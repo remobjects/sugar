@@ -21,12 +21,26 @@ type
   end;
   {$ENDIF}
 
+  {$IFDEF NOUGAT}
+  Console = public class mapped to java.lang.System
+    property NewLine: String read #10; // for now
+    method &Write(aString: String);
+    method &Write(aString: String; params aParams: array of String);
+    method WriteLine(aString: String);
+  end;
+  {$ENDIF}
+
 implementation
 
-{$IFDEF COOPER}
+{$IFNDEF ECHOES}
 method Console.&Write(aString: String);
 begin
+  {$IFDEF COOPER}
   System.out.print(aString);
+  {$ENDIF}
+  {$IFDEF NOUGAT}
+  NSLog('%@', aString);
+  {$ENDIF}
 end;
 
 method Console.WriteLine(aString: String);
