@@ -12,7 +12,7 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <Optimize>False</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;NOUGAT</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;</DefineConstants>
     <CaptureConsoleOutput>False</CaptureConsoleOutput>
     <StartMode>Project</StartMode>
     <RegisterForComInterop>False</RegisterForComInterop>
@@ -38,7 +38,7 @@
     <XmlDocWarningLevel>WarningOnPublicMembers</XmlDocWarningLevel>
     <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
     <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
-    <DefineConstants>NOUGAT</DefineConstants>
+    <DefineConstants></DefineConstants>
     <SuppressWarnings />
     <FutureHelperClassName />
   </PropertyGroup>
