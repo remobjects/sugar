@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 11
 Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "RemObjects.Sugar.Echoes", "RemObjects.Sugar.Echoes.oxygene", "{79301A0C-1F95-4FB0-9605-207E288C6171}"
 EndProject
-Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "RemObjects.Sugar.Cooper", "RemObjects.Sugar.Cooper.oxygene", "{64969621-74DB-436A-9839-4C1AB0E85335}"
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "RemObjects.Sugar.Cooper", "RemObjects.Sugar.Cooper.oxygene", "{18CEBAFC-1634-46B9-B8DA-FDBC838B1FF4}"
 EndProject
-Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "RemObjects.Sugar.Nougat", "RemObjects.Sugar.Nougat.oxygene", "{F0FFAF7E-CC14-44A5-87BA-F2FB39554C34}"
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "RemObjects.Sugar.Nougat", "RemObjects.Sugar.Nougat.oxygene", "{EE84DC48-E01E-4858-848D-8684F701D3B2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,18 +13,18 @@ Global
 		Release|Mixed Platforms = Release|Mixed Platforms
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{64969621-74DB-436A-9839-4C1AB0E85335}.Debug|Mixed Platforms.ActiveCfg = Debug
-		{64969621-74DB-436A-9839-4C1AB0E85335}.Debug|Mixed Platforms.Build.0 = Debug
-		{64969621-74DB-436A-9839-4C1AB0E85335}.Release|Mixed Platforms.ActiveCfg = Release
-		{64969621-74DB-436A-9839-4C1AB0E85335}.Release|Mixed Platforms.Build.0 = Release
+		{18CEBAFC-1634-46B9-B8DA-FDBC838B1FF4}.Debug|Mixed Platforms.ActiveCfg = Debug
+		{18CEBAFC-1634-46B9-B8DA-FDBC838B1FF4}.Debug|Mixed Platforms.Build.0 = Debug
+		{18CEBAFC-1634-46B9-B8DA-FDBC838B1FF4}.Release|Mixed Platforms.ActiveCfg = Release
+		{18CEBAFC-1634-46B9-B8DA-FDBC838B1FF4}.Release|Mixed Platforms.Build.0 = Release
 		{79301A0C-1F95-4FB0-9605-207E288C6171}.Debug|Mixed Platforms.ActiveCfg = Debug
 		{79301A0C-1F95-4FB0-9605-207E288C6171}.Debug|Mixed Platforms.Build.0 = Debug
 		{79301A0C-1F95-4FB0-9605-207E288C6171}.Release|Mixed Platforms.ActiveCfg = Release
 		{79301A0C-1F95-4FB0-9605-207E288C6171}.Release|Mixed Platforms.Build.0 = Release
-		{F0FFAF7E-CC14-44A5-87BA-F2FB39554C34}.Debug|Mixed Platforms.ActiveCfg = Debug
-		{F0FFAF7E-CC14-44A5-87BA-F2FB39554C34}.Debug|Mixed Platforms.Build.0 = Debug
-		{F0FFAF7E-CC14-44A5-87BA-F2FB39554C34}.Release|Mixed Platforms.ActiveCfg = Release
-		{F0FFAF7E-CC14-44A5-87BA-F2FB39554C34}.Release|Mixed Platforms.Build.0 = Release
+		{EE84DC48-E01E-4858-848D-8684F701D3B2}.Debug|Mixed Platforms.ActiveCfg = Debug
+		{EE84DC48-E01E-4858-848D-8684F701D3B2}.Debug|Mixed Platforms.Build.0 = Debug
+		{EE84DC48-E01E-4858-848D-8684F701D3B2}.Release|Mixed Platforms.ActiveCfg = Release
+		{EE84DC48-E01E-4858-848D-8684F701D3B2}.Release|Mixed Platforms.Build.0 = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

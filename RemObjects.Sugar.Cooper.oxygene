@@ -47,6 +47,9 @@
   <ItemGroup>
     <Compile Include="Console.pas" />
     <Compile Include="Dictionary.pas" />
+    <Compile Include="String.pas">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
