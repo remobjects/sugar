@@ -7,6 +7,7 @@
     <AllowLegacyCreate>False</AllowLegacyCreate>
     <Name>RemObjects.Sugar.Nougat</Name>
     <RootNamespace>RemObjects.Sugar.Nougat</RootNamespace>
+    <Framework>OS X 10.7</Framework>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <Optimize>False</Optimize>
@@ -42,6 +43,7 @@
     <FutureHelperClassName />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="C:\Program Files %28x86%29\RemObjects Software\Oxygene\Nougat Targets\OS X 10.7\CoreFoundation.fx" />
     <Reference Include="Foundation.fx" />
   </ItemGroup>
   <ItemGroup>
