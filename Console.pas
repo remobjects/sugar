@@ -1,4 +1,4 @@
-﻿namespace RemObjects.Sugar.Echoes;
+﻿namespace RemObjects.Sugar;
 
 interface
 
@@ -22,7 +22,8 @@ type
   {$ENDIF}
 
   {$IFDEF NOUGAT}
-  Console = public class mapped to java.lang.System
+  Console = public class
+  public
     property NewLine: String read #10; // for now
     method &Write(aString: String);
     method &Write(aString: String; params aParams: array of String);
