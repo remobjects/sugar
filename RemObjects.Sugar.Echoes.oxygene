@@ -20,7 +20,7 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <Optimize>False</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;ECHOES</DefineConstants>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <GeneratePDB>True</GeneratePDB>
     <GenerateMDB>True</GenerateMDB>
     <CaptureConsoleOutput>False</CaptureConsoleOutput>
@@ -45,7 +45,7 @@
     <XmlDocWarningLevel>WarningOnPublicMembers</XmlDocWarningLevel>
     <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
     <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
-    <DefineConstants>ECHOES</DefineConstants>
+    <DefineConstants></DefineConstants>
     <SuppressWarnings />
     <FutureHelperClassName />
   </PropertyGroup>
