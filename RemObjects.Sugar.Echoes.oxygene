@@ -68,9 +68,7 @@
     <Compile Include="Console.pas" />
     <Compile Include="Dictionary.pas" />
     <Compile Include="Properties\AssemblyInfo.pas" />
-    <Compile Include="String.pas">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="String.pas" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

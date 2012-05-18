@@ -7,9 +7,11 @@
     <AllowLegacyCreate>False</AllowLegacyCreate>
     <Name>RemObjects.Sugar.Nougat</Name>
     <RootNamespace>RemObjects.Sugar.Nougat</RootNamespace>
-    <Framework>OS X 10.7</Framework>
+    <SDK>OS X 10.7</SDK>
+    <ProjectGuid>{ab7ab88b-2370-43bf-844b-54d015da9e57}</ProjectGuid>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <Architecture>x64-apple-macosx</Architecture>
     <Optimize>False</Optimize>
     <OutputPath>.\bin\Debug</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
@@ -26,6 +28,7 @@
     <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <Architecture>x64-apple-macosx</Architecture>
     <Optimize>True</Optimize>
     <OutputPath>.\bin\Release</OutputPath>
     <GenerateDebugInfo>False</GenerateDebugInfo>
@@ -40,14 +43,16 @@
     <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="System.fx" />
     <Reference Include="Foundation.fx" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Console.pas" />
     <Compile Include="Dictionary.pas" />
-    <Compile Include="String.pas">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="String.pas" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Nougat.targets" />
   <PropertyGroup>

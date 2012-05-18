@@ -9,6 +9,9 @@ type
   {$IFDEF ECHOES}
   List<T> = public class mapped to System.Collections.Generic.List<T>
   {$ENDIF}
+  {$IFDEF NOUGAT}
+  List<T> = public class mapped to NSArray
+  {$ENDIF}
   end;
 
   {$IFDEF COOPER}
