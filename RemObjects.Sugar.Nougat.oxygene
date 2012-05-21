@@ -11,7 +11,7 @@
     <ProjectGuid>{ab7ab88b-2370-43bf-844b-54d015da9e57}</ProjectGuid>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <Architecture>x64-apple-macosx</Architecture>
+    <Architecture>x86_64-apple-macosx</Architecture>
     <Optimize>False</Optimize>
     <OutputPath>.\bin\Debug</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
@@ -28,7 +28,7 @@
     <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <Architecture>x64-apple-macosx</Architecture>
+    <Architecture>x86_64-apple-macosx</Architecture>
     <Optimize>True</Optimize>
     <OutputPath>.\bin\Release</OutputPath>
     <GenerateDebugInfo>False</GenerateDebugInfo>
@@ -49,6 +49,10 @@
   <ItemGroup>
     <Compile Include="Console.pas" />
     <Compile Include="Dictionary.pas" />
+    <Compile Include="Exceptions.pas">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="List.pas" />
     <Compile Include="String.pas" />
   </ItemGroup>
   <ItemGroup>

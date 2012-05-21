@@ -24,7 +24,7 @@ type
   {$IFDEF NOUGAT}
   Console = public class
   public
-    property NewLine: String read #10; // for now
+    property NewLine: String read RemObjects.Sugar.String(#10); // for now
     method &Write(aString: String);
     method &Write(aString: String; params aParams: array of String);
     method WriteLine(aString: String);
@@ -46,14 +46,18 @@ end;
 
 method Console.WriteLine(aString: String);
 begin
+  {$IFDEF COOPER}
+  //&Write(java.lang.String(aString)+java.lang.String(NewLine));
+  {$ELSE}
   &Write(aString+NewLine);
+  {$ENDIF}
 end;
 {$ENDIF}
 
 method Console.&Write(aString: String; params aParams: array of String);
 begin
   {$HIDE W0}
-  &Write(String.Format(aString, aParams));
+  &Write(String.FormatDotNet(aString, aParams));
   {$SHOW W0}
 end;
 

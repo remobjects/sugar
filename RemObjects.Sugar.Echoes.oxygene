@@ -2,9 +2,9 @@
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <ProductVersion>3.5</ProductVersion>
-    <RootNamespace>RemObjects.Sugar.Echoes</RootNamespace>
+    <RootNamespace>RemObjects.Sugar</RootNamespace>
     <StartupClass />
-    <OutputType>library</OutputType>
+    <OutputType>Library</OutputType>
     <AssemblyName>RemObjects.Sugar.Echoes</AssemblyName>
     <AllowGlobals>False</AllowGlobals>
     <AllowLegacyWith>False</AllowLegacyWith>
@@ -16,6 +16,8 @@
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <Name>RemObjects.Sugar.Echoes</Name>
     <ProjectGuid>{79301a0c-1f95-4fb0-9605-207e288c6171}</ProjectGuid>
+    <DefaultUses />
+    <InternalAssemblyName />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <Optimize>False</Optimize>
@@ -45,7 +47,8 @@
     <XmlDocWarningLevel>WarningOnPublicMembers</XmlDocWarningLevel>
     <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
     <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
-    <DefineConstants></DefineConstants>
+    <DefineConstants>
+    </DefineConstants>
     <SuppressWarnings />
     <FutureHelperClassName />
   </PropertyGroup>
@@ -67,6 +70,8 @@
   <ItemGroup>
     <Compile Include="Console.pas" />
     <Compile Include="Dictionary.pas" />
+    <Compile Include="Exceptions.pas" />
+    <Compile Include="List.pas" />
     <Compile Include="Properties\AssemblyInfo.pas" />
     <Compile Include="String.pas" />
   </ItemGroup>

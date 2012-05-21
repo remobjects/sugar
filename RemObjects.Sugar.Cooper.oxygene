@@ -37,7 +37,8 @@
     <XmlDocWarningLevel>WarningOnPublicMembers</XmlDocWarningLevel>
     <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
     <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
-    <DefineConstants></DefineConstants>
+    <DefineConstants>
+    </DefineConstants>
     <SuppressWarnings />
     <FutureHelperClassName />
   </PropertyGroup>
@@ -46,10 +47,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Console.pas" />
+    <Compile Include="Cooper\EnumerationSequence.pas" />
     <Compile Include="Dictionary.pas" />
+    <Compile Include="Exceptions.pas" />
+    <Compile Include="List.pas" />
     <Compile Include="String.pas" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Cooper" />
     <Folder Include="Properties\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Java.targets" />
