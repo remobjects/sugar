@@ -1,4 +1,4 @@
-﻿namespace RemObjects.Sugar;
+﻿namespace RemObjects.Oxygene.Sugar;
 
 interface
 

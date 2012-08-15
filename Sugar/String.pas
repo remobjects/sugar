@@ -1,4 +1,4 @@
-﻿namespace RemObjects.Sugar;
+﻿namespace RemObjects.Oxygene.Sugar;
 
 interface
 
@@ -14,6 +14,15 @@ type
   {$ENDIF}
     class method FormatDotNet(aFormat: String; params aParams: array of Object): String;
     class method FormatC(aFormat: String; params aParams: array of Object): String;
+
+    {$IFDEF COOPER}
+    method ToLower: String; mapped to toLowerCase;
+    method ToUpper: String; mapped to toUpperCase;
+    {$ENDIF}
+    {$IFDEF NOUGAT}
+    method ToLower: String; mapped to lowercaseString;
+    method ToUpper: String; mapped to uppercaseString;
+    {$ENDIF}
   end;
 
 implementation
