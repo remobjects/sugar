@@ -73,7 +73,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DelphiString.pas" />
+    <Compile Include="OneBasedString.pas" />
     <Compile Include="Properties\AssemblyInfo.pas" />
     <Compile Include="String Functions.pas" />
   </ItemGroup>

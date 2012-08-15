@@ -61,7 +61,7 @@
     <Reference Include="rt.jar" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DelphiString.pas" />
+    <Compile Include="OneBasedString.pas" />
     <Compile Include="String Functions.pas" />
   </ItemGroup>
   <ItemGroup>
