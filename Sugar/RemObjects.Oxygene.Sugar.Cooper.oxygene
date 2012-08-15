@@ -6,8 +6,11 @@
     <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
     <AllowLegacyCreate>False</AllowLegacyCreate>
     <Name>RemObjects.Oxygene.Sugar.Cooper</Name>
-    <RootNamespace>RemObjects.Sugar.Cooper</RootNamespace>
+    <RootNamespace>RemObjects.Oxygene.Sugar</RootNamespace>
     <ProjectGuid>{d1ee6c41-515b-4175-873f-ee188ac43450}</ProjectGuid>
+    <AssemblyName>RemObjects.Oxygene.Sugar</AssemblyName>
+    <DefaultUses />
+    <StartupClass />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <Optimize>False</Optimize>

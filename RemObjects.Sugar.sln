@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "RemObjects.Sugar.Cooper", "Sugar\RemObjects.Sugar.Cooper.oxygene", "{D1EE6C41-515B-4175-873F-EE188AC43450}"
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "RemObjects.Oxygene.Sugar.Cooper", "Sugar\RemObjects.Oxygene.Sugar.Cooper.oxygene", "{D1EE6C41-515B-4175-873F-EE188AC43450}"
 EndProject
-Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "RemObjects.Sugar.Echoes", "Sugar\RemObjects.Sugar.Echoes.oxygene", "{79301A0C-1F95-4FB0-9605-207E288C6171}"
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "RemObjects.Oxygene.Sugar.Echoes", "Sugar\RemObjects.Oxygene.Sugar.Echoes.oxygene", "{79301A0C-1F95-4FB0-9605-207E288C6171}"
 EndProject
-Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "RemObjects.Sugar.Nougat", "Sugar\RemObjects.Sugar.Nougat.oxygene", "{AB7AB88B-2370-43BF-844B-54D015DA9E57}"
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "RemObjects.Oxygene.Sugar.Nougat", "Sugar\RemObjects.Oxygene.Sugar.Nougat.oxygene", "{AB7AB88B-2370-43BF-844B-54D015DA9E57}"
 EndProject
 Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "RemObjects.Oxygene.Legacy.Cooper", "Legacy\RemObjects.Oxygene.Legacy.Cooper.oxygene", "{DCB8BC3B-F911-470F-A125-988D5EF46466}"
 EndProject

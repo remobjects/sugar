@@ -2,10 +2,10 @@
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <ProductVersion>3.5</ProductVersion>
-    <RootNamespace>RemObjects.Sugar</RootNamespace>
+    <RootNamespace>RemObjects.Oxygene.Sugar</RootNamespace>
     <StartupClass />
     <OutputType>Library</OutputType>
-    <AssemblyName>RemObjects.Sugar.Echoes</AssemblyName>
+    <AssemblyName>RemObjects.Oxygene.Sugar</AssemblyName>
     <AllowGlobals>False</AllowGlobals>
     <AllowLegacyWith>False</AllowLegacyWith>
     <AllowLegacyOutParams>False</AllowLegacyOutParams>
@@ -13,11 +13,12 @@
     <AllowUnsafeCode>False</AllowUnsafeCode>
     <ApplicationIcon />
     <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <Name>RemObjects.Oxygene.Sugar.Echoes</Name>
     <ProjectGuid>{79301a0c-1f95-4fb0-9605-207e288c6171}</ProjectGuid>
     <DefaultUses />
     <InternalAssemblyName />
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <Optimize>False</Optimize>

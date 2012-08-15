@@ -76,10 +76,6 @@
     <Compile Include="DelphiString.pas" />
     <Compile Include="Properties\AssemblyInfo.pas" />
     <Compile Include="String Functions.pas" />
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-    </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.pas" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
