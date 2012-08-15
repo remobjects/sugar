@@ -40,7 +40,7 @@ begin
   System.out.print(aString);
   {$ENDIF}
   {$IFDEF NOUGAT}
-  NSLog('%@', aString);
+  Foundation.NSLog('%@', aString);
   {$ENDIF}
 end;
 

@@ -10,8 +10,17 @@ type
   private
   protected
   public
+    {$IFDEF NOUGATx}
+    method init: id; override;
+    {$ENDIF}
   end;
 
 implementation
 
+{$IFDEF NOUGATx}
+method SugarNotImplementedException.init: id;
+begin
+  result := inherited init;
+end;
+{$ENDIF}
 end.

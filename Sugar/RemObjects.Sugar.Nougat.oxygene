@@ -43,15 +43,12 @@
     <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System.fx" />
     <Reference Include="Foundation.fx" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Console.pas" />
     <Compile Include="Dictionary.pas" />
-    <Compile Include="Exceptions.pas">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Exceptions.pas" />
     <Compile Include="List.pas" />
     <Compile Include="String.pas" />
   </ItemGroup>

@@ -7,6 +7,7 @@
     <AllowLegacyCreate>False</AllowLegacyCreate>
     <Name>RemObjects.Sugar.Cooper</Name>
     <RootNamespace>RemObjects.Sugar.Cooper</RootNamespace>
+    <ProjectGuid>{d1ee6c41-515b-4175-873f-ee188ac43450}</ProjectGuid>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <Optimize>False</Optimize>

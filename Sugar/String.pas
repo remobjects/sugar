@@ -30,7 +30,7 @@ end;
 class method String.FormatC(aFormat: String; params aParams: array of Object): String;
 begin
   {$IFDEF NOUGAT}
-  result := NSString.stringWithFormat(aFormat, aParams);
+  result := Foundation.NSString.stringWithFormat(aFormat, aParams);
   {$ELSE}
   raise new SugarNotImplementedException();
   {$ENDIF}
