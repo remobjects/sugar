@@ -22,8 +22,8 @@ type
 
   {$IFDEF NOUGAT}
   Dictionary<T,U> = public class mapped to Foundation.NSDictionary
-    method getValue(aKey: dynamic): dynamic; mapped to valueForKey;
-    method setValue(aKey: dynamic; aValue: dynamic): dynamic; mapped to setValue(aValue)forKey(aKey);
+    method getValue(aKey: dynamic): dynamic; mapped to objectForKey(aKey);
+    method setValue(aKey: dynamic; aValue: dynamic): dynamic; mapped to setObject(aValue)forKey(aKey);
     property Values[aKey: T]: U read getValue write setValue;
   end;
   {$ENDIF}

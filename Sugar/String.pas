@@ -18,14 +18,24 @@ type
     class method FormatDotNet(aFormat: String; params aParams: array of Object): String;
     class method FormatC(aFormat: String; params aParams: array of Object): String;
 
-    method IndexOf(aString: String): Int32; mapped to IndexOf(aString);
     method Length: Int32; mapped to length;
+
+    {$IFNDEF NOUGAT}
+    method IndexOf(aString: String): Int32; mapped to IndexOf(aString);
     method Substring(aStartIndex: Int32): String; mapped to Substring(aStartIndex);
+    {$ELSE}
+    method IndexOf(aString: String): Int32;
+    method Substring(aStartIndex: Int32): String; mapped to substringFromIndex(aStartIndex);
+    {$ENDIF}
+
     {$IFDEF COOPER}
     method Substring(aStartIndex: Int32; aLength: Int32): String; mapped to Substring(aStartIndex, aStartIndex+aLength);
     {$ENDIF}
     {$IFDEF ECHOES}
     method Substring(aStartIndex: Int32; aLength: Int32): String; mapped to Substring(aStartIndex, aLength);
+    {$ENDIF}
+    {$IFDEF NOUGAT}
+    method Substring(aStartIndex: Int32; aLength: Int32): String;
     {$ENDIF}
 
     {$IFDEF COOPER}
@@ -57,5 +67,18 @@ begin
   raise new SugarNotImplementedException();
   {$ENDIF}
 end;
+
+{$IFDEF NOUGAT}
+method String.IndexOf(aString: String): Int32;
+begin
+  result := mapped.rangeOfString(aString).location;
+end;
+
+method String.Substring(aStartIndex: Int32; aLength: Int32): String;
+begin
+  result := mapped.substringWithRange(NSMakeRange(aStartIndex, aLength)).location;
+
+end;
+{$ENDIF}
 
 end.

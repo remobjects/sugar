@@ -24,7 +24,7 @@ type
   {$IFDEF NOUGAT}
   Console = public class
   public
-    property NewLine: String read RemObjects.Sugar.String(#10); // for now
+    property NewLine: String read RemObjects.Oxygene.Sugar.String(#10); // for now
     method &Write(aString: String);
     method &Write(aString: String; params aParams: array of String);
     method WriteLine(aString: String);
