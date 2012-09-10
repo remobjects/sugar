@@ -3,7 +3,7 @@
 interface
 
 type 
-  SugarException = class({$IFDEF NOUGAT}Foundation.NSException{$ELSE}Exception{$ENDIF})
+  SugarException = public class({$IFDEF NOUGAT}Foundation.NSException{$ELSE}Exception{$ENDIF})
   end;
 
   SugarNotImplementedException = public class(SugarException)
