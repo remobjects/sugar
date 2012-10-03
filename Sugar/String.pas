@@ -46,6 +46,8 @@ type
     method ToLower: String; mapped to lowercaseString;
     method ToUpper: String; mapped to uppercaseString;
     {$ENDIF}
+
+    class operator Add(aStringA: String; aStringB: String): String;
   end;
 
 implementation
@@ -68,6 +70,19 @@ begin
   {$ENDIF}
 end;
 
+class operator String.Add(aStringA: String; aStringB: String): String;
+begin
+  {$IFDEF COOPER}
+  result := java.lang.String(aStringA)+java.lang.String(aStringB);
+  {$ENDIF}
+  {$IFDEF ECHOES}
+  result := System.String(aStringA)+System.String(aStringB);
+  {$ENDIF}
+  {$IFDEF NOUGAT}
+  result := Foundation.NSString(aStringA).stringByAppendingString(aStringB);
+  {$ENDIF}
+end;
+
 {$IFDEF NOUGAT}
 method String.IndexOf(aString: String): Int32;
 begin
@@ -76,7 +91,7 @@ end;
 
 method String.Substring(aStartIndex: Int32; aLength: Int32): String;
 begin
-  result := mapped.substringWithRange(NSMakeRange(aStartIndex, aLength)).location;
+  result := mapped.substringWithRange(Foundation.NSMakeRange(aStartIndex, aLength)).location;
 
 end;
 {$ENDIF}
