@@ -14,6 +14,11 @@ type
   {$IFDEF NOUGAT}
   String = public class mapped to Foundation.NSString
   {$ENDIF}
+  private
+    {$IFDEF NOUGAT}
+    method NSMakeRange(loc: Int32; len: Int32): Foundation.NSRange; // temp workaround
+    {$ENDIF}
+
   public
     class method FormatDotNet(aFormat: String; params aParams: array of Object): String;
     class method FormatC(aFormat: String; params aParams: array of Object): String;
@@ -84,6 +89,12 @@ begin
 end;
 
 {$IFDEF NOUGAT}
+method String.NSMakeRange(loc: Int32; len: Int32): Foundation.NSRange;
+begin 
+  result.location := loc;
+  result.length := len;
+end;
+
 method String.IndexOf(aString: String): Int32;
 begin
   result := mapped.rangeOfString(aString).location;
@@ -91,8 +102,7 @@ end;
 
 method String.Substring(aStartIndex: Int32; aLength: Int32): String;
 begin
-  result := mapped.substringWithRange(Foundation.NSMakeRange(aStartIndex, aLength)).location;
-
+  result := mapped.substringWithRange(NSMakeRange(aStartIndex, aLength));
 end;
 {$ENDIF}
 
