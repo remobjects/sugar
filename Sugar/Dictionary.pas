@@ -23,8 +23,9 @@ type
   {$IFDEF NOUGAT}
   Dictionary<T,U> = public class mapped to Foundation.NSMutableDictionary
     method getValue(aKey: dynamic): dynamic; mapped to objectForKey(aKey);
-    method setValue(aKey: dynamic; aValue: dynamic): dynamic; mapped to setObject(aValue)forKey(aKey);
-    property Values[aKey: T]: U read getValue write setValue;
+    // Generic mapped types aren't really well supported on Nougat YET
+    //method setValue(aKey: dynamic; aValue: dynamic): dynamic; mapped to setObject(aValue)forKey(aKey);
+    //property Values[aKey: dynamic{T}]: dynamic{U} read getValue write setValue;
   end;
   {$ENDIF}
   

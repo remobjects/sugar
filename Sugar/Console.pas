@@ -47,9 +47,18 @@ end;
 method Console.WriteLine(aString: String);
 begin
   {$IFDEF COOPER}
-  //&Write(java.lang.String(aString)+java.lang.String(NewLine));
-  {$ELSE}
+  //58668: Cant use operators on Mapped types in Cooper
+  //&Write(aString+NewLine);
+
+  {$ENDIF}
+  {$IFDEF ECHOES}
   &Write(aString+NewLine);
+  {$ENDIF}
+  {$IFDEF NOUGAT}
+  //&Write(aString+NewLine);
+  
+  // bugs://58667: NRE in Nougat compiler on mapped types
+  // &Write(Foundation.NSString(aString).stringByAppendingString(Foundation.NSString(NewLine)));
   {$ENDIF}
 end;
 {$ENDIF}
