@@ -2,19 +2,20 @@
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <ProductVersion>3.5</ProductVersion>
-    <OutputType>Library</OutputType>
+    <OutputType>StaticLibrary</OutputType>
     <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
     <AllowLegacyCreate>False</AllowLegacyCreate>
     <Name>RemObjects.Oxygene.Sugar.Nougat</Name>
     <RootNamespace>RemObjects.Oxygene.Sugar</RootNamespace>
     <SDK>OS X</SDK>
     <ProjectGuid>{ab7ab88b-2370-43bf-844b-54d015da9e57}</ProjectGuid>
-    <AssemblyName>RemObjects.Oxygene.Sugar</AssemblyName>
+    <AssemblyName>Sugar</AssemblyName>
     <DefaultUses />
     <StartupClass />
+    <DeploymentTargetVersion>10.6</DeploymentTargetVersion>
+    <BundleIdentifier>org.me.RemObjects.Oxygene.Sugar</BundleIdentifier>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <Architecture>x86_64-apple-macosx</Architecture>
     <Optimize>False</Optimize>
     <OutputPath>.\bin\Debug</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>

@@ -25,7 +25,7 @@ type
   Console = public class
   public
     property NewLine: String read RemObjects.Oxygene.Sugar.String(#10); // for now
-    method &Write(aString: String);
+    //method &Write(aString: String);
     method &Write(aString: String; params aParams: array of String);
     method WriteLine(aString: String);
   end;
@@ -33,17 +33,19 @@ type
 
 implementation
 
-{$IFNDEF ECHOES}
+{$IFDEF COOPER}
 method Console.&Write(aString: String);
 begin
   {$IFDEF COOPER}
   System.out.print(aString);
   {$ENDIF}
-  {$IFDEF NOUGAT}
-  Foundation.NSLog('%@', aString);
-  {$ENDIF}
+  //{$IFDEF NOUGAT}
+  //Foundation.NSLog('%@', aString);
+  //{$ENDIF}
 end;
+{$ENDIF}
 
+{$IFNDEF ECHOES}
 method Console.WriteLine(aString: String);
 begin
   {$IFDEF COOPER}
@@ -55,10 +57,8 @@ begin
   &Write(aString+NewLine);
   {$ENDIF}
   {$IFDEF NOUGAT}
-  //&Write(aString+NewLine);
-  
-  // bugs://58667: NRE in Nougat compiler on mapped types
-  // &Write(Foundation.NSString(aString).stringByAppendingString(Foundation.NSString(NewLine)));
+  //Foundation.NSLog(aString+NewLine); // 59154: Nougat: operators on mapped types
+  Foundation.NSLog(Foundation.NSString(aString).stringByAppendingString(Foundation.NSString(NewLine)));
   {$ENDIF}
 end;
 {$ENDIF}
