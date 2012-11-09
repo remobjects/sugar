@@ -22,30 +22,34 @@ type
   {$ENDIF}
 
   {$IFDEF NOUGAT}
-  Console = public class
+  Console = public static class
   public
     property NewLine: String read RemObjects.Oxygene.Sugar.String(#10); // for now
-    //method &Write(aString: String);
+    method &Write(aString: String);
     method &Write(aString: String; params aParams: array of String);
     method WriteLine(aString: String);
+    method ReadKey: Char;
   end;
   {$ENDIF}
 
 implementation
 
-{$IFDEF COOPER}
+{$IFDEF NOUGAT}
+uses Foundation;
+{$ENDIF}
+
+
+{$IFNDEF ECHOES}
 method Console.&Write(aString: String);
 begin
   {$IFDEF COOPER}
   System.out.print(aString);
   {$ENDIF}
-  //{$IFDEF NOUGAT}
-  //Foundation.NSLog('%@', aString);
-  //{$ENDIF}
+  {$IFDEF NOUGAT}
+  printf('%s', Foundation.NSString(aString).cStringUsingEncoding(NSStringEncoding.NSUTF8StringEncoding));
+  {$ENDIF}
 end;
-{$ENDIF}
 
-{$IFNDEF ECHOES}
 method Console.WriteLine(aString: String);
 begin
   {$IFDEF COOPER}
@@ -57,11 +61,18 @@ begin
   &Write(aString+NewLine);
   {$ENDIF}
   {$IFDEF NOUGAT}
-  //Foundation.NSLog(aString+NewLine); // 59154: Nougat: operators on mapped types
-  Foundation.NSLog(Foundation.NSString(aString).stringByAppendingString(Foundation.NSString(NewLine)));
+  printf('%s', Foundation.NSString(aString).cStringUsingEncoding(NSStringEncoding.NSUTF8StringEncoding));
+  printf(#10);
   {$ENDIF}
 end;
 {$ENDIF}
+
+method Console.ReadKey: Char;
+begin
+  {$IFDEF NOUGAT}
+  //result := Char(getchar());
+  {$ENDIF}
+end;
 
 method Console.&Write(aString: String; params aParams: array of String);
 begin
