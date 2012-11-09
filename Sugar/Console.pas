@@ -3,34 +3,27 @@
 interface
 
 type
-  {$IFDEF ECHOES}
-  Console = public class mapped to System.Console
-    property NewLine: String read Environment.NewLine;
-    method &Write(aString: String); mapped to &Write(aString);
-    method &Write(aString: String; params aParams: array of String);
-    method WriteLine(aString: String); mapped to WriteLine(aString);
-  end;
-  {$ENDIF}
-
-  {$IFDEF COOPER}
-  Console = public class mapped to java.lang.System
-    property NewLine: String read System.getProperty("line.separator");
-    method &Write(aString: String);
-    method &Write(aString: String; params aParams: array of String);
-    method WriteLine(aString: String);
-  end;
-  {$ENDIF}
-
-  {$IFDEF NOUGAT}
   Console = public static class
+  private
   public
+    {$IFDEF COOPER}
+    property NewLine: String read System.getProperty("line.separator");
+    {$ENDIF}
+    {$IFDEF ECHOES}
+    property NewLine: String read Environment.NewLine;
+    {$ENDIF}
+    {$IFDEF NOUGAT}
     property NewLine: String read RemObjects.Oxygene.Sugar.String(#10); // for now
+    {$ENDIF}
+
     method &Write(aString: String);
     method &Write(aString: String; params aParams: array of String);
     method WriteLine(aString: String);
+    method WriteLine(aString: String; params aParams: array of String);
+
+    method ReadLine: String;
     method ReadKey: Char;
   end;
-  {$ENDIF}
 
 implementation
 
@@ -38,12 +31,13 @@ implementation
 uses Foundation;
 {$ENDIF}
 
-
-{$IFNDEF ECHOES}
 method Console.&Write(aString: String);
 begin
   {$IFDEF COOPER}
   System.out.print(aString);
+  {$ENDIF}
+  {$IFDEF ECHOES}
+  Console.WriteLine(aString);
   {$ENDIF}
   {$IFDEF NOUGAT}
   printf('%s', Foundation.NSString(aString).cStringUsingEncoding(NSStringEncoding.NSUTF8StringEncoding));
@@ -52,33 +46,45 @@ end;
 
 method Console.WriteLine(aString: String);
 begin
-  {$IFDEF COOPER}
-  //58668: Cant use operators on Mapped types in Cooper
-  //&Write(aString+NewLine);
-
-  {$ENDIF}
-  {$IFDEF ECHOES}
-  &Write(aString+NewLine);
-  {$ENDIF}
-  {$IFDEF NOUGAT}
-  printf('%s', Foundation.NSString(aString).cStringUsingEncoding(NSStringEncoding.NSUTF8StringEncoding));
-  printf(#10);
-  {$ENDIF}
-end;
-{$ENDIF}
-
-method Console.ReadKey: Char;
-begin
-  {$IFDEF NOUGAT}
-  //result := Char(getchar());
-  {$ENDIF}
+  &Write(aString);
+  &Write(NewLine);
 end;
 
 method Console.&Write(aString: String; params aParams: array of String);
 begin
-  {$HIDE W0}
   &Write(String.FormatDotNet(aString, aParams));
-  {$SHOW W0}
+end;
+
+class method Console.WriteLine(aString: String; params aParams: array of String);
+begin
+  &Write(String.FormatDotNet(aString, aParams));
+  &Write(NewLine);
+end;
+
+method Console.ReadLine: String;
+begin
+  {$IFDEF COOPER}
+  using br := new java.io.BufferedReader(new java.io.InputStreamReader(System.in)) do
+    result := br.readLine();
+  {$ENDIF}
+  {$IFDEF ECHOES}
+  result := Console.ReadLine;
+  {$ENDIF}
+end;
+
+method Console.ReadKey: Char;
+begin
+  {$IFDEF COOPER}
+  var lBuffer: array[0..0] of Byte;
+  if System.in.read(lBuffer, 0, 1) = 1 then
+    result := Char(lBuffer[0]);
+  {$ENDIF}
+  {$IFDEF ECHOES}
+  result := Console.ReadKey;
+  {$ENDIF}
+  {$IFDEF NOUGAT}
+  //result := Char(getchar());
+  {$ENDIF}
 end;
 
 end.

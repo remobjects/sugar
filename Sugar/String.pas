@@ -18,6 +18,7 @@ type
     {$IFDEF NOUGAT}
     method NSMakeRange(loc: Int32; len: Int32): Foundation.NSRange; // temp workaround
     {$ENDIF}
+    method get_Chars(aIndex: Int32): Char;
 
   public
     class method FormatDotNet(aFormat: String; params aParams: array of Object): String;
@@ -52,6 +53,7 @@ type
     method ToUpper: String; mapped to uppercaseString;
     {$ENDIF}
 
+    property Chars[aIndex: Int32]: Char read get_Chars; default;
     class operator Add(aStringA: String; aStringB: String): String;
   end;
 
@@ -105,5 +107,18 @@ begin
   result := mapped.substringWithRange(NSMakeRange(aStartIndex, aLength));
 end;}
 {$ENDIF}
+
+method String.get_Chars(aIndex: Int32): Char;
+begin
+  {$IFDEF COOPER} // 59230: Improved IFDEF snytax
+  result := mapped[AIndex];
+  {$ENDIF}
+  {$IFDEF ECHOES}
+  result := mapped[aIndex];
+  {$ENDIF}
+  {$IFDEF NOUGAT}
+  result := mapped.characterAtIndex(aIndex);
+  {$ENDIF}
+end;
 
 end.
