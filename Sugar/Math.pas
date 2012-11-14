@@ -14,7 +14,8 @@ type
   Math = public class
   public
     const PI: Double = 3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679;
-    method Pow(x, y: Double): Double;  
+    method Pow(x, y: Double): Double;
+    method Sin(x: Double): Double;
   {$ENDIF}
   end;
 
@@ -25,6 +26,12 @@ method Math.Pow(x, y: Double): Double;
 begin
   exit rtl.Math.pow(x,y);  
 end;
+
+method Math.Sin(x: Double): Double;
+begin
+  exit rtl.Math.sin(x);  
+end;
+
 {$ENDIF}
 
 end.
