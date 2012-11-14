@@ -73,6 +73,7 @@
     <Compile Include="Dictionary.pas" />
     <Compile Include="Exceptions.pas" />
     <Compile Include="List.pas" />
+    <Compile Include="Math.pas" />
     <Compile Include="Properties\AssemblyInfo.pas" />
     <Compile Include="String.pas" />
     <Compile Include="Url.pas" />
