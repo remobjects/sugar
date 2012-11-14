@@ -54,6 +54,7 @@
     <Compile Include="Cooper\EnumerationSequence.pas" />
     <Compile Include="Dictionary.pas" />
     <Compile Include="Exceptions.pas" />
+    <Compile Include="FileStreams.pas" />
     <Compile Include="List.pas" />
     <Compile Include="Math.pas" />
     <Compile Include="String.pas" />
