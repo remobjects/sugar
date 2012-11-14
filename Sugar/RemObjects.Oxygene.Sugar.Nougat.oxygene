@@ -57,6 +57,7 @@
     <Compile Include="List.pas" />
     <Compile Include="Math.pas" />
     <Compile Include="String.pas" />
+    <Compile Include="Url.pas" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
