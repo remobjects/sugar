@@ -2,10 +2,6 @@
 
 interface
 
-{$IFDEF NOUGAT}
-
-{$ENDIF}
-
 type
 
   {$IFDEF COOPER}
