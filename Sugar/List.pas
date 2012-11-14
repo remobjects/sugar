@@ -3,13 +3,13 @@
 interface
 
 type
-  {$IFDEF COOPER}
+  {$IF COOPER}
   List<T> = public class mapped to java.util.ArrayList
   {$ENDIF}
-  {$IFDEF ECHOES}
+  {$IF ECHOES}
   List<T> = public class mapped to System.Collections.Generic.List<T>
   {$ENDIF}
-  {$IFDEF NOUGAT}
+  {$IF NOUGAT}
   List<T> = public class mapped to Foundation.NSArray
   {$ENDIF}
   end;

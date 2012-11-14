@@ -20,19 +20,19 @@ type
 
 implementation
 
-{$IFDEF NOUGAT}
+{$IF NOUGAT}
 uses Foundation;
 {$ENDIF}
 
 method Console.&Write(aString: String);
 begin
-  {$IFDEF COOPER}
+  {$IF COOPER}
   System.out.print(aString);
   {$ENDIF}
-  {$IFDEF ECHOES}
+  {$IF ECHOES}
   Console.WriteLine(aString);
   {$ENDIF}
-  {$IFDEF NOUGAT}
+  {$IF NOUGAT}
   printf('%s', Foundation.NSString(aString).cStringUsingEncoding(NSStringEncoding.NSUTF8StringEncoding));
   {$ENDIF}
 end;
@@ -57,14 +57,14 @@ end;
 method Console.ReadLine: String;
 const MAX = 1024;
 begin
-  {$IFDEF COOPER}
+  {$IF COOPER}
   using br := new java.io.BufferedReader(new java.io.InputStreamReader(System.in)) do
     result := br.readLine();
   {$ENDIF}
-  {$IFDEF ECHOES}
+  {$IF ECHOES}
   result := Console.ReadLine;
   {$ENDIF}
-  {$IFDEF NOUGAT}
+  {$IF NOUGAT}
   //const MAX = 1024;
   var lBuffer: array[0..MAX] of Byte;
   //rtl.
@@ -74,28 +74,28 @@ end;
 
 (*method Console.ReadKey: Char;
 begin
-  {$IFDEF COOPER}
+  {$IF COOPER}
   var lBuffer: array[0..0] of Byte;
   if System.in.read(lBuffer, 0, 1) = 1 then
     result := Char(lBuffer[0]);
   {$ENDIF}
-  {$IFDEF ECHOES}
+  {$IF ECHOES}
   result := Console.ReadKey;
   {$ENDIF}
-  {$IFDEF NOUGAT}
+  {$IF NOUGAT}
   //result := Char(getchar());
   {$ENDIF}
 end;*)
 
 class method Console.getNewLine: String;
 begin
-  {$IFDEF COOPER}
+  {$IF COOPER}
   result := System.getProperty("line.separator");
   {$ENDIF}
-  {$IFDEF ECHOES}
+  {$IF ECHOES}
   result := Environment.NewLine;
   {$ENDIF}
-  {$IFDEF NOUGAT}
+  {$IF NOUGAT}
   result := RemObjects.Oxygene.Sugar.String(#10); // always constant on Mac and iOS anyways.
   {$ENDIF}
 end;

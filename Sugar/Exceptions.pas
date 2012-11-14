@@ -3,21 +3,21 @@
 interface
 
 type 
-  SugarException = public class({$IFDEF NOUGAT}Foundation.NSException{$ELSE}Exception{$ENDIF})
+  SugarException = public class({$IF NOUGAT}Foundation.NSException{$ELSE}Exception{$ENDIF})
   end;
 
   SugarNotImplementedException = public class(SugarException)
   private
   protected
   public
-    {$IFDEF NOUGATx}
+    {$IF NOUGATx}
     method init: id; override;
     {$ENDIF}
   end;
 
 implementation
 
-{$IFDEF NOUGATx}
+{$IF NOUGATx}
 method SugarNotImplementedException.init: id;
 begin
   result := inherited init;

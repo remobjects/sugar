@@ -15,13 +15,13 @@ implementation
 
 method OneBasedString.get_OneBasedCharacters(aIndex: Int32): Char;
 begin
-  {$IFDEF ECHOES}
+  {$IF ECHOES}
   result := mapped.Chars[aIndex-1];
   {$ENDIF}
-  {$IFDEF COOPER}
+  {$IF COOPER}
   result := mapped.charAt(aIndex-1);
   {$ENDIF}
-  {$IFDEF NOUGAT}
+  {$IF NOUGAT}
   result := mapped.characterAtIndex(aIndex-1);
   {$ENDIF}
 

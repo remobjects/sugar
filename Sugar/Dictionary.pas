@@ -3,7 +3,7 @@
 interface
 
 type
-  {$IFDEF COOPER}
+  {$IF COOPER}
   Dictionary<T, U> = public class mapped to java.util.Dictionary<T, U>
     //method __getKeys: sequence of T; iterator;
     property Values[aKey: T]: U read mapped.get(aKey) write mapped.put;
@@ -12,7 +12,7 @@ type
   end;
   {$ENDIF}
 
-  {$IFDEF ECHOES}
+  {$IF ECHOES}
   Dictionary<T, U> = public class mapped to System.Collections.Generic.Dictionary<T, U>
     property Values[aKey: T]: U read mapped[aKey] write mapped[aKey];
     property AllKeys: sequence of T read mapped.Keys;
@@ -20,7 +20,7 @@ type
   end;
   {$ENDIF}
 
-  {$IFDEF NOUGAT}
+  {$IF NOUGAT}
   Dictionary<T,U> = public class mapped to Foundation.NSMutableDictionary
     method getValue(aKey: dynamic): dynamic; mapped to objectForKey(aKey);
     // Generic mapped types aren't really well supported on Nougat YET
@@ -31,7 +31,7 @@ type
   
 implementation
 
-{$IFDEF COOPER}
+{$IF COOPER}
 method Dictionary.ContainsKey(aKey: T): Boolean;
 begin
   result := assigned(mapped.get(aKey));

@@ -5,17 +5,17 @@
 interface
 
 type
-  {$IFDEF COOPER}
+  {$IF COOPER}
   String = public class mapped to java.lang.String
   {$ENDIF}
-  {$IFDEF ECHOES}
+  {$IF ECHOES}
   String = public class mapped to System.String
   {$ENDIF}
-  {$IFDEF NOUGAT}
+  {$IF NOUGAT}
   String = public class mapped to Foundation.NSString
   {$ENDIF}
   private
-    {$IFDEF NOUGAT}
+    {$IF NOUGAT}
     method NSMakeRange(loc: Int32; len: Int32): Foundation.NSRange; // temp workaround
     {$ENDIF}
     method get_Chars(aIndex: Int32): Char;
@@ -34,21 +34,21 @@ type
     method Substring(aStartIndex: Int32): String; mapped to substringFromIndex(aStartIndex);
     {$ENDIF}
 
-    {$IFDEF COOPER}
+    {$IF COOPER}
     method Substring(aStartIndex: Int32; aLength: Int32): String; mapped to Substring(aStartIndex, aStartIndex+aLength);
     {$ENDIF}
-    {$IFDEF ECHOES}
+    {$IF ECHOES}
     method Substring(aStartIndex: Int32; aLength: Int32): String; mapped to Substring(aStartIndex, aLength);
     {$ENDIF}
-    {$IFDEF NOUGAT}
+    {$IF NOUGAT}
     method Substring(aStartIndex: Int32; aLength: Int32): String; //59155: Nougat: support for methids with nameless parameters (foo:::)
     {$ENDIF}
 
-    {$IFDEF COOPER}
+    {$IF COOPER}
     method ToLower: String; mapped to toLowerCase;
     method ToUpper: String; mapped to toUpperCase;
     {$ENDIF}
-    {$IFDEF NOUGAT}
+    {$IF NOUGAT}
     method ToLower: String; mapped to lowercaseString;
     method ToUpper: String; mapped to uppercaseString;
     {$ENDIF}
@@ -61,7 +61,7 @@ implementation
 
 class method String.FormatDotNet(aFormat: String; params aParams: array of Object): String;
 begin
-  {$IFDEF ECHOES}
+  {$IF ECHOES}
   result := System.String.Format(System.String(aFormat), aParams);
   {$ELSE}
   raise new SugarNotImplementedException();
@@ -70,7 +70,7 @@ end;
 
 class method String.FormatC(aFormat: String; params aParams: array of Object): String;
 begin
-  {$IFDEF NOUGAT}
+  {$IF NOUGAT}
   result := Foundation.NSString.stringWithFormat(aFormat, aParams);
   {$ELSE}
   raise new SugarNotImplementedException();
@@ -79,18 +79,18 @@ end;
 
 class operator String.Add(aStringA: String; aStringB: String): String;
 begin
-  {$IFDEF COOPER}
+  {$IF COOPER}
   result := java.lang.String(aStringA)+java.lang.String(aStringB);
   {$ENDIF}
-  {$IFDEF ECHOES}
+  {$IF ECHOES}
   result := System.String(aStringA)+System.String(aStringB);
   {$ENDIF}
-  {$IFDEF NOUGAT}
+  {$IF NOUGAT}
   result := Foundation.NSString(aStringA).stringByAppendingString(aStringB);
   {$ENDIF}
 end;
 
-{$IFDEF NOUGAT}
+{$IF NOUGAT}
 method String.NSMakeRange(loc: Int32; len: Int32): Foundation.NSRange;
 begin 
   result.location := loc;
@@ -110,13 +110,13 @@ end;
 
 method String.get_Chars(aIndex: Int32): Char;
 begin
-  {$IFDEF COOPER} // 59230: Improved IFDEF snytax
+  {$IF COOPER} // 59230: Improved IFDEF snytax
   result := mapped[AIndex];
   {$ENDIF}
-  {$IFDEF ECHOES}
+  {$IF ECHOES}
   result := mapped[aIndex];
   {$ENDIF}
-  {$IFDEF NOUGAT}
+  {$IF NOUGAT}
   result := mapped.characterAtIndex(aIndex);
   {$ENDIF}
 end;
