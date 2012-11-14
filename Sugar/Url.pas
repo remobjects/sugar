@@ -3,7 +3,8 @@
 interface
 
 type
-  {$IF COOPER}
+
+  {$IFDEF COOPER}
   Url = public class mapped to java.net.URL
   public
     property Scheme: String read mapped.Protocol;
@@ -15,7 +16,7 @@ type
     property AsString: String read mapped.toString;
   end;
   {$ENDIF}
-  {$IF ECHOES}
+  {$IFDEF ECHOES}
   Url = public class mapped to System.Uri
   public
     property Scheme: String read mapped.Scheme;
@@ -27,7 +28,7 @@ type
     property AsString: String read mapped.ToString;
   end;
   {$ENDIF}
-  {$IF NOUGAT}
+  {$IFDEF NOUGAT}
   Url = public class mapped to Foundation.NSURL
   public
     property Scheme: String read mapped.scheme;

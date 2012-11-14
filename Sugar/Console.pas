@@ -64,7 +64,7 @@ begin
   {$IFDEF ECHOES}
   result := Console.ReadLine;
   {$ENDIF}
-  {$IF NOUGAT}
+  {$IFDEF NOUGAT}
   //const MAX = 1024;
   var lBuffer: array[0..MAX] of Byte;
   //rtl.
