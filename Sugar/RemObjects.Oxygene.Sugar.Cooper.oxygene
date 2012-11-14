@@ -56,6 +56,7 @@
     <Compile Include="Exceptions.pas" />
     <Compile Include="List.pas" />
     <Compile Include="String.pas" />
+    <Compile Include="Url.pas" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Cooper" />

@@ -5,16 +5,9 @@ interface
 type
   Console = public static class
   private
+    class method getNewLine: String;
   public
-    {$IFDEF COOPER}
-    property NewLine: String read System.getProperty("line.separator");
-    {$ENDIF}
-    {$IFDEF ECHOES}
-    property NewLine: String read Environment.NewLine;
-    {$ENDIF}
-    {$IFDEF NOUGAT}
-    property NewLine: String read RemObjects.Oxygene.Sugar.String(#10); // for now
-    {$ENDIF}
+    property NewLine: String read getNewLine;
 
     method &Write(aString: String);
     method &Write(aString: String; params aParams: array of String);
@@ -22,7 +15,7 @@ type
     method WriteLine(aString: String; params aParams: array of String);
 
     method ReadLine: String;
-    method ReadKey: Char;
+    //method ReadKey: Char;
   end;
 
 implementation
@@ -62,6 +55,7 @@ begin
 end;
 
 method Console.ReadLine: String;
+const MAX = 1024;
 begin
   {$IFDEF COOPER}
   using br := new java.io.BufferedReader(new java.io.InputStreamReader(System.in)) do
@@ -70,9 +64,15 @@ begin
   {$IFDEF ECHOES}
   result := Console.ReadLine;
   {$ENDIF}
+  {$IF NOUGAT}
+  //const MAX = 1024;
+  var lBuffer: array[0..MAX] of Byte;
+  //rtl.
+  //fgets(lBuffer, MAX, stdin);
+  {$ENDIF}
 end;
 
-method Console.ReadKey: Char;
+(*method Console.ReadKey: Char;
 begin
   {$IFDEF COOPER}
   var lBuffer: array[0..0] of Byte;
@@ -84,6 +84,19 @@ begin
   {$ENDIF}
   {$IFDEF NOUGAT}
   //result := Char(getchar());
+  {$ENDIF}
+end;*)
+
+class method Console.getNewLine: String;
+begin
+  {$IFDEF COOPER}
+  result := System.getProperty("line.separator");
+  {$ENDIF}
+  {$IFDEF ECHOES}
+  result := Environment.NewLine;
+  {$ENDIF}
+  {$IFDEF NOUGAT}
+  result := RemObjects.Oxygene.Sugar.String(#10); // always constant on Mac and iOS anyways.
   {$ENDIF}
 end;
 
