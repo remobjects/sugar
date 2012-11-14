@@ -41,7 +41,7 @@ type
     method Substring(aStartIndex: Int32; aLength: Int32): String; mapped to Substring(aStartIndex, aLength);
     {$ENDIF}
     {$IFDEF NOUGAT}
-    //method Substring(aStartIndex: Int32; aLength: Int32): String; //59155: Nougat: support for methids with nameless parameters (foo:::)
+    method Substring(aStartIndex: Int32; aLength: Int32): String; //59155: Nougat: support for methids with nameless parameters (foo:::)
     {$ENDIF}
 
     {$IFDEF COOPER}
@@ -102,10 +102,10 @@ begin
   result := mapped.rangeOfString(aString).location;
 end;
 
-{method String.Substring(aStartIndex: Int32; aLength: Int32): String; //59155: Nougat: support for methids with nameless parameters (foo:::)
+method String.Substring(aStartIndex: Int32; aLength: Int32): String; //59155: Nougat: support for methids with nameless parameters (foo:::)
 begin
   result := mapped.substringWithRange(NSMakeRange(aStartIndex, aLength));
-end;}
+end;
 {$ENDIF}
 
 method String.get_Chars(aIndex: Int32): Char;
