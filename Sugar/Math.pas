@@ -27,7 +27,12 @@ type
     method Exp(d: Double): Double;
     method Floor(d: Double): Double;
     method IEEERemainder(x, y: Double): Double; 
+    method Log(a: Double): Double;
+    method Log10(a: Double): Double;
+    method Max(a,b: Double): Double;    
+    method Min(a,b: Double): Double;
     method Pow(x, y: Double): Double;
+    method Round(a: Double): Double;
     method Sin(x: Double): Double;
   {$ENDIF}
   end;
@@ -93,6 +98,31 @@ end;
 method Math.IEEERemainder(x,y: Double): Double;
 begin
   exit rtl.Math.remainder(x,y);   
+end;
+
+method Math.Log(a: Double): Double;
+begin
+  exit rtl.Math.log(a);   
+end;
+
+method Math.Log10(a: Double): Double;
+begin
+  exit rtl.Math.log10(a);   
+end;
+
+method Math.Max(a,b: Double): Double;
+begin
+  exit iif(a > b, a, b);   
+end;
+
+method Math.Min(a,b: Double): Double;
+begin
+  exit iif(a < b, a, b);   
+end;
+
+method Math.Round(a: Double): Double;
+begin
+  exit rtl.Math.round(a);   
 end;
 
 {$ENDIF}
