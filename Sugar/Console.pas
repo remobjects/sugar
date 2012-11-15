@@ -30,7 +30,7 @@ begin
   System.out.print(aString);
   {$ENDIF}
   {$IF ECHOES}
-  Console.WriteLine(aString);
+  System.Console.Write(aString);
   {$ENDIF}
   {$IF NOUGAT}
   printf('%s', Foundation.NSString(aString).cStringUsingEncoding(NSStringEncoding.NSUTF8StringEncoding));
@@ -62,7 +62,7 @@ begin
     result := br.readLine();
   {$ENDIF}
   {$IF ECHOES}
-  result := Console.ReadLine;
+  result := System.Console.ReadLine;
   {$ENDIF}
   {$IF NOUGAT}
   //const MAX = 1024;
