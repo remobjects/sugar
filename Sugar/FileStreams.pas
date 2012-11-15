@@ -1,6 +1,9 @@
-﻿namespace RemObjects.Oxygene.Sugar;
+﻿namespace RemObjects.Oxygene.Sugar.IO;
 
 interface
+
+uses
+  RemObjects.Oxygene.Sugar;
 
 type
 
