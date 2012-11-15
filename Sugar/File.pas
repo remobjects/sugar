@@ -39,9 +39,9 @@ implementation
 {$IF COOPER}
 class method File.AppendText(aFileName, aContents: String); 
 begin
-  var out := new java.io.FileWriter(aFileName, true);
-  out.write(aContents);
-  out.close();
+  var textFile := new java.io.FileWriter(aFileName, true);
+  textFile.write(aContents);
+  textFile.close();
 end;
 
 class method File.Copy(aOldFileName, aNewFileName: String; aOverwriteFile: Boolean);
