@@ -53,6 +53,7 @@
     <Compile Include="Console.pas" />
     <Compile Include="Dictionary.pas" />
     <Compile Include="Exceptions.pas" />
+    <Compile Include="File.pas" />
     <Compile Include="FileStreams.pas" />
     <Compile Include="List.pas" />
     <Compile Include="Math.pas" />
