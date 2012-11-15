@@ -9,6 +9,7 @@ type
   public
     class method AppendText(aFileName, aContents: String);  mapped to AppendAllText(aFileName, aContents);
     class method &Copy(aOldFileName, aNewFileName: String; aOverwriteFile: Boolean); mapped to &Copy(aOldFileName, aNewFileName, aOverwriteFile);
+    class method Delete(aFileName: String); mapped to Delete(aFileName);
   {$ENDIF}
   {$IF COOPER or Nougat}
   File = public class
