@@ -6,6 +6,8 @@ type
 
   {$IF COOPER}
   Math = public class mapped to java.lang.Math
+  public
+    method Ceiling(a: Double): Double; mapped to ceil(a);
   {$ENDIF}
   {$IF ECHOES}
   Math = public class mapped to System.Math
@@ -18,6 +20,13 @@ type
     method Abs(value: Double): Double;
     method Acos(d: Double): Double;
     method Asin(d: Double): Double;
+    method Atan(d: Double): Double;
+    method Atan2(x,y: Double): Double;
+    method Cos(d: Double): Double;
+    method Cosh(d: Double): Double;
+    method Exp(d: Double): Double;
+    method Floor(d: Double): Double;
+    method IEEERemainder(x, y: Double): Double; 
     method Pow(x, y: Double): Double;
     method Sin(x: Double): Double;
   {$ENDIF}
@@ -41,14 +50,49 @@ begin
   exit rtl.Math.acos(d);   
 end;
 
+method Math.Cos(d: Double): Double;
+begin
+  exit rtl.Math.cos(d);   
+end;
+
+method Math.Cosh(d: Double): Double;
+begin
+  exit rtl.Math.cosh(d);   
+end;
+
 method Math.Asin(d: Double): Double;
 begin
   exit rtl.Math.asin(d);   
 end;
 
+method Math.Atan(d: Double): Double;
+begin
+  exit rtl.Math.atan(d);   
+end;
+
+method Math.Atan2(x,y: Double): Double;
+begin
+  exit rtl.Math.atan2(x,y);   
+end;
+
 method Math.Abs(value: Double): Double;
 begin
   exit rtl.Math.fabs(value);   
+end;
+
+method Math.Exp(d: Double): Double;
+begin
+  exit rtl.Math.exp(d);   
+end;
+
+method Math.Floor(d: Double): Double;
+begin
+  exit rtl.Math.floor(d);   
+end;
+
+method Math.IEEERemainder(x,y: Double): Double;
+begin
+  exit rtl.Math.remainder(x,y);   
 end;
 
 {$ENDIF}
