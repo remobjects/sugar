@@ -35,6 +35,7 @@ type
     method Min(a,b: Double): Double;
     method Pow(x, y: Double): Double;
     method Round(a: Double): Double;
+    method RoundToInt(a: Double): Integer;
     method Sign(d: Double): Integer;
     method Sin(x: Double): Double;
     method Sinh(x: Double): Double;
@@ -133,6 +134,11 @@ end;
 method Math.Round(a: Double): Double;
 begin
   exit rtl.Math.round(a);   
+end;
+
+method Math.RoundToInt(a: Double): Integer;
+begin
+  exit Integer(rtl.Math.round(a));   
 end;
 
 method Math.Sin(x: Double): Double;
