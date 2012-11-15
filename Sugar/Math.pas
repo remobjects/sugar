@@ -9,6 +9,7 @@ type
   public
     method Ceiling(a: Double): Double; mapped to ceil(a);
     method Sign(d: Double): Integer;
+    method Truncate(d: Double): Double;
   {$ENDIF}
   {$IF ECHOES}
   Math = public class mapped to System.Math
@@ -39,10 +40,19 @@ type
     method Sinh(x: Double): Double;
     method Sqrt(d: Double): Double;
     method Tan(d: Double): Double;
+    method Tanh(d: Double): Double;
+    method Truncate(d: Double): Double;
   {$ENDIF}
   end;
 
 implementation
+
+{$IF COOPER}
+method Math.Truncate(d: Double): Double;
+begin
+  exit iif(d < 0, Mapped.ceil(d), Mapped.floor(d));
+end;
+{$ENDIF}
 
 {$IF NOUGAT}
 method Math.Pow(x, y: Double): Double;
@@ -143,6 +153,16 @@ end;
 method Math.Tan(d: Double): Double;
 begin
   exit rtl.Math.tan(d);  
+end;
+
+method Math.Tanh(d: Double): Double;
+begin
+  exit rtl.Math.tanh(d);  
+end;
+
+method Math.Truncate(d: Double): Double;
+begin
+  exit rtl.Math.trunc(d);  
 end;
 {$ENDIF}
 
