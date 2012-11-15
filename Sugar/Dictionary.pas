@@ -22,10 +22,13 @@ type
 
   {$IF NOUGAT}
   Dictionary<T,U> = public class mapped to Foundation.NSMutableDictionary
+  //where T is class, U is class
+  private
     method getValue(aKey: dynamic): dynamic; mapped to objectForKey(aKey);
-    // Generic mapped types aren't really well supported on Nougat YET
-    //method setValue(aKey: dynamic; aValue: dynamic): dynamic; mapped to setObject(aValue)forKey(aKey);
+    method setValue(aKey: dynamic; aValue: dynamic); mapped to setObject(aValue)forKey(aKey);
+  public
     //property Values[aKey: dynamic{T}]: dynamic{U} read getValue write setValue;
+    method ContainsKey(aKey: T): Boolean; 
   end;
   {$ENDIF}
   
@@ -43,6 +46,13 @@ begin
   while k.hasMoreElements() do
     yield k.nextElement();
 end;}
+{$ENDIF}
+
+{$IF NOUGAT}
+method Dictionary.ContainsKey(aKey: T): Boolean; 
+begin
+  //result := assigned(mapped.objectForKey(T));
+end;
 {$ENDIF}
 
 end.

@@ -25,7 +25,7 @@ type
     method &Read(aArray: array of Byte): Integer;
     method &Skip(aNumberOfBytes: Int64): Int64; 
   {$ENDIF}
-    class method CreateFromFile(aFileName: String): FileInputStream;
+    class method StreamFromFile(aFileName: String): FileInputStream;
   end;
 
 implementation
@@ -37,7 +37,7 @@ begin
   result := Mapped.Seek(aNumberOfBytes, System.IO.SeekOrigin.Current) - currPos;
 end;
 
-class method FileInputStream.CreateFromFile(aFileName: String): FileInputStream;
+class method FileInputStream.StreamFromFile(aFileName: String): FileInputStream;
 begin
   exit new FileInputStream(aFileName, System.IO.FileMode.Open);
 end;
@@ -59,14 +59,14 @@ begin
   raise new SugarNotImplementedException;
 end;
 
-class method FileInputStream.CreateFromFile(aFileName: String): FileInputStream;
+class method FileInputStream.StreamFromFile(aFileName: String): FileInputStream;
 begin
   raise new SugarNotImplementedException;
 end;
 {$ENDIF}
 
 {$IF COOPER}
-class method FileInputStream.CreateFromFile(aFileName: String): FileInputStream;
+class method FileInputStream.StreamFromFile(aFileName: String): FileInputStream;
 begin
   exit new FileInputStream(aFileName);
 end;
