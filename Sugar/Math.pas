@@ -8,6 +8,7 @@ type
   Math = public class mapped to java.lang.Math
   public
     method Ceiling(a: Double): Double; mapped to ceil(a);
+    method Sign(d: Double): Integer;
   {$ENDIF}
   {$IF ECHOES}
   Math = public class mapped to System.Math
@@ -33,7 +34,11 @@ type
     method Min(a,b: Double): Double;
     method Pow(x, y: Double): Double;
     method Round(a: Double): Double;
+    method Sign(d: Double): Integer;
     method Sin(x: Double): Double;
+    method Sinh(x: Double): Double;
+    method Sqrt(d: Double): Double;
+    method Tan(d: Double): Double;
   {$ENDIF}
   end;
 
@@ -43,11 +48,6 @@ implementation
 method Math.Pow(x, y: Double): Double;
 begin
   exit rtl.Math.pow(x,y);  
-end;
-
-method Math.Sin(x: Double): Double;
-begin
-  exit rtl.Math.sin(x);  
 end;
 
 method Math.Acos(d: Double): Double;
@@ -125,6 +125,34 @@ begin
   exit rtl.Math.round(a);   
 end;
 
+method Math.Sin(x: Double): Double;
+begin
+  exit rtl.Math.sin(x);  
+end;
+
+method Math.Sinh(x: Double): Double;
+begin
+  exit rtl.Math.sinh(x);  
+end;
+
+method Math.Sqrt(d: Double): Double;
+begin
+  exit rtl.Math.sqrt(d);  
+end;
+
+method Math.Tan(d: Double): Double;
+begin
+  exit rtl.Math.tan(d);  
+end;
+{$ENDIF}
+
+{$IF COOPER or NOUGAT}
+method Math.Sign(d: Double): Integer;
+begin
+  if d > 0 then exit 1;
+  if d < 0 then exit -1;
+  exit 0;
+end;
 {$ENDIF}
 
 end.
