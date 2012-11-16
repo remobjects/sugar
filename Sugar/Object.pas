@@ -7,17 +7,14 @@ type
   {$IF NOUGAT}
   Object = public class mapped to Foundation.NSObject
   public 
-    method ToString: String;
+    method ToString: String; mapped to description;
   end;
   {$ENDIF}
 
 implementation
 
 {$IF NOUGAT}
-method Object.ToString: String;
-begin
-  exit mapped.description;
-end;
+
 {$ENDIF}
 
 end.
