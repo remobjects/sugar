@@ -47,6 +47,9 @@
     <FutureHelperClassName />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="com.remobjects.oxygene.rtl.jar">
+      <HintPath>C:\Program Files (x86)\Embarcadero\Delphi Prism\Reference Archives\com.remobjects.oxygene.rtl.jar</HintPath>
+    </Reference>
     <Reference Include="rt.jar" />
   </ItemGroup>
   <ItemGroup>

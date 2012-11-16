@@ -15,6 +15,10 @@ type
     {$ENDIF}
   end;
 
+  SugarArgumentNullException = public class(SugarException);
+
+  SugarFormatException = public class(SugarException);
+
 implementation
 
 {$IF NOUGATx}
