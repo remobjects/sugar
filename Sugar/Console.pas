@@ -8,12 +8,10 @@ type
     class method getNewLine: String;
   public
     property NewLine: String read getNewLine;
-
     method &Write(aString: String);
     method &Write(aString: String; params aParams: array of String);
     method WriteLine(aString: String);
     method WriteLine(aString: String; params aParams: array of String);
-
     method ReadLine: String;
     //method ReadKey: Char;
   end;
@@ -39,19 +37,34 @@ end;
 
 method Console.WriteLine(aString: String);
 begin
-  &Write(aString);
-  &Write(NewLine);
+  {$IF COOPER}
+  System.out.println(aString);
+  {$ENDIF}
+  {$IF ECHOES}
+  System.Console.WriteLine(aString);
+  {$ENDIF}
+  {$IF NOUGAT}
+  self.Write(aString);
+  self.Write(NewLine);
+  {$ENDIF}
 end;
 
-method Console.&Write(aString: String; params aParams: array of String);
-begin
-  &Write(String.FormatDotNet(aString, aParams));
+method Console.Write(aString: String; params aParams: array of String);
+begin 
+  {$IF ECHOES}
+  self.Write(StringFormatter.FormatString(aString, aParams));
+  {$ELSE}
+  raise new SugarNotImplementedException();
+  {$ENDIF}
 end;
 
 class method Console.WriteLine(aString: String; params aParams: array of String);
-begin
-  &Write(String.FormatDotNet(aString, aParams));
-  &Write(NewLine);
+begin 
+  {$IF ECHOES}
+  self.WriteLine(StringFormatter.FormatString(aString, aParams));
+  {$ELSE}
+  raise new SugarNotImplementedException();
+  {$ENDIF}
 end;
 
 method Console.ReadLine: String;

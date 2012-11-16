@@ -21,11 +21,8 @@ type
     method get_Chars(aIndex: Int32): Char;
 
   public
-    class method FormatDotNet(aFormat: String; params aParams: array of Object): String;
-    class method FormatC(aFormat: String; params aParams: array of Object): String;
-
+    class method Format(aFormat: String; params aParams: array of Object): String;
     method Length: Int32; mapped to length;
-
     {$IFNDEF NOUGAT}
     method IndexOf(aString: String): Int32; mapped to IndexOf(aString);
     method Substring(aStartIndex: Int32): String; mapped to Substring(aStartIndex);
@@ -59,19 +56,10 @@ type
 
 implementation
 
-class method String.FormatDotNet(aFormat: String; params aParams: array of Object): String;
+class method String.Format(aFormat: String; params aParams: array of Object): String;
 begin
   {$IF ECHOES}
-  result := System.String.Format(System.String(aFormat), aParams);
-  {$ELSE}
-  raise new SugarNotImplementedException();
-  {$ENDIF}
-end;
-
-class method String.FormatC(aFormat: String; params aParams: array of Object): String;
-begin
-  {$IF NOUGAT}
-  result := Foundation.NSString.stringWithFormat(aFormat, aParams);
+  exit StringFormatter.FormatString(aFormat, aParams);
   {$ELSE}
   raise new SugarNotImplementedException();
   {$ENDIF}

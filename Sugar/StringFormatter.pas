@@ -47,14 +47,14 @@ type
     class method ParseDecimal(str: String; var ptr: Int32): Int32;
     class method ParseFormatSpecifier(str: String; var ptr: Int32; out n: Int32; out width: Int32; out left_align: Boolean; out format: String);
   assembly
-    class method FormatString(format: String; params args: array of Object): String;
+    class method FormatString(aFormat: String; params args: array of Object): String;
   end;
 
 implementation
 
-class method StringFormatter.FormatString(format: String; params args: array of Object): String;
+class method StringFormatter.FormatString(aFormat: String; params args: array of Object): String;
 begin
-  if format = nil then raise new SugarArgumentNullException('format');
+  if aFormat = nil then raise new SugarArgumentNullException('aFormat');
   if args = nil then raise new SugarArgumentNullException('args');
   var sb: StringBuilder;
   var i: Int32 := 0;
@@ -66,20 +66,20 @@ begin
     inc(i);
   end;   
   if i = args.Length then  
-    sb := new StringBuilder(len + format.Length)
+    sb := new StringBuilder(len + aFormat.Length)
   else      
     sb := new StringBuilder(); 
   var ptr: Int32 := 0;
   var start: Int32 := ptr;
-  while ptr < format.Length do 
+  while ptr < aFormat.Length do 
   begin
-    var c := format[ptr];
+    var c := aFormat[ptr];
     inc(ptr);
     if c = '{' then 
     begin
-      sb.Append(format, start, ptr - start - 1);
+      sb.Append(aFormat, start, ptr - start - 1);
       // check for escaped open bracket
-      if format[ptr] = '{' then 
+      if aFormat[ptr] = '{' then 
       begin
         start := ptr;
         inc(ptr);
@@ -90,7 +90,7 @@ begin
       var width: Int32;
       var left_align: Boolean;
       var arg_format: String;
-      ParseFormatSpecifier(format, var ptr, out n, out width, out left_align, out arg_format);
+      ParseFormatSpecifier(aFormat, var ptr, out n, out width, out left_align, out arg_format);
       if n >= args.Length then raise new SugarFormatException('Index (zero based) must be greater than or equal to zero and less than the size of the argument list.');
      // format argument
       var arg := args[n];
@@ -123,16 +123,16 @@ begin
     end
     else
     begin
-      if ((c = '}') and (ptr < format.Length)) then 
+      if ((c = '}') and (ptr < aFormat.Length)) then 
       begin
-        sb.Append(format, start, ptr - start - 1);
+        sb.Append(aFormat, start, ptr - start - 1);
         start := ptr;
         inc(ptr);
       end
       else if c = '}' then raise new SugarFormatException('Input string was not in a correct format.');
     end;
   end;
-  if start < format.Length then  sb.Append(format, start, format.Length - start);
+  if start < aFormat.Length then sb.Append(aFormat, start, aFormat.Length - start);
   exit sb.ToString();
 end;
 
