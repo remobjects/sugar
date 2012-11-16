@@ -57,6 +57,7 @@
     <Compile Include="FileStreams.pas" />
     <Compile Include="List.pas" />
     <Compile Include="Math.pas" />
+    <Compile Include="Object.pas" />
     <Compile Include="String.pas" />
     <Compile Include="StringBuilder.pas" />
     <Compile Include="Url.pas" />

@@ -9,9 +9,9 @@ type
   public
     property NewLine: String read getNewLine;
     method &Write(aString: String);
-    method &Write(aString: String; params aParams: array of String);
+    method &Write(aString: String; params aParams: array of Object);
     method WriteLine(aString: String);
-    method WriteLine(aString: String; params aParams: array of String);
+    method WriteLine(aString: String; params aParams: array of Object);
     method ReadLine: String;
     //method ReadKey: Char;
   end;
@@ -49,7 +49,7 @@ begin
   {$ENDIF}
 end;
 
-method Console.Write(aString: String; params aParams: array of String);
+method Console.Write(aString: String; params aParams: array of Object);
 begin 
   {$IF ECHOES}
   self.Write(StringFormatter.FormatString(aString, aParams));
@@ -58,7 +58,7 @@ begin
   {$ENDIF}
 end;
 
-class method Console.WriteLine(aString: String; params aParams: array of String);
+class method Console.WriteLine(aString: String; params aParams: array of Object);
 begin 
   {$IF ECHOES}
   self.WriteLine(StringFormatter.FormatString(aString, aParams));
