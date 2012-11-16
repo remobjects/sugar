@@ -44,8 +44,8 @@ type
 
   StringFormatter = assembly static class
   private   
-    class method ParseDecimal(str: String; var ptr: Int32): Int32;
-    class method ParseFormatSpecifier(str: String; var ptr: Int32; out n: Int32; out width: Int32; out left_align: Boolean; out format: String);
+    class method ParseDecimal(aString: String; var ptr: Int32): Int32;
+    class method ParseFormatSpecifier(aString: String; var ptr: Int32; out n: Int32; out width: Int32; out left_align: Boolean; out aFormat: String);
   assembly
     class method FormatString(aFormat: String; params args: array of Object): String;
   end;
@@ -136,55 +136,55 @@ begin
   exit sb.ToString();
 end;
 
-class method StringFormatter.ParseFormatSpecifier(str: String; var ptr: Int32; out n: Int32; out width: Int32; out left_align: Boolean; out format: String);
+class method StringFormatter.ParseFormatSpecifier(aString: String; var ptr: Int32; out n: Int32; out width: Int32; out left_align: Boolean; out aFormat: String);
 begin
-  var max := str.Length;
+  var max := aString.Length;
   // parses format specifier of form:
   //   N,[\ +[-]M][:F]}
   //
   // where:
   // N = argument number (non-negative integer)
-  n := ParseDecimal(str, var ptr);
+  n := ParseDecimal(aString, var ptr);
   if n < 0 then raise new SugarFormatException('Input string was not in a correct format.');
   // M = width (non-negative integer)
-  if (ptr < max) and (str[ptr] = ',') then 
+  if (ptr < max) and (aString[ptr] = ',') then 
   begin
     // White space between ',' and number or sign.
     inc(ptr);
-    while (ptr < max) and (Char.IsWhiteSpace(str[ptr])) do inc(ptr);
+    while (ptr < max) and (Char.IsWhiteSpace(aString[ptr])) do inc(ptr);
     var start := ptr;
-    format := str.Substring(start, ptr - start);
-    left_align := ((ptr < max) and (str[ptr] = '-'));
+    aFormat := aString.Substring(start, ptr - start);
+    left_align := ((ptr < max) and (aString[ptr] = '-'));
     if left_align then inc(ptr);
-    width := ParseDecimal(str, var ptr);
+    width := ParseDecimal(aString, var ptr);
     if width < 0 then raise new SugarFormatException('Input string was not in a correct format.')
   end
   else 
   begin
     width := 0;
     left_align := false;
-    format := "";
+    aFormat := "";
   end;
   // F = argument format (string)
-  if (ptr < max) and (str[ptr] = ':') then 
+  if (ptr < max) and (aString[ptr] = ':') then 
   begin
     var start := ptr;
     inc(ptr);
-    while (ptr < max) and (str[ptr] <> '}') do inc(ptr);
-    format := format + str.Substring(start, ptr - start)
+    while (ptr < max) and (aString[ptr] <> '}') do inc(ptr);
+    aFormat := aFormat + aString.Substring(start, ptr - start);
   end
-  else format := nil;
-  if ((ptr >= max)) or (str[ptr] <> '}') then raise new SugarFormatException('Input string was not in a correct format.');
+  else aFormat := nil;
+  if ((ptr >= max)) or (aString[ptr] <> '}') then raise new SugarFormatException('Input string was not in a correct format.');
 end;
 
-class method StringFormatter.ParseDecimal(str: String; var ptr: Int32): Int32;
+class method StringFormatter.ParseDecimal(aString: String; var ptr: Int32): Int32;
 begin
   var p:= ptr;
   var n: Int32 := 0;
-  var max := str.Length;
+  var max := aString.Length;
   while p < max do 
   begin
-    var c := str[p];
+    var c := aString[p];
     if (c < '0') or ('9' < c) then break;
     n := (n * 10) + ord(c) - ord('0');
     inc(p);

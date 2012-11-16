@@ -111,7 +111,7 @@ end;
 {$IF COOPER or ECHOES}
 class method Math.RoundToInt(a: Double): Integer;
 begin
-  exit Integer(mapped.round(a));
+  exit Integer(mapped.Round(a));
 end;
 {$ENDIF}
 
