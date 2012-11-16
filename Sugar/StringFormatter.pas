@@ -91,7 +91,7 @@ begin
       var left_align: Boolean;
       var arg_format: String;
       ParseFormatSpecifier(format, var ptr, out n, out width, out left_align, out arg_format);
-      if n >= args.Length then raise new FormatException('Index (zero based) must be greater than or equal to zero and less than the size of the argument list.');
+      if n >= args.Length then raise new SugarFormatException('Index (zero based) must be greater than or equal to zero and less than the size of the argument list.');
      // format argument
       var arg := args[n];
       var str: String;
@@ -145,7 +145,7 @@ begin
   // where:
   // N = argument number (non-negative integer)
   n := ParseDecimal(str, var ptr);
-  if n < 0 then raise new FormatException('Input string was not in a correct format.');
+  if n < 0 then raise new SugarFormatException('Input string was not in a correct format.');
   // M = width (non-negative integer)
   if (ptr < max) and (str[ptr] = ',') then 
   begin
@@ -157,7 +157,7 @@ begin
     left_align := ((ptr < max) and (str[ptr] = '-'));
     if left_align then inc(ptr);
     width := ParseDecimal(str, var ptr);
-    if width < 0 then raise new FormatException('Input string was not in a correct format.')
+    if width < 0 then raise new SugarFormatException('Input string was not in a correct format.')
   end
   else 
   begin
