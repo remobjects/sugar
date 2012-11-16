@@ -78,8 +78,9 @@ begin
   result := System.Console.ReadLine;
   {$ENDIF}
   {$IF NOUGAT}
+  raise new SugarNotImplementedException();
   //const MAX = 1024;
-  var lBuffer: array[0..MAX] of Byte;
+  //var lBuffer: array[0..MAX] of Byte;
   //rtl.
   //fgets(lBuffer, MAX, stdin);
   {$ENDIF}
