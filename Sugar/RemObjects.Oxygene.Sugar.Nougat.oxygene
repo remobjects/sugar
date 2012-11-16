@@ -32,7 +32,6 @@
     <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <Architecture>x86_64-apple-macosx</Architecture>
     <Optimize>True</Optimize>
     <OutputPath>.\bin\Release</OutputPath>
     <GenerateDebugInfo>False</GenerateDebugInfo>
@@ -48,6 +47,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Foundation.fx" />
+    <Reference Include="rtl.fx" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Console.pas" />
