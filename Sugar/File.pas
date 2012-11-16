@@ -16,9 +16,9 @@ type
     class method Delete(aFileName: String); mapped to Delete(aFileName);
     class method Exists(aFileName: String): Boolean; mapped to Exists(aFileName);
     class method Move(aOldFileName, aNewFileName: String); mapped to Move(aOldFileName, aNewFileName);
-    //class method ReadBytes(aFileName: String): Binary; mapped to ReadAllBytes(aFileName);
+    class method ReadBytes(aFileName: String): array of Byte; mapped to ReadAllBytes(aFileName);
     class method ReadText(aFileName: String): String; mapped to ReadAllText(aFileName);
-    //class method WriteBytes(aFileName: String; aData:Binary); mapped to WriteAllBytes(aFileName, aData);
+    class method WriteBytes(aFileName: String; aData:array of Byte); mapped to WriteAllBytes(aFileName, aData);
     class method WriteText(aFileName: String; aText: String); mapped to WriteAllText(aFileName, aText);
   {$ENDIF}
   {$IF COOPER or NOUGAT}
@@ -28,9 +28,9 @@ type
     class method Delete(aFileName: String);
     class method Exists(aFileName: String): Boolean; 
     class method Move(aOldFileName, aNewFileName: String);
-    class method ReadBytes(aFileName: String): Binary;
+    class method ReadBytes(aFileName: String): array of Byte;
     class method ReadText(aFileName: String): String;
-    class method WriteBytes(aFileName: String; aData: Binary);
+    class method WriteBytes(aFileName: String; aData: array of Byte);
     class method WriteText(aFileName: String; aText: String); 
   {$ENDIF}
   end;
@@ -65,7 +65,7 @@ begin
 
 end;
 
-class method File.ReadBytes(aFileName: String): Binary;
+class method File.ReadBytes(aFileName: String): array of Byte;
 begin
 
 end;
@@ -75,7 +75,7 @@ begin
 
 end;
 
-class method File.WriteBytes(aFileName: String; aData: Binary);
+class method File.WriteBytes(aFileName: String; aData: array of Byte);
 begin
 
 end;
@@ -89,12 +89,15 @@ end;
 {$IF NOUGAT}
 class method File.AppendText(aFileName, aContents: String); 
 begin
-
 end;
 
 class method File.Copy(aOldFileName, aNewFileName: String; aOverwriteFile: Boolean);
 begin
-
+  var lError: Foundation.NSError := nil;
+  //ToDo: handle aOverwriteFile
+  NSFileManager.defaultManager.copyItemAtPath(aOldFileName) toPath(aNewFileName) error(@lError);
+  if not assigned(lData) then 
+    raise SugarNSErrorException.exceptionWithError(lError); 
 end;
 
 class method File.Delete(aFileName: String);
@@ -112,15 +115,21 @@ end;
 
 class method File.Move(aOldFileName, aNewFileName: String);
 begin
-
+  var lError: Foundation.NSError := nil;
+  NSFileManager.defaultManager.moveItemAtPath(aOldFileName) toPath(aNewFileName) error(@lError);
+  if not assigned(lData) then 
+    raise SugarNSErrorException.exceptionWithError(lError); 
 end;
 
-class method File.ReadBytes(aFileName: String): Binary;
+class method File.ReadBytes(aFileName: String): array of Byte;
 begin
   var lError: Foundation.NSError := nil;
-  result := NSData.dataWithContentsOfFile(aFileName) options(NSDataReadingOptions.NSDataReadingMappedIfSafe) error(@lError);
-  if not assigned(result) then 
+  var lData := NSData.dataWithContentsOfFile(aFileName) options(NSDataReadingOptions.NSDataReadingMappedIfSafe) error(@lError);
+  if not assigned(lData) then 
     raise SugarNSErrorException.exceptionWithError(lError); 
+
+  result := new Byte[lData.length];
+  lData.getBytes(^Void(result)) length(lData.length);
 end;
 
 class method File.ReadText(aFileName: String): String;
@@ -131,10 +140,11 @@ begin
     raise SugarNSErrorException.exceptionWithError(lError); 
 end;
 
-class method File.WriteBytes(aFileName: String; aData: Binary);
+class method File.WriteBytes(aFileName: String; aData: array of Byte);
 begin
+  var lData := NSData.dataWithBytesNoCopy(^Void(aData)) length({length(aData)}1); // length(aData) doesnt compile yet
   // ToDo: should use colon once NRE issue is fixed
-  if not NSData(aData){:}.writeToFile(aFileName) atomically(true) then
+  if not lData{:}.writeToFile(aFileName) atomically(true) then
     raise NSException.exceptionWithName('NSData') reason('Failed to write NSData to file.') userInfo(nil); 
 end;
 
