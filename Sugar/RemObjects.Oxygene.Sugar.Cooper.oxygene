@@ -53,6 +53,7 @@
     <Reference Include="rt.jar" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Binary.pas" />
     <Compile Include="Console.pas" />
     <Compile Include="Cooper\EnumerationSequence.pas" />
     <Compile Include="Dictionary.pas" />

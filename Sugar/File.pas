@@ -16,9 +16,9 @@ type
     class method Delete(aFileName: String); mapped to Delete(aFileName);
     class method Exists(aFileName: String): Boolean; mapped to Exists(aFileName);
     class method Move(aOldFileName, aNewFileName: String); mapped to Move(aOldFileName, aNewFileName);
-    class method ReadBytes(aFileName: String): array of Byte; mapped to ReadAllBytes(aFileName);
+    //class method ReadBytes(aFileName: String): Binary; mapped to ReadAllBytes(aFileName);
     class method ReadText(aFileName: String): String; mapped to ReadAllText(aFileName);
-    class method WriteBytes(aFileName: String; aData: array of Byte); mapped to WriteAllBytes(aFileName, aData);
+    //class method WriteBytes(aFileName: String; aData:Binary); mapped to WriteAllBytes(aFileName, aData);
     class method WriteText(aFileName: String; aText: String); mapped to WriteAllText(aFileName, aText);
   {$ENDIF}
   {$IF COOPER or NOUGAT}
@@ -28,9 +28,9 @@ type
     class method Delete(aFileName: String);
     class method Exists(aFileName: String): Boolean; 
     class method Move(aOldFileName, aNewFileName: String);
-    class method ReadBytes(aFileName: String): array of Byte;
+    class method ReadBytes(aFileName: String): Binary;
     class method ReadText(aFileName: String): String;
-    class method WriteBytes(aFileName: String; aData: array of Byte);
+    class method WriteBytes(aFileName: String; aData: Binary);
     class method WriteText(aFileName: String; aText: String); 
   {$ENDIF}
   end;
@@ -65,7 +65,7 @@ begin
 
 end;
 
-class method File.ReadBytes(aFileName: String): array of Byte;
+class method File.ReadBytes(aFileName: String): Binary;
 begin
 
 end;
@@ -75,7 +75,7 @@ begin
 
 end;
 
-class method File.WriteBytes(aFileName: String; aData: array of Byte);
+class method File.WriteBytes(aFileName: String; aData: Binary);
 begin
 
 end;
@@ -99,13 +99,15 @@ end;
 
 class method File.Delete(aFileName: String);
 begin
-
+  var lError: Foundation.NSError := nil;
+  if not NSFileManager.defaultManager.removeItemAtPath(aFileName) error(@lError) then
+    raise SugarNSErrorException.exceptionWithError(lError); 
 end;
 
 class method File.Exists(aFileName: String): Boolean; 
 begin
   var lIsDirectory := false;
-  result := Foundation.NSFileManager.defaultManager.fileExistsAtPath(aFileName) isDirectory(@lIsDirectory) and not lIsDirectory
+  result := NSFileManager.defaultManager.fileExistsAtPath(aFileName) isDirectory(@lIsDirectory) and not lIsDirectory
 end;
 
 class method File.Move(aOldFileName, aNewFileName: String);
@@ -113,9 +115,12 @@ begin
 
 end;
 
-class method File.ReadBytes(aFileName: String): array of Byte;
+class method File.ReadBytes(aFileName: String): Binary;
 begin
-
+  var lError: Foundation.NSError := nil;
+  result := NSData.dataWithContentsOfFile(aFileName) options(NSDataReadingOptions.NSDataReadingMappedIfSafe) error(@lError);
+  if not assigned(result) then 
+    raise SugarNSErrorException.exceptionWithError(lError); 
 end;
 
 class method File.ReadText(aFileName: String): String;
@@ -126,14 +131,19 @@ begin
     raise SugarNSErrorException.exceptionWithError(lError); 
 end;
 
-class method File.WriteBytes(aFileName: String; aData: array of Byte);
+class method File.WriteBytes(aFileName: String; aData: Binary);
 begin
-
+  // ToDo: should use colon once NRE issue is fixed
+  if not NSData(aData){:}.writeToFile(aFileName) atomically(true) then
+    raise NSException.exceptionWithName('NSData') reason('Failed to write NSData to file.') userInfo(nil); 
 end;
 
 class method File.WriteText(aFileName: String; aText: String); 
 begin
-
+  var lError: Foundation.NSError := nil;
+  // ToDo: should use colon once NRE issue is fixed
+  if not NSString(aText){:}.writeToFile(aFileName) atomically(true) encoding(NSStringEncoding.NSUTF8StringEncoding) error(@lError) then
+    raise SugarNSErrorException.exceptionWithError(lError); 
 end;
 {$ENDIF}
 

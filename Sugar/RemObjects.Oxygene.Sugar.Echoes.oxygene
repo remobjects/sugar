@@ -69,6 +69,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Binary.pas" />
     <Compile Include="Console.pas" />
     <Compile Include="Dictionary.pas" />
     <Compile Include="Exceptions.pas" />
