@@ -101,6 +101,8 @@ type
 
 implementation
 
+{$HIDE W0}
+
 {$IF COOPER}
 class method Math.Truncate(d: Double): Double;
 begin

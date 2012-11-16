@@ -3,6 +3,7 @@
 interface
 
 uses
+  {$IFDEF NOUGAT}Foundation,{$ENDIF}
   RemObjects.Oxygene.Sugar;
 
 type
@@ -13,7 +14,7 @@ type
     class method AppendText(aFileName, aContents: String);  mapped to AppendAllText(aFileName, aContents);
     class method &Copy(aOldFileName, aNewFileName: String; aOverwriteFile: Boolean); mapped to &Copy(aOldFileName, aNewFileName, aOverwriteFile);
     class method Delete(aFileName: String); mapped to Delete(aFileName);
-    class method Exists(aFileName: String); mapped to Exists(aFileName);
+    class method Exists(aFileName: String): Boolean; mapped to Exists(aFileName);
     class method Move(aOldFileName, aNewFileName: String); mapped to Move(aOldFileName, aNewFileName);
     class method ReadBytes(aFileName: String): array of Byte; mapped to ReadAllBytes(aFileName);
     class method ReadText(aFileName: String): String; mapped to ReadAllText(aFileName);
@@ -25,7 +26,7 @@ type
     class method AppendText(aFileName, aContents: String); 
     class method &Copy(aOldFileName, aNewFileName: String; aOverwriteFile: Boolean);
     class method Delete(aFileName: String);
-    class method Exists(aFileName: String); 
+    class method Exists(aFileName: String): Boolean; 
     class method Move(aOldFileName, aNewFileName: String);
     class method ReadBytes(aFileName: String): array of Byte;
     class method ReadText(aFileName: String): String;
@@ -54,7 +55,7 @@ begin
 
 end;
 
-class method File.Exists(aFileName: String); 
+class method File.Exists(aFileName: String): Boolean; 
 begin
 
 end;
@@ -101,9 +102,10 @@ begin
 
 end;
 
-class method File.Exists(aFileName: String); 
+class method File.Exists(aFileName: String): Boolean; 
 begin
-
+  var lIsDirectory := false;
+  result := Foundation.NSFileManager.defaultManager.fileExistsAtPath(aFileName) isDirectory(@lIsDirectory) and not lIsDirectory
 end;
 
 class method File.Move(aOldFileName, aNewFileName: String);
@@ -118,7 +120,10 @@ end;
 
 class method File.ReadText(aFileName: String): String;
 begin
-
+  var lError: Foundation.NSError := nil;
+  result := Foundation.NSString.stringWithContentsOfFile(aFileName) encoding(NSStringEncoding.NSUTF8StringEncoding) error(@lError);
+  if not assigned(result) then 
+    raise SugarNSErrorException.exceptionWithError(lError); 
 end;
 
 class method File.WriteBytes(aFileName: String; aData: array of Byte);

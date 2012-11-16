@@ -19,6 +19,13 @@ type
 
   SugarFormatException = public class(SugarException);
 
+  {$IF NOUGAT}
+  SugarNSErrorException = public class(SugarException)
+  public
+    class method exceptionWithError(aError: Foundation.NSError): id;
+  end;
+  {$ENDIF}
+
 implementation
 
 {$IF NOUGATx}
@@ -27,4 +34,12 @@ begin
   result := inherited init;
 end;
 {$ENDIF}
+
+{$IF NOUGAT}
+class method SugarNSErrorException.exceptionWithError(aError: Foundation.NSError): id;
+begin
+  result := inherited exceptionWithName('NSError') reason(aError.description) userInfo(aError.userInfo);
+end;
+{$ENDIF}
+
 end.
