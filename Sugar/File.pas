@@ -112,8 +112,7 @@ class method File.Copy(aOldFileName, aNewFileName: String; aOverwriteFile: Boole
 begin
   var lError: Foundation.NSError := nil;
   //ToDo: handle aOverwriteFile
-  NSFileManager.defaultManager.copyItemAtPath(aOldFileName) toPath(aNewFileName) error(@lError);
-  if not assigned(lData) then 
+  if not (NSFileManager.defaultManager.copyItemAtPath(aOldFileName) toPath(aNewFileName) error(@lError)) then 
     raise SugarNSErrorException.exceptionWithError(lError); 
 end;
 
@@ -133,8 +132,7 @@ end;
 class method File.Move(aOldFileName, aNewFileName: String);
 begin
   var lError: Foundation.NSError := nil;
-  NSFileManager.defaultManager.moveItemAtPath(aOldFileName) toPath(aNewFileName) error(@lError);
-  if not assigned(lData) then 
+  if not NSFileManager.defaultManager.moveItemAtPath(aOldFileName) toPath(aNewFileName) error(@lError) then
     raise SugarNSErrorException.exceptionWithError(lError); 
 end;
 
@@ -159,7 +157,7 @@ end;
 
 class method File.WriteBytes(aFileName: String; aData: array of Byte);
 begin
-  var lData := NSData.dataWithBytesNoCopy(^Void(aData)) length({length(aData)}1); // length(aData) doesnt compile yet
+  var lData := NSData.dataWithBytesNoCopy(^Void(aData)) length(length(aData));
   // ToDo: should use colon once NRE issue is fixed
   if not lData{:}.writeToFile(aFileName) atomically(true) then
     raise NSException.exceptionWithName('NSData') reason('Failed to write NSData to file.') userInfo(nil); 
