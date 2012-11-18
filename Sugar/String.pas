@@ -7,11 +7,9 @@ interface
 type
   {$IF COOPER}
   String = public class mapped to java.lang.String
-  {$ENDIF}
-  {$IF ECHOES}
+  {$ELSEIF ECHOES}
   String = public class mapped to System.String
-  {$ENDIF}
-  {$IF NOUGAT}
+  {$ELSEIF NOUGAT}
   String = public class mapped to Foundation.NSString
   {$ENDIF}
   private
@@ -21,44 +19,47 @@ type
     method get_Chars(aIndex: Int32): Char;
 
   public
+    property Length: Int32 read mapped.length;
+    property Chars[aIndex: Int32]: Char read get_Chars; default;
+
     class method Format(aFormat: String; params aParams: array of Object): String;
-    method Length: Int32; mapped to length;
-    {$IFNDEF NOUGAT}
+    class operator Add(aStringA: String; aStringB: String): String;
+
+    {$IF ECHOES OR COOPER}
     method IndexOf(aString: String): Int32; mapped to IndexOf(aString);
-    method Substring(aStartIndex: Int32): String; mapped to Substring(aStartIndex);
-    {$ELSE}
+    {$ELSEIF NOUGAT}
     method IndexOf(aString: String): Int32;
-    method Substring(aStartIndex: Int32): String; mapped to substringFromIndex(aStartIndex);
     {$ENDIF}
 
     {$IF COOPER}
+    method Substring(aStartIndex: Int32): String;                 mapped to Substring(aStartIndex);
     method Substring(aStartIndex: Int32; aLength: Int32): String; mapped to Substring(aStartIndex, aStartIndex+aLength);
-    {$ENDIF}
-    {$IF ECHOES}
+    {$ELSEIF ECHOES}
+    method Substring(aStartIndex: Int32): String;                 mapped to Substring(aStartIndex);
     method Substring(aStartIndex: Int32; aLength: Int32): String; mapped to Substring(aStartIndex, aLength);
-    {$ENDIF}
-    {$IF NOUGAT}
-    method Substring(aStartIndex: Int32; aLength: Int32): String; //59155: Nougat: support for methids with nameless parameters (foo:::)
+    {$ELSEIF NOUGAT}
+    method Substring(aStartIndex: Int32): String;                 mapped to substringFromIndex(aStartIndex);
+    method Substring(aStartIndex: Int32; aLength: Int32): String; 
     {$ENDIF}
 
     {$IF COOPER}
     method ToLower: String; mapped to toLowerCase;
     method ToUpper: String; mapped to toUpperCase;
-    {$ENDIF}
-    {$IF NOUGAT}
+    {$ELSEIF ECHOES}
+    method ToLower: String; mapped to ToLower;
+    method ToUpper: String; mapped to ToUpper;
+    {$ELSEIF NOUGAT}
     method ToLower: String; mapped to lowercaseString;
     method ToUpper: String; mapped to uppercaseString;
     {$ENDIF}
 
-    property Chars[aIndex: Int32]: Char read get_Chars; default;
-    class operator Add(aStringA: String; aStringB: String): String;
   end;
 
 implementation
 
 class method String.Format(aFormat: String; params aParams: array of Object): String;
 begin
-  {$IF ECHOES}
+  {$IF ECHOES OR NOUGAT}
   exit StringFormatter.FormatString(aFormat, aParams);
   {$ELSE}
   raise new SugarNotImplementedException();
