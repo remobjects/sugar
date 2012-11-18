@@ -56,19 +56,7 @@ class method StringFormatter.FormatString(aFormat: String; params args: array of
 begin
   if aFormat = nil then raise new SugarArgumentNullException('aFormat');
   if args = nil then raise new SugarArgumentNullException('args');
-  var sb: StringBuilder;
-  var i: Int32 := 0;
-  var len: Int32 := 0;
-  for each arg in args do
-  begin
-    var s := arg.ToString();
-    if assigned(s) then len := len + s.Length else break;
-    inc(i);
-  end;   
-  if i = args.Length then  
-    sb := new StringBuilder(len + aFormat.Length)
-  else      
-    sb := new StringBuilder(); 
+  var sb := new StringBuilder(); 
   var ptr: Int32 := 0;
   var start: Int32 := ptr;
   while ptr < aFormat.Length do 
