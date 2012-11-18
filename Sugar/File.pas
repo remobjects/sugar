@@ -40,14 +40,23 @@ implementation
 {$IF COOPER}
 class method File.AppendText(aFileName, aContents: String); 
 begin
-  var textFile := new java.io.FileWriter(aFileName, true);
-  textFile.write(aContents);
-  textFile.close();
+  var textFile: java.io.FileWriter;
+  try
+    textFile := new java.io.FileWriter(aFileName, true);
+    textFile.write(aContents);
+  finally
+    textFile.close();
+  end;
 end;
 
 class method File.Copy(aOldFileName, aNewFileName: String; aOverwriteFile: Boolean);
 begin
-
+  var source := new java.io.File(aOldFileName);
+  var dest := new java.io.File(aNewFileName);
+  if aOverwriteFile then
+    java.nio.file.Files.copy(source.toPath(), dest.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING)
+  else
+    java.nio.file.Files.copy(source.toPath(), dest.toPath());
 end;
 
 class method File.Delete(aFileName: String);
@@ -82,7 +91,13 @@ end;
 
 class method File.WriteText(aFileName: String; aText: String); 
 begin
-
+  var textFile: java.io.FileWriter;
+  try
+    textFile := new java.io.FileWriter(aFileName, false);
+    textFile.write(aText);
+  finally
+    textFile.close();
+  end;
 end;
 {$ENDIF}
 
