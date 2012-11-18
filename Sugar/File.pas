@@ -93,7 +93,20 @@ end;
 
 class method File.ReadText(aFileName: String): String;
 begin
-
+  var file:= new java.io.File(aFileName);
+  var fileContents := new java.lang.StringBuilder(Integer(file.length()));
+  var scanner := new java.util.Scanner(file);
+  var lineSeparator := System.getProperty('line.separator');
+  try
+    while scanner.hasNextLine() do 
+    begin  
+      fileContents.append(scanner.nextLine());
+      fileContents.append(lineSeparator);
+    end;
+    exit fileContents.toString();
+  finally
+    scanner.close();
+  end;
 end;
 
 class method File.WriteBytes(aFileName: String; aData: array of Byte);
