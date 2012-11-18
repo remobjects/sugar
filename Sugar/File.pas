@@ -141,7 +141,7 @@ class method File.Copy(aOldFileName, aNewFileName: String; aOverwriteFile: Boole
 begin
   var lError: Foundation.NSError := nil;
   //ToDo: handle aOverwriteFile
-  if not (NSFileManager.defaultManager.copyItemAtPath(aOldFileName) toPath(aNewFileName) error(@lError)) then 
+  //if not NSFileManager.defaultManager.copyItemAtPath(aOldFileName) toPath(aNewFileName) error(@lError) then  //59444: Nougat: weird error with "not" 
     raise SugarNSErrorException.exceptionWithError(lError); 
 end;
 
