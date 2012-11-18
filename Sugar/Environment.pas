@@ -11,6 +11,8 @@ type
     class property UserName: String read mapped.getProperty("user.name");
     class property OperatingSystemName: String read  mapped.getProperty("os.name");
     class property OperatingSystemVersion: String read mapped.getProperty("os.version");
+    class property TargetPlatform: TargetPlatform read TargetPlatform.JVM;
+    class property TargetPlatformAsString: String read 'Java VM';
     class method GetEnvironmentVariable(aVariableName: String): String; mapped to getenv(aVariableName);
   {$ENDIF}
   {$IF ECHOES}
@@ -20,6 +22,8 @@ type
     class property UserName: String read mapped.UserName;
     class property OperatingSystemName: String read  mapped.OSVersion.Platform.ToString();
     class property OperatingSystemVersion: String read mapped.OSVersion.Version.ToString();
+    class property TargetPlatform: TargetPlatform read TargetPlatform.DotNet;
+    class property TargetPlatformAsString: String read '.NET/MONO';
     class method GetEnvironmentVariable(aVariableName: String): String; mapped to GetEnvironmentVariable(aVariableName);
   {$ENDIF}
   {$IF NOUGAT}
@@ -29,9 +33,13 @@ type
     class property UserName: String read Foundation.NSUserName();
     class property OperatingSystemName: String read ""; //todo
     class property OperatingSystemVersion: String read ""; //todo
+    class property TargetPlatform: TargetPlatform read TargetPlatform.Apple;
+    class property TargetPlatformAsString: String read 'Apple';
     class method GetEnvironmentVariable(aVariableName: String): String;
   {$ENDIF}
   end;
+
+  TargetPlatform = public enum(DotNet, JVM, Apple);
 
 implementation
 
