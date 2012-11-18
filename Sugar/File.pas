@@ -111,7 +111,13 @@ end;
 
 class method File.WriteBytes(aFileName: String; aData: array of Byte);
 begin
-
+  var fos: java.io.FileOutputStream;
+  try
+    fos := new java.io.FileOutputStream(aFileName);
+    fos.write(aData);
+  finally
+    fos.close();
+  end;
 end;
 
 class method File.WriteText(aFileName: String; aText: String); 
