@@ -28,6 +28,7 @@ type
     method Append(value: String): StringBuilder;
     method AppendLine(): StringBuilder; 
     method AppendLine(value: String): StringBuilder; 
+    method ToString(): String;
   {$ENDIF}
   end;
 
@@ -69,6 +70,11 @@ begin
   mapped.appendString(value);
   mapped.appendString(Environment.NewLine);
   exit mapped;
+end;
+
+method StringBuilder.ToString(): String;
+begin
+  exit Foundation.NSString.stringWithString(mapped);
 end;
 {$ENDIF}
 
