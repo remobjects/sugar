@@ -61,12 +61,14 @@ end;
 
 class method File.Delete(aFileName: String);
 begin
-
+  var f := new java.io.File(aFileName);
+  f.delete();
 end;
 
 class method File.Exists(aFileName: String): Boolean; 
 begin
-
+  var f := new java.io.File(aFileName);
+  exit f.exists();
 end;
 
 class method File.Move(aOldFileName, aNewFileName: String);
