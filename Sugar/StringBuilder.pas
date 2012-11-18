@@ -26,6 +26,8 @@ type
   StringBuilder = public class mapped to Foundation.NSMutableString
   public
     method Append(value: String): StringBuilder;
+    method AppendLine(): StringBuilder; 
+    method AppendLine(value: String): StringBuilder; 
   {$ENDIF}
   end;
 
@@ -53,6 +55,19 @@ end;
 method StringBuilder.Append(value: String): StringBuilder;
 begin
   mapped.appendString(value);
+  exit mapped;
+end;
+
+method StringBuilder.AppendLine(): StringBuilder;
+begin
+  mapped.appendString(Environment.NewLine);
+  exit mapped;
+end;
+
+method StringBuilder.AppendLine(value: String): StringBuilder;
+begin
+  mapped.appendString(value);
+  mapped.appendString(Environment.NewLine);
   exit mapped;
 end;
 {$ENDIF}
