@@ -80,7 +80,15 @@ end;
 
 class method File.ReadBytes(aFileName: String): array of Byte;
 begin
-
+  var f := new java.io.File(aFileName);
+  result := new Byte[Integer(f.length())];
+  var dis: java.io.DataInputStream;
+  try
+    dis := new java.io.DataInputStream(new java.io.FileInputStream(f));
+    dis.readFully(result);
+  finally
+    dis.close();
+  end;
 end;
 
 class method File.ReadText(aFileName: String): String;
