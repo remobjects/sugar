@@ -59,7 +59,7 @@ implementation
 
 class method String.Format(aFormat: String; params aParams: array of Object): String;
 begin
-  {$IF ECHOES OR NOUGAT}
+  {$IF ECHOES}
   exit StringFormatter.FormatString(aFormat, aParams);
   {$ELSE}
   raise new SugarNotImplementedException();

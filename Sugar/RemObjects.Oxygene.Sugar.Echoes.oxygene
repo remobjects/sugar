@@ -78,6 +78,7 @@
     <Compile Include="FileStreams.pas" />
     <Compile Include="List.pas" />
     <Compile Include="Math.pas" />
+    <Compile Include="Path.pas" />
     <Compile Include="Properties\AssemblyInfo.pas" />
     <Compile Include="String.pas" />
     <Compile Include="StringBuilder.pas" />

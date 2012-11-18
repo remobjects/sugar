@@ -174,7 +174,7 @@ begin
     aFormat := aFormat + aString.Substring(start, ptr - start);
   end
   else aFormat := nil;
-  if ((ptr >= max)) or (aString[ptr] <> '}') then raise new SugarFormatException('Input string was not in a correct format.');
+  if ((ptr >= max)) or (aString[ptr] <> '}') then raise new SugarFormatException('Input string was not in a correct format.'); 
 end;
 
 class method StringFormatter.ParseDecimal(aString: String; var ptr: Int32): Int32;
@@ -191,7 +191,7 @@ begin
   end;
   if (p = ptr) or (p = max) then  exit -1;
   ptr := p;
-  exit n
+  exit n;
 end;
 
 

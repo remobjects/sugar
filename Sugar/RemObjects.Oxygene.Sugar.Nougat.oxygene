@@ -60,6 +60,7 @@
     <Compile Include="List.pas" />
     <Compile Include="Math.pas" />
     <Compile Include="Object.pas" />
+    <Compile Include="Path.pas" />
     <Compile Include="String.pas" />
     <Compile Include="StringBuilder.pas" />
     <Compile Include="Url.pas" />
