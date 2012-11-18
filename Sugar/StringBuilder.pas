@@ -10,6 +10,7 @@ type
     method Append(value: String): StringBuilder; mapped to append(value);
     method Append(value: String; startIndex, count: Integer): StringBuilder; mapped to append(value, startIndex, count);
     method Append(value: Char; repeatCount: Integer): StringBuilder;
+    method AppendLine(): StringBuilder;
   {$ENDIF}
   {$IF ECHOES}
   StringBuilder = public class mapped to System.Text.StringBuilder
@@ -17,6 +18,7 @@ type
     method Append(value: String): StringBuilder; mapped to Append(value);
     method Append(value: String; startIndex, count: Integer): StringBuilder; mapped to Append(value, startIndex, count);
     method Append(value: Char; repeatCount: Integer): StringBuilder; mapped to Append(value, repeatCount);
+    method AppendLine(): StringBuilder; mapped to AppendLine();
   {$ENDIF}
   {$IF NOUGAT}
   StringBuilder = public class mapped to Foundation.NSMutableString
@@ -31,6 +33,11 @@ implementation
 method StringBuilder.Append(value: Char; repeatCount: Integer): StringBuilder;
 begin
   for i: Int32 := 1 to repeatCount do mapped.append(value);
+end;
+
+method StringBuilder.AppendLine(): StringBuilder;
+begin
+  mapped.append(Environment.NewLine);
 end;
 {$ENDIF}
 

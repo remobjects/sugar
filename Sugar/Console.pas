@@ -4,10 +4,7 @@ interface
 
 type
   Console = public static class
-  private
-    class method getNewLine: String;
   public
-    property NewLine: String read getNewLine;
     method &Write(aString: String);
     method &Write(aString: String; params aParams: array of Object);
     method WriteLine(aString: String);
@@ -45,7 +42,7 @@ begin
   {$ENDIF}
   {$IF NOUGAT}
   self.Write(aString);
-  self.Write(NewLine);
+  self.Write(Environment.NewLine);
   {$ENDIF}
 end;
 
@@ -100,18 +97,5 @@ begin
   //result := Char(getchar());
   {$ENDIF}
 end;*)
-
-class method Console.getNewLine: String;
-begin
-  {$IF COOPER}
-  result := System.getProperty("line.separator");
-  {$ENDIF}
-  {$IF ECHOES}
-  result := Environment.NewLine;
-  {$ENDIF}
-  {$IF NOUGAT}
-  result := RemObjects.Oxygene.Sugar.String(#10); // always constant on Mac and iOS anyways.
-  {$ENDIF}
-end;
 
 end.
