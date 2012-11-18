@@ -73,7 +73,9 @@ end;
 
 class method File.Move(aOldFileName, aNewFileName: String);
 begin
-
+  var source := new java.io.File(aOldFileName);
+  var dest := new java.io.File(aNewFileName);
+  java.nio.file.Files.move(source.toPath(), dest.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING)
 end;
 
 class method File.ReadBytes(aFileName: String): array of Byte;
