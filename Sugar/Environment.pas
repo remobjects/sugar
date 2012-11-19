@@ -46,7 +46,7 @@ implementation
 {$IF NOUGAT}
 class method Environment.GetEnvironmentVariable(aVariableName: String): String;
 begin
-// [[[NSProcessInfo processInfo] environment] objectForKey:@"MY_SRC_DIR"] //todo translate to Oxygene
+  Foundation.NSProcessInfo.processInfo:environment:objectForKey(aVariableName);
 end;
 {$ENDIF}
 

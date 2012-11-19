@@ -6,7 +6,7 @@ type
   SugarException = public class({$IF NOUGAT}Foundation.NSException{$ELSE}Exception{$ENDIF})
   {$IF NOUGAT}
   public
-    method init(aMessage String): RemObjects.Oxygene.System.id; override;
+    method init(aMessage: String): RemObjects.Oxygene.System.id;
   {$ENDIF}
   end;
 
@@ -33,7 +33,7 @@ type
 implementation
 
 {$IF NOUGAT}
-method SugarException.init(aMessage String): RemObjects.Oxygene.System.id; override;
+method SugarException.init(aMessage: String): RemObjects.Oxygene.System.id;
 begin
   result := inherited initWithName('SugarException') reason(aMessage) userInfo(nil);
 end;
