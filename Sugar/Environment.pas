@@ -10,8 +10,8 @@ type
     class property UserName: String read mapped.getProperty("user.name");
     class property OperatingSystemName: String read  mapped.getProperty("os.name");
     class property OperatingSystemVersion: String read mapped.getProperty("os.version");
-    class property TargetPlatform: TargetPlatform read TargetPlatform.JVM;
-    class property TargetPlatformAsString: String read 'Java VM';
+    class property TargetPlatform: TargetPlatform read TargetPlatform.Java;
+    class property TargetPlatforName: String read 'Java';
     class method GetEnvironmentVariable(aVariableName: String): String; mapped to getenv(aVariableName);
   {$ELSEIF ECHOES}
   Environment = public class mapped to System.Environment
@@ -20,8 +20,9 @@ type
     class property UserName: String read mapped.UserName;
     class property OperatingSystemName: String read  mapped.OSVersion.Platform.ToString();
     class property OperatingSystemVersion: String read mapped.OSVersion.Version.ToString();
-    class property TargetPlatform: TargetPlatform read TargetPlatform.DotNet;
-    class property TargetPlatformAsString: String read '.NET/MONO';
+    class property TargetPlatform: TargetPlatform read TargetPlatform.Net;
+    class property TargetPlatforName: String read '.NET';
+    class property IsMono: Boolean read assigned(&Type.GetType('Mono.Runtime'));
     class method GetEnvironmentVariable(aVariableName: String): String; mapped to GetEnvironmentVariable(aVariableName);
   {$ELSEIF NOUGAT}
   Environment = public class
@@ -33,13 +34,13 @@ type
     class property UserName: String read Foundation.NSUserName();
     class property OperatingSystemName: String read getOperatingSystemName;
     class property OperatingSystemVersion: String read getOperatingSystemVersion; //todo
-    class property TargetPlatform: TargetPlatform read TargetPlatform.Apple;
-    class property TargetPlatformAsString: String read 'Apple';
+    class property TargetPlatform: TargetPlatform read TargetPlatform.Cocoa;
+    class property TargetPlatforName: String read 'Cocoa';
     class method GetEnvironmentVariable(aVariableName: String): String;
   {$ENDIF}
   end;
 
-  TargetPlatform = public enum(DotNet, JVM, Apple);
+  TargetPlatform = public enum(Net, Java, Cocoa);
 
 implementation
 
