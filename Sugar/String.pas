@@ -92,7 +92,7 @@ begin
 //  result := java.lang.String(aStringA)+java.lang.String(aStringB);
   {$ENDIF}
   {$IF ECHOES}
-  result := aChar.IsWhiteSpace;
+  result := Char.IsWhiteSpace(aChar);
   {$ENDIF}
   {$IF NOUGAT}
   result := Foundation.NSCharacterSet.whitespaceAndNewlineCharacterSet.characterIsMember(aChar);
