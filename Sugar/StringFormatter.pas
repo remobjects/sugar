@@ -52,6 +52,11 @@ type
 
 implementation
 
+{$IF NOUGAT}
+uses
+  Foundation; // 59476: Nougat: mapping fails if namespace for mapped methid isn't used
+{$ENDIF}
+
 class method StringFormatter.FormatString(aFormat: String; params args: array of Object): String;
 begin
   if aFormat = nil then raise new SugarArgumentNullException('aFormat');
@@ -139,7 +144,7 @@ begin
   begin
     // White space between ',' and number or sign.
     inc(ptr);
-    while (ptr < max) and (Char.IsWhiteSpace(aString[ptr])) do inc(ptr);
+    while (ptr < max) and (String.CharacterIsWhiteSpace(aString[ptr])) do inc(ptr);
     var start := ptr;
     aFormat := aString.Substring(start, ptr - start);
     left_align := ((ptr < max) and (aString[ptr] = '-'));

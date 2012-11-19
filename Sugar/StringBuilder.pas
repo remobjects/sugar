@@ -26,6 +26,8 @@ type
   StringBuilder = public class mapped to Foundation.NSMutableString
   public
     method Append(value: String): StringBuilder;
+    method Append(value: String; startIndex, count: Integer): StringBuilder;
+    method Append(value: Char; repeatCount: Integer): StringBuilder;
     method AppendLine(): StringBuilder; 
     method AppendLine(value: String): StringBuilder; 
     method ToString(): String;
@@ -59,6 +61,20 @@ end;
 method StringBuilder.Append(value: String): StringBuilder;
 begin
   mapped.appendString(value);
+  exit mapped;
+end;
+
+method StringBuilder.Append(value: Char; repeatCount: Integer): StringBuilder;
+begin
+  for i: Int32 := 1 to repeatCount do
+    mapped.appendString(value);
+  exit mapped;
+end;
+
+method StringBuilder.Append(value: String; startIndex: Integer; count: Integer): StringBuilder;
+begin
+  //Append(value.Substring(startIndex, count)); // 59477: Nougat: Compiler NRE on nested mapped call
+  mapped.appendString(value.Substring(startIndex, count));
   exit mapped;
 end;
 

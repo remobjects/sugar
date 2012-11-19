@@ -25,6 +25,8 @@ type
     class method Format(aFormat: String; params aParams: array of Object): String;
     class operator Add(aStringA: String; aStringB: String): String;
 
+    class method CharacterIsWhiteSpace(aChar: Char): Boolean;
+
     {$IF ECHOES OR COOPER}
     method IndexOf(aString: String): Int32; mapped to IndexOf(aString);
     {$ELSEIF NOUGAT}
@@ -57,6 +59,11 @@ type
 
 implementation
 
+{$IF NOUGAT}
+uses
+  Foundation;
+{$ENDIF}
+
 class method String.Format(aFormat: String; params aParams: array of Object): String;
 begin
   {$IF ECHOES}
@@ -78,6 +85,20 @@ begin
   result := Foundation.NSString(aStringA).stringByAppendingString(aStringB);
   {$ENDIF}
 end;
+
+class method String.CharacterIsWhiteSpace(aChar: Char): Boolean;
+begin
+  {$IF COOPER}
+//  result := java.lang.String(aStringA)+java.lang.String(aStringB);
+  {$ENDIF}
+  {$IF ECHOES}
+  result := aChar.IsWhiteSpace;
+  {$ENDIF}
+  {$IF NOUGAT}
+  result := Foundation.NSCharacterSet.whitespaceAndNewlineCharacterSet.characterIsMember(aChar);
+  {$ENDIF}
+end;
+
 
 {$IF NOUGAT}
 method String.NSMakeRange(loc: Int32; len: Int32): Foundation.NSRange;

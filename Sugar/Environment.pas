@@ -3,7 +3,6 @@
 interface
 
 type
- 
   {$IF COOPER}
   Environment = public class mapped to System
   public 
@@ -14,8 +13,7 @@ type
     class property TargetPlatform: TargetPlatform read TargetPlatform.JVM;
     class property TargetPlatformAsString: String read 'Java VM';
     class method GetEnvironmentVariable(aVariableName: String): String; mapped to getenv(aVariableName);
-  {$ENDIF}
-  {$IF ECHOES}
+  {$ELSEIF ECHOES}
   Environment = public class mapped to System.Environment
   public
     class property NewLine: String read mapped.NewLine;
@@ -25,8 +23,7 @@ type
     class property TargetPlatform: TargetPlatform read TargetPlatform.DotNet;
     class property TargetPlatformAsString: String read '.NET/MONO';
     class method GetEnvironmentVariable(aVariableName: String): String; mapped to GetEnvironmentVariable(aVariableName);
-  {$ENDIF}
-  {$IF NOUGAT}
+  {$ELSEIF NOUGAT}
   Environment = public class
   private
     class method getOperatingSystemVersion: String;
