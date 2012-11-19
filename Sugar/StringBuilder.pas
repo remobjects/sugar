@@ -38,17 +38,20 @@ implementation
 method StringBuilder.Append(value: Char; repeatCount: Integer): StringBuilder;
 begin
   for i: Int32 := 1 to repeatCount do mapped.append(value);
+  exit mapped;
 end;
 
 method StringBuilder.AppendLine(): StringBuilder;
 begin
   mapped.append(Environment.NewLine);
+  exit mapped;
 end;
 
 method StringBuilder.AppendLine(value: String): StringBuilder;
 begin
   mapped.append(value);
   mapped.append(Environment.NewLine);
+  exit mapped;
 end;
 {$ENDIF}
 
