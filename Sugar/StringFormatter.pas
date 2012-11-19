@@ -79,7 +79,7 @@ begin
       var left_align: Boolean;
       var arg_format: String;
       ParseFormatSpecifier(aFormat, var ptr, out n, out width, out left_align, out arg_format);
-      if n >= args.Length then raise new SugarFormatException('Index (zero based) must be greater than or equal to zero and less than the size of the argument list.');
+      if n >= length(args) then raise new SugarFormatException('Index (zero based) must be greater than or equal to zero and less than the size of the argument list.');
      // format argument
       var arg := args[n];
       var str: String;
