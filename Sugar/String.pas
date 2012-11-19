@@ -89,7 +89,7 @@ end;
 class method String.CharacterIsWhiteSpace(aChar: Char): Boolean;
 begin
   {$IF COOPER}
-//  result := java.lang.String(aStringA)+java.lang.String(aStringB);
+  result := java.lang.Character.isWhitespace(aChar);
   {$ENDIF}
   {$IF ECHOES}
   result := Char.IsWhiteSpace(aChar);
