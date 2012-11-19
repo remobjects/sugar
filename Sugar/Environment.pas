@@ -32,7 +32,7 @@ type
     class property NewLine: String read RemObjects.Oxygene.Sugar.String(#10);
     class property UserName: String read Foundation.NSUserName();
     class property OperatingSystemName: String read getOperatingSystemName;
-    class property OperatingSystemVersion: String read getOperatingSystemVersion;
+    class property OperatingSystemVersion: String read getOperatingSystemVersion; //todo
     class property TargetPlatform: TargetPlatform read TargetPlatform.Apple;
     class property TargetPlatformAsString: String read 'Apple';
     class method GetEnvironmentVariable(aVariableName: String): String;
@@ -69,7 +69,7 @@ begin
 
 class method Environment.GetEnvironmentVariable(aVariableName: String): String;
 begin
-  Foundation.NSProcessInfo.processInfo:environment:objectForKey(aVariableName);
+  result := Foundation.NSProcessInfo.processInfo:environment:objectForKey(aVariableName);
 end;
 {$ENDIF}
 
