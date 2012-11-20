@@ -45,7 +45,7 @@ type
   StringFormatter = assembly static class
   private   
     class method ParseDecimal(aString: String; var ptr: Int32): Int32;
-    class method ParseFormatSpecifier(aString: String; var ptr: Int32; out n: Int32; out width: Int32; out left_align: Boolean; out aFormat: String);
+    class method ParseFormatSpecifier(aString: String; var ptr: Int32; out n: UInt32; out width: Int32; out left_align: Boolean; out aFormat: String);
   assembly
     class method FormatString(aFormat: String; params args: array of Object): String;
   end;
@@ -79,12 +79,12 @@ begin
         continue;
       end;
       // parse specifier
-      var n: Int32;
+      var n: UInt32;
       var width: Int32;
       var left_align: Boolean;
       var arg_format: String;
       ParseFormatSpecifier(aFormat, var ptr, out n, out width, out left_align, out arg_format);
-      if n >= length(args) then raise new SugarFormatException('Index (zero based) must be greater than or equal to zero and less than the size of the argument list.');
+      if n ≥ length(args) then raise new SugarFormatException('Index (zero based) must be greater than or equal to zero and less than the size of the argument list.');
      // format argument
       var arg := args[n];
       var str: String;
@@ -129,7 +129,7 @@ begin
   exit sb.ToString();
 end;
 
-class method StringFormatter.ParseFormatSpecifier(aString: String; var ptr: Int32; out n: Int32; out width: Int32; out left_align: Boolean; out aFormat: String);
+class method StringFormatter.ParseFormatSpecifier(aString: String; var ptr: Int32; out n: UInt32; out width: Int32; out left_align: Boolean; out aFormat: String);
 begin
   var max := aString.Length;
   // parses format specifier of form:
@@ -163,11 +163,11 @@ begin
   begin
     var start := ptr;
     inc(ptr);
-    while (ptr < max) and (aString[ptr] <> '}') do inc(ptr);
+    while (ptr < max) and (aString[ptr] ≠ '}') do inc(ptr);
     aFormat := aFormat + aString.Substring(start, ptr - start);
   end
   else aFormat := nil;
-  if ((ptr >= max)) or (aString[ptr] <> '}') then raise new SugarFormatException('Input string was not in a correct format.'); 
+  if ((ptr >= max)) or (aString[ptr] ≠ '}') then raise new SugarFormatException('Input string was not in a correct format.'); 
 end;
 
 class method StringFormatter.ParseDecimal(aString: String; var ptr: Int32): Int32;

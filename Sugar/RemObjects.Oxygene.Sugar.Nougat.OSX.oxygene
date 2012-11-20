@@ -5,7 +5,7 @@
     <OutputType>StaticLibrary</OutputType>
     <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
     <AllowLegacyCreate>False</AllowLegacyCreate>
-    <Name>RemObjects.Oxygene.Sugar.Nougat</Name>
+    <Name>RemObjects.Oxygene.Sugar.Nougat.OSX</Name>
     <RootNamespace>RemObjects.Oxygene.Sugar</RootNamespace>
     <SDK>OS X</SDK>
     <ProjectGuid>{ab7ab88b-2370-43bf-844b-54d015da9e57}</ProjectGuid>

@@ -5,7 +5,7 @@ Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "RemObjects.Oxygene.Sugar.Co
 EndProject
 Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "RemObjects.Oxygene.Sugar.Echoes", "Sugar\RemObjects.Oxygene.Sugar.Echoes.oxygene", "{79301A0C-1F95-4FB0-9605-207E288C6171}"
 EndProject
-Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "RemObjects.Oxygene.Sugar.Nougat", "Sugar\RemObjects.Oxygene.Sugar.Nougat.oxygene", "{AB7AB88B-2370-43BF-844B-54D015DA9E57}"
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "RemObjects.Oxygene.Sugar.Nougat.OSX", "Sugar\RemObjects.Oxygene.Sugar.Nougat.OSX.oxygene", "{AB7AB88B-2370-43BF-844B-54D015DA9E57}"
 EndProject
 Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "RemObjects.Oxygene.Legacy.Cooper", "Legacy\RemObjects.Oxygene.Legacy.Cooper.oxygene", "{DCB8BC3B-F911-470F-A125-988D5EF46466}"
 EndProject
@@ -13,20 +13,18 @@ Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "RemObjects.Oxygene.Legacy.E
 EndProject
 Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "RemObjects.Oxygene.Legacy.Nougat", "Legacy\RemObjects.Oxygene.Legacy.Nougat.oxygene", "{4D7FE7A5-2A35-4915-B16B-3F2E84B64216}"
 EndProject
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "RemObjects.Oxygene.Sugar.Nougat.iOS", "Sugar\RemObjects.Oxygene.Sugar.Nougat.iOS.oxygene", "{98EBD692-5B26-4993-A9EA-545BC51BCCF6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Mixed Platforms = Debug|Mixed Platforms
 		Release|Mixed Platforms = Release|Mixed Platforms
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{4D7FE7A5-2A35-4915-B16B-3F2E84B64216}.Debug|Mixed Platforms.ActiveCfg = Debug
-		{4D7FE7A5-2A35-4915-B16B-3F2E84B64216}.Debug|Mixed Platforms.Build.0 = Debug
-		{4D7FE7A5-2A35-4915-B16B-3F2E84B64216}.Release|Mixed Platforms.ActiveCfg = Release
-		{4D7FE7A5-2A35-4915-B16B-3F2E84B64216}.Release|Mixed Platforms.Build.0 = Release
-		{5566157C-55C7-4334-B57E-FAF1E154D225}.Debug|Mixed Platforms.ActiveCfg = Debug
-		{5566157C-55C7-4334-B57E-FAF1E154D225}.Debug|Mixed Platforms.Build.0 = Debug
-		{5566157C-55C7-4334-B57E-FAF1E154D225}.Release|Mixed Platforms.ActiveCfg = Release
-		{5566157C-55C7-4334-B57E-FAF1E154D225}.Release|Mixed Platforms.Build.0 = Release
+		{D1EE6C41-515B-4175-873F-EE188AC43450}.Debug|Mixed Platforms.ActiveCfg = Debug
+		{D1EE6C41-515B-4175-873F-EE188AC43450}.Debug|Mixed Platforms.Build.0 = Debug
+		{D1EE6C41-515B-4175-873F-EE188AC43450}.Release|Mixed Platforms.ActiveCfg = Release
+		{D1EE6C41-515B-4175-873F-EE188AC43450}.Release|Mixed Platforms.Build.0 = Release
 		{79301A0C-1F95-4FB0-9605-207E288C6171}.Debug|Mixed Platforms.ActiveCfg = Debug
 		{79301A0C-1F95-4FB0-9605-207E288C6171}.Debug|Mixed Platforms.Build.0 = Debug
 		{79301A0C-1F95-4FB0-9605-207E288C6171}.Release|Mixed Platforms.ActiveCfg = Release
@@ -35,14 +33,19 @@ Global
 		{AB7AB88B-2370-43BF-844B-54D015DA9E57}.Debug|Mixed Platforms.Build.0 = Debug
 		{AB7AB88B-2370-43BF-844B-54D015DA9E57}.Release|Mixed Platforms.ActiveCfg = Release
 		{AB7AB88B-2370-43BF-844B-54D015DA9E57}.Release|Mixed Platforms.Build.0 = Release
-		{D1EE6C41-515B-4175-873F-EE188AC43450}.Debug|Mixed Platforms.ActiveCfg = Debug
-		{D1EE6C41-515B-4175-873F-EE188AC43450}.Debug|Mixed Platforms.Build.0 = Debug
-		{D1EE6C41-515B-4175-873F-EE188AC43450}.Release|Mixed Platforms.ActiveCfg = Release
-		{D1EE6C41-515B-4175-873F-EE188AC43450}.Release|Mixed Platforms.Build.0 = Release
 		{DCB8BC3B-F911-470F-A125-988D5EF46466}.Debug|Mixed Platforms.ActiveCfg = Debug
-		{DCB8BC3B-F911-470F-A125-988D5EF46466}.Debug|Mixed Platforms.Build.0 = Debug
 		{DCB8BC3B-F911-470F-A125-988D5EF46466}.Release|Mixed Platforms.ActiveCfg = Release
 		{DCB8BC3B-F911-470F-A125-988D5EF46466}.Release|Mixed Platforms.Build.0 = Release
+		{5566157C-55C7-4334-B57E-FAF1E154D225}.Debug|Mixed Platforms.ActiveCfg = Debug
+		{5566157C-55C7-4334-B57E-FAF1E154D225}.Release|Mixed Platforms.ActiveCfg = Release
+		{5566157C-55C7-4334-B57E-FAF1E154D225}.Release|Mixed Platforms.Build.0 = Release
+		{4D7FE7A5-2A35-4915-B16B-3F2E84B64216}.Debug|Mixed Platforms.ActiveCfg = Debug
+		{4D7FE7A5-2A35-4915-B16B-3F2E84B64216}.Release|Mixed Platforms.ActiveCfg = Release
+		{4D7FE7A5-2A35-4915-B16B-3F2E84B64216}.Release|Mixed Platforms.Build.0 = Release
+		{98EBD692-5B26-4993-A9EA-545BC51BCCF6}.Debug|Mixed Platforms.ActiveCfg = Debug
+		{98EBD692-5B26-4993-A9EA-545BC51BCCF6}.Debug|Mixed Platforms.Build.0 = Debug
+		{98EBD692-5B26-4993-A9EA-545BC51BCCF6}.Release|Mixed Platforms.ActiveCfg = Release
+		{98EBD692-5B26-4993-A9EA-545BC51BCCF6}.Release|Mixed Platforms.Build.0 = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

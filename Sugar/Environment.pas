@@ -60,7 +60,7 @@ class method Environment.getOperatingSystemVersion: String;
 begin
   var mib: array of Integer := [rtl.sys.CTL_KERN, rtl.sys.KERN_OSVERSION];
   var namelen: UInt32 {u_int} := sizeOf(mib) / sizeOf(mib[0]);
-  var bufferSize: UInt64{size_t} := 0; // ToDo: why is size_t missing, and we MUSt use it, for 32/64 compatibility!
+  var bufferSize: UIntPtr{size_t} := 0; // ToDo: why is size_t missing, and we MUSt use it, for 32/64 compatibility!
 
   rtl.sys.sysctl(@mib, namelen, nil, @bufferSize, nil, 0);
   var buildBuffer := new Char{u_char}[bufferSize];
