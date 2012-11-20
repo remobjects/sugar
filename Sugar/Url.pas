@@ -13,7 +13,7 @@ type
     property Path: String read mapped.Path;
     property QueryString: String read mapped.Query;
    // property Fragment: String read mapped;
-    property AsString: String read mapped.toString;
+    property ToString: String read mapped.toString;
   end;
   {$ENDIF}
   {$IF ECHOES}
@@ -25,7 +25,7 @@ type
     property Path: String read mapped.AbsolutePath;
     property QueryString: String read mapped.Query;
     property Fragment: String read mapped.Fragment;
-    property AsString: String read mapped.ToString;
+    property ToString: String read mapped.ToString;
   end;
   {$ENDIF}
   {$IF NOUGAT}
@@ -37,7 +37,7 @@ type
     property Path: String read mapped.path;
     property QueryString: String read mapped.query;
     property Fragment: String read mapped.fragment;
-    property AsString: String read mapped.absoluteString;
+    property ToString: String read mapped.absoluteString;
   end;
   {$ENDIF}
 

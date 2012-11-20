@@ -7,8 +7,8 @@
     <AllowLegacyCreate>False</AllowLegacyCreate>
     <Name>RemObjects.Oxygene.Sugar.Nougat</Name>
     <RootNamespace>RemObjects.Oxygene.Sugar</RootNamespace>
-    <SDK>OS X</SDK>
-    <ProjectGuid>{ab7ab88b-2370-43bf-844b-54d015da9e57}</ProjectGuid>
+    <SDK>iOS</SDK>
+    <ProjectGuid>{91B301FC-331E-48A7-803B-4CBE3FFF6ED7}</ProjectGuid>
     <AssemblyName>Sugar</AssemblyName>
     <DefaultUses />
     <StartupClass />
@@ -46,9 +46,6 @@
     <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CoreServices.fx">
-      <HintPath>C:\Program Files (x86)\RemObjects Software\Oxygene\Nougat\SDKs\OS X 10.8\CoreServices.fx</HintPath>
-    </Reference>
     <Reference Include="Foundation.fx" />
     <Reference Include="rtl.fx" />
   </ItemGroup>

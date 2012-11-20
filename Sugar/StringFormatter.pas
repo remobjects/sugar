@@ -84,7 +84,8 @@ begin
       var left_align: Boolean;
       var arg_format: String;
       ParseFormatSpecifier(aFormat, var ptr, out n, out width, out left_align, out arg_format);
-      if n >= length(args) then raise new SugarFormatException('Index (zero based) must be greater than or equal to zero and less than the size of the argument list.');
+      // 59503: Nougat: length() needs to be Int32, not UInt32. remove the cast below, when fixed.
+      if n ≥ Int32(length(args)) then raise new SugarFormatException('Index (zero based) must be greater than or equal to zero and less than the size of the argument list.');
      // format argument
       var arg := args[n];
       var str: String;
@@ -163,11 +164,16 @@ begin
   begin
     var start := ptr;
     inc(ptr);
-    while (ptr < max) and (aString[ptr] <> '}') do inc(ptr);
+    while (ptr < max) and (aString[ptr] ≠ '}') do inc(ptr);
+    {$IF NOT NOUGAT}
     aFormat := aFormat + aString.Substring(start, ptr - start);
+    {$ELSE}
+    //59154: Nougat: operators on mapped types
+    aFormat := NSString(aFormat).stringByAppendingString(aString.Substring(start, ptr - start));
+    {$ENDIF}
   end
   else aFormat := nil;
-  if ((ptr >= max)) or (aString[ptr] <> '}') then raise new SugarFormatException('Input string was not in a correct format.'); 
+  if ((ptr >= max)) or (aString[ptr] ≠ '}') then raise new SugarFormatException('Input string was not in a correct format.'); 
 end;
 
 class method StringFormatter.ParseDecimal(aString: String; var ptr: Int32): Int32;
