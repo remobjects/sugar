@@ -164,7 +164,12 @@ begin
     var start := ptr;
     inc(ptr);
     while (ptr < max) and (aString[ptr] ≠ '}') do inc(ptr);
+    {$IFDEF NOT NOUGAT}
     aFormat := aFormat + aString.Substring(start, ptr - start);
+    {$ELSE}
+    //59154: Nougat: operators on mapped types
+    aFormat := NSString(aFormat).stringByAppendingString(aString.Substring(start, ptr - start));
+    {$ENDIF}
   end
   else aFormat := nil;
   if ((ptr >= max)) or (aString[ptr] ≠ '}') then raise new SugarFormatException('Input string was not in a correct format.'); 
