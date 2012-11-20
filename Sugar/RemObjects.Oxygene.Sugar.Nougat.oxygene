@@ -59,6 +59,7 @@
     <Compile Include="Environment.pas" />
     <Compile Include="Exceptions.pas" />
     <Compile Include="File.pas" />
+    <Compile Include="Directory.pas" />
     <Compile Include="FileStreams.pas" />
     <Compile Include="List.pas" />
     <Compile Include="HashSet.pas" />
