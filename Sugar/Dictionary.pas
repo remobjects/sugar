@@ -67,7 +67,7 @@ begin
 end;
 
 method Dictionary<T, U>.Remove(Key: T);
-begins
+begin
   mapped.removeObjectForKey(Key);
 end;
 
