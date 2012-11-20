@@ -1,58 +1,130 @@
 ﻿namespace RemObjects.Oxygene.Sugar;
 
 {$HIDE W0} //supress case-mismatch errors
-{$HIDE W27}
 
 interface
 
-{$IF NOT NOUGAT}
 type
-  List<T> = public class mapped to {$IF ECHOES}System.Collections.Generic.List<T>{$ENDIF}{$IF COOPER}java.util.ArrayList<T>{$ENDIF}{$IF NOUGAT}Foundation.NSMutableArray{$ENDIF}
+  {$IF ECHOES}
+  List<T> = public class mapped to System.Collections.Generic.List<T>
   public
-    method &Add(Item: T); mapped to {$IFNDEF NOUGAT}&Add(Item){$ELSE}addObject(Item){$ENDIF};
-    method Clear; mapped to {$IFNDEF NOUGAT}Clear{$ELSE}{$ENDIF};
-    method Contains(Item: T): boolean; mapped to {$IFNDEF NOUGAT}Contains(Item){$ELSE}{$ENDIF};
+    method &Add(Item: T); mapped to &Add(Item);
+    method Clear; mapped to Clear;
+    method Contains(Item: T): boolean; mapped to Contains(Item);
 
     method Exists(Match: Predicate<T>): Boolean;
     method FindIndex(Match: Predicate<T>): Integer;
     method FindIndex(StartIndex: Integer; Match: Predicate<T>): Integer;
-    method FindIndex(StartIndex: Integer; Count: Integer; Match: Predicate<T>): Integer;
+    method FindIndex(StartIndex: Integer; aCount: Integer; Match: Predicate<T>): Integer;
+
     method Find(Match: Predicate<T>): T;
     method FindAll(Match: Predicate<T>): List<T>;
-
-    method IndexOf(Item: T): Integer; mapped to {$IFNDEF NOUGAT}IndexOf(Item){$ELSE}{$ENDIF};
-    method Insert(&Index: Integer; Item: T); mapped to {$IF ECHOES}Insert(&Index, Item){$ENDIF}{$IF COOPER}&Add(&Index, Item){$ENDIF}{$IF NOUGAT}{$ENDIF};
-    method LastIndexOf(Item: T): Integer; mapped to {$IFNDEF NOUGAT}LastIndexOf(Item){$ELSE}{$ENDIF};
-
-    method &Remove(Item: T): Boolean; mapped to {$IF ECHOES}Remove(&Item){$ENDIF}{$IF COOPER}&Remove(Object(Item)){$ENDIF};
-    method RemoveAt(&Index: Integer); mapped to {$IF ECHOES}RemoveAt(&Index){$ENDIF}{$IF COOPER}&Remove(&Index){$ENDIF};
-    method RemoveRange(&Index: Integer; Count: Integer); {$IF ECHOES}mapped to RemoveRange(&Index, Count);{$ENDIF}
-
     method TrueForAll(Match: Predicate<T>): Boolean;
 
-    property Count: Integer read {$IFNDEF COOPER}mapped.Count{$ELSE}mapped.size{$ENDIF};
-    property Item[i: Integer]: T {$IFNDEF NOUGAT}read mapped[i] write mapped[i]{$ELSE}{$ENDIF}; default;
-  end;
+    method IndexOf(Item: T): Integer; mapped to IndexOf(Item);
+    method Insert(&Index: Integer; Item: T); mapped to Insert(&Index, Item);
+    method LastIndexOf(Item: T): Integer; mapped to LastIndexOf(Item);
 
+    method &Remove(Item: T): Boolean; mapped to &Remove(&Item);
+    method RemoveAt(&Index: Integer); mapped to RemoveAt(&Index);
+    method RemoveRange(&Index: Integer; aCount: Integer); mapped to RemoveRange(&Index, aCount);
+
+    property Count: Integer read mapped.Count;
+    property Item[i: Integer]: T read mapped[i] write mapped[i]; default;
+  end;
+  {$ELSEIF COOPER}
+  List<T> = public class mapped to java.util.ArrayList<T>
+  public
+    method &Add(Item: T); mapped to &Add(Item);
+    method Clear; mapped to Clear;
+    method Contains(Item: T): boolean; mapped to Contains(Item);
+
+    method Exists(Match: Predicate<T>): Boolean;
+    method FindIndex(Match: Predicate<T>): Integer;
+    method FindIndex(StartIndex: Integer; Match: Predicate<T>): Integer;
+    method FindIndex(StartIndex: Integer; aCount: Integer; Match: Predicate<T>): Integer;
+
+    method Find(Match: Predicate<T>): T;
+    method FindAll(Match: Predicate<T>): List<T>;
+    method TrueForAll(Match: Predicate<T>): Boolean;
+
+    method IndexOf(Item: T): Integer; mapped to IndexOf(Item);
+    method Insert(&Index: Integer; Item: T); mapped to &Add(&Index, Item);
+    method LastIndexOf(Item: T): Integer; mapped to LastIndexOf(Item);
+
+    method &Remove(Item: T): Boolean; mapped to &Remove(Object(Item));
+    method RemoveAt(&Index: Integer); mapped to &Remove(&Index);
+    method RemoveRange(&Index: Integer; aCount: Integer);
+
+    property Count: Integer read mapped.size;
+    property Item[i: Integer]: T read mapped[i] write mapped[i]; default;
+  end;
+  {$ELSEIF NOUGAT}
+  List<T> = public class mapped to Foundation.NSMutableArray
+  public
+    method &Add(Item: T); mapped to addObject(Item);
+    method Clear; mapped to removeAllObjects;
+    method Contains(Item: T): boolean; mapped to containsObject(Item);
+
+    {$IF NOT NOUGAT}
+    method Exists(Match: Predicate<T>): Boolean;
+    method FindIndex(Match: Predicate<T>): Integer;
+    method FindIndex(StartIndex: Integer; Match: Predicate<T>): Integer;
+    method FindIndex(StartIndex: Integer; aCount: Integer; Match: Predicate<T>): Integer;
+
+    method Find(Match: Predicate<T>): T;
+    method FindAll(Match: Predicate<T>): List<T>;
+    method TrueForAll(Match: Predicate<T>): Boolean;
+    method LastIndexOf(Item: T): Integer;
+    {$ENDIF}
+
+    method IndexOf(Item: T): Integer; mapped to indexOfObject(Item);
+    method Insert(&Index: Integer; Item: T); mapped to insertObject(Item) atIndex(&Index);
+   
+
+    method &Remove(anItem: T): Boolean;
+    method RemoveAt(&Index: Integer); mapped to removeObjectAtIndex(&Index);
+    method RemoveRange(&Index: Integer; aCount: Integer);
+
+    property Count: Integer read mapped.Count;
+    property Item[i: Integer]: T read mapped[i] write mapped[i]; default;
+  end;
+  {$ENDIF}  
+
+  {$IF NOT NOUGAT}
   Predicate<T> = public interface
     method Check(Obj: T): Boolean;
   end;
-{$ENDIF}
+  {$ENDIF}
+
 
 implementation
-{$IF NOT NOUGAT}
+
 
 {$IFNDEF ECHOES}
-method List<T>.RemoveRange(&Index: Integer; Count: Integer);
+method List<T>.RemoveRange(&Index: Integer; aCount: Integer);
 begin
- mapped.subList(&Index, Count).clear;
+ {$IF COOPER}
+ mapped.subList(&Index, aCount).clear;
+ {$ELSEIF NOUGAT}
+ mapped.removeObjectsInRange(new Foundation.NSRange(length := aCount, location := &Index));
+ {$ENDIF}
 end;
 {$ENDIF}
 
+{$IF NOUGAT}
+method List<T>.Remove(anItem: T): Boolean;
+begin
+  result := mapped.containsObject(anItem);
+  mapped.removeObject(anItem);
+end;
+{$ENDIF}
+
+{$IF NOT NOUGAT}
 method List<T>.TrueForAll(Match: Predicate<T>): Boolean;
 begin
   for i: Integer := 0 to self.Count-1 do begin
-    if not Match({$IF COOPER}mapped[i]{$ELSE}Item[i]{$ENDIF}) then  //Item[i] causes crash in Cooper
+    if not Match(mapped[i]) then  //Item[i] causes crash in Cooper
       exit false;
   end;
   exit true;
@@ -65,7 +137,7 @@ end;
 
 method List<T>.FindIndex(Match: Predicate<T>): Integer;
 begin
-  exit self.FindIndex(0, Count, Match);
+  exit self.FindIndex(0, Count, Match);  
 end;
 
 method List<T>.FindIndex(StartIndex: Integer; Match: Predicate<T>): Integer;
@@ -73,11 +145,11 @@ begin
   exit self.FindIndex(StartIndex, Count - StartIndex, Match);
 end;
 
-method List<T>.FindIndex(StartIndex: Integer; Count: Integer; Match: Predicate<T>): Integer;
+method List<T>.FindIndex(StartIndex: Integer; aCount: Integer; Match: Predicate<T>): Integer;
 begin
-  var Num := StartIndex + Count;
+  var Num := StartIndex + aCount;
   for i: Int32 := StartIndex to Num-1 do begin
-    if Match({$IF COOPER}mapped[i]{$ELSE}Item[i]{$ENDIF}) then
+    if Match(mapped[i]) then
       exit i;
   end;
   exit -1;
@@ -86,8 +158,8 @@ end;
 method List<T>.Find(Match: Predicate<T>): T;
 begin
   for i: Integer := 0 to Count-1 do begin
-    if Match({$IF COOPER}mapped[i]{$ELSE}Item[i]{$ENDIF}) then
-      exit Item[i];
+    if Match(mapped[i]) then
+      exit mapped[i];
   end;
   exit &default(T);
 end;
@@ -96,9 +168,10 @@ method List<T>.FindAll(Match: Predicate<T>): List<T>;
 begin
   var lList := new List<T>();
   for i: Integer := 0 to Count-1 do begin
-    if Match({$IF COOPER}mapped[i]{$ELSE}Item[i]{$ENDIF}) then
-      lList.Add(Item[i]);
+    if Match(mapped[i]) then
+      lList.Add(mapped[i]);
   end;
 end;
 {$ENDIF}
+
 end.
