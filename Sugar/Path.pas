@@ -74,7 +74,60 @@ end;
 {$ENDIF}
 
 {$IF COOPER}
-{$WARNING Path is not implemented for Cooper yet}
+class method Path.GetFilename(aPath: String): String;
+begin
+  var lFile := new java.io.File(aPath);
+  exit lFile.Name;
+end;
+
+class method Path.GetFilenameWithoutExtension(aPath: String): String;
+begin
+  result := GetFilename(aPath);
+  var lIndex := result.LastIndexOf(".");
+  if lIndex <> -1 then
+    exit result.Substring(0, lIndex);
+end;
+
+class method Path.GetFilenameExtension(aPath: String): String;
+begin
+  result := GetFilename(aPath);
+  var lIndex := result.LastIndexOf(".");
+  if lIndex <> -1 then
+    exit result.Substring(lIndex);  
+end;
+
+class method Path.GetFolderName(aPath: String): String;
+begin
+  var lFile := new java.io.File(aPath);
+  exit lFile.ParentFile.AbsolutePath;
+end;
+
+class method Path.Combine(aBasePath: String; aSubPath: String): String;
+begin
+  var File1 := new java.io.File(aBasePath);
+  var File2 := new java.io.File(File1, aSubPath);
+  exit File2.Path;
+end;
+
+class method Path.get_PathSeparator: String;
+begin
+  exit java.io.File.pathSeparator;
+end;
+
+class method Path.get_FolderSeparator: String;
+begin
+  exit java.io.File.separator;
+end;
+
+class method Path.GetTempFolder: String;
+begin
+  exit System.getProperty("java.io.tmpdir");
+end;
+
+class method Path.GetTempFilename: String;
+begin
+  exit java.io.File.createTempFile('tmp', '.TMP').AbsolutePath;
+end;
 {$ENDIF}
 
 {$IF NOUGAT}
