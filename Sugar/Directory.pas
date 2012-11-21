@@ -2,20 +2,22 @@
 
 interface
 
-{$IF ECHOES}
+uses
+    RemObjects.Oxygene.Sugar;
+
 type
+{$IF ECHOES}
   Directory = public class mapped to System.IO.Directory
   public
     class method CreateDirectory(Path: String); mapped to CreateDirectory(Path);
     class method Delete(Path: String); mapped to Delete(Path);
     class method Delete(Path: String; Recursive: Boolean); mapped to Delete(Path, Recursive);
     class method Exists(Path: String): Boolean; mapped to Exists(Path);
-    class method GetCurrentDirectory: String; mapped to GetCurrentDirectory;
-    class method GetFiles(Path: String): array of String; mapped to GetFiles(Path);
+    class method GetCurrentDirectory: String; mapped to GetCurrentDirectory;    
+    class method GetFiles(Path: String; Recursive: Boolean): array of String;
     class method Move(SourceDirName: String; DestDirName: String); mapped to Move(SourceDirName, DestDirName);
   end;
 {$ELSEIF COOPER}
-type
   Directory = public class
   private
     class method RecursiveDelete(Dir: java.io.File);
@@ -26,14 +28,37 @@ type
     class method Delete(Path: String; Recursive: Boolean);
     class method Exists(Path: String): Boolean;
     class method GetCurrentDirectory: String;
-    class method GetFiles(Path: String): array of String;
+    class method GetFiles(Path: String; Recursive: Boolean): array of String;
+    class method Move(SourceDirName: String; DestDirName: String);
+  end;
+{$ELSEIF NOUGAT}
+  Directory = public class
+  private
+    class method IsDirectory(Path: String): Boolean;
+    class method GetFilesRecursive(Path: String; List: Foundation.NSMutableArray);
+  public
+    class method CreateDirectory(Path: String);
+    class method Delete(Path: String);
+    class method Delete(Path: String; Recursive: Boolean);
+    class method Exists(Path: String): Boolean;
+    class method GetCurrentDirectory: String;
+    class method GetFiles(Path: String; Recursive: Boolean): array of String;
     class method Move(SourceDirName: String; DestDirName: String);
   end;
 {$ENDIF}
 
 implementation
 
-{$IF COOPER}
+{$IF ECHOES}
+class method Directory.GetFiles(Path: String; Recursive: Boolean): array of String;
+begin
+  if Recursive then
+    exit mapped.GetFiles(Path, "*", System.IO.SearchOption.AllDirectories)
+  else
+    exit mapped.GetFiles(Path);
+end;
+
+{$ELSEIF COOPER}
 class method Directory.Delete(Path: String);
 begin
   Delete(Path, false);
@@ -76,13 +101,26 @@ begin
   exit System.getProperty("user.dir");
 end;
 
-class method Directory.GetFiles(Path: String): array of String;
+class method Directory.GetFiles(Path: String; Recursive: Boolean): array of String;
 begin
   var Dir := new java.io.File(Path);
-  var Files := Dir.listFiles;
-  result := new String[Files.length];
-  for i: Integer := 0 to Files.length-1 do
-    result[i] := Files[i].AbsolutePath;
+  var List := new java.util.ArrayList<String>;
+ 
+  if Dir.isDirectory then begin
+    var Files := Dir.listFiles;    
+
+    for each file in Files do begin
+      if file.isFile then
+        List.add(file.AbsolutePath)
+      else
+        if file.isDirectory and Recursive then
+          List.addAll(java.util.Arrays.asList(GetFiles(file.AbsolutePath, Recursive)));
+    end;    
+  end
+  else
+    List.add(Path);
+
+  result := List.toArray(new String[List.size]);
 end;
 
 class method Directory.Move(SourceDirName: String; DestDirName: String);
@@ -107,6 +145,75 @@ begin
     else
       java.nio.file.Files.move(file.toPath, DestFile.toPath);
   end;
+end;
+
+{$ELSEIF NOUGAT}
+class method Directory.Delete(Path: String);
+begin
+  Delete(Path, false);
+end;
+
+class method Directory.CreateDirectory(Path: String);
+begin
+  var lError: Foundation.NSError := nil;
+  if not Foundation.NSFileManager.defaultManager.createDirectoryAtPath(Path) withIntermediateDirectories(False) attributes(nil) error(@lError) then
+    raise SugarNSErrorException.exceptionWithError(lError);
+end;
+
+class method Directory.Delete(Path: String; Recursive: Boolean); 
+begin
+ //TODO: Currently always deletes files recursively
+  var lError: Foundation.NSError := nil;
+  if not Foundation.NSFileManager.defaultManager.removeItemAtPath(Path) error(@lError) then
+    raise SugarNSErrorException.exceptionWithError(lError);
+end;
+
+class method Directory.Exists(Path: String): Boolean;
+begin
+  exit Foundation.NSFileManager.defaultManager.fileExistsAtPath(Path);
+end;
+
+class method Directory.GetCurrentDirectory: String;
+begin
+  exit Foundation.NSFileManager.defaultManager.currentDirectoryPath;
+end;
+
+class method Directory.GetFiles(Path: String; Recursive: Boolean): array of String;
+begin  
+  var List := new Foundation.NSMutableArray();
+  
+  if Recursive then
+    GetFilesRecursive(Path, List)
+  else
+    List.addObjectsFromArray(Foundation.NSFileManager.defaultManager.contentsOfDirectoryAtPath(Path) error(nil));
+
+  result := new String[List.count];
+  for i: Integer := 0 to List.count-1 do
+    result[i] := List.objectAtIndex(i);
+end;
+
+class method Directory.GetFilesRecursive(Path: String; List: Foundation.NSMutableArray);
+begin
+  var Files := Foundation.NSFileManager.defaultManager.contentsOfDirectoryAtPath(Path) error(nil);
+  for i: Integer := 0 to Files.count-1 do begin
+    var lFilePath: String := Files.objectAtIndex(i);
+    if not IsDirectory(lFilePath) then
+      List.addObject(lFilePath)
+    else
+      GetFilesRecursive(lFilePath, List);
+  end;
+end;
+
+class method Directory.IsDirectory(Path: String): Boolean;
+begin
+  Foundation.NSFileManager.defaultManager.fileExistsAtPath(Path) isDirectory(@Result);
+end;
+
+class method Directory.Move(SourceDirName: String; DestDirName: String);
+begin
+  var lError: Foundation.NSError := nil;
+  if not Foundation.NSFileManager.defaultManager.moveItemAtPath(SourceDirName) toPath(DestDirName) error(nil) then
+    raise SugarNSErrorException.exceptionWithError(lError);
 end;
 {$ENDIF}
 
