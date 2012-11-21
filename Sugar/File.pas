@@ -136,6 +136,20 @@ end;
 {$IF NOUGAT}
 class method File.AppendText(aFileName, aContents: String); 
 begin
+  var lData := NSString(aContents).dataUsingEncoding(NSStringEncoding.NSUTF8StringEncoding);
+
+  if not Exists(aFileName) then begin
+    NSFileManager.defaultManager.createFileAtPath(aFileName) contents(lData) attributes(nil);
+    exit;
+  end;
+
+  var fileHandle := NSFileHandle.fileHandleForWritingAtPath(aFileName);
+  try
+    fileHandle.seekToEndOfFile;
+    fileHandle.writeData(lData);
+  finally
+    fileHandle.closeFile;
+  end;  
 end;
 
 class method File.Copy(aOldFileName, aNewFileName: String; aOverwriteFile: Boolean);
