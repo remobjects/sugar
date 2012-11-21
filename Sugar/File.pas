@@ -23,6 +23,7 @@ type
   {$ENDIF}
   {$IF COOPER or NOUGAT}
   File = public class
+  public
     class method AppendText(aFileName, aContents: String); 
     class method &Copy(aOldFileName, aNewFileName: String; aOverwriteFile: Boolean);
     class method Delete(aFileName: String);
