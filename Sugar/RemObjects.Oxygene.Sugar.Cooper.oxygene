@@ -61,6 +61,7 @@
     <Compile Include="Exceptions.pas" />
     <Compile Include="File.pas" />
     <Compile Include="Stack.pas" />
+    <Compile Include="Queue.pas" />
     <Compile Include="Directory.pas" />
     <Compile Include="Path.pas" />
     <Compile Include="FileStreams.pas" />
