@@ -29,8 +29,10 @@ type
 
     {$IF ECHOES OR COOPER}
     method IndexOf(aString: String): Int32; mapped to IndexOf(aString);
+    method LastIndexOf(aString: String): Int32; mapped to LastIndexOf(aString);
     {$ELSEIF NOUGAT}
     method IndexOf(aString: String): Int32;
+    method LastIndexOf(aString: String): Int32;
     {$ENDIF}
 
     {$IF COOPER}
@@ -110,6 +112,11 @@ end;
 method String.IndexOf(aString: String): Int32;
 begin
   result := mapped.rangeOfString(aString).location;
+end;
+
+method String.LastIndexOf(aString: String): Int32;
+begin
+  result := mapped.rangeOfString(aString) options(NSStringCompareOptions.NSBackwardsSearch).location;
 end;
 
 method String.Substring(aStartIndex: Int32; aLength: Int32): String; //59155: Nougat: support for methids with nameless parameters (foo:::)
