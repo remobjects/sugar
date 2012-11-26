@@ -65,6 +65,7 @@
     <Compile Include="Directory.pas" />
     <Compile Include="Path.pas" />
     <Compile Include="FileStreams.pas" />
+    <Compile Include="Thread.pas" />
     <Compile Include="List.pas" />
     <Compile Include="HashSet.pas" />
     <Compile Include="Math.pas" />
