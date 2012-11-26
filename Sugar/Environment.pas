@@ -30,6 +30,10 @@ type
     class method getOperatingSystemVersion: String;
     class method getOperatingSystemName: String;
   public 
+    {$REGION OS-specific Helper APIs}
+    class method SysCtl(aLevel: Int32; aValue: Int32): String;
+    {$ENDREGION}
+
     class property NewLine: String read RemObjects.Oxygene.Sugar.String(#10);
     class property UserName: String read Foundation.NSUserName();
     class property OperatingSystemName: String read getOperatingSystemName;
@@ -56,16 +60,24 @@ begin
   {$SHOW H0}
 end;
 
-class method Environment.getOperatingSystemVersion: String;
+class method Environment.SysCtl(aLevel: Int32; aValue: Int32): String;
 begin
-  var mib: array of Integer := [rtl.sys.CTL_KERN, rtl.sys.KERN_OSVERSION];
+  var mib: array of Integer := [aLevel, aValue];
   var namelen: UInt32 {u_int} := sizeOf(mib) / sizeOf(mib[0]);
-  var bufferSize: UIntPtr{size_t} := 0; // ToDo: why is size_t missing, and we MUSt use it, for 32/64 compatibility!
+  var bufferSize: UIntPtr{size_t} := 0; // ToDo: why is size_t missing, and we MUST use it, for 32/64 compatibility!
 
   rtl.sys.sysctl(@mib, namelen, nil, @bufferSize, nil, 0);
   var buildBuffer := new Char{u_char}[bufferSize];
-  if rtl.sys.sysctl(mib, namelen, buildBuffer, @bufferSize, nil, 0) > 0 then
+  if rtl.sys.sysctl(mib, namelen, buildBuffer, @bufferSize, nil, 0) = 0 then
     result := Foundation.NSString.alloc.initWithBytes(buildBuffer) length(bufferSize) encoding(Foundation.NSStringEncoding.NSUTF8StringEncoding);
+ end;
+
+class method Environment.getOperatingSystemVersion: String;
+begin
+  result := Foundation.NSString.stringWithFormat('%@ %@ (%@)',
+                                                 SysCtl(rtl.sys.CTL_KERN, rtl.sys.KERN_OSTYPE),
+                                                 SysCtl(rtl.sys.CTL_KERN, rtl.sys.KERN_OSRELEASE),
+                                                 SysCtl(rtl.sys.CTL_KERN, rtl.sys.KERN_OSVERSION));
  end;
 
 class method Environment.GetEnvironmentVariable(aVariableName: String): String;
