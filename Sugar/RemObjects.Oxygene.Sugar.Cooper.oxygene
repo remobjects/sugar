@@ -63,6 +63,7 @@
     <Compile Include="Stack.pas" />
     <Compile Include="Queue.pas" />
     <Compile Include="Directory.pas" />
+    <Compile Include="ManualResetEvent.pas" />
     <Compile Include="Path.pas" />
     <Compile Include="FileStreams.pas" />
     <Compile Include="Thread.pas" />
