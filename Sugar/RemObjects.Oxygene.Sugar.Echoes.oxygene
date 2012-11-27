@@ -81,6 +81,7 @@
     <Compile Include="Thread.pas" />
     <Compile Include="ManualResetEvent.pas" />
     <Compile Include="AutoResetEvent.pas" />
+    <Compile Include="Semaphore.pas" />
     <Compile Include="Queue.pas" />
     <Compile Include="Stack.pas" />
     <Compile Include="HashSet.pas" />
