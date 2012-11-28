@@ -67,8 +67,8 @@ method Console.ReadLine: String;
 const MAX = 1024;
 begin
   {$IF COOPER}
-  using br := new java.io.BufferedReader(new java.io.InputStreamReader(System.in)) do
-    result := br.readLine();
+  var Scaner := new java.util.Scanner(System.in);
+  exit Scaner.nextLine;
   {$ENDIF}
   {$IF ECHOES}
   result := System.Console.ReadLine;
