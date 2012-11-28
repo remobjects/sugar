@@ -41,8 +41,7 @@ begin
   System.Console.WriteLine(aString);
   {$ENDIF}
   {$IF NOUGAT}
-  self.Write(aString);
-  self.Write(Environment.NewLine);
+  printf('%s'#10, Foundation.NSString(aString).cStringUsingEncoding(NSStringEncoding.NSUTF8StringEncoding));
   {$ENDIF}
 end;
 

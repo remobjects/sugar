@@ -18,6 +18,6 @@ Sugar does not intent to facilitate the creation of single "lowest common denomi
 
 ## Requirements
 
-Sugar pushes the limited of the compiler and the mapped types system, and as such we recommend using the very latest Oxygene compiler. The current (November 20, 2012) state of the library will require at least .1131 or later of Oxygene, for any of the three platforms; as development of the library continues towards a 1.0 release in H1/2012, this requirement will extend to the respective latest versions of the compiler, as well.
+Sugar pushes the limited of the compiler and the mapped types system, and as such we recommend using the very latest Oxygene compiler. The current (November, 2012) state of the library will require at least .1137 or later of Oxygene, for any of the three platforms; as development of the library continues towards a 1.0 release in H1/2012, this requirement will extend to the respective latest versions of the compiler, as well.
 
 If you check out a copy of Sugar and find it does not compile with your version of Oxygene, please do make sure you have the latest alpha channel build installed *and* confer with the change logs to see if any specific build requirements are mentioned.

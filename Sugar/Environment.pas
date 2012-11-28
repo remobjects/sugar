@@ -63,11 +63,11 @@ end;
 class method Environment.SysCtl(aLevel: Int32; aValue: Int32): String;
 begin
   var mib: array of Integer := [aLevel, aValue];
-  var namelen: UInt32 {u_int} := sizeOf(mib) / sizeOf(mib[0]);
-  var bufferSize: UIntPtr{size_t} := 0; // ToDo: why is size_t missing, and we MUST use it, for 32/64 compatibility!
+  var namelen: rtl.sys.u_int := sizeOf(mib) / sizeOf(mib[0]);
+  var bufferSize: rtl.stdio.size_t := 0;
 
   rtl.sys.sysctl(@mib, namelen, nil, @bufferSize, nil, 0);
-  var buildBuffer := new Char{u_char}[bufferSize];
+  var buildBuffer := new rtl.sys.u_char[bufferSize];
   if rtl.sys.sysctl(mib, namelen, buildBuffer, @bufferSize, nil, 0) = 0 then
     result := Foundation.NSString.alloc.initWithBytes(buildBuffer) length(bufferSize) encoding(Foundation.NSStringEncoding.NSUTF8StringEncoding);
  end;
