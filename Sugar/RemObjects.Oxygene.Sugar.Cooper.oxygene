@@ -65,6 +65,7 @@
     <Compile Include="Directory.pas" />
     <Compile Include="ManualResetEvent.pas" />
     <Compile Include="AutoResetEvent.pas" />
+    <Compile Include="MemoryStream.pas" />
     <Compile Include="Semaphore.pas" />
     <Compile Include="ThreadPool.pas" />
     <Compile Include="Path.pas" />
