@@ -56,6 +56,7 @@
     <Compile Include="Binary.pas" />
     <Compile Include="Console.pas" />
     <Compile Include="Dictionary.pas" />
+    <Compile Include="Dispatch.pas" />
     <Compile Include="Environment.pas" />
     <Compile Include="Exceptions.pas" />
     <Compile Include="File.pas" />
@@ -71,6 +72,8 @@
     <Compile Include="String.pas" />
     <Compile Include="StringBuilder.pas" />
     <Compile Include="StringFormatter.pas" />
+    <Compile Include="Thread.pas" />
+    <Compile Include="ThreadPool.pas" />
     <Compile Include="Url.pas" />
   </ItemGroup>
   <ItemGroup>

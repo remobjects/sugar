@@ -8,7 +8,19 @@ uses
 {$ENDIF}
 
 type
-  {$IF ECHOES}
+  {$IF COOPER}
+  ThreadPool = public static class 
+  private
+    var fExecutor: ThreadPoolExecutor := new ThreadPoolExecutor(4, 1000, 0, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>()); readonly;
+  public
+    method QueueUserWorkItem(Callback: Runnable);
+    method Terminate; //must be called in Java
+
+    property MinThreads: Integer read fExecutor.CorePoolSize write fExecutor.CorePoolSize;
+    property MaxThreads: Integer read fExecutor.MaximumPoolSize write fExecutor.MaximumPoolSize;
+    property AvailableThreads: Integer read fExecutor.MaximumPoolSize - fExecutor.ActiveCount;
+  end;
+  {$ELSEIF ECHOES}
   ThreadPool = public class mapped to System.Threading.ThreadPool
   private
     class method GetMinThreads: Integer;
@@ -22,17 +34,9 @@ type
     class property MaxThreads: Integer read GetMaxThreads write SetMaxThreads;
     class property AvailableThreads: Integer read GetAvailableThreads;
   end;
-  {$ELSEIF COOPER}
-  ThreadPool = public static class 
-  private
-    var fExecutor: ThreadPoolExecutor := new ThreadPoolExecutor(4, 1000, 0, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>()); readonly;
-  public
-    method QueueUserWorkItem(Callback: Runnable);
-    method Terminate; //must be called in Java
-
-    property MinThreads: Integer read fExecutor.CorePoolSize write fExecutor.CorePoolSize;
-    property MaxThreads: Integer read fExecutor.MaximumPoolSize write fExecutor.MaximumPoolSize;
-    property AvailableThreads: Integer read fExecutor.MaximumPoolSize - fExecutor.ActiveCount;
+  {$ENDIF}
+  {$IF NOUGAT}
+  ThreadPool = public static class
   end;
   {$ENDIF}
 

@@ -68,6 +68,8 @@
     <Compile Include="String.pas" />
     <Compile Include="StringBuilder.pas" />
     <Compile Include="StringFormatter.pas" />
+    <Compile Include="Thread.pas" />
+    <Compile Include="ThreadPool.pas" />
     <Compile Include="Url.pas" />
   </ItemGroup>
   <ItemGroup>

@@ -4,25 +4,39 @@
 interface
 
 type
-  Thread = public class mapped to {$IF ECHOES}System.Threading.Thread{$ELSEIF COOPER}java.lang.Thread{$ENDIF}
+  {$IF COOPER}
+  Thread = public class mapped to java.lang.Thread
+  {$ELSEIF ECHOES}
+  Thread = public class mapped to System.Threading.Thread
+  {$ELSEIF NOUGAT}
+  Thread = public class mapped to Foundation.NSThread
+  {$ENDIF}
   private   
     method GetPriority: ThreadPriority;
     method SetPriority(Value: ThreadPriority);
+    method GetCallStack: List<String>;
+    method GetThreadID: IntPtr;
   public
     method Start; mapped to Start;
-    method &Join; mapped to &Join;
-    method &Join(Timeout: Integer); mapped to &Join(Timeout);
+    method &Join; {$IF COOPER OR ECHOES} mapped to &Join;{$ENDIF}
+    method &Join(Timeout: Integer);  {$IF COOPER OR ECHOES}mapped to &Join(Timeout);{$ENDIF}
     
-    method Abort; mapped to {$IF ECHOES}Abort{$ELSEIF COOPER}Stop{$ENDIF};
+    method Abort; mapped to {$IF ECHOES}Aborty{$ELSEIF COOPER}Stop{$ELSEIF NOUGAT}cancel{$ENDIF};
 
-    class method Sleep(Timeout: Integer); mapped to Sleep(Timeout);
-    class property CurrentThread: Thread read mapped.CurrentThread; 
+    class method Sleep(aTimeout: Integer); mapped to {$IF COOPER OR ECHOES}Sleep(aTimeout){$ELSEIF NOUGAT}sleepForTimeInterval(aTimeout){$ENDIF};
 
     //property State: ThreadState read GetState write SetState;
-    property IsAlive: Boolean read mapped.IsAlive;
-    property Name: {$IF ECHOES}System.String{$ELSEIF COOPER}java.lang.String{$ENDIF} read mapped.Name write mapped.Name;
-    property Id: Integer read {$IF ECHOES}mapped.ManagedThreadId{$ELSEIF COOPER}mapped.id{$ENDIF};
+    property IsAlive: Boolean read {$IF COOPER OR ECHOES}mapped.IsAlive{$ELSEIF NOUGAT}mapped.isExecuting{$ENDIF};
+    property Name: String read mapped.Name write {$IF COOPER OR ECHOES}mapped.Name{$ELSEIF NOUGAT}mapped.setName{$ENDIF};
+    property ThreadId: IntPtr read {$IF COOPER}mapped.id{$ELSEIF ECHOES}mapped.ManagedThreadId{$ELSEIF NOUGAT}GetThreadID{$ENDIF};
     property Priority: ThreadPriority read GetPriority write SetPriority;
+
+    //Error	6	(E62) Type mismatch, cannot assign "RemObjects.Oxygene.Sugar.List<RemObjects.Oxygene.Sugar.String>" to "RemObjects.Oxygene.Sugar.List<RemObjects.Oxygene.Sugar.String>"	Z:\Code\Sugar\Sugar\Thread.pas	33	5	RemObjects.Oxygene.Sugar.Nougat.OSX
+    //property CallStack: List<String> read GetCallStack;
+
+    class property MainThread: Thread read mapped.mainThread;
+    class property CurrentThread: Thread read mapped.currentThread; 
+
   end;
 
   ThreadState = public enum(
@@ -69,6 +83,33 @@ begin
     ThreadPriority.AboveNormal: mapped.Priority := 7;
     ThreadPriority.Highest: mapped.Priority := 9;
   end;
+  {$ENDIF}
+end;
+
+method Thread.&Join;
+begin
+
+end;
+
+method Thread.&Join(Timeout: Integer);
+begin
+
+end;
+
+{$IF NOUGAT}
+method Thread.GetThreadID: IntPtr;
+begin
+  // Todo
+end;
+{$ENDIF}
+
+method Thread.GetCallStack: List<String>;
+begin
+  {$IF COOPER}
+  {$ELSEIF ECHOES}
+  {$ELSEIF NOUGAT}
+  //Error	6	(E62) Type mismatch, cannot assign "RemObjects.Oxygene.Sugar.List<RemObjects.Oxygene.Sugar.String>" to "RemObjects.Oxygene.Sugar.List<RemObjects.Oxygene.Sugar.String>"	Z:\Code\Sugar\Sugar\Thread.pas	33	5	RemObjects.Oxygene.Sugar.Nougat.OSX
+  //result := mapped.callStackSymbols as List<String>;
   {$ENDIF}
 end;
 
