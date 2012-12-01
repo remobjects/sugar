@@ -79,6 +79,7 @@
     <Compile Include="FileStreams.pas" />
     <Compile Include="List.pas" />
     <Compile Include="Thread.pas" />
+    <Compile Include="MemoryStream.pas" />
     <Compile Include="ManualResetEvent.pas" />
     <Compile Include="AutoResetEvent.pas" />
     <Compile Include="Semaphore.pas" />
