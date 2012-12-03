@@ -56,6 +56,7 @@
   <ItemGroup>
     <Reference Include="mscorlib" />
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core">
@@ -74,6 +75,7 @@
     <Compile Include="Dictionary.pas" />
     <Compile Include="Environment.pas" />
     <Compile Include="Exceptions.pas" />
+    <Compile Include="UserSettings.pas" />
     <Compile Include="File.pas" />
     <Compile Include="Directory.pas" />
     <Compile Include="FileStreams.pas" />

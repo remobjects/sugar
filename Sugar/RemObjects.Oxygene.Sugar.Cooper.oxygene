@@ -59,6 +59,7 @@
     <Compile Include="Dictionary.pas" />
     <Compile Include="Environment.pas" />
     <Compile Include="Exceptions.pas" />
+    <Compile Include="UserSettings.pas" />
     <Compile Include="File.pas" />
     <Compile Include="Stack.pas" />
     <Compile Include="Queue.pas" />
