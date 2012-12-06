@@ -56,6 +56,7 @@
     <Compile Include="Binary.pas" />
     <Compile Include="Console.pas" />
     <Compile Include="Dictionary.pas" />
+    <Compile Include="DateTime.pas" />
     <Compile Include="Dispatch.pas" />
     <Compile Include="Environment.pas" />
     <Compile Include="Exceptions.pas" />

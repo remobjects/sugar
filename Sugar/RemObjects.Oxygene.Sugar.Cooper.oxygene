@@ -57,6 +57,7 @@
     <Compile Include="Console.pas" />
     <Compile Include="Cooper\EnumerationSequence.pas" />
     <Compile Include="Dictionary.pas" />
+    <Compile Include="DateTime.pas" />
     <Compile Include="Environment.pas" />
     <Compile Include="Exceptions.pas" />
     <Compile Include="UserSettings.pas" />
