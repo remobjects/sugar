@@ -56,6 +56,7 @@
     <Compile Include="DateTime.pas" />
     <Compile Include="Environment.pas" />
     <Compile Include="Exceptions.pas" />
+    <Compile Include="Properties.pas" />
     <Compile Include="File.pas" />
     <Compile Include="UserSettings.pas" />
     <Compile Include="Directory.pas" />

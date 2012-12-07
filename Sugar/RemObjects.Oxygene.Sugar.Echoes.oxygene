@@ -77,6 +77,7 @@
     <Compile Include="Environment.pas" />
     <Compile Include="Exceptions.pas" />
     <Compile Include="UserSettings.pas" />
+    <Compile Include="Properties.pas" />
     <Compile Include="File.pas" />
     <Compile Include="Directory.pas" />
     <Compile Include="FileStreams.pas" />
