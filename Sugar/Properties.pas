@@ -40,6 +40,20 @@ type
   end;
   {$ELSEIF NOUGAT}
   Properties = public class
+  private
+    Items: Foundation.NSMutableDictionary := new Foundation.NSMutableDictionary();
+  public
+    method Put(Key: String; Value: String);
+    method Get(Key: String; DefaultValue: String): String;
+
+    method Clear;
+    method Contains(Key: String): Boolean;
+    method &Remove(Key: String);
+
+    method SaveToFile(Path: String);
+    method LoadFromFile(Path: String);
+
+    property Count: Integer read Items.Count;
   end;
   {$ENDIF}
 
@@ -73,9 +87,35 @@ method Properties.Remove(Key: String);
 begin
   Items.Remove(Key);
 end;
+{$ELSEIF NOUGAT} 
+method Properties.Clear;
+begin
+  Items.removeAllObjects();
+end;
+
+method Properties.Contains(Key: String): Boolean;
+begin
+  exit Items.objectForKey(Key) <> nil;
+end;
+
+method Properties.Get(Key: String; DefaultValue: String): String;
+begin
+  result := Items.objectForKey(Key);
+  if result = nil then
+    exit DefaultValue;
+end;
+
+method Properties.Put(Key: String; Value: String);
+begin  
+  Items.setObject(Value) forKey(Key);
+end;
+
+method Properties.Remove(Key: String);
+begin
+  Items.removeObjectForKey(Key);
+end;
 {$ENDIF}
 
-{$IF NOT NOUGAT}
 method Properties.SaveToFile(Path: String);
 begin
   {$IF COOPER}
@@ -94,6 +134,8 @@ begin
   end;
 
   Document.Save(Path);
+  {$ELSEIF NOUGAT}
+  Items.writeToFile(Path) atomically(true);
   {$ENDIF}
 end;
 
@@ -115,8 +157,11 @@ begin
   for each Element: System.Xml.XmlElement in Root.ChildNodes do begin
     Items.Add(Element.GetAttribute("key"), Element.InnerText);
   end;
+  {$ELSEIF NOUGAT}
+  Clear;
+  var lDictionary: Foundation.NSDictionary := Foundation.NSDictionary.dictionaryWithContentsOfFile(Path);
+  Items.addEntriesFromDictionary(lDictionary);
   {$ENDIF}
 end;
-{$ENDIF}
 
 end.
