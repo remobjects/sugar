@@ -17,9 +17,9 @@ type
   {$IF COOPER}
   DispatchAction = public delegate;
   {$ELSEIF ECHOES}
-  DispatchAction = public delegate;
+  DispatchAction = Action;   // 59866: allow "delegate" as inline type and map it to Action on Echoes
   {$ELSEIF NOUGAT}
-  DispatchAction = dispatch_block_t; // why
+  DispatchAction = {public block}dispatch_block_t; // 59867: Nougat: blocks/delegates not assignment compatible with dispatch_block_t
   {$ENDIF}
 
   DispatchPriority = public enum (High, Normal, Low, Idle);
@@ -35,7 +35,7 @@ begin
                                              DispatchPriority.High:DISPATCH_QUEUE_PRIORITY_HIGH;
                                              DispatchPriority.Normal:DISPATCH_QUEUE_PRIORITY_DEFAULT;
                                              DispatchPriority.Low:DISPATCH_QUEUE_PRIORITY_LOW;
-                                             DispatchPriority.Idle:INT16_MIN{DISPATCH_QUEUE_PRIORITY_BACKGROUND};
+                                             DispatchPriority.Idle:INT16_MIN {DISPATCH_QUEUE_PRIORITY_BACKGROUND missing};
                                              else DISPATCH_QUEUE_PRIORITY_DEFAULT; // why needed?
                                            end, 0), aAction);
   {$ENDIF}
@@ -46,7 +46,7 @@ begin
   {$IF COOPER}
   {$ELSEIF ECHOES}
   {$ELSEIF NOUGAT}
-  //dispatch_async(dispatch_get_main_queue(), aAction);
+  dispatch_async({dispatch_get_main_queue()}@_dispatch_main_q, aAction);
   {$ENDIF}
 end;
 
