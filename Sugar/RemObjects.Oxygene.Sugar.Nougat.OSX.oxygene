@@ -70,6 +70,7 @@
     <Compile Include="FileStreams.pas" />
     <Compile Include="List.pas" />
     <Compile Include="HashSet.pas" />
+    <Compile Include="Xml.pas" />
     <Compile Include="Math.pas" />
     <Compile Include="Object.pas" />
     <Compile Include="Path.pas" />

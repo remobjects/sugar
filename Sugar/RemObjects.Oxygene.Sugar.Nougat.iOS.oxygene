@@ -60,6 +60,7 @@
     <Compile Include="File.pas" />
     <Compile Include="UserSettings.pas" />
     <Compile Include="Directory.pas" />
+    <Compile Include="Xml.pas" />
     <Compile Include="MemoryStream.pas" />
     <Compile Include="FileStreams.pas" />
     <Compile Include="List.pas" />
