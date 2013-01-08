@@ -1,5 +1,5 @@
 ﻿namespace RemObjects.Oxygene.Sugar;
-
+{$HIDE W0} //supress case-mismatch errors
 interface
 
 type
@@ -12,12 +12,28 @@ type
   end;
 
   {$IF COOPER}
-  Binary = public class mapped to Object
+  Binary = public class
+  private
+    fData: java.io.ByteArrayOutputStream := new java.io.ByteArrayOutputStream();
+  public
+    method Assign(Data: Binary);
+    method Clear;
+
+    method ReadRangeOfBytes(Range: Range): array of Byte;
+    method ReadBytes(aLength: Integer): array of Byte; 
+    
+    method Subdata(Range: Range): Binary;
+
+    method WriteBytes(Data: array of Byte; aLength: Integer);
+    method WriteData(Data: Binary);
+
+    method ToArray: array of Byte;
+    property Length: Integer read fData.size;
   end;
   {$ELSEIF ECHOES}
   Binary = public class
   private
-    fData: System.IO.MemoryStream;
+    fData: System.IO.MemoryStream := new System.IO.MemoryStream();
   public
     method Assign(Data: Binary);
     method Clear;
@@ -62,6 +78,49 @@ begin
   exit new Range(Location := aLocation, Length := aLength);
 end;
 {$IF COOPER}
+method Binary.Assign(Data: Binary);
+begin
+  Clear;
+  fData.Write(Data.ToArray, 0, Data.Length);
+end;
+
+method Binary.ReadRangeOfBytes(Range: Range): array of Byte;
+begin
+  result := new Byte[Range.Length];
+  System.arraycopy(fData.toByteArray, Range.Location, result, 0, Range.Length);
+end;
+
+method Binary.ReadBytes(aLength: Integer): array of Byte;
+begin
+  result := ReadRangeOfBytes(Range.MakeRange(0, aLength));
+end;
+
+method Binary.Subdata(Range: Range): Binary;
+begin
+  var Data := ReadRangeOfBytes(Range);
+  result := new Binary();
+  result.WriteBytes(Data, Data.Length);
+end;
+
+method Binary.WriteBytes(Data: array of Byte; aLength: Integer);
+begin
+  fData.Write(Data, 0, aLength);
+end;
+
+method Binary.WriteData(Data: Binary);
+begin
+  WriteBytes(Data.ToArray, Data.Length);
+end;
+
+method Binary.ToArray: array of Byte;
+begin
+  exit fData.toByteArray;
+end;
+
+method Binary.Clear;
+begin
+  fData.reset;
+end;
 {$ELSEIF ECHOES}
 method Binary.Assign(Data: Binary);
 begin
