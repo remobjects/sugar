@@ -51,34 +51,39 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Binary.pas" />
+    <Compile Include="Collections\Dictionary.pas" />
+    <Compile Include="Collections\HashSet.pas" />
+    <Compile Include="Collections\List.pas" />
+    <Compile Include="Collections\Queue.pas" />
+    <Compile Include="Collections\Stack.pas" />
     <Compile Include="Console.pas" />
-    <Compile Include="Dictionary.pas" />
-    <Compile Include="DateTime.pas" />
     <Compile Include="Environment.pas" />
     <Compile Include="Exceptions.pas" />
     <Compile Include="Properties.pas" />
-    <Compile Include="File.pas" />
+    <Compile Include="IO\Directory.pas" />
+    <Compile Include="IO\File.pas" />
+    <Compile Include="IO\FileStream.pas" />
+    <Compile Include="IO\MemoryStream.pas" />
+    <Compile Include="IO\Path.pas" />
     <Compile Include="UserSettings.pas" />
-    <Compile Include="Directory.pas" />
-    <Compile Include="Xml.pas" />
-    <Compile Include="MemoryStream.pas" />
-    <Compile Include="FileStreams.pas" />
-    <Compile Include="List.pas" />
-    <Compile Include="Stack.pas" />
-    <Compile Include="Queue.pas" />
-    <Compile Include="HashSet.pas" />
+    <Compile Include="Threading\AutoResetEvent.pas" />
+    <Compile Include="Threading\ManualResetEvent.pas" />
+    <Compile Include="Threading\Semaphore.pas" />
+    <Compile Include="Threading\Thread.pas" />
+    <Compile Include="Threading\ThreadPool.pas" />
     <Compile Include="Math.pas" />
     <Compile Include="Object.pas" />
-    <Compile Include="Path.pas" />
     <Compile Include="String.pas" />
     <Compile Include="StringBuilder.pas" />
     <Compile Include="StringFormatter.pas" />
-    <Compile Include="Thread.pas" />
-    <Compile Include="ThreadPool.pas" />
+    <Compile Include="Xml.pas" />
     <Compile Include="Url.pas" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
+    <Folder Include="Collections" />
+    <Folder Include="Threading" />
+    <Folder Include="IO" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Nougat.targets" />
   <PropertyGroup>

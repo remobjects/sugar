@@ -1,17 +1,9 @@
-﻿namespace RemObjects.Oxygene.Sugar;
+﻿namespace RemObjects.Oxygene.Sugar.Threading;
 {$HIDE W0} //supress case-mismatch errors
 interface
 
 type
-  {$IF ECHOES}
-  ManualResetEvent = public class mapped to System.Threading.ManualResetEvent
-  public
-    method &Set; mapped to &Set;
-    method Reset; mapped to Reset;
-    method WaitOne; mapped to WaitOne;
-    method WaitOne(Timeout: Integer): Boolean; mapped to WaitOne(Timeout);
-  end;
-  {$ELSEIF COOPER}
+  {$IF COOPER}
   ManualResetEvent = public class
   private
     fEvent: java.util.concurrent.CountDownLatch;
@@ -22,6 +14,17 @@ type
     method Reset; locked;
     method WaitOne;
     method WaitOne(Timeout: Integer): Boolean;
+  end;
+  {$ELSEIF ECHOES}
+  ManualResetEvent = public class mapped to System.Threading.ManualResetEvent
+  public
+    method &Set; mapped to &Set;
+    method Reset; mapped to Reset;
+    method WaitOne; mapped to WaitOne;
+    method WaitOne(Timeout: Integer): Boolean; mapped to WaitOne(Timeout);
+  end;
+  {$ELSEIF NOUGAT}
+  ManualResetEvent = public class
   end;
   {$ENDIF}
 

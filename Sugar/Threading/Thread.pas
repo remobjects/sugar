@@ -1,7 +1,9 @@
-﻿namespace RemObjects.Oxygene.Sugar;
-
+﻿namespace RemObjects.Oxygene.Sugar.Threading;
 {$HIDE W0} //supress case-mismatch errors
 interface
+
+uses
+  RemObjects.Oxygene.Sugar.Collections;
 
 type
   {$IF COOPER}
@@ -15,26 +17,32 @@ type
     method GetPriority: ThreadPriority;
     method SetPriority(Value: ThreadPriority);
     method GetCallStack: List<String>;
-    method GetThreadID: IntPtr;
+    {$IF NOUGAT}method GetThreadID: IntPtr;{$ENDIF}
   public
     method Start; mapped to Start;
     method &Join; {$IF COOPER OR ECHOES} mapped to &Join;{$ENDIF}
     method &Join(Timeout: Integer);  {$IF COOPER OR ECHOES}mapped to &Join(Timeout);{$ENDIF}
     
-    method Abort; mapped to {$IF ECHOES}Aborty{$ELSEIF COOPER}Stop{$ELSEIF NOUGAT}cancel{$ENDIF};
+    method Abort; mapped to {$IF ECHOES}Abort{$ELSEIF COOPER}Stop{$ELSEIF NOUGAT}cancel{$ENDIF};
 
     class method Sleep(aTimeout: Integer); mapped to {$IF COOPER OR ECHOES}Sleep(aTimeout){$ELSEIF NOUGAT}sleepForTimeInterval(aTimeout){$ENDIF};
 
     //property State: ThreadState read GetState write SetState;
     property IsAlive: Boolean read {$IF COOPER OR ECHOES}mapped.IsAlive{$ELSEIF NOUGAT}mapped.isExecuting{$ENDIF};
     property Name: String read mapped.Name write {$IF COOPER OR ECHOES}mapped.Name{$ELSEIF NOUGAT}mapped.setName{$ENDIF};
-    property ThreadId: IntPtr read {$IF COOPER}mapped.id{$ELSEIF ECHOES}mapped.ManagedThreadId{$ELSEIF NOUGAT}GetThreadID{$ENDIF};
+
+    {$IF COOPER OR ECHOES}
+    property ThreadId: Int64 read {$IF COOPER}mapped.id{$ELSEIF ECHOES}mapped.ManagedThreadId{$ENDIF};
+    {$ELSEIF NOUGAT}    
+    property ThreadId: IntPtr read GetThreadID;
+    {$ENDIF}
+
     property Priority: ThreadPriority read GetPriority write SetPriority;
 
     //Error	6	(E62) Type mismatch, cannot assign "RemObjects.Oxygene.Sugar.List<RemObjects.Oxygene.Sugar.String>" to "RemObjects.Oxygene.Sugar.List<RemObjects.Oxygene.Sugar.String>"	Z:\Code\Sugar\Sugar\Thread.pas	33	5	RemObjects.Oxygene.Sugar.Nougat.OSX
     //property CallStack: List<String> read GetCallStack;
 
-    class property MainThread: Thread read mapped.mainThread;
+    {$IF NOUGAT}class property MainThread: Thread read mapped.mainThread;{$ENDIF}
     class property CurrentThread: Thread read mapped.currentThread; 
 
   end;
@@ -86,6 +94,12 @@ begin
   {$ENDIF}
 end;
 
+{$IF NOUGAT}
+method Thread.GetThreadID: IntPtr;
+begin
+  // Todo
+end;
+
 method Thread.&Join;
 begin
 
@@ -94,12 +108,6 @@ end;
 method Thread.&Join(Timeout: Integer);
 begin
 
-end;
-
-{$IF NOUGAT}
-method Thread.GetThreadID: IntPtr;
-begin
-  // Todo
 end;
 {$ENDIF}
 
