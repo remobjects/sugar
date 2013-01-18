@@ -42,7 +42,6 @@ type
     property Day: Integer read fCalendar.get(Calendar.DAY_OF_MONTH);
     property Hour: Integer read fCalendar.get(Calendar.HOUR);
     property Minute: Integer read fCalendar.get(Calendar.MINUTE);
-    property Millisecond: Integer read fCalendar.get(Calendar.MILLISECOND);
     property Month: Integer read fCalendar.get(Calendar.MONTH)+1;
     class property Now: DateTime read new DateTime;
     property Second: Integer read fCalendar.get(Calendar.SECOND);
@@ -72,7 +71,6 @@ type
     property Day: Integer read mapped.Day;
     property Hour: Integer read mapped.Hour;
     property Minute: Integer read mapped.Minute;
-    property Millisecond: Integer read mapped.Millisecond;
     property Month: Integer read mapped.Month;
     class property Now: DateTime read mapped.Now;
     property Second: Integer read mapped.Second;
@@ -89,7 +87,7 @@ type
     method GetComponent(Component: NSCalendarUnit): Integer;
     method FormatWithStyle(DateStyle, TimeStyle: NSDateFormatterStyle): String;
   public
-    constructor;    
+    method init: id; override;
     method initWithDate(aDate: NSDate): dynamic;
     method AddDays(Value: Integer): DateTime;
     method AddHours(Value: Integer): DateTime;
@@ -111,7 +109,6 @@ type
     property Day: Integer read GetComponent(NSCalendarUnit.NSDayCalendarUnit);
     property Hour: Integer read GetComponent(NSCalendarUnit.NSHourCalendarUnit);
     property Minute: Integer read GetComponent(NSCalendarUnit.NSMinuteCalendarUnit); //TODO: Milliseconds for Nougat
-    //property Millisecond: Integer read fCalendar.get(Calendar.MILLISECOND);
     property Month: Integer read GetComponent(NSCalendarUnit.NSMonthCalendarUnit);
     class property Now: DateTime read new DateTime;
     property Second: Integer read GetComponent(NSCalendarUnit.NSSecondCalendarUnit);
@@ -223,9 +220,10 @@ begin
   exit java.text.DateFormat.getTimeInstance(java.text.DateFormat.SHORT).format(fDate);
 end;
 {$ELSEIF NOUGAT}
-constructor DateTime;
-begin
+method DateTime.init: id;
+begin  
   fDate := new NSDate();
+  result := inherited;
 end;
 
 method DateTime.initWithDate(aDate: NSDate): dynamic;
