@@ -78,6 +78,7 @@
     <Compile Include="Collections\Stack.pas" />
     <Compile Include="Console.pas" />
     <Compile Include="DateTime.pas" />
+    <Compile Include="Random.pas" />
     <Compile Include="Environment.pas" />
     <Compile Include="Exceptions.pas" />
     <Compile Include="IO\Directory.pas" />
