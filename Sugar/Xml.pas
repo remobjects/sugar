@@ -886,9 +886,9 @@ end;
 
 method XmlNode.SelectNodes(XPath: String): array of XmlNode;
 begin
-  var Error: NSError := nil;
-  var Nodes := Node.nodesForXPath(XPath) error(@Error);
-  exit ConvertNodeList(Nodes);
+  var lError: NSError := nil;
+  var lNodes := Node.nodesForXPath(XPath) error(var lError);
+  exit ConvertNodeList(lNodes);
 end;
 
 method XmlNode.SelectSingleNode(XPath: String): XmlNode;
@@ -1211,7 +1211,8 @@ end;
 class method XmlDocument.LoadDocument(FileName: String): XmlDocument;
 begin
   var Url := new NSURL fileURLWithPath(FileName);
-  var lNode := new NSXMLDocument withContentsOfURL(Url) options(NSXMLDocumentTidyXML) error(nil);
+  var lError: NSError;
+  var lNode := new NSXMLDocument withContentsOfURL(Url) options(NSXMLDocumentTidyXML) error(var lError);
   exit new XmlDocument(lNode);
 end;
 
