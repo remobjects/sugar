@@ -51,13 +51,17 @@ implementation
 {$IF NOUGAT}
 class method Environment.getOperatingSystemName: String;
 begin
-  {$HIDE H0}
-  if rtl.TargetConditionals.TARGET_OS_MAC = 1 then result := ('OS X')
-  else if rtl.TargetConditionals.TARGET_OS_IPHONE = 1 then begin
-    if rtl.TargetConditionals.TARGET_IPHONE_SIMULATOR = 1 then result := 'iOS Simulator'
-    else result := 'iOS';
-  end;
-  {$SHOW H0}
+  {$IF TARGET_OS_MAC}
+  result := ('OS X');
+  {$ELSEIF TARGET_OS_IPHONE}
+    {$IF TARGET_IPHONE_SIMULATOR}
+    result := 'iOS Simulator';
+    {$ELSE}
+    result := 'iOS';
+    {$ENDIF}
+  {$ELSE}
+    {$ERROR Unknown Nougat target platform}
+  {$ENDIF}
 end;
 
 class method Environment.SysCtl(aLevel: Int32; aValue: Int32): String;
