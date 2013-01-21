@@ -3,7 +3,7 @@
 interface
 
 uses
-    RemObjects.Oxygene.Sugar;
+  RemObjects.Oxygene.Sugar;
 
 type
 {$IF ECHOES}
@@ -156,7 +156,7 @@ end;
 class method Directory.CreateDirectory(Path: String);
 begin
   var lError: Foundation.NSError := nil;
-  if not Foundation.NSFileManager.defaultManager.createDirectoryAtPath(Path) withIntermediateDirectories(False) attributes(nil) error(@lError) then
+  if not Foundation.NSFileManager.defaultManager.createDirectoryAtPath(Path) withIntermediateDirectories(False) attributes(nil) error(var lError) then
     raise SugarNSErrorException.exceptionWithError(lError);
 end;
 
@@ -164,7 +164,7 @@ class method Directory.Delete(Path: String; Recursive: Boolean);
 begin
  //TODO: Currently always deletes files recursively
   var lError: Foundation.NSError := nil;
-  if not Foundation.NSFileManager.defaultManager.removeItemAtPath(Path) error(@lError) then
+  if not Foundation.NSFileManager.defaultManager.removeItemAtPath(Path) error(var lError) then
     raise SugarNSErrorException.exceptionWithError(lError);
 end;
 
@@ -184,8 +184,10 @@ begin
   
   if Recursive then
     GetFilesRecursive(Path, List)
-  else
-    List.addObjectsFromArray(Foundation.NSFileManager.defaultManager.contentsOfDirectoryAtPath(Path) error(nil));
+  else begin
+    var lError: Foundation.NSError;
+    List.addObjectsFromArray(Foundation.NSFileManager.defaultManager.contentsOfDirectoryAtPath(Path) error(var lError));
+  end;
 
   result := new String[List.count];
   for i: Integer := 0 to List.count-1 do
@@ -194,7 +196,8 @@ end;
 
 class method Directory.GetFilesRecursive(Path: String; List: Foundation.NSMutableArray);
 begin
-  var Files := Foundation.NSFileManager.defaultManager.contentsOfDirectoryAtPath(Path) error(nil);
+  var lError: Foundation.NSError;
+  var Files := Foundation.NSFileManager.defaultManager.contentsOfDirectoryAtPath(Path) error(var lError);
   for i: Integer := 0 to Files.count-1 do begin
     var lFilePath: String := Files.objectAtIndex(i);
     if not IsDirectory(lFilePath) then
@@ -212,7 +215,7 @@ end;
 class method Directory.Move(SourceDirName: String; DestDirName: String);
 begin
   var lError: Foundation.NSError := nil;
-  if not Foundation.NSFileManager.defaultManager.moveItemAtPath(SourceDirName) toPath(DestDirName) error(nil) then
+  if not Foundation.NSFileManager.defaultManager.moveItemAtPath(SourceDirName) toPath(DestDirName) error(var lError) then
     raise SugarNSErrorException.exceptionWithError(lError);
 end;
 {$ENDIF}

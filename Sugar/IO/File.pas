@@ -156,14 +156,14 @@ class method File.Copy(aOldFileName, aNewFileName: String; aOverwriteFile: Boole
 begin
   var lError: Foundation.NSError := nil;
   //ToDo: handle aOverwriteFile
-  if not NSFileManager.defaultManager.copyItemAtPath(aOldFileName) toPath(aNewFileName) error(@lError) then
+  if not NSFileManager.defaultManager.copyItemAtPath(aOldFileName) toPath(aNewFileName) error(var lError) then
     raise SugarNSErrorException.exceptionWithError(lError); 
 end;
 
 class method File.Delete(aFileName: String);
 begin
   var lError: Foundation.NSError := nil;
-  if not NSFileManager.defaultManager.removeItemAtPath(aFileName) error(@lError) then
+  if not NSFileManager.defaultManager.removeItemAtPath(aFileName) error(var lError) then
     raise SugarNSErrorException.exceptionWithError(lError); 
 end;
 
@@ -176,14 +176,14 @@ end;
 class method File.Move(aOldFileName, aNewFileName: String);
 begin
   var lError: Foundation.NSError := nil;
-  if not NSFileManager.defaultManager.moveItemAtPath(aOldFileName) toPath(aNewFileName) error(@lError) then
+  if not NSFileManager.defaultManager.moveItemAtPath(aOldFileName) toPath(aNewFileName) error(var lError) then
     raise SugarNSErrorException.exceptionWithError(lError); 
 end;
 
 class method File.ReadBytes(aFileName: String): array of Byte;
 begin
   var lError: Foundation.NSError := nil;
-  var lData := NSData.dataWithContentsOfFile(aFileName) options(NSDataReadingOptions.NSDataReadingMappedIfSafe) error(@lError);
+  var lData := NSData.dataWithContentsOfFile(aFileName) options(NSDataReadingOptions.NSDataReadingMappedIfSafe) error(var lError);
   if not assigned(lData) then 
     raise SugarNSErrorException.exceptionWithError(lError); 
 
@@ -194,7 +194,7 @@ end;
 class method File.ReadText(aFileName: String): String;
 begin
   var lError: Foundation.NSError := nil;
-  result := Foundation.NSString.stringWithContentsOfFile(aFileName) encoding(NSStringEncoding.NSUTF8StringEncoding) error(@lError);
+  result := Foundation.NSString.stringWithContentsOfFile(aFileName) encoding(NSStringEncoding.NSUTF8StringEncoding) error(var lError);
   if not assigned(result) then 
     raise SugarNSErrorException.exceptionWithError(lError); 
 end;
@@ -211,7 +211,7 @@ class method File.WriteText(aFileName: String; aText: String);
 begin
   var lError: Foundation.NSError := nil;
   // ToDo: should use colon once NRE issue is fixed
-  if not NSString(aText){:}.writeToFile(aFileName) atomically(true) encoding(NSStringEncoding.NSUTF8StringEncoding) error(@lError) then
+  if not NSString(aText){:}.writeToFile(aFileName) atomically(true) encoding(NSStringEncoding.NSUTF8StringEncoding) error(var lError) then
     raise SugarNSErrorException.exceptionWithError(lError); 
 end;
 {$ENDIF}
