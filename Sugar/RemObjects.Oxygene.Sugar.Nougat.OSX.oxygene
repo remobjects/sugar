@@ -66,6 +66,7 @@
     <Compile Include="Color.pas" />
     <Compile Include="Console.pas" />
     <Compile Include="DateTime.pas" />
+    <Compile Include="Random.pas" />
     <Compile Include="Dispatch.pas" />
     <Compile Include="Environment.pas" />
     <Compile Include="IO\Directory.pas" />

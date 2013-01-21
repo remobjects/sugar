@@ -40,13 +40,24 @@ type
     property Length: Integer read mapped.Length;
   {$ELSEIF NOUGAT}
   StringBuilder = public class mapped to Foundation.NSMutableString
+  private
+    method NSMakeRange(loc: Int32; len: Int32): Foundation.NSRange;
   public
     method Append(value: String): StringBuilder;
     method Append(value: String; startIndex, count: Integer): StringBuilder;
     method Append(value: Char; repeatCount: Integer): StringBuilder;
     method AppendLine(): StringBuilder; 
     method AppendLine(value: String): StringBuilder; 
+
     method ToString(): String;
+    method Clear; mapped to setString("");
+    method Delete(Start, &End: Integer): StringBuilder;
+    method Replace(Start, &End: Integer; Value: String): StringBuilder;
+    method Substring(Start: Integer): String; mapped to substringFromIndex(Start);
+    method Substring(Start, &End: Integer): String;
+    method Insert(Offset: Integer; Value: String): StringBuilder;
+
+    property Length: Integer read mapped.length;
   {$ENDIF}
   end;
 
@@ -119,6 +130,35 @@ end;
 method StringBuilder.ToString(): String;
 begin
   exit Foundation.NSString.stringWithString(mapped);
+end;
+
+method StringBuilder.Insert(Offset: Integer; Value: String): StringBuilder;
+begin
+  mapped.insertString(Value) atIndex(Offset);
+  exit mapped;
+end;
+
+method StringBuilder.NSMakeRange(loc: Int32; len: Int32): Foundation.NSRange;
+begin
+  result.location := loc;
+  result.length := len;
+end;
+
+method StringBuilder.Replace(Start: Integer; &End: Integer; Value: String): StringBuilder;
+begin
+  mapped.replaceCharactersInRange(NSMakeRange(Start, &End)) withString(Value);
+  exit mapped;
+end;
+
+method StringBuilder.Substring(Start: Integer; &End: Integer): String;
+begin
+  exit mapped.substringWithRange(NSMakeRange(Start, &End));
+end;
+
+method StringBuilder.Delete(Start: Integer; &End: Integer): StringBuilder;
+begin
+  mapped.deleteCharactersInRange(NSMakeRange(Start, &End));
+  exit mapped;
 end;
 {$ENDIF}
 
