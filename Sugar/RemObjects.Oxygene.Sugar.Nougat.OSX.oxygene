@@ -14,6 +14,7 @@
     <StartupClass />
     <DeploymentTargetVersion>10.6</DeploymentTargetVersion>
     <BundleIdentifier>org.me.RemObjects.Oxygene.Sugar</BundleIdentifier>
+    <AllowLegacyOutParams>False</AllowLegacyOutParams>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <Optimize>False</Optimize>
@@ -46,6 +47,9 @@
     <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AppKit.fx">
+      <HintPath>C:\Program Files (x86)\RemObjects Software\Oxygene\Nougat\SDKs\OS X 10.8\AppKit.fx</HintPath>
+    </Reference>
     <Reference Include="CoreServices.fx">
       <HintPath>C:\Program Files (x86)\RemObjects Software\Oxygene\Nougat\SDKs\OS X 10.8\CoreServices.fx</HintPath>
     </Reference>
@@ -59,6 +63,7 @@
     <Compile Include="Collections\List.pas" />
     <Compile Include="Collections\Queue.pas" />
     <Compile Include="Collections\Stack.pas" />
+    <Compile Include="Color.pas" />
     <Compile Include="Console.pas" />
     <Compile Include="DateTime.pas" />
     <Compile Include="Dispatch.pas" />

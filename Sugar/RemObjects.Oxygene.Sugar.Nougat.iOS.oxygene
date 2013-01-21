@@ -14,6 +14,7 @@
     <StartupClass />
     <DeploymentTargetVersion>10.6</DeploymentTargetVersion>
     <BundleIdentifier>org.me.RemObjects.Oxygene.Sugar</BundleIdentifier>
+    <AllowLegacyOutParams>False</AllowLegacyOutParams>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <Optimize>False</Optimize>
@@ -56,6 +57,7 @@
     <Compile Include="Collections\List.pas" />
     <Compile Include="Collections\Queue.pas" />
     <Compile Include="Collections\Stack.pas" />
+    <Compile Include="Color.pas" />
     <Compile Include="Console.pas" />
     <Compile Include="Environment.pas" />
     <Compile Include="Exceptions.pas" />

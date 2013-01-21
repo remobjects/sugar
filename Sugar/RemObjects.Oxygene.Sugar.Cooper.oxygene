@@ -53,12 +53,14 @@
     <Reference Include="rt.jar" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AutoreleasePool.pas" />
     <Compile Include="Binary.pas" />
     <Compile Include="Collections\Dictionary.pas" />
     <Compile Include="Collections\HashSet.pas" />
     <Compile Include="Collections\List.pas" />
     <Compile Include="Collections\Queue.pas" />
     <Compile Include="Collections\Stack.pas" />
+    <Compile Include="Color.pas" />
     <Compile Include="Console.pas" />
     <Compile Include="Cooper\EnumerationSequence.pas" />
     <Compile Include="DateTime.pas" />

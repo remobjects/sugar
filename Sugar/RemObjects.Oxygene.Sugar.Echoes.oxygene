@@ -6,11 +6,14 @@
     <StartupClass />
     <OutputType>Library</OutputType>
     <AssemblyName>RemObjects.Oxygene.Sugar</AssemblyName>
-    <AllowGlobals>False</AllowGlobals>
-    <AllowLegacyWith>False</AllowLegacyWith>
+    <AllowGlobals>
+    </AllowGlobals>
+    <AllowLegacyWith>
+    </AllowLegacyWith>
     <AllowLegacyOutParams>False</AllowLegacyOutParams>
     <AllowLegacyCreate>False</AllowLegacyCreate>
-    <AllowUnsafeCode>False</AllowUnsafeCode>
+    <AllowUnsafeCode>
+    </AllowUnsafeCode>
     <ApplicationIcon />
     <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
@@ -58,6 +61,9 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing">
+      <HintPath>C:\Windows\Microsoft.NET\Framework\v2.0.50727\System.Drawing.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -70,12 +76,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AutoreleasePool.pas" />
     <Compile Include="Binary.pas" />
     <Compile Include="Collections\Dictionary.pas" />
     <Compile Include="Collections\HashSet.pas" />
     <Compile Include="Collections\List.pas" />
     <Compile Include="Collections\Queue.pas" />
     <Compile Include="Collections\Stack.pas" />
+    <Compile Include="Color.pas" />
     <Compile Include="Console.pas" />
     <Compile Include="DateTime.pas" />
     <Compile Include="Environment.pas" />
