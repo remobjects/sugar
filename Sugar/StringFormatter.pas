@@ -92,7 +92,8 @@ begin
       if not assigned(arg) then 
         str := ""
       else 
-        str := arg.ToString();  
+        //60445: Nougat: support for extension methods (ie Categories)
+        str := arg.{$IF NOUGAT}description{$ELSE}ToString{$ENDIF}();  
       // pad formatted string and append to sb
       if width > str.Length then 
       begin

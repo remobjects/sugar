@@ -1,5 +1,5 @@
 ﻿namespace RemObjects.Oxygene.Sugar;
-{$HIDE W0} //supress case-mismatch errors
+
 interface
 
 uses
@@ -53,7 +53,7 @@ type
     method SaveToFile(Path: String);
     method LoadFromFile(Path: String);
 
-    property Count: Integer read Items.Count;
+    property Count: Integer read Items.count;
   end;
   {$ENDIF}
 

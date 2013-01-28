@@ -46,7 +46,7 @@ begin
   {$IF COOPER}
   {$ELSEIF ECHOES}
   {$ELSEIF NOUGAT}
-  dispatch_async({dispatch_get_main_queue()}@_dispatch_main_q, aAction);
+  dispatch_async({dispatch_get_main_queue()}dispatch_queue_t(@_dispatch_main_q), aAction);
   {$ENDIF}
 end;
 

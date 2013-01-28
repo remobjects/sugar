@@ -77,6 +77,7 @@ type
     class property Today: DateTime read mapped.Today;
     property Year: Integer read mapped.Year;
   end;
+
   {$ELSEIF NOUGAT}
   DateTime = public class
   private
