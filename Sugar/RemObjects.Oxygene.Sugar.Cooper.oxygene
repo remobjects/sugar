@@ -63,6 +63,10 @@
     <Compile Include="Color.pas" />
     <Compile Include="Console.pas" />
     <Compile Include="Cooper\EnumerationSequence.pas" />
+    <Compile Include="Crypto\Cipher.pas">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Crypto\Digest.pas" />
     <Compile Include="DateTime.pas" />
     <Compile Include="Random.pas" />
     <Compile Include="Environment.pas" />
@@ -89,6 +93,7 @@
     <Folder Include="Cooper" />
     <Folder Include="Collections" />
     <Folder Include="IO" />
+    <Folder Include="Crypto" />
     <Folder Include="Threading" />
     <Folder Include="Properties\" />
   </ItemGroup>

@@ -12,9 +12,11 @@
     <AssemblyName>Sugar</AssemblyName>
     <DefaultUses />
     <StartupClass />
-    <DeploymentTargetVersion>10.6</DeploymentTargetVersion>
+    <DeploymentTargetVersion>
+    </DeploymentTargetVersion>
     <BundleIdentifier>org.me.RemObjects.Oxygene.Sugar</BundleIdentifier>
     <AllowLegacyOutParams>False</AllowLegacyOutParams>
+    <CreateHeaderFile>True</CreateHeaderFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <Optimize>False</Optimize>
@@ -65,6 +67,10 @@
     <Compile Include="Collections\Stack.pas" />
     <Compile Include="Color.pas" />
     <Compile Include="Console.pas" />
+    <Compile Include="Crypto\Cipher.pas">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Crypto\Digest.pas" />
     <Compile Include="DateTime.pas" />
     <Compile Include="Random.pas" />
     <Compile Include="Dispatch.pas" />
@@ -91,6 +97,7 @@
     <Compile Include="Url.pas" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Crypto" />
     <Folder Include="Properties\" />
     <Folder Include="Collections" />
     <Folder Include="Threading" />

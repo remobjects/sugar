@@ -85,6 +85,10 @@
     <Compile Include="Collections\Stack.pas" />
     <Compile Include="Color.pas" />
     <Compile Include="Console.pas" />
+    <Compile Include="Crypto\Cipher.pas">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Crypto\Digest.pas" />
     <Compile Include="DateTime.pas" />
     <Compile Include="Random.pas" />
     <Compile Include="Environment.pas" />
@@ -110,6 +114,7 @@
     <Compile Include="Url.pas" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Crypto" />
     <Folder Include="Properties\" />
     <Folder Include="Collections" />
     <Folder Include="Threading" />
