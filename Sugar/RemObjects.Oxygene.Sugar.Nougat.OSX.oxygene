@@ -12,8 +12,7 @@
     <AssemblyName>Sugar</AssemblyName>
     <DefaultUses />
     <StartupClass />
-    <DeploymentTargetVersion>
-    </DeploymentTargetVersion>
+    <DeploymentTargetVersion>10.6</DeploymentTargetVersion>
     <BundleIdentifier>org.me.RemObjects.Oxygene.Sugar</BundleIdentifier>
     <AllowLegacyOutParams>False</AllowLegacyOutParams>
     <CreateHeaderFile>True</CreateHeaderFile>
