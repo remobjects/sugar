@@ -64,9 +64,7 @@
     <Compile Include="Crypto\Cipher.pas">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Crypto\Digest.pas">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Crypto\Digest.pas" />
     <Compile Include="DateTime.pas" />
     <Compile Include="Environment.pas" />
     <Compile Include="Random.pas" />
