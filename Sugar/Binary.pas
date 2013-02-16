@@ -1,14 +1,16 @@
 ﻿namespace RemObjects.Oxygene.Sugar;
-{$HIDE W0} //supress case-mismatch errors
+
+{$HIDE W0} //supress case-mismatch errors between platforms
+
 interface
 
 type
-  Range = public class//shoud be mapped to NSRange in Nougat
+  Range = public record {$IF NOUGAT}mapped to Foundation.NSRange{$ENDIF}
   public
     class method MakeRange(aLocation, aLength: Integer): Range;
 
-    property Location: Integer read write;
-    property Length: Integer read write;
+    property Location: Integer {$IF NOUGAT}read mapped.location write mapped.location{$ENDIF};
+    property Length: Integer {$IF NOUGAT} read mapped.length write mapped.length{$ENDIF};
   end;
 
   {$IF COOPER}

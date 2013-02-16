@@ -48,7 +48,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="com.remobjects.oxygene.rtl.jar">
-      <HintPath>C:\Program Files (x86)\Embarcadero\Delphi Prism\Reference Archives\com.remobjects.oxygene.rtl.jar</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="rt.jar" />
   </ItemGroup>
