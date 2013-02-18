@@ -66,6 +66,7 @@
     <Compile Include="Environment.pas" />
     <Compile Include="Random.pas" />
     <Compile Include="Exceptions.pas" />
+    <Compile Include="Guid.pas" />
     <Compile Include="Properties.pas" />
     <Compile Include="IO\Directory.pas" />
     <Compile Include="IO\File.pas" />

@@ -87,6 +87,7 @@
     <Compile Include="Threading\Thread.pas" />
     <Compile Include="Threading\ThreadPool.pas" />
     <Compile Include="Exceptions.pas" />
+    <Compile Include="Guid.pas" />
     <Compile Include="Math.pas" />
     <Compile Include="Object.pas" />
     <Compile Include="String.pas" />
