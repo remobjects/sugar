@@ -30,6 +30,11 @@ type
   end;
   {$ENDIF}
 
+  ErrorMessage = assembly static class
+  public
+    class const FORMAT_ERROR = "Input string was not in a correct format";
+  end;
+
 implementation
 
 {$IF NOUGAT}

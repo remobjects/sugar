@@ -3,32 +3,45 @@
 {$HIDE W0} //supress case-mismatch errors
 interface
 
+{$IF NOUGAT}
+uses
+  Foundation;
+{$ENDIF}
+
 type
+  GuidFormat = public enum (&Default, Braces, Parentheses);
+
   {$IF COOPER}
   Guid = public class mapped to java.util.UUID
     method CompareTo(Value: Guid): Integer; mapped to compareTo(Value);
     method &Equals(Value: Guid): Boolean; mapped to &equals(Value);
     class method NewGuid: Guid; mapped to randomUUID;
-    class method Parse(Value: String): Guid; mapped to fromString(Value);
+    class method Parse(Value: String): Guid;
+    class method EmptyGuid: Guid;
     class operator Equal(GuidA, GuidB: Guid): Boolean;
     class operator NotEqual(GuidA, GuidB: Guid): Boolean;
     method ToByteArray: array of byte;
+    method ToString(Format: GuidFormat): String;
   end;
   {$ELSEIF ECHOES}
+  [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Auto, Size := 1)]
   Guid = public record mapped to System.Guid
   public
     method CompareTo(Value: Guid): Integer; mapped to CompareTo(Value);
     method &Equals(Value: Guid): Boolean; mapped to &Equals(Value);
     class method NewGuid: Guid; mapped to NewGuid;
     class method Parse(Value: String): Guid;
+    class method EmptyGuid: Guid; mapped to Empty;
     class operator Equal(GuidA, GuidB: Guid): Boolean;
     class operator NotEqual(GuidA, GuidB: Guid): Boolean;
     method ToByteArray: array of byte; mapped to ToByteArray;     
+    method ToString(Format: GuidFormat): String;
   end;
   {$ELSEIF NOUGAT}
   Guid = public class
   private
     fData: array of Byte;
+    method AppendRange(Data: NSMutableString; Range: NSRange);
     method InternalParse(Data: String): array of Byte;
   public
     method init: id; override;
@@ -42,6 +55,7 @@ type
     class method EmptyGuid: Guid;
     method ToByteArray: array of Byte;
     method ToString: String;
+    method ToString(Format: GuidFormat): String;
   end;
   {$ENDIF}
 
@@ -56,6 +70,41 @@ begin
   buffer.putLong(mapped.LeastSignificantBits);
   exit buffer.array;
 end;
+
+class method Guid.EmptyGuid: Guid;
+begin
+  exit new Guid(0,0);
+end;
+
+method Guid.ToString(Format: GuidFormat): String;
+begin
+  case Format of
+    Format.Default: exit mapped.toString;
+    Format.Braces: exit "{"+mapped.toString+"}";
+    Format.Parentheses: exit "("+mapped.toString+")";
+    else
+      exit mapped.toString;
+  end;
+end;
+
+class method Guid.Parse(Value: String): Guid;
+begin  
+  if (Value.Length <> 38) and (Value.Length <> 36) then
+    raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);
+
+  if Value.Chars[0] = '{' then begin
+    if Value.Chars[37] <> '}' then
+      raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);
+  end
+  else if Value.Chars[0] = '(' then begin
+    if Value.Chars[37] <> ')' then
+      raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);
+  end;
+
+  //remove {} or () symbols
+  Value := java.lang.String(Value.ToUpper).replaceAll("[^A-F0-9]", "");
+  exit mapped.fromString(Value);
+end;
 {$ENDIF}
 
 {$IF ECHOES}
@@ -63,9 +112,20 @@ class method Guid.Parse(Value: String): Guid;
 begin
   exit new Guid(Value);
 end;
+
+method Guid.ToString(Format: GuidFormat): String;
+begin
+  case Format of
+    Format.Default: exit mapped.ToString("D");
+    Format.Braces: exit mapped.ToString("B");
+    Format.Parentheses: exit mapped.ToString("P");
+    else
+      exit mapped.ToString("D");
+  end;
+end;
 {$ENDIF}
 
-{$IF COOPER OF ECHOES}
+{$IF COOPER OR ECHOES}
 class operator Guid.Equal(GuidA: Guid; GuidB: Guid): Boolean;
 begin
   exit GuidA.Equals(GuidB);
@@ -134,76 +194,71 @@ begin
   memcpy(Result, fData, 16);
 end;
 
+method Guid.AppendRange(Data: NSMutableString; Range: NSRange);
+begin
+  for i: Integer := Range.location to Range.length do
+    Data.appendFormat("%02hhX", fData[i]);
+end;
+
 method Guid.ToString: String;
 begin
   var GuidString := new NSMutableString();
 
-  for i: Integer := 0 to 3 do
-    GuidString.appendFormat("%02hhX", fData[i]);
-
+  AppendRange(GuidString, NSMakeRange(0, 3));
   GuidString.appendString("-");
-
-  for i: Integer := 4 to 5 do
-    GuidString.appendFormat("%02hhX", fData[i]);
-
+  AppendRange(GuidString, NSMakeRange(4, 5));
   GuidString.appendString("-");
-
-  for i: Integer := 6 to 7 do
-    GuidString.appendFormat("%02hhX", fData[i]);
-
+  AppendRange(GuidString, NSMakeRange(6, 7));
   GuidString.appendString("-");
-
-  for i: Integer := 8 to 9 do
-    GuidString.appendFormat("%02hhX", fData[i]);
-
+  AppendRange(GuidString, NSMakeRange(8, 9));
   GuidString.appendString("-");
-
-  for i: Integer := 10 to 15 do
-    GuidString.appendFormat("%02hhX", fData[i]);
+  AppendRange(GuidString, NSMakeRange(10, 15));
 
   exit GuidString;
+end;
+
+method Guid.ToString(Format: GuidFormat): String;
+begin
+  case Format of
+    Format.Default: exit ToString;
+    Format.Braces: exit "{"+ToString+"}";
+    Format.Parentheses: exit "("+ToString+")";
+    else
+      exit ToString;
+  end;
 end;
 
 method Guid.InternalParse(Data: String): array of Byte;
 begin
   var Offset := 0;
 
-  if (Data.length <> 38) and (Data.length <> 36) then
-    raise new NSException;
+  if (Data.Length <> 38) and (Data.Length <> 36) then
+    raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);
 
-  if Data.characterAtIndex(0) = '{' then begin
-    if Data.characterAtIndex(37) <> '}' then
-      raise new NSException;
+  if Data.Chars[0] = '{' then begin
+    if Data.Chars[37] <> '}' then
+      raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);
 
     Offset := 1;
   end
-  else if Data.characterAtIndex(0) = '(' then begin
-    if Data.characterAtIndex(37) <> ')' then
-      raise new NSException;
+  else if Data.Chars[0] = '(' then begin
+    if Data.Chars[37] <> ')' then
+      raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);
 
     Offset := 1;
   end;
 
-  if (Data.characterAtIndex(8+Offset) <> '-') or (Data.characterAtIndex(13+Offset) <> '-') or
-     (Data.characterAtIndex(18+Offset) <> '-') or (Data.characterAtIndex(23+Offset) <> '-') then
-    raise new NSException;
-
-  var Scanner := NSScanner.scannerWithString(Data.uppercaseString);
-  var HexChars := NSCharacterSet.characterSetWithCharactersInString("0123456789ABCDEF");
-  var HexString := NSMutableString.string;
+  if (Data.Chars[8+Offset] <> '-') or (Data.Chars[13+Offset] <> '-') or
+     (Data.Chars[18+Offset] <> '-') or (Data.Chars[23+Offset] <> '-') then
+    raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);
 
   //Clear string from "{}()-" symbols
-  while (not Scanner.isAtEnd) do begin
-    var Buffer: String;
-    if (Scanner.scanCharactersFromSet(HexChars) intoString(var Buffer)) then
-      HexString.appendString(Buffer)
-    else
-      Scanner.setScanLocation(Scanner.scanLocation + 1);
-  end;
+  var Regex := NSRegularExpression.regularExpressionWithPattern("[^A-F0-9]") options(NSRegularExpressionOptions.NSRegularExpressionCaseInsensitive) error(nil);
+  var HexString := new NSMutableString withString(Regex.stringByReplacingMatchesInString(Data) options(NSMatchingOptions(0)) range(NSMakeRange(0, Data.length)) withTemplate(""));
 
   // We should get 32 chars
   if HexString.length <> 32 then
-    raise new NSException;
+    raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);
 
   Result := new Byte[16];
   var Idx, Idx2 := 0;
