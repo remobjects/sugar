@@ -230,7 +230,7 @@ end;
 
 method Guid.InternalParse(Data: String): array of Byte;
 begin
-  var Offset := 0;
+  var Offset: Int32;
 
   if (Data.Length <> 38) and (Data.Length <> 36) then
     raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);
@@ -261,7 +261,7 @@ begin
     raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);
 
   Result := new Byte[16];
-  var Idx, Idx2 := 0;
+  var Idx, Idx2: UInt32 := 0;
 
   //Convert hex to byte
   while Idx < HexString.length do begin

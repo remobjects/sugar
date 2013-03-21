@@ -50,6 +50,7 @@
   <ItemGroup>
     <Reference Include="Foundation.fx" />
     <Reference Include="rtl.fx" />
+    <Reference Include="UIKit.fx" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Binary.pas" />
@@ -84,7 +85,7 @@
     <Compile Include="String.pas" />
     <Compile Include="StringBuilder.pas" />
     <Compile Include="StringFormatter.pas" />
-    <Compile Include="Xml.pas" />
+    <None Include="Xml.pas" />
     <Compile Include="Url.pas" />
   </ItemGroup>
   <ItemGroup>

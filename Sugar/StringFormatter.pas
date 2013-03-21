@@ -41,7 +41,6 @@ namespace RemObjects.Oxygene.Sugar;
 interface
 
 type
-
   StringFormatter = assembly static class
   private   
     class method ParseDecimal(aString: String; var ptr: Int32): Int32;
@@ -51,6 +50,8 @@ type
   end;
 
 implementation
+
+{$HIDE W0}
 
 {$IF NOUGAT}
 uses
@@ -64,16 +65,13 @@ begin
   var sb := new StringBuilder(); 
   var ptr: Int32 := 0;
   var start: Int32 := ptr;
-  while ptr < aFormat.Length do 
-  begin
+  while ptr < aFormat.Length do begin
     var c := aFormat[ptr];
     inc(ptr);
-    if c = '{' then 
-    begin
+    if c = '{' then begin
       sb.Append(aFormat, start, ptr - start - 1);
       // check for escaped open bracket
-      if aFormat[ptr] = '{' then 
-      begin
+      if aFormat[ptr] = '{' then begin
         start := ptr;
         inc(ptr);
         continue;
@@ -84,47 +82,39 @@ begin
       var left_align: Boolean;
       var arg_format: String;
       ParseFormatSpecifier(aFormat, var ptr, out n, out width, out left_align, out arg_format);
-      // 59503: Nougat: length() needs to be Int32, not UInt32. remove the cast below, when fixed.
-      if n ≥ Int32(length(args)) then raise new SugarFormatException('Index (zero based) must be greater than or equal to zero and less than the size of the argument list.');
-     // format argument
+
+      if n ≥ length(args) then raise new SugarFormatException('Index (zero based) must be greater than or equal to zero and less than the size of the argument list.');
+
+      // format argument
       var arg := args[n];
-      var str: String;
-      if not assigned(arg) then 
-        str := ""
-      else 
-        //60445: Nougat: support for extension methods (ie Categories)
-        str := arg.{$IF NOUGAT}description{$ELSE}ToString{$ENDIF}();  
+      var str := if not assigned(arg) then '' else arg.ToString();  
+
       // pad formatted string and append to sb
-      if width > str.Length then 
-      begin
-        var padchar := ' ';
-        var padlen := width - str.Length;
-        if left_align then 
-        begin
+      if width > length(str) then begin
+        var padlen := width - length(str);
+        if left_align then begin
           sb.Append(str);
-          sb.Append(padchar, padlen)
+          sb.Append(' ', padlen)
         end
-        else 
-        begin
-          sb.Append(padchar, padlen);
+        else begin
+          sb.Append(' ', padlen);
           sb.Append(str)
         end
       end
-      else 
-      begin
+      else begin
         sb.Append(str)
       end;
       start := ptr
     end
-    else
-    begin
-      if ((c = '}') and (ptr < aFormat.Length)) then 
-      begin
+    else begin
+      if ((c = '}') and (ptr < aFormat.Length)) then begin
         sb.Append(aFormat, start, ptr - start - 1);
         start := ptr;
         inc(ptr);
       end
-      else if c = '}' then raise new SugarFormatException('Input string was not in a correct format.');
+      else if c = '}' then begin
+        raise new SugarFormatException('Input string was not in a correct format.');
+      end;
     end;
   end;
   if start < aFormat.Length then sb.Append(aFormat, start, aFormat.Length - start);
@@ -142,8 +132,7 @@ begin
   n := ParseDecimal(aString, var ptr);
   if n < 0 then raise new SugarFormatException('Input string was not in a correct format.');
   // M = width (non-negative integer)
-  if (ptr < max) and (aString[ptr] = ',') then 
-  begin
+  if (ptr < max) and (aString[ptr] = ',') then begin
     // White space between ',' and number or sign.
     inc(ptr);
     while (ptr < max) and (String.CharacterIsWhiteSpace(aString[ptr])) do inc(ptr);
@@ -154,15 +143,14 @@ begin
     width := ParseDecimal(aString, var ptr);
     if width < 0 then raise new SugarFormatException('Input string was not in a correct format.')
   end
-  else 
-  begin
+  else begin
     width := 0;
     left_align := false;
     aFormat := "";
   end;
+
   // F = argument format (string)
-  if (ptr < max) and (aString[ptr] = ':') then 
-  begin
+  if (ptr < max) and (aString[ptr] = ':') then begin
     var start := ptr;
     inc(ptr);
     while (ptr < max) and (aString[ptr] ≠ '}') do inc(ptr);
@@ -182,8 +170,7 @@ begin
   var p:= ptr;
   var n: Int32 := 0;
   var max := aString.Length;
-  while p < max do 
-  begin
+  while p < max do begin
     var c := aString[p];
     if (c < '0') or ('9' < c) then break;
     n := (n * 10) + ord(c) - ord('0');
