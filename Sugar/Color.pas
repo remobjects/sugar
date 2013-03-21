@@ -3,7 +3,6 @@
 interface
 
 type
-
   {$IF ECHOES}
   Color = public static class
   public

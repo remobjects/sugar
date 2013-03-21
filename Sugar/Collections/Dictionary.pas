@@ -38,6 +38,7 @@ type
   end;
 {$ELSEIF NOUGAT}
   Dictionary<T, U> = public class mapped to Foundation.NSMutableDictionary
+    where T is Foundation.INSCopying;
   private
     method GetItem(Key: T): U;   
     method SetItem(Key: T; Value: U);
