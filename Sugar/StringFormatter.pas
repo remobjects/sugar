@@ -53,11 +53,6 @@ implementation
 
 {$HIDE W0}
 
-{$IF NOUGAT}
-uses
-  Foundation; // 59476: Nougat: mapping fails if namespace for mapped methid isn't used
-{$ENDIF}
-
 class method StringFormatter.FormatString(aFormat: String; params args: array of Object): String;
 begin
   if aFormat = nil then raise new SugarArgumentNullException('aFormat');
@@ -154,15 +149,13 @@ begin
     var start := ptr;
     inc(ptr);
     while (ptr < max) and (aString[ptr] ≠ '}') do inc(ptr);
-    {$IF NOT NOUGAT}
     aFormat := aFormat + aString.Substring(start, ptr - start);
-    {$ELSE}
-    //59154: Nougat: operators on mapped types
-    aFormat := NSString(aFormat).stringByAppendingString(aString.Substring(start, ptr - start));
-    {$ENDIF}
   end
-  else aFormat := nil;
-  if ((ptr >= max)) or (aString[ptr] ≠ '}') then raise new SugarFormatException('Input string was not in a correct format.'); 
+  else begin
+    aFormat := nil;
+  end;
+  if ((ptr >= max)) or (aString[ptr] ≠ '}') then 
+    raise new SugarFormatException('Input string was not in a correct format.'); 
 end;
 
 class method StringFormatter.ParseDecimal(aString: String; var ptr: Int32): Int32;
