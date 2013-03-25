@@ -124,7 +124,7 @@ end;
 method List<T>.TrueForAll(Match: Predicate<T>): Boolean;
 begin
   for i: Integer := 0 to self.Count-1 do begin
-    if not Match(mapped[i]) then  //Item[i] causes crash in Cooper
+    if not Match(mapped[i]) then  // Retest: Item[i] causes crash in Cooper
       exit false;
   end;
   exit true;

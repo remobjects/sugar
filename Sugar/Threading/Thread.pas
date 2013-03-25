@@ -39,8 +39,7 @@ type
 
     property Priority: ThreadPriority read GetPriority write SetPriority;
 
-    //Error	6	(E62) Type mismatch, cannot assign "RemObjects.Oxygene.Sugar.List<RemObjects.Oxygene.Sugar.String>" to "RemObjects.Oxygene.Sugar.List<RemObjects.Oxygene.Sugar.String>"	Z:\Code\Sugar\Sugar\Thread.pas	33	5	RemObjects.Oxygene.Sugar.Nougat.OSX
-    //property CallStack: List<String> read GetCallStack;
+    property CallStack: List<String> read GetCallStack;
 
     {$IF NOUGAT}class property MainThread: Thread read mapped.mainThread;{$ENDIF}
     class property CurrentThread: Thread read mapped.currentThread; 
@@ -116,8 +115,7 @@ begin
   {$IF COOPER}
   {$ELSEIF ECHOES}
   {$ELSEIF NOUGAT}
-  //Error	6	(E62) Type mismatch, cannot assign "RemObjects.Oxygene.Sugar.List<RemObjects.Oxygene.Sugar.String>" to "RemObjects.Oxygene.Sugar.List<RemObjects.Oxygene.Sugar.String>"	Z:\Code\Sugar\Sugar\Thread.pas	33	5	RemObjects.Oxygene.Sugar.Nougat.OSX
-  //result := mapped.callStackSymbols as List<String>;
+  result := mapped.callStackSymbols as List<String>;
   {$ENDIF}
 end;
 

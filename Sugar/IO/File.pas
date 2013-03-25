@@ -202,16 +202,14 @@ end;
 class method File.WriteBytes(aFileName: String; aData: array of Byte);
 begin
   var lData := NSData.dataWithBytesNoCopy(^Void(aData)) length(length(aData));
-  // ToDo: should use colon once NRE issue is fixed
-  if not lData{:}.writeToFile(aFileName) atomically(true) then
+  if not lData:writeToFile(aFileName) atomically(true) then
     raise NSException.exceptionWithName('NSData') reason('Failed to write NSData to file.') userInfo(nil); 
 end;
 
 class method File.WriteText(aFileName: String; aText: String); 
 begin
   var lError: Foundation.NSError := nil;
-  // ToDo: should use colon once NRE issue is fixed
-  if not NSString(aText){:}.writeToFile(aFileName) atomically(true) encoding(NSStringEncoding.NSUTF8StringEncoding) error(var lError) then
+  if not NSString(aText):writeToFile(aFileName) atomically(true) encoding(NSStringEncoding.NSUTF8StringEncoding) error(var lError) then
     raise SugarNSErrorException.exceptionWithError(lError); 
 end;
 {$ENDIF}

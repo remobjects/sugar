@@ -1,6 +1,6 @@
 ﻿namespace RemObjects.Oxygene.Legacy;
 
-{$HIDE W0} // sometimes case differs between .NET and Java; no sense needlessly IFDEF'ing that
+{$HIDE W0} //supress case-mismatch errors
 
 interface
 

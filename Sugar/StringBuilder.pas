@@ -109,7 +109,7 @@ end;
 
 method StringBuilder.Append(value: String; startIndex: Integer; count: Integer): StringBuilder;
 begin
-  //Append(value.Substring(startIndex, count)); // 59477: Nougat: Compiler NRE on nested mapped call
+  Append(value.Substring(startIndex, count));
   mapped.appendString(value.Substring(startIndex, count));
   exit mapped;
 end;

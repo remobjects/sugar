@@ -1,6 +1,6 @@
 ﻿namespace RemObjects.Oxygene.Sugar;
 
-{$HIDE W0} //supress case-mismatch errors between platforms
+{$HIDE W0} //supress case-mismatch errors
 
 interface
 

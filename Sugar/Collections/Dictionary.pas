@@ -50,9 +50,9 @@ type
     method &Remove(Key: T); 
 
     property Item[Key: T]: U read GetItem write SetItem; default;
-    //sequences doesn't work in Nougat
-    //property Keys: sequence of T read ;
-    //property Values: sequence of U read ;
+    // 61584: Nougat: Support for "sequence of"
+    //property Keys: sequence of T read mapped.allKeys;
+    //property Values: sequence of U read mapped.allValues;
     property Count: Integer read mapped.Count;
   end;
 {$ENDIF}

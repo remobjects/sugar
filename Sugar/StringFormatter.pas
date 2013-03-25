@@ -51,7 +51,7 @@ type
 
 implementation
 
-{$HIDE W0}
+{$HIDE W0} //supress case-mismatch errors
 
 class method StringFormatter.FormatString(aFormat: String; params args: array of Object): String;
 begin

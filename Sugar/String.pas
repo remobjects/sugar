@@ -1,6 +1,6 @@
 ﻿namespace RemObjects.Oxygene.Sugar;
 
-{$HIDE W0} // sometimes case differs between .NET and Java; no sense needlessly IFDEF'ing that
+{$HIDE W0} //supress case-mismatch errors
 
 interface
 
@@ -70,7 +70,6 @@ type
   {$ELSEIF NOUGAT}
   String = public class mapped to Foundation.NSString
   private
-    method NSMakeRange(loc: Int32; len: Int32): Foundation.NSRange; // temp workaround
     method get_Chars(aIndex: Int32): Char;
   public
     property Length: Int32 read mapped.length;
@@ -159,12 +158,6 @@ begin
 end;
 
 {$IF NOUGAT}
-method String.NSMakeRange(loc: Int32; len: Int32): Foundation.NSRange;
-begin 
-  result.location := loc;
-  result.length := len;
-end;
-
 method String.IndexOf(aString: String): Int32;
 begin
   result := mapped.rangeOfString(aString).location;
@@ -175,9 +168,9 @@ begin
   result := mapped.rangeOfString(aString) options(NSStringCompareOptions.NSBackwardsSearch).location;
 end;
 
-method String.Substring(aStartIndex: Int32; aLength: Int32): String; //59155: Nougat: support for methids with nameless parameters (foo:::)
+method String.Substring(aStartIndex: Int32; aLength: Int32): String; 
 begin
-  result := mapped.substringWithRange(NSMakeRange(aStartIndex, aLength));
+  result := mapped.substringWithRange(Foundation.NSMakeRange(aStartIndex, aLength));
 end;
 
 method String.Trim: String;
