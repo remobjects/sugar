@@ -24,25 +24,49 @@ type
     class method &Default: UserSettings; mapped to userRoot;
   end;
   {$ELSEIF ECHOES}
-  UserSettings = public class mapped to System.Configuration.Configuration
-  public
-    method ReadString(Key: String; DefaultValue: String): String;
-    method ReadInteger(Key: String; DefaultValue: Integer): Integer;
-    method ReadBoolean(Key: String; DefaultValue: Boolean): Boolean;
-    method ReadDouble(Key: String; DefaultValue: Double): Double;
+    {$IF WINDOWS_PHONE}
+    UserSettings = public class mapped to System.IO.IsolatedStorage.IsolatedStorageSettings
+    private
+      method get_Keys: array of String;
+    public
+      method ReadString(Key: String; DefaultValue: String): String;
+      method ReadInteger(Key: String; DefaultValue: Integer): Integer;
+      method ReadBoolean(Key: String; DefaultValue: Boolean): Boolean;
+      method ReadDouble(Key: String; DefaultValue: Double): Double;
 
-    method WriteString(Key: String; Value: String);
-    method WriteInteger(Key: String; Value: Integer);
-    method WriteBoolean(Key: String; Value: Boolean);
-    method WriteDouble(Key: String; Value: Double);
+      method WriteString(Key: String; Value: String); mapped to &Add(Key, Value);
+      method WriteInteger(Key: String; Value: Integer); mapped to &Add(Key, Value);
+      method WriteBoolean(Key: String; Value: Boolean); mapped to &Add(Key, Value);
+      method WriteDouble(Key: String; Value: Double); mapped to &Add(Key, Value);
 
-    method Save; mapped to Save(System.Configuration.ConfigurationSaveMode.Modified);
-    method Clear;
-    method &Remove(Key: String);
-    property Keys: array of String read mapped.AppSettings.Settings.AllKeys;
+      method Save; mapped to Save;
+      method Clear; mapped to Clear;
+      method &Remove(Key: String); mapped to &Remove(Key);
+      property Keys: array of String read get_Keys;
 
-    class method &Default: UserSettings;
-  end;
+      class method &Default: UserSettings;
+    end;
+    {$ELSE}
+    UserSettings = public class mapped to System.Configuration.Configuration
+    public
+      method ReadString(Key: String; DefaultValue: String): String;
+      method ReadInteger(Key: String; DefaultValue: Integer): Integer;
+      method ReadBoolean(Key: String; DefaultValue: Boolean): Boolean;
+      method ReadDouble(Key: String; DefaultValue: Double): Double;
+
+      method WriteString(Key: String; Value: String);
+      method WriteInteger(Key: String; Value: Integer);
+      method WriteBoolean(Key: String; Value: Boolean);
+      method WriteDouble(Key: String; Value: Double);
+
+      method Save; mapped to Save(System.Configuration.ConfigurationSaveMode.Modified);
+      method Clear;
+      method &Remove(Key: String);
+      property Keys: array of String read mapped.AppSettings.Settings.AllKeys;
+
+      class method &Default: UserSettings;
+    end;
+    {$ENDIF}
   {$ELSEIF NOUGAT}
   UserSettings = public class mapped to Foundation.NSUserDefaults
   private
@@ -71,6 +95,47 @@ type
 implementation
 
 {$IF ECHOES}
+  {$IF WINDOWS_PHONE}
+method UserSettings.ReadBoolean(Key: String; DefaultValue: Boolean): Boolean;
+begin
+  if not mapped.TryGetValue<Boolean>(Key, out result) then
+    exit DefaultValue;
+end;
+
+method UserSettings.ReadDouble(Key: String; DefaultValue: Double): Double;
+begin
+  if not mapped.TryGetValue<Double>(Key, out result) then
+    exit DefaultValue;
+end;
+
+method UserSettings.ReadInteger(Key: String; DefaultValue: Integer): Integer;
+begin
+  if not mapped.TryGetValue<Integer>(Key, out result) then
+    exit DefaultValue;
+end;
+
+method UserSettings.ReadString(Key: String; DefaultValue: String): String;
+begin
+  if not mapped.TryGetValue<String>(Key, out result) then
+    exit DefaultValue;
+end;
+
+class method UserSettings.&Default: UserSettings;
+begin
+  exit mapped.ApplicationSettings;
+end;
+
+method UserSettings.get_Keys: array of String;
+begin
+  result := new String[mapped.ApplicationSettings.Keys.Count];
+  var Count := 0;
+  var Enumerator := mapped.ApplicationSettings.Keys.GetEnumerator;
+  while Enumerator.MoveNext do begin
+    result[Count] := String(Enumerator.Current);
+    inc(Count);
+  end;
+end;
+  {$ELSE}
 method UserSettings.ReadString(Key: String; DefaultValue: String): String;
 begin
   if mapped.AppSettings.Settings[Key] = nil then
@@ -131,6 +196,7 @@ class method UserSettings.&Default: UserSettings;
 begin
   exit System.Configuration.ConfigurationManager.OpenExeConfiguration(System.Configuration.ConfigurationUserLevel.None);
 end;
+  {$ENDIF}
 {$ELSEIF NOUGAT}
 method UserSettings.Exists(Key: String): Boolean;
 begin

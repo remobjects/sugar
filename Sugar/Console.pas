@@ -9,6 +9,7 @@ type
     method &Write(aString: String; params aParams: array of Object);
     method WriteLine(aString: String);
     method WriteLine(aString: String; params aParams: array of Object);
+    method WriteLine;
     method ReadLine: String;
     //method ReadKey: Char;
   end;
@@ -81,6 +82,11 @@ begin
   {$ENDIF}
 end;
 
+class method Console.WriteLine;
+begin
+  Console.WriteLine('');
+end;
+
 (*method Console.ReadKey: Char;
 begin
   {$IF COOPER}
@@ -89,7 +95,8 @@ begin
     result := Char(lBuffer[0]);
   {$ENDIF}
   {$IF ECHOES}
-  result := Console.ReadKey;
+  //result := System.Console.ReadKey(true).KeyChar;
+  //exit #0;
   {$ENDIF}
   {$IF NOUGAT}
   //result := Char(getchar());
