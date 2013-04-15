@@ -61,6 +61,7 @@ type
   end;
   {$ELSEIF NOUGAT}
   List<T> = public class mapped to Foundation.NSMutableArray
+    where T is class;
   public
     method &Add(Item: T); mapped to addObject(Item);
     method Clear; mapped to removeAllObjects;
@@ -80,7 +81,7 @@ type
 
     method IndexOf(Item: T): Integer; mapped to indexOfObject(Item);
     method Insert(&Index: Integer; Item: T); mapped to insertObject(Item) atIndex(&Index);
-   
+    method LastIndexOf(anItem: T): Integer;   
 
     method &Remove(anItem: T): Boolean;
     method RemoveAt(&Index: Integer); mapped to removeObjectAtIndex(&Index);
@@ -105,9 +106,9 @@ implementation
 method List<T>.RemoveRange(&Index: Integer; aCount: Integer);
 begin
  {$IF COOPER}
- mapped.subList(&Index, aCount).clear;
+ mapped.subList(&Index, &Index+aCount).clear;
  {$ELSEIF NOUGAT}
- mapped.removeObjectsInRange(new Foundation.NSRange(length := aCount, location := &Index));
+ mapped.removeObjectsInRange(Foundation.NSMakeRange(&Index, aCount));
  {$ENDIF}
 end;
 {$ENDIF}
@@ -117,6 +118,13 @@ method List<T>.Remove(anItem: T): Boolean;
 begin
   result := mapped.containsObject(anItem);
   mapped.removeObject(anItem);
+end;
+
+method List<T>.LastIndexOf(anItem: T): Integer;
+begin
+  //61865: Sugar: Invalid BR record exception for method with block
+  {var RetVal := mapped.indexOfObjectWithOptions(Foundation.NSEnumerationReverse) passingTest((x,y,z) -> x = anItem);
+  exit iif(RetVal = Foundation.NSNotFound, -1, RetVal);}
 end;
 {$ENDIF}
 
