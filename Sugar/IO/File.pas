@@ -11,15 +11,24 @@ type
   {$IF ECHOES}
   File = public class mapped to System.IO.File
   public
-    class method AppendText(aFileName, aContents: String);  mapped to AppendAllText(aFileName, aContents);
     class method &Copy(aOldFileName, aNewFileName: String; aOverwriteFile: Boolean); mapped to &Copy(aOldFileName, aNewFileName, aOverwriteFile);
     class method Delete(aFileName: String); mapped to Delete(aFileName);
     class method Exists(aFileName: String): Boolean; mapped to Exists(aFileName);
     class method Move(aOldFileName, aNewFileName: String); mapped to Move(aOldFileName, aNewFileName);
-    class method ReadBytes(aFileName: String): array of Byte; mapped to ReadAllBytes(aFileName);
-    class method ReadText(aFileName: String): String; mapped to ReadAllText(aFileName);
-    class method WriteBytes(aFileName: String; aData:array of Byte); mapped to WriteAllBytes(aFileName, aData);
-    class method WriteText(aFileName: String; aText: String); mapped to WriteAllText(aFileName, aText);
+
+    {$IF WINDOWS_PHONE}
+      class method AppendText(aFileName, aContents: String);
+      class method ReadBytes(aFileName: String): array of Byte;
+      class method ReadText(aFileName: String): String; 
+      class method WriteBytes(aFileName: String; aData:array of Byte);
+      class method WriteText(aFileName: String; aText: String);
+    {$ELSE}
+      class method AppendText(aFileName, aContents: String);  mapped to AppendAllText(aFileName, aContents);
+      class method ReadBytes(aFileName: String): array of Byte; mapped to ReadAllBytes(aFileName);
+      class method ReadText(aFileName: String): String; mapped to ReadAllText(aFileName);
+      class method WriteBytes(aFileName: String; aData:array of Byte); mapped to WriteAllBytes(aFileName, aData);
+      class method WriteText(aFileName: String; aText: String); mapped to WriteAllText(aFileName, aText);
+    {$ENDIF}    
   {$ENDIF}
   {$IF COOPER or NOUGAT}
   File = public class
@@ -37,6 +46,7 @@ type
   end;
 
 implementation
+
 
 {$IF COOPER}
 class method File.AppendText(aFileName, aContents: String); 
@@ -131,9 +141,50 @@ begin
     textFile.close();
   end;
 end;
-{$ENDIF}
+{$ELSEIF ECHOES}
+{$IF WINDOWS_PHONE}
+class method File.AppendText(aFileName: String; aContents: String);
+begin
+  var sw := System.IO.File.AppendText(aFileName);
+  sw.Write(aContents);
+  sw.Flush;
+  sw.Close;
+end;
 
-{$IF NOUGAT}
+class method File.ReadBytes(aFileName: String): array of Byte;
+begin
+  var fs := System.IO.File.OpenRead(aFileName);
+  fs.Seek(0, System.IO.SeekOrigin.Begin);
+  result := new Byte[fs.Length];
+  fs.Read(result, 0, fs.Length);
+  fs.Close;
+end;
+
+class method File.ReadText(aFileName: String): String;
+begin
+ var sr := System.IO.File.OpenText(aFileName);
+ result := sr.ReadToEnd;
+ sr.Close;
+end;
+
+class method File.WriteBytes(aFileName: String; aData: array of Byte);
+begin
+  var fs := System.IO.File.Create(aFileName);
+  fs.Seek(0, System.IO.SeekOrigin.Begin);
+  fs.Write(aData, 0, aData.Length);
+  fs.Flush;
+  fs.Close;
+end;
+
+class method File.WriteText(aFileName: String; aText: String);
+begin
+  var sw := System.IO.File.CreateText(aFileName);
+  sw.Write(aText);
+  sw.Flush;
+  sw.Close;
+end;
+{$ENDIF}
+{$ELSEIF NOUGAT}
 class method File.AppendText(aFileName, aContents: String); 
 begin
   var lData := NSString(aContents).dataUsingEncoding(NSStringEncoding.NSUTF8StringEncoding);

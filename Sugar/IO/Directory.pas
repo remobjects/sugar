@@ -8,6 +8,9 @@ uses
 type
 {$IF ECHOES}
   Directory = public class mapped to System.IO.Directory
+  {$IF WINDOWS_PHONE}
+    class method GetFilesRecursive(Path: String; List: System.Collections.Generic.List<String>);
+  {$ENDIF}
   public
     class method CreateDirectory(Path: String); mapped to CreateDirectory(Path);
     class method Delete(Path: String); mapped to Delete(Path);
@@ -53,10 +56,29 @@ implementation
 class method Directory.GetFiles(Path: String; Recursive: Boolean): array of String;
 begin
   if Recursive then
+    {$IF WINDOWS_PHONE}
+    begin
+      var list := new System.Collections.Generic.List<String>;    
+      GetFilesRecursive(Path, list);
+      exit list.ToArray;
+    end
+    {$ELSE}
     exit mapped.GetFiles(Path, "*", System.IO.SearchOption.AllDirectories)
+    {$ENDIF}
   else
     exit mapped.GetFiles(Path);
 end;
+
+{$IF WINDOWS_PHONE}
+class method Directory.GetFilesRecursive(Path: String; List: System.Collections.Generic.List<String>);
+begin
+  var files := mapped.GetFiles(Path);
+  List.AddRange(files);
+  var folders := mapped.GetDirectories(Path);
+  {for i: Integer := 0 to folders.Length-1 do //STACK OVERFLOW
+    GetFilesRecursive(Path+System.IO.Path.DirectorySeparatorChar+folders[i], List);}
+end;
+{$ENDIF}
 
 {$ELSEIF COOPER}
 class method Directory.Delete(Path: String);

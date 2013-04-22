@@ -27,12 +27,16 @@ type
     class method GetMaxThreads: Integer;
     class method SetMinThreads(Value: Integer);
     class method SetMaxThreads(Value: Integer);
+    {$IF NOT WINDOWS_PHONE}
     class method GetAvailableThreads: Integer;
+    {$ENDIF}
   public
     class method QueueUserWorkItem(Callback: System.Threading.WaitCallback); mapped to QueueUserWorkItem(Callback);
     class property MinThreads: Integer read GetMinThreads write SetMinThreads;
     class property MaxThreads: Integer read GetMaxThreads write SetMaxThreads;
+    {$IF NOT WINDOWS_PHONE}
     class property AvailableThreads: Integer read GetAvailableThreads;
+    {$ENDIF}
   end;
   {$ENDIF}
   {$IF NOUGAT}
@@ -70,6 +74,7 @@ begin
   exit WorkerThreads;
 end;
 
+{$IF NOT WINDOWS_PHONE}
 class method ThreadPool.GetAvailableThreads: Integer;
 begin
   var WorkerThreads: Integer;
@@ -77,6 +82,7 @@ begin
   System.Threading.ThreadPool.GetAvailableThreads(out WorkerThreads, out IOThreads);
   exit WorkerThreads;
 end;
+{$ENDIF}
 
 class method ThreadPool.SetMinThreads(Value: Integer);
 begin

@@ -3,6 +3,7 @@
 interface
 
 uses
+  RemObjects.Oxygene.Sugar,
   RemObjects.Oxygene.Sugar.Collections;
 
 type
@@ -38,7 +39,6 @@ type
     {$ENDIF}
 
     property Priority: ThreadPriority read GetPriority write SetPriority;
-
     property CallStack: List<String> read GetCallStack;
 
     {$IF NOUGAT}class property MainThread: Thread read mapped.mainThread;{$ENDIF}
@@ -66,7 +66,11 @@ implementation
 method Thread.GetPriority: ThreadPriority;
 begin
   {$IF ECHOES}
-  exit ThreadPriority(mapped.Priority);
+    {$IF WINDOWS_PHONE}
+    exit ThreadPriority.Normal;
+    {$ELSE}
+    exit ThreadPriority(mapped.Priority);
+    {$ENDIF}
   {$ELSEIF COOPER} 
   case mapped.Priority of
     1,2: exit ThreadPriority.Lowest;
@@ -81,7 +85,11 @@ end;
 method Thread.SetPriority(Value: ThreadPriority);
 begin
   {$IF ECHOES}
-  mapped.Priority := System.Threading.ThreadPriority(Value);
+    {$IF WINDOWS_PHONE}
+    raise new SugarException("Changing thread priority is not supported on Windows Phone");
+    {$ELSE}
+    mapped.Priority := System.Threading.ThreadPriority(Value);
+    {$ENDIF}
   {$ELSEIF COOPER} 
   case Value of
     ThreadPriority.Lowest: mapped.Priority := 2;

@@ -50,8 +50,8 @@ type
     class method IsNullOrEmpty(Value: String): Boolean; mapped to IsNullOrEmpty(Value);
     class method IsNullOrWhiteSpace(Value: String): Boolean;
 
-    method CompareTo(Value: String): Integer; mapped to Compare(mapped, Value, false);
-    method CompareToIgnoreCase(Value: String): Integer; mapped to Compare(mapped, Value, true);
+    method CompareTo(Value: String): Integer; mapped to Compare(mapped, Value, StringComparison.Ordinal);
+    method CompareToIgnoreCase(Value: String): Integer; mapped to Compare(mapped, Value, StringComparison.OrdinalIgnoreCase);
     method &Equals(Value: String): Boolean; mapped to &Equals(Value);
     method EqualsIngoreCase(Value: String): Boolean; mapped to &Equals(Value, StringComparison.InvariantCultureIgnoreCase);
     method Contains(Value: String): Boolean; mapped to Contains(Value);

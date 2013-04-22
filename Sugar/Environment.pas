@@ -17,13 +17,13 @@ type
   Environment = public class mapped to System.Environment
   public
     class property NewLine: String read mapped.NewLine;
-    class property UserName: String read mapped.UserName;
+    class property UserName: String read {$IF WINDOWS_PHONE}""{$ELSE}mapped.UserName{$ENDIF};
     class property OperatingSystemName: String read  mapped.OSVersion.Platform.ToString();
     class property OperatingSystemVersion: String read mapped.OSVersion.Version.ToString();
     class property TargetPlatform: TargetPlatform read TargetPlatform.Net;
     class property TargetPlatforName: String read '.NET';
     class property IsMono: Boolean read assigned(&Type.GetType('Mono.Runtime'));
-    class method GetEnvironmentVariable(aVariableName: String): String; mapped to GetEnvironmentVariable(aVariableName);
+    {$IF NOT WINDOWS_PHONE}class method GetEnvironmentVariable(aVariableName: String): String; mapped to GetEnvironmentVariable(aVariableName);{$ENDIF}
   {$ELSEIF NOUGAT}
   Environment = public class
   private
