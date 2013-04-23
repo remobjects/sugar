@@ -18,8 +18,7 @@ implementation
 
 method Dispatch.DispatchToBackgroundThread(aAction: DispatchAction; aPriority: DispatchPriority {$IF NOT COOPER} := DispatchPriority.Normal{$ENDIF});
 begin
-  {$IF COOPER}
-  {$ELSEIF ECHOES}
+  {$IF COOPER OR ECHOES}
   async aAction();
   {$ELSEIF NOUGAT}
   dispatch_async(dispatch_get_global_queue(case aPriority of

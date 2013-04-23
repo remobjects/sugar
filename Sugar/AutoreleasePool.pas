@@ -3,34 +3,27 @@
 interface
 
 {$IFDEF NOUGAT}
-  {ERROR This units is intentded for Echoes and Cooper only}
+  {ERROR This units is intended for Echoes and Cooper only}
 {$ENDIF}
 
-method autoreleasepool: IDisposable;
-
-{$IF COOPER}
-type 
-  IDisposable = public interface mapped to java.io.Closeable
-    method Dispose; mapped to close;
-  end;
-{$ENDIF}
+method autoreleasepool: {$IF COOPER}java.io.Closeable{$ELSEIF ECHOES}IDisposable{$ENDIF};
 
 implementation
 
 type
-  DummyAutoreleasePool = class(IDisposable)
+  DummyAutoreleasePool = class({$IF COOPER}java.io.Closeable{$ELSEIF ECHOES}IDisposable{$ENDIF})
   assembly
     class property Instance: DummyAutoreleasePool := new DummyAutoreleasePool();
   public
-    method Dispose;
+    method {$IF COOPER}close{$ELSEIF ECHOES}Dispose{$ENDIF};
   end;
 
-method autoreleasepool: IDisposable;
+method autoreleasepool: {$IF COOPER}java.io.Closeable{$ELSEIF ECHOES}IDisposable{$ENDIF};
 begin
   result := DummyAutoreleasePool.Instance;
 end;
 
-method DummyAutoreleasePool.Dispose;
+method DummyAutoreleasePool.{$IF COOPER}close{$ELSEIF ECHOES}Dispose{$ENDIF};
 begin
 end;
 
