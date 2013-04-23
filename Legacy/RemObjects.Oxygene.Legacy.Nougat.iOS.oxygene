@@ -3,7 +3,7 @@
   <PropertyGroup>
     <ProductVersion>3.5</ProductVersion>
     <RootNamespace>RemObjects.Oxygene.Legacy</RootNamespace>
-    <ProjectGuid>{4d7fe7a5-2a35-4915-b16b-3f2e84b64216}</ProjectGuid>
+    <ProjectGuid>{731210B4-23B2-4D29-9098-0AC41A551241}</ProjectGuid>
     <OutputType>StaticLibrary</OutputType>
     <AssemblyName>SugarLegacy</AssemblyName>
     <AllowGlobals>
@@ -15,14 +15,14 @@
     <AllowUnsafeCode>True</AllowUnsafeCode>
     <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <Name>RemObjects.Oxygene.Legacy.Nougat.OSX</Name>
+    <Name>RemObjects.Oxygene.Legacy.Nougat.iOS</Name>
     <DefaultUses />
     <StartupClass />
     <InternalAssemblyName />
     <ApplicationIcon />
     <TargetFrameworkProfile />
     <CreateHeaderFile>True</CreateHeaderFile>
-    <SDK>OS X</SDK>
+    <SDK>iOS</SDK>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <Optimize>false</Optimize>
@@ -70,9 +70,9 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Sugar\RemObjects.Oxygene.Sugar.Nougat.OSX.oxygene">
-      <Name>RemObjects.Oxygene.Sugar.Nougat.OSX</Name>
-      <Project>{ab7ab88b-2370-43bf-844b-54d015da9e57}</Project>
+    <ProjectReference Include="..\Sugar\RemObjects.Oxygene.Sugar.Nougat.iOS.oxygene">
+      <Name>RemObjects.Oxygene.Sugar.Nougat.iOS</Name>
+      <Project>{91b301fc-331e-48a7-803b-4cbe3fff6ed7}</Project>
       <Private>True</Private>
       <HintPath>..\Sugar\bin\Debug\Sugar.exe</HintPath>
     </ProjectReference>

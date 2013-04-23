@@ -17,6 +17,8 @@ Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "RemObjects.Oxygene.Sugar.No
 EndProject
 Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "RemObjects.Oxygene.Sugar.Echoes.WP8", "Sugar\RemObjects.Oxygene.Sugar.Echoes.WP8.oxygene", "{BD5D51E2-B11A-4356-9450-64566F8CDC38}"
 EndProject
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "RemObjects.Oxygene.Legacy.Nougat.iOS", "Legacy\RemObjects.Oxygene.Legacy.Nougat.iOS.oxygene", "{731210B4-23B2-4D29-9098-0AC41A551241}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|AnyCPU = Debug|AnyCPU
@@ -157,6 +159,22 @@ Global
 		{BD5D51E2-B11A-4356-9450-64566F8CDC38}.Release|Mixed Platforms.Build.0 = Release|x86
 		{BD5D51E2-B11A-4356-9450-64566F8CDC38}.Release|x86.ActiveCfg = Release|x86
 		{BD5D51E2-B11A-4356-9450-64566F8CDC38}.Release|x86.Build.0 = Release|x86
+		{731210B4-23B2-4D29-9098-0AC41A551241}.Debug|AnyCPU.ActiveCfg = Debug
+		{731210B4-23B2-4D29-9098-0AC41A551241}.Debug|AnyCPU.Build.0 = Debug
+		{731210B4-23B2-4D29-9098-0AC41A551241}.Debug|ARM.ActiveCfg = Debug
+		{731210B4-23B2-4D29-9098-0AC41A551241}.Debug|ARM.Build.0 = Debug
+		{731210B4-23B2-4D29-9098-0AC41A551241}.Debug|Mixed Platforms.ActiveCfg = Debug
+		{731210B4-23B2-4D29-9098-0AC41A551241}.Debug|Mixed Platforms.Build.0 = Debug
+		{731210B4-23B2-4D29-9098-0AC41A551241}.Debug|x86.ActiveCfg = Debug
+		{731210B4-23B2-4D29-9098-0AC41A551241}.Debug|x86.Build.0 = Debug
+		{731210B4-23B2-4D29-9098-0AC41A551241}.Release|AnyCPU.ActiveCfg = Release
+		{731210B4-23B2-4D29-9098-0AC41A551241}.Release|AnyCPU.Build.0 = Release
+		{731210B4-23B2-4D29-9098-0AC41A551241}.Release|ARM.ActiveCfg = Release
+		{731210B4-23B2-4D29-9098-0AC41A551241}.Release|ARM.Build.0 = Release
+		{731210B4-23B2-4D29-9098-0AC41A551241}.Release|Mixed Platforms.ActiveCfg = Release
+		{731210B4-23B2-4D29-9098-0AC41A551241}.Release|Mixed Platforms.Build.0 = Release
+		{731210B4-23B2-4D29-9098-0AC41A551241}.Release|x86.ActiveCfg = Release
+		{731210B4-23B2-4D29-9098-0AC41A551241}.Release|x86.Build.0 = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
