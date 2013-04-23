@@ -122,6 +122,13 @@
     <Compile Include="StringFormatter.pas" />
     <Compile Include="Url.pas" />
     <Compile Include="UserSettings.pas" />
+    <Compile Include="XML\XmlAttribute.pas" />
+    <Compile Include="XML\XmlCharacterData.pas" />
+    <Compile Include="XML\XmlDocument.pas" />
+    <Compile Include="XML\XmlDocumentType.pas" />
+    <Compile Include="XML\XmlElement.pas" />
+    <Compile Include="XML\XmlNode.pas" />
+    <Compile Include="XML\XmlProcessingInstruction.pas" />
   </ItemGroup>
   <ProjectExtensions />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -133,12 +140,19 @@
   -->
   <ItemGroup>
     <reference Include="mscorlib" />
+    <Reference Include="System.Xml.XPath">
+      <HintPath>C:\Program Files (x86)\Microsoft SDKs\Silverlight\v4.0\Libraries\Client\System.Xml.XPath.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Collections\" />
     <Folder Include="IO\" />
     <Folder Include="Properties\" />
     <Folder Include="Threading\" />
+    <Folder Include="XML\" />
+  </ItemGroup>
+  <ItemGroup>
+    <reference Include="mscorlib" />
   </ItemGroup>
   <ItemGroup>
     <reference Include="mscorlib" />

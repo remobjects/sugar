@@ -107,16 +107,23 @@
     <Compile Include="Threading\Thread.pas" />
     <Compile Include="Threading\ThreadPool.pas" />
     <Compile Include="UserSettings.pas" />
-    <Compile Include="Xml.pas" />
     <Compile Include="Math.pas" />
     <Compile Include="Properties\AssemblyInfo.pas" />
     <Compile Include="String.pas" />
     <Compile Include="StringBuilder.pas" />
     <Compile Include="StringFormatter.pas" />
     <Compile Include="Url.pas" />
+    <Compile Include="XML\XmlAttribute.pas" />
+    <Compile Include="XML\XmlCharacterData.pas" />
+    <Compile Include="XML\XmlDocument.pas" />
+    <Compile Include="XML\XmlDocumentType.pas" />
+    <Compile Include="XML\XmlElement.pas" />
+    <Compile Include="XML\XmlNode.pas" />
+    <Compile Include="XML\XmlProcessingInstruction.pas" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Crypto" />
+    <Folder Include="XML" />
     <Folder Include="Properties\" />
     <Folder Include="Collections" />
     <Folder Include="Threading" />

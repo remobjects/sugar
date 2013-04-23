@@ -85,7 +85,6 @@
     <Compile Include="String.pas" />
     <Compile Include="StringBuilder.pas" />
     <Compile Include="StringFormatter.pas" />
-    <None Include="Xml.pas" />
     <Compile Include="Url.pas" />
   </ItemGroup>
   <ItemGroup>
