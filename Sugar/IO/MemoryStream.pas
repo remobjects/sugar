@@ -1,14 +1,16 @@
 ﻿namespace RemObjects.Oxygene.Sugar.IO;
+
 {$HIDE W0} //supress case-mismatch errors
+
 interface
 
 type
   {$IF ECHOES}
   MemoryStream = public class mapped to System.IO.MemoryStream
   public
-    method &Read(Offset: Integer; Count: Integer): array of byte;
-    method &Write(Data: array of byte; Offset: Integer; Count: Integer); mapped to &Write(Data, Offset, Count);
-    method ToArray: array of byte; mapped to ToArray;
+    method &Read(Offset: Integer; Count: Integer): array of Byte;
+    method &Write(Data: array of Byte; Offset: Integer; Count: Integer); mapped to &Write(Data, Offset, Count);
+    method ToArray: array of Byte; mapped to ToArray;
 
     method CopyTo(Target: MemoryStream);
     property Length: Int64 read mapped.Length;
@@ -16,12 +18,12 @@ type
   {$ELSEIF NOUGAT}
   MemoryStream = public class mapped to Foundation.NSMutableData
     //method &Read(Data: array of byte; Offset: Integer; Count: Integer); mapped to getBytes(Data) range(new Foundation.NSRange(length := Count, location := Offset));
-    method &Read(Offset: Integer; Count: Integer): array of byte;
-    method &Write(Data: array of byte; Offset: Integer; Count: Integer);
-    method ToArray: array of byte;
+    method &Read(Offset: Integer; Count: Integer): array of Byte;
+    method &Write(Data: array of Byte; Offset: Integer; Count: Integer);
+    method ToArray: array of Byte;
 
     method CopyTo(Target: MemoryStream); 
-    property Length: Int64 read mapped.Length;
+    property Length: Int64 read mapped.length;
   end;
   {$ELSEIF COOPER}
   MemoryStream = public class
@@ -30,9 +32,9 @@ type
 
     method GetLength: Int64;
   public
-    method &Read(Offset: Integer; Count: Integer): array of byte;
-    method &Write(Data: array of byte; Offset: Integer; Count: Integer);
-    method ToArray: array of byte;
+    method &Read(Offset: Integer; Count: Integer): array of Byte;
+    method &Write(Data: array of Byte; Offset: Integer; Count: Integer);
+    method ToArray: array of Byte;
 
     method CopyTo(Target: MemoryStream); 
     property Length: Int64 read GetLength;
@@ -42,26 +44,26 @@ type
 implementation
 
 {$IF NOUGAT}
-method MemoryStream.Write(Data: array of byte; Offset: Integer; Count: Integer);
+method MemoryStream.Write(Data: array of Byte; Offset: Integer; Count: Integer);
 begin
-  var lData: array of byte := new byte[Count];
+  var lData: array of Byte := new Byte[Count];
   memcpy(lData, @Data[Offset], Count);
   mapped.appendBytes(lData) length(Count);
 end;
 
-method MemoryStream.ToArray: array of byte;
+method MemoryStream.ToArray: array of Byte;
 begin
-  result := new byte[mapped.Length];
+  result := new Byte[mapped.length];
   mapped.getBytes(Result);
 end;
 
 {$ELSEIF COOPER}
-method MemoryStream.&Write(Data: array of byte; Offset: Integer; Count: Integer);
+method MemoryStream.&Write(Data: array of Byte; Offset: Integer; Count: Integer);
 begin
   fStream.write(Data, Offset, Count);
 end;
 
-method MemoryStream.ToArray: array of byte;
+method MemoryStream.ToArray: array of Byte;
 begin
   result := fStream.toByteArray;
 end;
@@ -72,15 +74,15 @@ begin
 end;
 {$ENDIF}
 
-method MemoryStream.&Read(Offset: Integer; Count: Integer): array of byte;
+method MemoryStream.&Read(Offset: Integer; Count: Integer): array of Byte;
 begin
   {$IF ECHOES}
-  result := new byte[Count];
+  result := new Byte[Count];
   Array.Copy(mapped.ToArray, Offset, result, 0, Count);
   {$ELSEIF COOPER}
   exit java.util.Arrays.copyOfRange(ToArray, Offset, Offset+Count);
   {$ELSEIF NOUGAT} 
-  result := new byte[Count];
+  result := new Byte[Count];
   mapped.getBytes(result) range(new Foundation.NSRange(length := Count, location := Offset));
   {$ENDIF}
 end;

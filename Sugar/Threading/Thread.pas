@@ -24,7 +24,7 @@ type
     method &Join; {$IF COOPER OR ECHOES} mapped to &Join;{$ENDIF}
     method &Join(Timeout: Integer);  {$IF COOPER OR ECHOES}mapped to &Join(Timeout);{$ENDIF}
     
-    method Abort; mapped to {$IF ECHOES}Abort{$ELSEIF COOPER}Stop{$ELSEIF NOUGAT}cancel{$ENDIF};
+    method Abort; mapped to {$IF ECHOES}Abort{$ELSEIF COOPER}stop{$ELSEIF NOUGAT}cancel{$ENDIF};
 
     class method Sleep(aTimeout: Integer); mapped to {$IF COOPER OR ECHOES}Sleep(aTimeout){$ELSEIF NOUGAT}sleepForTimeInterval(aTimeout){$ENDIF};
 
@@ -33,7 +33,7 @@ type
     property Name: String read mapped.Name write {$IF COOPER OR ECHOES}mapped.Name{$ELSEIF NOUGAT}mapped.setName{$ENDIF};
 
     {$IF COOPER OR ECHOES}
-    property ThreadId: Int64 read {$IF COOPER}mapped.id{$ELSEIF ECHOES}mapped.ManagedThreadId{$ENDIF};
+    property ThreadId: Int64 read {$IF COOPER}mapped.Id{$ELSEIF ECHOES}mapped.ManagedThreadId{$ENDIF};
     {$ELSEIF NOUGAT}    
     property ThreadId: IntPtr read GetThreadID;
     {$ENDIF}

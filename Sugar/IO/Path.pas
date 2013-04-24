@@ -1,5 +1,7 @@
 ﻿namespace RemObjects.Oxygene.Sugar.IO;
+
 {$HIDE W0} //supress case-mismatch errors
+
 interface
 
 type
@@ -83,17 +85,17 @@ end;
 class method Path.GetFilenameWithoutExtension(aPath: String): String;
 begin
   result := GetFilename(aPath);
-  var lIndex := result.LastIndexOf(".");
+  var lIndex := result.lastIndexOf(".");
   if lIndex <> -1 then
-    exit result.Substring(0, lIndex);
+    exit result.substring(0, lIndex);
 end;
 
 class method Path.GetFilenameExtension(aPath: String): String;
 begin
   result := GetFilename(aPath);
-  var lIndex := result.LastIndexOf(".");
+  var lIndex := result.lastIndexOf(".");
   if lIndex <> -1 then
-    exit result.Substring(lIndex);  
+    exit result.substring(lIndex);  
 end;
 
 class method Path.GetFolderName(aPath: String): String;

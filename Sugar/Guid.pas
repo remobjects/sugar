@@ -1,12 +1,8 @@
 ﻿namespace RemObjects.Oxygene.Sugar;
 
 {$HIDE W0} //supress case-mismatch errors
-interface
 
-{$IF NOUGAT}
-uses
-  Foundation;
-{$ENDIF}
+interface
 
 type
   GuidFormat = public enum (&Default, Braces, Parentheses);
@@ -20,7 +16,7 @@ type
     class method EmptyGuid: Guid;
     class operator Equal(GuidA, GuidB: Guid): Boolean;
     class operator NotEqual(GuidA, GuidB: Guid): Boolean;
-    method ToByteArray: array of byte;
+    method ToByteArray: array of Byte;
     method ToString(Format: GuidFormat): String;
   end;
   {$ELSEIF ECHOES}
@@ -34,7 +30,7 @@ type
     class method EmptyGuid: Guid; mapped to Empty;
     class operator Equal(GuidA, GuidB: Guid): Boolean;
     class operator NotEqual(GuidA, GuidB: Guid): Boolean;
-    method ToByteArray: array of byte; mapped to ToByteArray;     
+    method ToByteArray: array of Byte; mapped to ToByteArray;     
     method ToString(Format: GuidFormat): String;
   end;
   {$ELSEIF NOUGAT}
@@ -63,7 +59,7 @@ type
 implementation
 
 {$IF COOPER} 
-method Guid.ToByteArray: array of byte;
+method Guid.ToByteArray: array of Byte;
 begin
   var buffer := java.nio.ByteBuffer.wrap(new Byte[16]);
   buffer.putLong(mapped.MostSignificantBits);

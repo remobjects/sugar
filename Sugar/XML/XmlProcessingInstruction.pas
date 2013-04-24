@@ -36,7 +36,7 @@ type
     method SetData(aValue: String);
   public
     property Data: String read GetData write SetData;
-    property Target: String read Node.Name;
+    property Target: String read Node.name;
   end;
 {$ENDIF}
 implementation

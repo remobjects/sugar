@@ -83,7 +83,7 @@ end;
 method Binary.Assign(Data: Binary);
 begin
   Clear;
-  fData.Write(Data.ToArray, 0, Data.Length);
+  fData.write(Data.ToArray, 0, Data.Length);
 end;
 
 method Binary.ReadRangeOfBytes(Range: Range): array of Byte;
@@ -101,12 +101,12 @@ method Binary.Subdata(Range: Range): Binary;
 begin
   var Data := ReadRangeOfBytes(Range);
   result := new Binary();
-  result.WriteBytes(Data, Data.Length);
+  result.WriteBytes(Data, Data.length);
 end;
 
 method Binary.WriteBytes(Data: array of Byte; aLength: Integer);
 begin
-  fData.Write(Data, 0, aLength);
+  fData.write(Data, 0, aLength);
 end;
 
 method Binary.WriteData(Data: Binary);

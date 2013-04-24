@@ -101,6 +101,7 @@
     <Compile Include="IO\FileStream.pas" />
     <Compile Include="IO\MemoryStream.pas" />
     <Compile Include="IO\Path.pas" />
+    <Compile Include="IO\StandardFolders.pas" />
     <Compile Include="Threading\AutoResetEvent.pas" />
     <Compile Include="Threading\ManualResetEvent.pas" />
     <Compile Include="Threading\Semaphore.pas" />
@@ -139,6 +140,7 @@
   </Target>
   -->
   <ItemGroup>
+    <reference Include="mscorlib" />
     <reference Include="mscorlib" />
     <Reference Include="System.Xml.XPath">
       <HintPath>C:\Program Files (x86)\Microsoft SDKs\Silverlight\v4.0\Libraries\Client\System.Xml.XPath.dll</HintPath>

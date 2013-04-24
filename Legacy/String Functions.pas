@@ -6,7 +6,7 @@ interface
 
 uses RemObjects.Oxygene.Sugar;
 
-// all methods in this module ar eone-based, as they are for Delphi compatibility.
+// all methods in this module are one-based, as they are for Delphi compatibility.
 
 method &Copy(aString: String; aStart, aLength: Int32): String;
 method Pos(aSubString: String; aString: String): Int32;
@@ -22,7 +22,8 @@ method &Copy(aString: String; aStart: Int32; aLength: Int32): String;
 begin
   if not assigned(aString) then exit ''; 
 
-  // Delphi's copy() handes lenths that exceed the string, and returns what's there. .NET's SubString would throw an exception.
+  // Delphi's copy() handels lenths that exceed the string, and returns what's there. 
+  // .NET and Sugar's SubString would throw an exception, so we need to account for that.
   var l := aString.Length;
   if (aStart-1)+aLength > l then aLength := l-(aStart+1); 
   

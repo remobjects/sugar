@@ -95,47 +95,47 @@ end;
 
 method XmlDocument.CreateAttribute(Name: String): XmlAttribute;
 begin
-  exit new XmlAttribute(Doc.CreateAttribute(Name));
+  exit new XmlAttribute(Doc.createAttribute(Name));
 end;
 
 method XmlDocument.CreateAttribute(QualifiedName: String; NamespaceUri: String): XmlAttribute;
 begin
-  exit new XmlAttribute(Doc.CreateAttributeNs(NamespaceUri, QualifiedName));
+  exit new XmlAttribute(Doc.createAttributeNS(NamespaceUri, QualifiedName));
 end;
 
 method XmlDocument.CreateCDataSection(Data: String): XmlCDataSection;
 begin
-  exit new XmlCDataSection(Doc.CreateCDataSection(Data));
+  exit new XmlCDataSection(Doc.createCDATASection(Data));
 end;
 
 method XmlDocument.CreateComment(Data: String): XmlComment;
 begin
-  exit new XmlComment(Doc.CreateComment(Data));
+  exit new XmlComment(Doc.createComment(Data));
 end;
 
 method XmlDocument.CreateElement(Name: String): XmlElement;
 begin
-  exit new XmlElement(Doc.CreateElement(Name));
+  exit new XmlElement(Doc.createElement(Name));
 end;
 
 method XmlDocument.CreateElement(QualifiedName: String; NamespaceUri: String): XmlElement;
 begin
-  exit new XmlElement(Doc.CreateElementNs(NamespaceUri, QualifiedName));
+  exit new XmlElement(Doc.createElementNS(NamespaceUri, QualifiedName));
 end;
 
 method XmlDocument.CreateProcessingInstruction(Target: String; Data: String): XmlProcessingInstruction;
 begin
-  exit new XmlProcessingInstruction(Doc.CreateProcessingInstruction(Target, Data));
+  exit new XmlProcessingInstruction(Doc.createProcessingInstruction(Target, Data));
 end;
 
 method XmlDocument.CreateTextNode(Data: String): XmlText;
 begin
-  exit new XmlText(Doc.CreateTextNode(Data));
+  exit new XmlText(Doc.createTextNode(Data));
 end;
 
 method XmlDocument.GetElementById(ElementId: String): XmlElement;
 begin
-  var lResult := Doc.GetElementById(ElementId);
+  var lResult := Doc.getElementById(ElementId);
   if lResult <> nil then
     exit new XmlElement(lResult)
   else
@@ -144,12 +144,12 @@ end;
 
 method XmlDocument.GetElementsByTagName(Name: String): array of XmlNode;
 begin
-  exit ConvertNodeList(Doc.GetElementsByTagName(Name));
+  exit ConvertNodeList(Doc.getElementsByTagName(Name));
 end;
 
 method XmlDocument.GetElementsByTagName(LocalName: String; NamespaceUri: String): array of XmlNode;
 begin
-  exit ConvertNodeList(Doc.GetElementsByTagNameNs(NamespaceUri, LocalName));
+  exit ConvertNodeList(Doc.getElementsByTagNameNS(NamespaceUri, LocalName));
 end;
 
 class method XmlDocument.LoadDocument(FileName: String): XmlDocument;
@@ -348,7 +348,7 @@ end;
 
     using isoStore: IsolatedStorageFile := IsolatedStorageFile.GetUserStoreForApplication do
       using isoStream: IsolatedStorageFileStream := new IsolatedStorageFileStream(FileName, System.IO.FileMode.Create, isoStore) do
-        doc.Save(isoStream);
+        Doc.Save(isoStream);
   end;
   {$ELSE}
   method XmlDocument.GetElement(Name: String): XmlElement;
@@ -459,17 +459,17 @@ end;
 
   method XmlDocument.AddChild(Node: XmlNode);
   begin
-    Doc.appendChild(Node.Node);
+    Doc.AppendChild(Node.Node);
   end;
 
   method XmlDocument.RemoveChild(Node: XmlNode);
   begin
-    Doc.removeChild(Node.Node);
+    Doc.RemoveChild(Node.Node);
   end;
 
   method XmlDocument.ReplaceChild(Node: XmlNode; WithNode: XmlNode);
   begin
-    Doc.replaceChild(WithNode.Node, Node.Node);
+    Doc.ReplaceChild(WithNode.Node, Node.Node);
   end;
   {$ENDIF}
 {$ELSEIF NOUGAT}

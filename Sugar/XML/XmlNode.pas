@@ -71,7 +71,7 @@ type
     constructor(aNode: {$IF COOPER}Node{$ELSE}System.Xml.XmlNode{$ENDIF});
   public
     property Name: String read {$IF COOPER}Node.NodeName{$ELSE}Node.Name{$ENDIF};
-    property URI: String read Node.BaseUri;
+    property URI: String read Node.BaseURI;
     property Value: String read {$IF COOPER}Node.NodeValue{$ELSE}Node.Value{$ENDIF} write {$IF COOPER}Node.NodeValue{$ELSE}Node.Value{$ENDIF};
     property InnerText: String read {$IF COOPER}Node.TextContent{$ELSE}Node.InnerText{$ENDIF} write {$IF COOPER}Node.TextContent{$ELSE}Node.InnerText{$ENDIF};
     property LocalName: String read Node.LocalName;
@@ -84,7 +84,7 @@ type
     property FirstChild: XmlNode read CreateCompatibleNode(Node.FirstChild);
     property LastChild: XmlNode read CreateCompatibleNode(Node.LastChild);
     property Item[&Index: Integer]: XmlNode read CreateCompatibleNode(Node.ChildNodes.Item(&Index));
-    property ChildCount: Integer read {$IF COOPER}Node.ChildNodes.length{$ELSE}Node.ChildNodes.Count{$ENDIF};
+    property ChildCount: Integer read {$IF COOPER}Node.ChildNodes.Length{$ELSE}Node.ChildNodes.Count{$ENDIF};
     property ChildNodes: array of XmlNode read ConvertNodeList(Node.ChildNodes);
 
     method SelectNodes(XPath: String): array of XmlNode;
@@ -110,8 +110,8 @@ XmlNode = public class
     property Name: String read Node.name write SetName;
     property URI: String read Node.URI;
     property Value: String read Node.stringValue write SetValue;
-    property InnerText: String read Node.stringValue write SetValue;
-    property LocalName: String read Node.LocalName;
+    property InnerText: String read Node.stringValue write setValue;
+    property LocalName: String read Node.localName;
 
     property Document: XmlDocument read iif(Node.rootDocument = nil, nil, new XmlDocument withNode(Node.rootDocument));
     property Parent: XmlNode read CreateCompatibleNode(Node.parent);

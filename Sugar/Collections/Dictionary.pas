@@ -25,15 +25,15 @@ type
 {$ELSEIF COOPER}
   Dictionary<T, U> = public class mapped to java.util.HashMap<T,U>
   public
-    method &Add(Key: T; Value: U); mapped to Put(Key, Value);
-    method Clear; mapped to Clear;
-    method ContainsKey(Key: T): Boolean; mapped to ContainsKey(Key);
-    method ContainsValue(Value: U): Boolean; mapped to ContainsValue(Value);
-    method &Remove(Key: T); mapped to &Remove(Key);
+    method &Add(Key: T; Value: U); mapped to put(Key, Value);
+    method Clear; mapped to clear;
+    method ContainsKey(Key: T): Boolean; mapped to containsKey(Key);
+    method ContainsValue(Value: U): Boolean; mapped to containsValue(Value);
+    method &Remove(Key: T); mapped to &remove(Key);
 
     property Item[Key: T]: U read mapped[Key] write mapped[Key]; default;
     property Keys: sequence of T read mapped.keySet;
-    property Values: sequence of U read mapped.Values;
+    property Values: sequence of U read mapped.values;
     property Count: Integer read mapped.size;
   end;
 {$ELSEIF NOUGAT}
@@ -53,7 +53,7 @@ type
     // 61584: Nougat: Support for "sequence of"
     //property Keys: sequence of T read mapped.allKeys;
     //property Values: sequence of U read mapped.allValues;
-    property Count: Integer read mapped.Count;
+    property Count: Integer read mapped.count;
   end;
 {$ENDIF}
 

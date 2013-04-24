@@ -91,6 +91,7 @@
     <Compile Include="Crypto\Digest.pas" />
     <Compile Include="DateTime.pas" />
     <Compile Include="Dispatch.pas" />
+    <Compile Include="IO\StandardFolders.pas" />
     <Compile Include="Random.pas" />
     <Compile Include="Environment.pas" />
     <Compile Include="Exceptions.pas" />

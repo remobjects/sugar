@@ -10,7 +10,7 @@ type
   public
     method &Add(Item: T); mapped to &Add(Item);
     method Clear; mapped to Clear;
-    method Contains(Item: T): boolean; mapped to Contains(Item);
+    method Contains(Item: T): Boolean; mapped to Contains(Item);
 
     method Exists(Match: Predicate<T>): Boolean;
     method FindIndex(Match: Predicate<T>): Integer;
@@ -35,9 +35,9 @@ type
   {$ELSEIF COOPER}
   List<T> = public class mapped to java.util.ArrayList<T>
   public
-    method &Add(Item: T); mapped to &Add(Item);
-    method Clear; mapped to Clear;
-    method Contains(Item: T): boolean; mapped to Contains(Item);
+    method &Add(Item: T); mapped to &add(Item);
+    method Clear; mapped to clear;
+    method Contains(Item: T): Boolean; mapped to contains(Item);
 
     method Exists(Match: Predicate<T>): Boolean;
     method FindIndex(Match: Predicate<T>): Integer;
@@ -48,12 +48,12 @@ type
     method FindAll(Match: Predicate<T>): List<T>;
     method TrueForAll(Match: Predicate<T>): Boolean;
 
-    method IndexOf(Item: T): Integer; mapped to IndexOf(Item);
-    method Insert(&Index: Integer; Item: T); mapped to &Add(&Index, Item);
-    method LastIndexOf(Item: T): Integer; mapped to LastIndexOf(Item);
+    method IndexOf(Item: T): Integer; mapped to indexOf(Item);
+    method Insert(&Index: Integer; Item: T); mapped to &add(&Index, Item);
+    method LastIndexOf(Item: T): Integer; mapped to lastIndexOf(Item);
 
-    method &Remove(Item: T): Boolean; mapped to &Remove(Object(Item));
-    method RemoveAt(&Index: Integer); mapped to &Remove(&Index);
+    method &Remove(Item: T): Boolean; mapped to &remove(Object(Item));
+    method RemoveAt(&Index: Integer); mapped to &remove(&Index);
     method RemoveRange(&Index: Integer; aCount: Integer);
 
     property Count: Integer read mapped.size;
@@ -65,7 +65,7 @@ type
   public
     method &Add(Item: T); mapped to addObject(Item);
     method Clear; mapped to removeAllObjects;
-    method Contains(Item: T): boolean; mapped to containsObject(Item);
+    method Contains(Item: T): Boolean; mapped to containsObject(Item);
 
     {$IF NOT NOUGAT}
     method Exists(Match: Predicate<T>): Boolean;
@@ -87,7 +87,7 @@ type
     method RemoveAt(&Index: Integer); mapped to removeObjectAtIndex(&Index);
     method RemoveRange(&Index: Integer; aCount: Integer);
 
-    property Count: Integer read mapped.Count;
+    property Count: Integer read mapped.count;
     property Item[i: Integer]: T read mapped[i] write mapped[i]; default;
   end;
   {$ENDIF}  

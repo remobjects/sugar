@@ -46,7 +46,7 @@ type
     class property Now: DateTime read new DateTime;
     property Second: Integer read fCalendar.get(Calendar.SECOND);
     class property Today: DateTime read Now.Date;
-    property Year: Integer read fCalendar.get(Calendar.Year);    
+    property Year: Integer read fCalendar.get(Calendar.YEAR);    
   end;
   {$ELSEIF ECHOES}
   [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Auto, Size := 1)]

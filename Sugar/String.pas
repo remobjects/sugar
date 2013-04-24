@@ -23,13 +23,13 @@ type
     method CompareToIgnoreCase(Value: String): Integer; mapped to compareToIgnoreCase(Value);
     method &Equals(Value: String): Boolean; mapped to &equals(Value);
     method EqualsIngoreCase(Value: String): Boolean; mapped to equalsIgnoreCase(Value);
-    method Contains(Value: String): Boolean; mapped to Contains(Value);
+    method Contains(Value: String): Boolean; mapped to contains(Value);
 
-    method IndexOf(aString: String): Int32; mapped to IndexOf(aString);
-    method LastIndexOf(aString: String): Int32; mapped to LastIndexOf(aString);
+    method IndexOf(aString: String): Int32; mapped to indexOf(aString);
+    method LastIndexOf(aString: String): Int32; mapped to lastIndexOf(aString);
 
-    method Substring(aStartIndex: Int32): String; mapped to Substring(aStartIndex);
-    method Substring(aStartIndex: Int32; aLength: Int32): String; mapped to Substring(aStartIndex, aStartIndex+aLength);
+    method Substring(aStartIndex: Int32): String; mapped to substring(aStartIndex);
+    method Substring(aStartIndex: Int32; aLength: Int32): String; mapped to substring(aStartIndex, aStartIndex+aLength);
     method Replace(OldValue, NewValue: String): String; mapped to replace(OldValue, NewValue);
 
     method ToLower: String; mapped to toLowerCase;
@@ -41,7 +41,7 @@ type
   private
     method get_Chars(aIndex: Int32): Char;
   public
-    property Length: Int32 read mapped.length;
+    property Length: Int32 read mapped.Length;
     property Chars[aIndex: Int32]: Char read get_Chars; default;
 
     class method Format(aFormat: String; params aParams: array of Object): String;
@@ -81,7 +81,7 @@ type
     class method IsNullOrEmpty(Value: String): Boolean;
     class method IsNullOrWhiteSpace(Value: String): Boolean;
 
-    method CompareTo(Value: String): Integer; mapped to Compare(Value);
+    method CompareTo(Value: String): Integer; mapped to compare(Value);
     method CompareToIgnoreCase(Value: String): Integer; mapped to caseInsensitiveCompare(Value);
     method &Equals(Value: String): Boolean; 
     method EqualsIngoreCase(Value: String): Boolean;

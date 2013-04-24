@@ -10,7 +10,7 @@
     <SDK>iOS</SDK>
     <ProjectGuid>{91B301FC-331E-48A7-803B-4CBE3FFF6ED7}</ProjectGuid>
     <AssemblyName>Sugar</AssemblyName>
-    <DefaultUses />
+    <DefaultUses>Foundation</DefaultUses>
     <StartupClass />
     <DeploymentTargetVersion>5.0</DeploymentTargetVersion>
     <BundleIdentifier>org.me.RemObjects.Oxygene.Sugar</BundleIdentifier>
@@ -65,6 +65,7 @@
     <Compile Include="Crypto\Digest.pas" />
     <Compile Include="DateTime.pas" />
     <Compile Include="Environment.pas" />
+    <Compile Include="IO\StandardFolders.pas" />
     <Compile Include="Random.pas" />
     <Compile Include="Exceptions.pas" />
     <Compile Include="Guid.pas" />

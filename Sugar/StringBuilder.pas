@@ -15,10 +15,10 @@ type
 
     method Clear; mapped to setLength(0);
     method Delete(Start, &End: Integer): StringBuilder; mapped to delete(Start, &End);
-    method Replace(Start, &End: Integer; Value: String): StringBuilder; mapped to Replace(Start, &End, Value);
+    method Replace(Start, &End: Integer; Value: String): StringBuilder; mapped to replace(Start, &End, Value);
     method Substring(Start: Integer): String; mapped to substring(Start);
     method Substring(Start, &End: Integer): String; mapped to substring(Start, &End);
-    method Insert(Offset: Integer; Value: String): StringBuilder; mapped to Insert(Offset, Value);
+    method Insert(Offset: Integer; Value: String): StringBuilder; mapped to insert(Offset, Value);
 
     property Length: Integer read mapped.length;
   {$ELSEIF ECHOES}
