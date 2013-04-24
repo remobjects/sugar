@@ -2,7 +2,7 @@
 
 interface
 
-{ToDo: The Echoes implementations need platform checks and call proper APIs on Linux and Mac}
+{ToDo: The Echoes implementations need platform checks and call proper APIs on Linux and other platforms}
 
 type
   Folder = public class mapped to {$IF WINDOWS_PHONE}Windows.Storage.StorageFolder{$ELSE}String{$ENDIF}
@@ -30,6 +30,10 @@ type
 
 implementation
 
+{$IF ECHOES AND NOT WINDOWS_PHONE}
+uses 
+  RemObjects.Sugar.MonoHelpers;
+{$ENDIF}
 
 {$IF NOUGAT}
 class method StandardFolders.GetSystemPath(aDirectory: Foundation.NSSearchPathDirectory; aDomainMask: Foundation.NSSearchPathDomainMask): Folder;
@@ -46,7 +50,10 @@ begin
     {$IF WINDOWS_PHONE}
       // not supported
     {$ELSE}
-    result := Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+    case PlatformSupport.Platform of
+      PlatformType.Windows: result := Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+      PlatformType.Mac: result := MacFolders.GetFolder(MacDomains.kUserDomain, MacFolderTypes.kUsersFolderType);
+    end;
     {$ENDIF}
   {$ELSEIF NOUGAT}
   result := GetSystemPath(NSSearchPathDirectory.NSUserDirectory, NSSearchPathDomainMask.NSUserDomainMask);
@@ -60,7 +67,10 @@ begin
     {$IF WINDOWS_PHONE}
       // not supported
     {$ELSE}
-    result := Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+    case PlatformSupport.Platform of
+      PlatformType.Windows: result := Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+      PlatformType.Mac: result := MacFolders.GetFolder(MacDomains.kUserDomain, MacFolderTypes.kApplicationSupportFolderType);
+    end;
     {$ENDIF}
   {$ELSEIF NOUGAT}
   //result := GetSystemPath(NSSearchPathDirectory.NSApplicationSupportDirectory, NSSearchPathDomainMask.NSUserDomainMask);
@@ -75,7 +85,10 @@ begin
     {$IF WINDOWS_PHONE}
       // not supported
     {$ELSE}
-    result := Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+    case PlatformSupport.Platform of
+      PlatformType.Windows: result := Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+      PlatformType.Mac: result := MacFolders.GetFolder(MacDomains.kUserDomain, MacFolderTypes.kApplicationSupportFolderType);
+    end;
     {$ENDIF}
   {$ELSEIF NOUGAT}
   result := GetSystemPath(NSSearchPathDirectory.NSApplicationSupportDirectory, NSSearchPathDomainMask.NSUserDomainMask);
@@ -89,7 +102,10 @@ begin
     {$IF WINDOWS_PHONE}
       // not supported
     {$ELSE}
-    result := Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+    case PlatformSupport.Platform of
+      PlatformType.Windows: result := Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+      PlatformType.Mac: result := MacFolders.GetFolder(MacDomains.kUserDomain, MacFolderTypes.kDesktopFolderType);
+    end;
     {$ENDIF}
   {$ELSEIF NOUGAT}
   result := GetSystemPath(NSSearchPathDirectory.NSDesktopDirectory, NSSearchPathDomainMask.NSUserDomainMask);
@@ -103,7 +119,10 @@ begin
     {$IF WINDOWS_PHONE}
     result := Windows.Storage.KnownFolders.DocumentsLibrary
     {$ELSE}
-    result := Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+    case PlatformSupport.Platform of
+      PlatformType.Windows: result := Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+      PlatformType.Mac: result := MacFolders.GetFolder(MacDomains.kUserDomain, MacFolderTypes.kDocumentationFolderType);
+    end;
     {$ENDIF}
   {$ELSEIF NOUGAT}
   result := GetSystemPath(NSSearchPathDirectory.NSDocumentDirectory, NSSearchPathDomainMask.NSUserDomainMask);
@@ -117,10 +136,15 @@ begin
     {$IF WINDOWS_PHONE}
       // not supported
     {$ELSE}
-    var KNOWN_FOLDER_DOWNLOADS := new Guid("374DE290-123F-4565-9164-39C4925E467B");
-    var lResult: String;
-    SHGetKnownFolderPath(KNOWN_FOLDER_DOWNLOADS, 0, IntPtr.Zero, out lResult);
-    result := lResult;
+    case PlatformSupport.Platform of
+      PlatformType.Windows: begin
+          var KNOWN_FOLDER_DOWNLOADS := new Guid("374DE290-123F-4565-9164-39C4925E467B");
+          var lResult: String;
+          SHGetKnownFolderPath(KNOWN_FOLDER_DOWNLOADS, 0, IntPtr.Zero, out lResult);
+          result := lResult;
+        end;
+      PlatformType.Mac: result := MacFolders.GetFolder(MacDomains.kUserDomain, MacFolderTypes.kDownloadsFolderType);
+    end;
     {$ENDIF}
   {$ELSEIF NOUGAT}
   result := GetSystemPath(NSSearchPathDirectory.NSDownloadsDirectory, NSSearchPathDomainMask.NSUserDomainMask);

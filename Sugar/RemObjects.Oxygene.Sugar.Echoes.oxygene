@@ -91,6 +91,9 @@
     <Compile Include="Crypto\Digest.pas" />
     <Compile Include="DateTime.pas" />
     <Compile Include="Dispatch.pas" />
+    <Compile Include="Echoes\MonoHelpers\CoreFoundation.pas" />
+    <Compile Include="Echoes\MonoHelpers\MacFolders.pas" />
+    <Compile Include="Echoes\MonoHelpers\PlatformDetection.pas" />
     <Compile Include="IO\StandardFolders.pas" />
     <Compile Include="Random.pas" />
     <Compile Include="Environment.pas" />
@@ -124,6 +127,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Crypto" />
+    <Folder Include="Echoes" />
+    <Folder Include="Echoes\MonoHelpers" />
     <Folder Include="XML" />
     <Folder Include="Properties\" />
     <Folder Include="Collections" />
