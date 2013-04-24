@@ -14,7 +14,7 @@
     <AllowLegacyCreate>False</AllowLegacyCreate>
     <AllowUnsafeCode>True</AllowUnsafeCode>
     <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <Name>RemObjects.Oxygene.Legacy.Echoes</Name>
     <DefaultUses />
     <StartupClass />

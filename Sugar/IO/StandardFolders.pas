@@ -43,6 +43,11 @@ method StandardFolders.UserLocal: Folder;
 begin
   {$IF COOPER}
   {$ELSEIF ECHOES}
+    {$IF WINDOWS_PHONE}
+      // not supported
+    {$ELSE}
+    result := Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+    {$ENDIF}
   {$ELSEIF NOUGAT}
   result := GetSystemPath(NSSearchPathDirectory.NSUserDirectory, NSSearchPathDomainMask.NSUserDomainMask);
   {$ENDIF}
@@ -53,7 +58,7 @@ begin
   {$IF COOPER}
   {$ELSEIF ECHOES}
     {$IF WINDOWS_PHONE}
-    //result := Windows.Storage.KnownFolders.
+      // not supported
     {$ELSE}
     result := Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
     {$ENDIF}
@@ -68,7 +73,7 @@ begin
   {$IF COOPER}
   {$ELSEIF ECHOES}
     {$IF WINDOWS_PHONE}
-    //result := Windows.Storage.KnownFolders.
+      // not supported
     {$ELSE}
     result := Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
     {$ENDIF}
@@ -82,7 +87,7 @@ begin
   {$IF COOPER}
   {$ELSEIF ECHOES}
     {$IF WINDOWS_PHONE}
-    //result := Windows.Storage.KnownFolders.
+      // not supported
     {$ELSE}
     result := Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
     {$ENDIF}
@@ -108,11 +113,15 @@ end;
 method StandardFolders.UserDownloads: Folder;
 begin
   {$IF COOPER}
-  {$ELSEIF ECHOES AND NOT WINDOWS_PHONE}
-  var KNOWN_FOLDER_DOWNLOADS := new Guid("374DE290-123F-4565-9164-39C4925E467B");
-  var lResult: String;
-  SHGetKnownFolderPath(KNOWN_FOLDER_DOWNLOADS, 0, IntPtr.Zero, out lResult);
-  result := lResult;
+  {$ELSEIF ECHOES}
+    {$IF WINDOWS_PHONE}
+      // not supported
+    {$ELSE}
+    var KNOWN_FOLDER_DOWNLOADS := new Guid("374DE290-123F-4565-9164-39C4925E467B");
+    var lResult: String;
+    SHGetKnownFolderPath(KNOWN_FOLDER_DOWNLOADS, 0, IntPtr.Zero, out lResult);
+    result := lResult;
+    {$ENDIF}
   {$ELSEIF NOUGAT}
   result := GetSystemPath(NSSearchPathDirectory.NSDownloadsDirectory, NSSearchPathDomainMask.NSUserDomainMask);
   {$ENDIF}

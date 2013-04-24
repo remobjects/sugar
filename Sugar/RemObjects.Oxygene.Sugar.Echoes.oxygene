@@ -16,7 +16,7 @@
     </AllowUnsafeCode>
     <ApplicationIcon />
     <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <Name>RemObjects.Oxygene.Sugar.Echoes</Name>
     <ProjectGuid>{79301a0c-1f95-4fb0-9605-207e288c6171}</ProjectGuid>
     <DefaultUses />
