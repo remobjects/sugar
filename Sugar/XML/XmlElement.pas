@@ -7,7 +7,7 @@ interface
 uses
   {$IF COOPER}
   org.w3c.dom,
-  {$ELSEIF WINDOWS_PHONE}
+  {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
   System.Xml.Linq,
   System.Linq,
   {$ELSEIF NOUGAT}
@@ -18,11 +18,11 @@ uses
 type
   XmlElement = public class (XmlNode)
   private
-    property Element: {$IF COOPER}Element{$ELSEIF WINDOWS_PHONE}XElement{$ELSEIF ECHOES}System.Xml.XmlElement{$ELSEIF NOUGAT}NSXMLElement{$ENDIF} 
-                      read Node as {$IF COOPER}Element{$ELSEIF WINDOWS_PHONE}XElement{$ELSEIF ECHOES}System.Xml.XmlElement{$ELSEIF NOUGAT}NSXMLElement{$ENDIF};
+    property Element: {$IF COOPER}Element{$ELSEIF WINDOWS_PHONE OR NETFX_CORE}XElement{$ELSEIF ECHOES}System.Xml.XmlElement{$ELSEIF NOUGAT}NSXMLElement{$ENDIF} 
+                      read Node as {$IF COOPER}Element{$ELSEIF WINDOWS_PHONE OR NETFX_CORE}XElement{$ELSEIF ECHOES}System.Xml.XmlElement{$ELSEIF NOUGAT}NSXMLElement{$ENDIF};
     method GetAttributes: array of XmlAttribute;
   public
-    {$IF WINDOWS_PHONE}
+    {$IF WINDOWS_PHONE OR NETFX_CORE}
     property Name: String read Element.Name.ToString; override;
     property LocalName: String read Element.Name.LocalName; override;
     property Value: String read Element.Value write Element.Value; override;
@@ -53,7 +53,7 @@ type
   end;
 implementation
 
-{$IF WINDOWS_PHONE}
+{$IF WINDOWS_PHONE OR NETFX_CORE}
 method XmlElement.GetAttributes: array of XmlAttribute;
 begin
   var items := Element.Attributes:ToArray;

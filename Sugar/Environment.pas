@@ -15,15 +15,17 @@ type
     class method GetEnvironmentVariable(aVariableName: String): String; mapped to getenv(aVariableName);
   {$ELSEIF ECHOES}
   Environment = public class mapped to System.Environment
+  private
+    {$IF NETFX_CORE}class method GetUserName: String;{$ENDIF}
   public
     class property NewLine: String read mapped.NewLine;
-    class property UserName: String read {$IF WINDOWS_PHONE}""{$ELSE}mapped.UserName{$ENDIF};
-    class property OperatingSystemName: String read  mapped.OSVersion.Platform.ToString();
-    class property OperatingSystemVersion: String read mapped.OSVersion.Version.ToString();
+    class property UserName: String read {$IF WINDOWS_PHONE}""{$ELSEIF NETFX_CORE}GetUserName{$ELSE}mapped.UserName{$ENDIF};
+    class property OperatingSystemName: String read {$IF NETFX_CORE}"Microsoft Windows NT 6.2"{$ELSE}mapped.OSVersion.Platform.ToString(){$ENDIF};
+    class property OperatingSystemVersion: String read {$IF NETFX_CORE}"6.2"{$ELSE}mapped.OSVersion.Version.ToString(){$ENDIF};
     class property TargetPlatform: TargetPlatform read TargetPlatform.Net;
     class property TargetPlatforName: String read '.NET';
     class property IsMono: Boolean read assigned(&Type.GetType('Mono.Runtime'));
-    {$IF NOT WINDOWS_PHONE}class method GetEnvironmentVariable(aVariableName: String): String; mapped to GetEnvironmentVariable(aVariableName);{$ENDIF}
+    {$IF NOT (WINDOWS_PHONE OR NETFX_CORE)}class method GetEnvironmentVariable(aVariableName: String): String; mapped to GetEnvironmentVariable(aVariableName);{$ENDIF}
   {$ELSEIF NOUGAT}
   Environment = public class
   private
@@ -47,6 +49,15 @@ type
   TargetPlatform = public enum(Net, Java, Cocoa);
 
 implementation
+
+{$IF NETFX_CORE}
+class method Environment.GetUserName: String;
+begin
+  //var task := await Windows.System.UserProfile.UserInformation.GetDisplayNameAsync;
+  //exit task;
+  exit "";
+end;
+{$ENDIF}
 
 {$IF NOUGAT}
 class method Environment.getOperatingSystemName: String;

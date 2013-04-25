@@ -142,9 +142,6 @@
   <ItemGroup>
     <reference Include="mscorlib" />
     <reference Include="mscorlib" />
-    <Reference Include="System.Xml.XPath">
-      <HintPath>C:\Program Files (x86)\Microsoft SDKs\Silverlight\v4.0\Libraries\Client\System.Xml.XPath.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Collections\" />

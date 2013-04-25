@@ -4,19 +4,11 @@ interface
 
 type
   {$IF ECHOES}
-    {$IF WINDOWS_PHONE}
-    Color = public static class
-    public
-      class method colorWithRGBAPercentage(aRed, aGreen, aBlue, aAlpha: Single): System.Windows.Media.Color;
-      class method colorWithRGBA256(aRed, aGreen, aBlue, aAlpha: Byte): System.Windows.Media.Color;
-    end;
-    {$ELSE}
-    Color = public static class
-    public
-      class method colorWithRGBAPercentage(aRed, aGreen, aBlue, aAlpha: Single): System.Drawing.Color; 
-      class method colorWithRGBA256(aRed, aGreen, aBlue, aAlpha: Byte): System.Drawing.Color;
-    end;
-    {$ENDIF}
+  Color = public static class
+  public
+    class method colorWithRGBAPercentage(aRed, aGreen, aBlue, aAlpha: Single): {$IF WINDOWS_PHONE}System.Windows.Media.Color{$ELSEIF NETFX_CORE}Windows.UI.Color{$ELSE}System.Drawing.Color{$ENDIF}; 
+    class method colorWithRGBA256(aRed, aGreen, aBlue, aAlpha: Byte): {$IF WINDOWS_PHONE}System.Windows.Media.Color{$ELSEIF NETFX_CORE}Windows.UI.Color{$ELSE}System.Drawing.Color{$ENDIF}; 
+  end;    
   {$ELSEIF COOPER}
   Color = public class mapped to Int64
   public
@@ -43,14 +35,14 @@ type
 implementation
 
 {$IF ECHOES}
-class method Color.colorWithRGBAPercentage(aRed: Single; aGreen: Single; aBlue: Single; aAlpha: Single): {$IF WINDOWS_PHONE}System.Windows.Media.Color{$ELSE}System.Drawing.Color{$ENDIF};
+class method Color.colorWithRGBAPercentage(aRed: Single; aGreen: Single; aBlue: Single; aAlpha: Single): {$IF WINDOWS_PHONE}System.Windows.Media.Color{$ELSEIF NETFX_CORE}Windows.UI.Color{$ELSE}System.Drawing.Color{$ENDIF};
 begin
-  result := {$IF WINDOWS_PHONE}System.Windows.Media.Color{$ELSE}System.Drawing.Color{$ENDIF}.FromArgb(aAlpha*256 as Int32, aRed*256 as Int32, aGreen*256 as Int32, aBlue*256 as Int32);
+  result := {$IF WINDOWS_PHONE}System.Windows.Media.Color{$ELSEIF NETFX_CORE}Windows.UI.Color{$ELSE}System.Drawing.Color{$ENDIF}.FromArgb(aAlpha*256 as Int32, aRed*256 as Int32, aGreen*256 as Int32, aBlue*256 as Int32);
 end;
 
-class method Color.colorWithRGBA256(aRed: Byte; aGreen: Byte; aBlue: Byte; aAlpha: Byte): {$IF WINDOWS_PHONE}System.Windows.Media.Color{$ELSE}System.Drawing.Color{$ENDIF};
+class method Color.colorWithRGBA256(aRed: Byte; aGreen: Byte; aBlue: Byte; aAlpha: Byte): {$IF WINDOWS_PHONE}System.Windows.Media.Color{$ELSEIF NETFX_CORE}Windows.UI.Color{$ELSE}System.Drawing.Color{$ENDIF};
 begin
-  result := {$IF WINDOWS_PHONE}System.Windows.Media.Color{$ELSE}System.Drawing.Color{$ENDIF}.FromArgb(aAlpha, aRed, aGreen, aBlue);
+  result := {$IF WINDOWS_PHONE}System.Windows.Media.Color{$ELSEIF NETFX_CORE}Windows.UI.Color{$ELSE}System.Drawing.Color{$ENDIF}.FromArgb(aAlpha, aRed, aGreen, aBlue);
 end;
 
 {$ELSEIF COOPER}

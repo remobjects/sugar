@@ -53,7 +53,7 @@ type
     method CompareTo(Value: String): Integer; mapped to Compare(mapped, Value, StringComparison.Ordinal);
     method CompareToIgnoreCase(Value: String): Integer; mapped to Compare(mapped, Value, StringComparison.OrdinalIgnoreCase);
     method &Equals(Value: String): Boolean; mapped to &Equals(Value);
-    method EqualsIngoreCase(Value: String): Boolean; mapped to &Equals(Value, StringComparison.InvariantCultureIgnoreCase);
+    method EqualsIngoreCase(Value: String): Boolean; mapped to &Equals(Value, StringComparison.OrdinalIgnoreCase);
     method Contains(Value: String): Boolean; mapped to Contains(Value);
 
     method IndexOf(aString: String): Int32; mapped to IndexOf(aString);

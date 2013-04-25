@@ -2,6 +2,11 @@
 {$HIDE W0} //supress case-mismatch errors
 interface
 
+{$IF NETFX_CORE}
+uses
+  System.Linq;
+{$ENDIF}
+
 type
   {$IF COOPER}
   UserSettings = public class mapped to java.util.prefs.Preferences
@@ -23,7 +28,7 @@ type
 
     class method &Default: UserSettings; mapped to userRoot;
   end;
-  {$ELSEIF ECHOES}
+  {$ELSEIF ECHOES}    
     {$IF WINDOWS_PHONE}
     UserSettings = public class mapped to System.IO.IsolatedStorage.IsolatedStorageSettings
     private
@@ -43,6 +48,26 @@ type
       method Clear; mapped to Clear;
       method &Remove(Key: String); mapped to &Remove(Key);
       property Keys: array of String read get_Keys;
+
+      class method &Default: UserSettings;
+    end;
+    {$ELSEIF NETFX_CORE}
+    UserSettings = public class mapped to Windows.Storage.ApplicationDataContainer
+    public
+      method ReadString(Key: String; DefaultValue: String): String;
+      method ReadInteger(Key: String; DefaultValue: Integer): Integer;
+      method ReadBoolean(Key: String; DefaultValue: Boolean): Boolean;
+      method ReadDouble(Key: String; DefaultValue: Double): Double;
+
+      method WriteString(Key: String; Value: String);
+      method WriteInteger(Key: String; Value: Integer);
+      method WriteBoolean(Key: String; Value: Boolean);
+      method WriteDouble(Key: String; Value: Double);
+
+      method Save; empty;
+      method Clear;
+      method &Remove(Key: String);
+      property Keys: array of String read mapped.Values.Keys.ToArray;
 
       class method &Default: UserSettings;
     end;
@@ -134,6 +159,76 @@ begin
     result[Count] := String(Enumerator.Current);
     inc(Count);
   end;
+end;
+  {$ELSEIF NETFX_CORE}
+method UserSettings.ReadBoolean(Key: String; DefaultValue: Boolean): Boolean;
+begin
+  if not mapped.Values.ContainsKey(Key) then 
+    exit DefaultValue;
+
+  exit Boolean(mapped.Values[Key]);
+end;
+
+method UserSettings.ReadDouble(Key: String; DefaultValue: Double): Double;
+begin
+  if not mapped.Values.ContainsKey(Key) then 
+    exit DefaultValue;
+
+  exit Double(mapped.Values[Key]);
+end;
+
+method UserSettings.ReadInteger(Key: String; DefaultValue: Integer): Integer;
+begin
+  if not mapped.Values.ContainsKey(Key) then 
+    exit DefaultValue;
+
+  exit Integer(mapped.Values[Key]);
+end;
+
+method UserSettings.ReadString(Key: String; DefaultValue: String): String;
+begin
+    raise new SugarException;
+  System.Diagnostics.Debug.WriteLine(mapped.Values.ContainsKey(Key));
+  System.Diagnostics.Debug.WriteLine(Key);
+  if not mapped.Values.ContainsKey(Key) then 
+    exit DefaultValue;
+
+  exit String(mapped.Values[Key]);
+end;
+
+class method UserSettings.&Default: UserSettings;
+begin
+  exit Windows.Storage.ApplicationData.Current.LocalSettings;
+end;
+
+method UserSettings.Clear;
+begin
+  mapped.Values.Clear;
+end;
+
+method UserSettings.&Remove(Key: String);
+begin
+  mapped.Values.Remove(key);
+end;
+
+method UserSettings.WriteBoolean(Key: String; Value: Boolean);
+begin
+  mapped.Values.Add(Key, Value);
+end;
+
+method UserSettings.WriteDouble(Key: String; Value: Double);
+begin
+  mapped.Values.Add(Key, Value);
+end;
+
+method UserSettings.WriteInteger(Key: String; Value: Integer);
+begin
+  mapped.Values.Add(Key, Value);
+end;
+
+method UserSettings.WriteString(Key: String; Value: String);
+begin
+  mapped.Values.Add(Key, Value);
 end;
   {$ELSE}
 method UserSettings.ReadString(Key: String; DefaultValue: String): String;

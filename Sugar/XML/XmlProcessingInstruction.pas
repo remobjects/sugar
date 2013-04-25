@@ -7,7 +7,7 @@ interface
 uses
   {$IF COOPER}
   org.w3c.dom,
-  {$ELSEIF WINDOWS_PHONE}
+  {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
   System.Xml.Linq,
   {$ELSEIF NOUGAT}
   Foundation,
@@ -15,13 +15,13 @@ uses
   RemObjects.Oxygene.Sugar;
 
 type
-{$IF COOPER OR ECHOES OR WINDOWS_PHONE}
+{$IF COOPER OR ECHOES OR WINDOWS_PHONE OR NETFX_CORE}
   XmlProcessingInstruction = public class (XmlNode)
   private
-    property ProcessingInstruction: {$IF COOPER}ProcessingInstruction{$ELSEIF WINDOWS_PHONE}XProcessingInstruction{$ELSE}System.Xml.XmlProcessingInstruction{$ENDIF} 
-                                    read Node as {$IF COOPER}ProcessingInstruction{$ELSEIF WINDOWS_PHONE}XProcessingInstruction{$ELSE}System.Xml.XmlProcessingInstruction{$ENDIF};
+    property ProcessingInstruction: {$IF COOPER}ProcessingInstruction{$ELSEIF WINDOWS_PHONE OR NETFX_CORE}XProcessingInstruction{$ELSE}System.Xml.XmlProcessingInstruction{$ENDIF} 
+                                    read Node as {$IF COOPER}ProcessingInstruction{$ELSEIF WINDOWS_PHONE OR NETFX_CORE}XProcessingInstruction{$ELSE}System.Xml.XmlProcessingInstruction{$ENDIF};
   public
-    {$IF WINDOWS_PHONE}
+    {$IF WINDOWS_PHONE OR NETFX_CORE}
     property Name: String read "#processinginstruction"; override;
     property InnerText: String read ProcessingInstruction.Data write ProcessingInstruction.Data; override;
     property Value: String read ProcessingInstruction.Data write ProcessingInstruction.Data; override;
@@ -36,7 +36,7 @@ type
     method SetData(aValue: String);
   public
     property Data: String read GetData write SetData;
-    property Target: String read Node.name;
+    property Target: String read Node.Name;
   end;
 {$ENDIF}
 implementation

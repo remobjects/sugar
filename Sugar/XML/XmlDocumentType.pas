@@ -7,7 +7,7 @@ interface
 uses
   {$IF COOPER}
   org.w3c.dom,
-  {$ELSEIF WINDOWS_PHONE}
+  {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
   System.Xml.Linq,
   {$ELSEIF NOUGAT}
   Foundation,
@@ -17,8 +17,8 @@ uses
 type
   XmlDocumentType = public class (XmlNode)
   private
-    property DocumentType: {$IF COOPER}DocumentType{$ELSEIF WINDOWS_PHONE}XDocumentType{$ELSEIF NOUGAT}NSXMLDTD{$ELSEIF ECHOES}System.Xml.XmlDocumentType{$ENDIF}
-                            read Node as {$IF COOPER}DocumentType{$ELSEIF WINDOWS_PHONE}XDocumentType{$ELSEIF NOUGAT}NSXMLDTD{$ELSEIF ECHOES}System.Xml.XmlDocumentType{$ENDIF};
+    property DocumentType: {$IF COOPER}DocumentType{$ELSEIF WINDOWS_PHONE OR NETFX_CORE}XDocumentType{$ELSEIF NOUGAT}NSXMLDTD{$ELSEIF ECHOES}System.Xml.XmlDocumentType{$ENDIF}
+                            read Node as {$IF COOPER}DocumentType{$ELSEIF WINDOWS_PHONE OR NETFX_CORE}XDocumentType{$ELSEIF NOUGAT}NSXMLDTD{$ELSEIF ECHOES}System.Xml.XmlDocumentType{$ENDIF};
 
     method GetEntities: array of XmlNode;
     method GetNotations: array of XmlNode;
@@ -31,7 +31,7 @@ type
   end;
 implementation
 
-{$IF WINDOWS_PHONE}
+{$IF WINDOWS_PHONE OR NETFX_CORE}
 method XmlDocumentType.GetEntities: array of XmlNode;
 begin
   exit new XmlNode[0];
@@ -44,7 +44,7 @@ end;
 {$ELSEIF COOPER OR ECHOES}
 method XmlDocumentType.GetEntities: array of XmlNode;
 begin
-  var ItemsCount: Integer := DocumentType.Entities.{$IF COOPER}Length{$ELSEIF ECHOES}Count{$ENDIF};
+  var ItemsCount: Integer := DocumentType.Entities.{$IF COOPER}length{$ELSEIF ECHOES}Count{$ENDIF};
   var lEntitites: array of XmlNode := new XmlNode[ItemsCount];
   for i: Integer := 0 to ItemsCount-1 do
     lEntitites[i] := CreateCompatibleNode(DocumentType.Entities.Item(i));
@@ -54,7 +54,7 @@ end;
 
 method XmlDocumentType.GetNotations: array of XmlNode;
 begin
-  var ItemsCount: Integer := DocumentType.Notations.{$IF COOPER}Length{$ELSEIF ECHOES}Count{$ENDIF};
+  var ItemsCount: Integer := DocumentType.Notations.{$IF COOPER}length{$ELSEIF ECHOES}Count{$ENDIF};
   var lNotations: array of XmlNode := new XmlNode[ItemsCount];
   for i: Integer := 0 to ItemsCount-1 do
     lNotations[i] := CreateCompatibleNode(DocumentType.Notations.Item(i));
@@ -66,7 +66,7 @@ method XmlDocumentType.GetEntities: array of XmlNode;
 begin
   var Items: NSMutableArray := new NSMutableArray();
 
-  for i: Integer := 0 to DocumentType.childCount-1 do begin
+  for i: Integer := 0 to DocumentType.ChildCount-1 do begin
     var Item := DocumentType.childAtIndex(i);
     if Item.kind = NSXMLNodeKind.NSXMLEntityDeclarationKind then
       Items.addObject(Item);
@@ -79,7 +79,7 @@ method XmlDocumentType.GetNotations: array of XmlNode;
 begin
   var Items: NSMutableArray := new NSMutableArray();
 
-  for i: Integer := 0 to DocumentType.childCount-1 do begin
+  for i: Integer := 0 to DocumentType.ChildCount-1 do begin
     var Item := DocumentType.childAtIndex(i);
     if Item.kind = NSXMLNodeKind.NSXMLNotationDeclarationKind then
       Items.addObject(Item);

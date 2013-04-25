@@ -62,10 +62,10 @@ type
     
     method CompareTo(Value: DateTime): Integer; mapped to CompareTo(Value);
     method ToString(Format: String): String; mapped to ToString(Format);
-	  method ToLongDateString: String; mapped to ToLongDateString;
-    method ToLongTimeString: String; mapped to ToLongTimeString;
-    method ToShortDateString: String; mapped to ToShortDateString;
-	  method ToShortTimeString: String; mapped to ToShortTimeString;
+	  method ToLongDateString: String; {$IF NOT NETFX_CORE}mapped to ToLongDateString;{$ENDIF}
+    method ToLongTimeString: String; {$IF NOT NETFX_CORE}mapped to ToLongTimeString;{$ENDIF}
+    method ToShortDateString: String; {$IF NOT NETFX_CORE}mapped to ToShortDateString;{$ENDIF}
+	  method ToShortTimeString: String; {$IF NOT NETFX_CORE}mapped to ToShortTimeString;{$ENDIF}
 
     property Date: DateTime read mapped.Date;
     property Day: Integer read mapped.Day;
@@ -219,6 +219,26 @@ end;
 method DateTime.ToShortTimeString: String;
 begin
   exit java.text.DateFormat.getTimeInstance(java.text.DateFormat.SHORT).format(fDate);
+end;
+{$ELSEIF NETFX_CORE}
+method DateTime.ToLongDateString: String;
+begin
+  exit Windows.Globalization.DateTimeFormatting.DateTimeFormatter.LongDate.Format(mapped);
+end;
+
+method DateTime.ToLongTimeString: String;
+begin
+  exit Windows.Globalization.DateTimeFormatting.DateTimeFormatter.LongTime.Format(mapped);
+end;
+
+method DateTime.ToShortDateString: String;
+begin
+  exit Windows.Globalization.DateTimeFormatting.DateTimeFormatter.ShortDate.Format(mapped);
+end;
+
+method DateTime.ToShortTimeString: String;
+begin
+  exit Windows.Globalization.DateTimeFormatting.DateTimeFormatter.ShortTime.Format(mapped);
 end;
 {$ELSEIF NOUGAT}
 method DateTime.init: id;

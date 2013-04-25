@@ -7,11 +7,9 @@ interface
 uses
   {$IF COOPER}
   org.w3c.dom,
-  {$ELSEIF WINDOWS_PHONE}
+  {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
   System.Xml.Linq,
   System.Linq,
-  System.Xml.XPath,
-  System.IO.IsolatedStorage,
   {$ELSEIF NOUGAT}
   Foundation,
   {$ENDIF}
@@ -20,11 +18,11 @@ uses
 type
   XmlDocument = public class (XmlNode)
   private
-    property Doc: {$IF COOPER}Document{$ELSEIF WINDOWS_PHONE}XDocument{$ELSEIF NOUGAT}NSXMLDocument{$ELSE}System.Xml.XmlDocument{$ENDIF} 
-                  read Node as {$IF COOPER}Document{$ELSEIF WINDOWS_PHONE}XDocument{$ELSEIF NOUGAT}NSXMLDocument{$ELSE}System.Xml.XmlDocument{$ENDIF};
+    property Doc: {$IF COOPER}Document{$ELSEIF WINDOWS_PHONE OR NETFX_CORE}XDocument{$ELSEIF NOUGAT}NSXMLDocument{$ELSE}System.Xml.XmlDocument{$ENDIF} 
+                  read Node as {$IF COOPER}Document{$ELSEIF WINDOWS_PHONE OR NETFX_CORE}XDocument{$ELSEIF NOUGAT}NSXMLDocument{$ELSE}System.Xml.XmlDocument{$ENDIF};
     method GetElement(Name: String): XmlElement;
   public
-    {$IF WINDOWS_PHONE}
+    {$IF WINDOWS_PHONE OR NETFX_CORE}
     property DocumentElement: XmlElement read iif(Doc.Root = nil, nil, new XmlElement(Doc.Root));
     property DocumentType: XmlDocumentType read iif(Doc.DocumentType = nil, nil, new XmlDocumentType(Doc.DocumentType));
     {$ELSEIF COOPER}
@@ -95,47 +93,47 @@ end;
 
 method XmlDocument.CreateAttribute(Name: String): XmlAttribute;
 begin
-  exit new XmlAttribute(Doc.createAttribute(Name));
+  exit new XmlAttribute(Doc.CreateAttribute(Name));
 end;
 
 method XmlDocument.CreateAttribute(QualifiedName: String; NamespaceUri: String): XmlAttribute;
 begin
-  exit new XmlAttribute(Doc.createAttributeNS(NamespaceUri, QualifiedName));
+  exit new XmlAttribute(Doc.CreateAttributeNs(NamespaceUri, QualifiedName));
 end;
 
 method XmlDocument.CreateCDataSection(Data: String): XmlCDataSection;
 begin
-  exit new XmlCDataSection(Doc.createCDATASection(Data));
+  exit new XmlCDataSection(Doc.CreateCDataSection(Data));
 end;
 
 method XmlDocument.CreateComment(Data: String): XmlComment;
 begin
-  exit new XmlComment(Doc.createComment(Data));
+  exit new XmlComment(Doc.CreateComment(Data));
 end;
 
 method XmlDocument.CreateElement(Name: String): XmlElement;
 begin
-  exit new XmlElement(Doc.createElement(Name));
+  exit new XmlElement(Doc.CreateElement(Name));
 end;
 
 method XmlDocument.CreateElement(QualifiedName: String; NamespaceUri: String): XmlElement;
 begin
-  exit new XmlElement(Doc.createElementNS(NamespaceUri, QualifiedName));
+  exit new XmlElement(Doc.CreateElementNs(NamespaceUri, QualifiedName));
 end;
 
 method XmlDocument.CreateProcessingInstruction(Target: String; Data: String): XmlProcessingInstruction;
 begin
-  exit new XmlProcessingInstruction(Doc.createProcessingInstruction(Target, Data));
+  exit new XmlProcessingInstruction(Doc.CreateProcessingInstruction(Target, Data));
 end;
 
 method XmlDocument.CreateTextNode(Data: String): XmlText;
 begin
-  exit new XmlText(Doc.createTextNode(Data));
+  exit new XmlText(Doc.CreateTextNode(Data));
 end;
 
 method XmlDocument.GetElementById(ElementId: String): XmlElement;
 begin
-  var lResult := Doc.getElementById(ElementId);
+  var lResult := Doc.GetElementById(ElementId);
   if lResult <> nil then
     exit new XmlElement(lResult)
   else
@@ -144,12 +142,12 @@ end;
 
 method XmlDocument.GetElementsByTagName(Name: String): array of XmlNode;
 begin
-  exit ConvertNodeList(Doc.getElementsByTagName(Name));
+  exit ConvertNodeList(Doc.GetElementsByTagName(Name));
 end;
 
 method XmlDocument.GetElementsByTagName(LocalName: String; NamespaceUri: String): array of XmlNode;
 begin
-  exit ConvertNodeList(Doc.getElementsByTagNameNS(NamespaceUri, LocalName));
+  exit ConvertNodeList(Doc.GetElementsByTagNameNs(NamespaceUri, LocalName));
 end;
 
 class method XmlDocument.LoadDocument(FileName: String): XmlDocument;
@@ -211,7 +209,7 @@ begin
   Doc.replaceChild(WithNode.Node, Node.Node);
 end;
 {$ELSEIF ECHOES}
-  {$IF WINDOWS_PHONE}
+  {$IF WINDOWS_PHONE OR NETFX_CORE}
   method XmlDocument.AddChild(Node: XmlNode);
   begin
     Doc.Add(Node.Node);
@@ -346,9 +344,10 @@ end;
     if XmlDeclaration <> nil then
       Doc.Declaration := new XDeclaration(XmlDeclaration.Version, XmlDeclaration.Encoding, XmlDeclaration.StandaloneString);
 
-    using isoStore: IsolatedStorageFile := IsolatedStorageFile.GetUserStoreForApplication do
+    {using isoStore: IsolatedStorageFile := IsolatedStorageFile.GetUserStoreForApplication do
       using isoStream: IsolatedStorageFileStream := new IsolatedStorageFileStream(FileName, System.IO.FileMode.Create, isoStore) do
-        Doc.Save(isoStream);
+        doc.Save(isoStream);}
+    raise new SugarNotImplementedException;
   end;
   {$ELSE}
   method XmlDocument.GetElement(Name: String): XmlElement;
@@ -459,17 +458,17 @@ end;
 
   method XmlDocument.AddChild(Node: XmlNode);
   begin
-    Doc.AppendChild(Node.Node);
+    Doc.appendChild(Node.Node);
   end;
 
   method XmlDocument.RemoveChild(Node: XmlNode);
   begin
-    Doc.RemoveChild(Node.Node);
+    Doc.removeChild(Node.Node);
   end;
 
   method XmlDocument.ReplaceChild(Node: XmlNode; WithNode: XmlNode);
   begin
-    Doc.ReplaceChild(WithNode.Node, Node.Node);
+    Doc.replaceChild(WithNode.Node, Node.Node);
   end;
   {$ENDIF}
 {$ELSEIF NOUGAT}
