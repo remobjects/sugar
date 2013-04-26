@@ -7,7 +7,7 @@ interface
 uses
   {$IF COOPER}
   org.w3c.dom,
-  {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
+  {$ELSEIF ECHOES}
   System.Xml.Linq,
   System.Linq,
   {$ELSEIF NOUGAT}
@@ -17,7 +17,7 @@ uses
 
 type
 
-{$IF WINDOWS_PHONE OR NETFX_CORE}
+{$IF ECHOES}
   XmlNode = public class
   private
     fNode: XObject;
@@ -58,21 +58,21 @@ type
     method SelectSingleNode(XPath: String): XmlNode;
     method ToString: System.String; override;
   end;
-{$ELSEIF COOPER OR ECHOES}
+{$ELSEIF COOPER}
   XmlNode = public class
   private
-    fNode: {$IF COOPER}Node{$ELSE}System.Xml.XmlNode{$ENDIF};
+    fNode: Node;
   protected
-    method ConvertNodeList(List: {$IF COOPER}NodeList{$ELSE}System.Xml.XmlNodeList{$ENDIF}): array of XmlNode;
-    class method CreateCompatibleNode(Node: {$IF COOPER}Node{$ELSE}System.Xml.XmlNode{$ENDIF}): XmlNode;
+    method ConvertNodeList(List: NodeList): array of XmlNode;
+    class method CreateCompatibleNode(Node: Node): XmlNode;
   assembly or protected 
-    property Node: {$IF COOPER}Node{$ELSE}System.Xml.XmlNode{$ENDIF} read fNode;
-    constructor(aNode: {$IF COOPER}Node{$ELSE}System.Xml.XmlNode{$ENDIF});
+    property Node: Node read fNode;
+    constructor(aNode: Node);
   public
-    property Name: String read {$IF COOPER}Node.NodeName{$ELSE}Node.Name{$ENDIF};
+    property Name: String read Node.NodeName;
     property URI: String read Node.BaseUri;
-    property Value: String read {$IF COOPER}Node.NodeValue{$ELSE}Node.Value{$ENDIF} write {$IF COOPER}Node.NodeValue{$ELSE}Node.Value{$ENDIF};
-    property InnerText: String read {$IF COOPER}Node.TextContent{$ELSE}Node.InnerText{$ENDIF} write {$IF COOPER}Node.TextContent{$ELSE}Node.InnerText{$ENDIF};
+    property Value: String read Node.NodeValue write Node.NodeValue;
+    property InnerText: String read Node.TextContent write Node.TextContent;
     property LocalName: String read Node.LocalName;
     
     property Document: XmlDocument read iif(Node.OwnerDocument = nil, nil, new XmlDocument(Node.OwnerDocument));
@@ -83,12 +83,12 @@ type
     property FirstChild: XmlNode read CreateCompatibleNode(Node.FirstChild);
     property LastChild: XmlNode read CreateCompatibleNode(Node.LastChild);
     property Item[&Index: Integer]: XmlNode read CreateCompatibleNode(Node.ChildNodes.Item(&Index));
-    property ChildCount: Integer read {$IF COOPER}Node.ChildNodes.length{$ELSE}Node.ChildNodes.Count{$ENDIF};
+    property ChildCount: Integer read Node.ChildNodes.length;
     property ChildNodes: array of XmlNode read ConvertNodeList(Node.ChildNodes);
 
     method SelectNodes(XPath: String): array of XmlNode;
     method SelectSingleNode(XPath: String): XmlNode;
-    method ToString: {$IF ECHOES}System.{$ENDIF}String; override;
+    method ToString: String; override;
   end;  
 {$ELSEIF NOUGAT}
 XmlNode = public class
@@ -130,7 +130,7 @@ XmlNode = public class
 
 implementation
 
-{$IF WINDOWS_PHONE OR NETFX_CORE}
+{$IF ECHOES}
 class method XmlNode.CreateCompatibleNode(Node: XNode): XmlNode;
 begin
   if Node = nil then
@@ -235,18 +235,18 @@ method XmlNode.ToString: {$IF ECHOES}System.{$ENDIF}String;
 begin
   exit fNode.ToString;
 end;
-{$ELSEIF COOPER OR ECHOES}
-constructor XmlNode(aNode: {$IF COOPER}Node{$ELSE}System.Xml.XmlNode{$ENDIF});
+{$ELSEIF COOPER}
+constructor XmlNode(aNode: Node);
 begin
   fNode := aNode;
 end;
 
-method XmlNode.ConvertNodeList(List: {$IF COOPER}NodeList{$ELSE}System.Xml.XmlNodeList{$ENDIF}): array of XmlNode;
+method XmlNode.ConvertNodeList(List: NodeList): array of XmlNode;
 begin  
   if List = nil then
     exit nil;
 
-  var ItemsCount: Integer := {$IF COOPER}List.Length{$ELSE}List.Count{$ENDIF};
+  var ItemsCount: Integer := List.Length;
   var lItems: array of XmlNode := new XmlNode[ItemsCount];
   for i: Integer := 0 to ItemsCount-1 do
     lItems[i] := CreateCompatibleNode(List.Item(i));
@@ -256,32 +256,23 @@ end;
 
 method XmlNode.SelectNodes(XPath: String): array of XmlNode;
 begin
-  {$IF COOPER}
   var Path := javax.xml.xpath.XPathFactory.newInstance().newXPath();
   var Nodes := NodeList(Path.evaluate(XPath, Node, javax.xml.xpath.XPathConstants.NODESET));
   exit ConvertNodeList(Nodes);
-  {$ELSE}
-  exit ConvertNodeList(Node.SelectNodes(XPath));
-  {$ENDIF}
 end;
 
 method XmlNode.SelectSingleNode(XPath: String): XmlNode;
 begin
-  {$IF COOPER}
   var Nodes := SelectNodes(XPath);
   if (Nodes <> nil) and (Nodes.length > 0) then
     exit Nodes[0];
-  {$ELSE}
-  exit CreateCompatibleNode(Node.SelectSingleNode(XPath));
-  {$ENDIF}
 end;
 
-method XmlNode.ToString: {$IF ECHOES}System.{$ENDIF}String;
+method XmlNode.ToString:String;
 begin
   exit fNode.ToString;
 end;
 
-{$IF COOPER}
 class method XmlNode.CreateCompatibleNode(Node: Node): XmlNode;
 begin
   if Node = nil then
@@ -299,29 +290,6 @@ begin
       exit new XmlNode(Node);
   end;
 end;
-{$ELSE}
-class method XmlNode.CreateCompatibleNode(Node: System.Xml.XmlNode): XmlNode;
-begin
-  if Node = nil then
-    exit nil;
-
-  case Node.NodeType of
-		System.Xml.XmlNodeType.None: exit nil;
-		System.Xml.XmlNodeType.Element: exit new XmlElement(Node);
-		System.Xml.XmlNodeType.Attribute: exit new XmlAttribute(Node);
-		System.Xml.XmlNodeType.Text: exit new XmlText(Node);
-		System.Xml.XmlNodeType.CDATA: exit new XmlCDataSection(Node);
-		System.Xml.XmlNodeType.ProcessingInstruction: exit new XmlProcessingInstruction(Node);
-		System.Xml.XmlNodeType.Comment: exit new XmlComment(Node);
-		System.Xml.XmlNodeType.Document: exit new XmlDocument(Node);
-		System.Xml.XmlNodeType.DocumentType: exit new XmlDocumentType(Node);
-		System.Xml.XmlNodeType.Whitespace: exit new XmlText(Node);
-		System.Xml.XmlNodeType.SignificantWhitespace: exit new XmlText(Node);
-    else
-      exit new XmlNode(Node);
-  end;
-end;
-{$ENDIF}
 {$ELSEIF NOUGAT}
 method XmlNode.SetName(aValue: String);
 begin

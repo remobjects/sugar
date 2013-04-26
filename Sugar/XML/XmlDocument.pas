@@ -7,7 +7,7 @@ interface
 uses
   {$IF COOPER}
   org.w3c.dom,
-  {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
+  {$ELSEIF ECHOES}
   System.Xml.Linq,
   System.Linq,
   {$ELSEIF NOUGAT}
@@ -18,19 +18,16 @@ uses
 type
   XmlDocument = public class (XmlNode)
   private
-    property Doc: {$IF COOPER}Document{$ELSEIF WINDOWS_PHONE OR NETFX_CORE}XDocument{$ELSEIF NOUGAT}NSXMLDocument{$ELSE}System.Xml.XmlDocument{$ENDIF} 
-                  read Node as {$IF COOPER}Document{$ELSEIF WINDOWS_PHONE OR NETFX_CORE}XDocument{$ELSEIF NOUGAT}NSXMLDocument{$ELSE}System.Xml.XmlDocument{$ENDIF};
+    property Doc: {$IF COOPER}Document{$ELSEIF ECHOES}XDocument{$ELSEIF NOUGAT}NSXMLDocument{$ENDIF} 
+                  read Node as {$IF COOPER}Document{$ELSEIF ECHOES}XDocument{$ELSEIF NOUGAT}NSXMLDocument{$ENDIF};
     method GetElement(Name: String): XmlElement;
   public
-    {$IF WINDOWS_PHONE OR NETFX_CORE}
+    {$IF ECHOES}
     property DocumentElement: XmlElement read iif(Doc.Root = nil, nil, new XmlElement(Doc.Root));
     property DocumentType: XmlDocumentType read iif(Doc.DocumentType = nil, nil, new XmlDocumentType(Doc.DocumentType));
     {$ELSEIF COOPER}
     property DocumentElement: XmlElement read iif(Doc.DocumentElement = nil, nil, new XmlElement(Doc.DocumentElement));
     property DocumentType: XmlDocumentType read iif(Doc.Doctype = nil, nil, new XmlDocumentType(Doc.Doctype));
-    {$ELSEIF ECHOES}
-    property DocumentElement: XmlElement read iif(Doc.DocumentElement = nil, nil, new XmlElement(Doc.DocumentElement));
-    property DocumentType: XmlDocumentType read iif(Doc.DocumentType = nil, nil, new XmlDocumentType(Doc.DocumentType));
     {$ELSEIF NOUGAT}
     property DocumentElement: XmlElement read iif(Doc.rootElement = nil, nil, new XmlElement(Doc.rootElement));
     property DocumentType: XmlDocumentType read iif(Doc.DTD = nil, nil, new XmlDocumentType(Doc.DTD));
@@ -208,269 +205,146 @@ method XmlDocument.ReplaceChild(Node: XmlNode; WithNode: XmlNode);
 begin
   Doc.replaceChild(WithNode.Node, Node.Node);
 end;
-{$ELSEIF ECHOES}
-  {$IF WINDOWS_PHONE OR NETFX_CORE}
-  method XmlDocument.AddChild(Node: XmlNode);
-  begin
-    Doc.Add(Node.Node);
-  end;
+{$ELSEIF ECHOES}  
+method XmlDocument.AddChild(Node: XmlNode);
+begin
+  Doc.Add(Node.Node);
+end;
 
-  method XmlDocument.CreateAttribute(Name: String): XmlAttribute;
-  begin
-    var Attr := new XAttribute(System.String(Name), "");
-    exit new XmlAttribute(Attr);
-  end;
+method XmlDocument.CreateAttribute(Name: String): XmlAttribute;
+begin
+  var Attr := new XAttribute(System.String(Name), "");
+  exit new XmlAttribute(Attr);
+end;
 
-  method XmlDocument.CreateAttribute(QualifiedName: String; NamespaceUri: String): XmlAttribute;
-  begin
-    var ns: XNamespace := System.String(NamespaceUri);
-    var Attr := new XAttribute(ns + QualifiedName, "");
-    exit new XmlAttribute(Attr);
-  end;
+method XmlDocument.CreateAttribute(QualifiedName: String; NamespaceUri: String): XmlAttribute;
+begin
+  var ns: XNamespace := System.String(NamespaceUri);
+  var Attr := new XAttribute(ns + QualifiedName, "");
+  exit new XmlAttribute(Attr);
+end;
 
-  method XmlDocument.CreateCDataSection(Data: String): XmlCDataSection;
-  begin
-    var CData := new XCData(Data);
-    exit new XmlCDataSection(CData);
-  end;
+method XmlDocument.CreateCDataSection(Data: String): XmlCDataSection;
+begin
+  var CData := new XCData(Data);
+  exit new XmlCDataSection(CData);
+end;
 
-  method XmlDocument.CreateComment(Data: String): XmlComment;
-  begin
-    var Comment := new XComment(Data);
-    exit new XmlComment(Comment);
-  end;
+method XmlDocument.CreateComment(Data: String): XmlComment;
+begin
+  var Comment := new XComment(Data);
+  exit new XmlComment(Comment);
+end;
 
-  class method XmlDocument.CreateDocument: XmlDocument;
-  begin
-    var Doc := new XDocument;
-    exit new XmlDocument(Doc);
-  end;
+class method XmlDocument.CreateDocument: XmlDocument;
+begin
+  var Doc := new XDocument;
+  exit new XmlDocument(Doc);
+end;
 
-  method XmlDocument.CreateElement(Name: String): XmlElement;
-  begin
-    var el := new XElement(System.String(Name));
+method XmlDocument.CreateElement(Name: String): XmlElement;
+begin
+  var el := new XElement(System.String(Name));
+  exit new XmlElement(el);
+end;
+
+method XmlDocument.CreateElement(QualifiedName: String; NamespaceUri: String): XmlElement;
+begin
+  var ns: XNamespace := System.String(NamespaceUri);
+  var el := new XElement(ns + QualifiedName);
+  exit new XmlElement(el);
+end;
+
+method XmlDocument.CreateProcessingInstruction(Target: String; Data: String): XmlProcessingInstruction;
+begin
+  var pi := new XProcessingInstruction(Target, Data);
+  exit new XmlProcessingInstruction(pi);
+end;
+
+method XmlDocument.CreateTextNode(Data: String): XmlText;
+begin
+  var text := new XText(Data);
+  exit new XmlText(text);
+end;
+
+method XmlDocument.GetElement(Name: String): XmlElement;
+begin
+  var el := Doc.Element(System.String(Name));
+  if el <> nil then
     exit new XmlElement(el);
-  end;
+end;
 
-  method XmlDocument.CreateElement(QualifiedName: String; NamespaceUri: String): XmlElement;
-  begin
-    var ns: XNamespace := System.String(NamespaceUri);
-    var el := new XElement(ns + QualifiedName);
-    exit new XmlElement(el);
-  end;
+method XmlDocument.GetElementById(ElementId: String): XmlElement;
+begin
+  var Item := FirstChild;
 
-  method XmlDocument.CreateProcessingInstruction(Target: String; Data: String): XmlProcessingInstruction;
-  begin
-    var pi := new XProcessingInstruction(Target, Data);
-    exit new XmlProcessingInstruction(pi);
-  end;
+  if Item = nil then
+    exit nil;
 
-  method XmlDocument.CreateTextNode(Data: String): XmlText;
-  begin
-    var text := new XText(Data);
-    exit new XmlText(text);
-  end;
-
-  method XmlDocument.GetElement(Name: String): XmlElement;
-  begin
-    var el := Doc.Element(System.String(Name));
-    if el <> nil then
-      exit new XmlElement(el);
-  end;
-
-  method XmlDocument.GetElementById(ElementId: String): XmlElement;
-  begin
-    var Item := FirstChild;
-
-    if Item = nil then
-      exit nil;
-
-    while Item <> nil do begin
-      if Item.Node.NodeType = System.Xml.XmlNodeType.Element then begin
-        var Attr := XmlElement(Item).GetAttributeNode("id");
-        if (Attr <> nil) and (Attr.Value = ElementId) then
-          exit Item as XmlElement;
-      end;
-
-      Item := Item.NextSibling;
+  while Item <> nil do begin
+    if Item.Node.NodeType = System.Xml.XmlNodeType.Element then begin
+      var Attr := XmlElement(Item).GetAttributeNode("id");
+      if (Attr <> nil) and (Attr.Value = ElementId) then
+        exit Item as XmlElement;
     end;
-  end;
 
-  method XmlDocument.GetElementsByTagName(LocalName: String; NamespaceUri: String): array of XmlNode;
-  begin
-    var ns: XNamespace := System.String(NamespaceUri);
-    var items := Doc.Elements(ns + LocalName):ToArray;
-    result := new XmlNode[items.Length];
-    for I: Integer := 0 to items.Length - 1 do
-      result[I] := CreateCompatibleNode(items[I]);
+    Item := Item.NextSibling;
   end;
+end;
 
-  method XmlDocument.GetElementsByTagName(Name: String): array of XmlNode;
-  begin  
-    var items := Doc.Elements(System.String(Name)):ToArray;
-    result := new XmlNode[items.Length];
-    for I: Integer := 0 to items.Length - 1 do
-      result[I] := CreateCompatibleNode(items[I]);
-  end;
+method XmlDocument.GetElementsByTagName(LocalName: String; NamespaceUri: String): array of XmlNode;
+begin
+  var ns: XNamespace := System.String(NamespaceUri);
+  var items := Doc.Elements(ns + LocalName):ToArray;
+  result := new XmlNode[items.Length];
+  for I: Integer := 0 to items.Length - 1 do
+    result[I] := CreateCompatibleNode(items[I]);
+end;
 
-  class method XmlDocument.LoadDocument(FileName: String): XmlDocument;
-  begin
-    var document := XDocument.Load(FileName, LoadOptions.SetBaseUri);
-    exit new XmlDocument(document);
-  end;
+method XmlDocument.GetElementsByTagName(Name: String): array of XmlNode;
+begin  
+  var items := Doc.Elements(System.String(Name)):ToArray;
+  result := new XmlNode[items.Length];
+  for I: Integer := 0 to items.Length - 1 do
+    result[I] := CreateCompatibleNode(items[I]);
+end;
 
-  method XmlDocument.RemoveChild(Node: XmlNode);
-  begin
-    (Node.Node as XNode):&Remove;
-  end;
+class method XmlDocument.LoadDocument(FileName: String): XmlDocument;
+begin
+  var document := XDocument.Load(FileName, LoadOptions.SetBaseUri);
+  exit new XmlDocument(document);
+end;
 
-  method XmlDocument.ReplaceChild(Node: XmlNode; WithNode: XmlNode);
-  begin
-    (Node.Node as XNode):ReplaceWith(WithNode.Node);
-  end;
+method XmlDocument.RemoveChild(Node: XmlNode);
+begin
+  (Node.Node as XNode):&Remove;
+end;
 
-  method XmlDocument.Save(FileName: String);
-  begin
-    Save(FileName, nil);
-  end;
+method XmlDocument.ReplaceChild(Node: XmlNode; WithNode: XmlNode);
+begin
+  (Node.Node as XNode):ReplaceWith(WithNode.Node);
+end;
 
-  method XmlDocument.Save(FileName: String; Version: String; Encoding: String; Standalone: Boolean);
-  begin
-    Save(FileName, new XmlDocumentDeclaration(Version, Encoding, Standalone));
-  end;
+method XmlDocument.Save(FileName: String);
+begin
+  Save(FileName, nil);
+end;
 
-  method XmlDocument.Save(FileName: String; XmlDeclaration: XmlDocumentDeclaration);
-  begin
-    if XmlDeclaration <> nil then
-      Doc.Declaration := new XDeclaration(XmlDeclaration.Version, XmlDeclaration.Encoding, XmlDeclaration.StandaloneString);
+method XmlDocument.Save(FileName: String; Version: String; Encoding: String; Standalone: Boolean);
+begin
+  Save(FileName, new XmlDocumentDeclaration(Version, Encoding, Standalone));
+end;
 
-    {using isoStore: IsolatedStorageFile := IsolatedStorageFile.GetUserStoreForApplication do
-      using isoStream: IsolatedStorageFileStream := new IsolatedStorageFileStream(FileName, System.IO.FileMode.Create, isoStore) do
-        doc.Save(isoStream);}
-    raise new SugarNotImplementedException;
-  end;
-  {$ELSE}
-  method XmlDocument.GetElement(Name: String): XmlElement;
-  begin
-    var lResult := Doc[Name];
-    if lResult <> nil then
-      exit new XmlElement(lResult)
-    else
-      exit nil;
-  end;
+method XmlDocument.Save(FileName: String; XmlDeclaration: XmlDocumentDeclaration);
+begin
+  if XmlDeclaration <> nil then
+    Doc.Declaration := new XDeclaration(XmlDeclaration.Version, XmlDeclaration.Encoding, XmlDeclaration.StandaloneString);
 
-  method XmlDocument.CreateAttribute(Name: String): XmlAttribute;
-  begin
-    exit new XmlAttribute(Doc.CreateAttribute(Name));
-  end;
-
-  method XmlDocument.CreateAttribute(QualifiedName: String; NamespaceUri: String): XmlAttribute;
-  begin
-    exit new XmlAttribute(Doc.CreateAttribute(QualifiedName, NamespaceUri));
-  end;
- 
-  method XmlDocument.CreateCDataSection(Data: String): XmlCDataSection;
-  begin
-    exit new XmlCDataSection(Doc.CreateCDataSection(Data));
-  end;
-
-  method XmlDocument.CreateComment(Data: String): XmlComment;
-  begin
-    exit new XmlComment(Doc.CreateComment(Data));
-  end;
-
-  method XmlDocument.CreateElement(Name: String): XmlElement;
-  begin
-    exit new XmlElement(Doc.CreateElement(Name));
-  end;
-
-  method XmlDocument.CreateElement(QualifiedName: String; NamespaceUri: String): XmlElement;
-  begin
-    exit new XmlElement(Doc.CreateElement(QualifiedName, NamespaceUri));
-  end;
-
-  method XmlDocument.CreateProcessingInstruction(Target: String; Data: String): XmlProcessingInstruction;
-  begin
-    exit new XmlProcessingInstruction(Doc.CreateProcessingInstruction(Target, Data));
-  end;
-
-  method XmlDocument.CreateTextNode(Data: String): XmlText;
-  begin
-    exit new XmlText(Doc.CreateTextNode(Data));
-  end;
-
-  method XmlDocument.GetElementById(ElementId: String): XmlElement;
-  begin
-    var lResult := Doc.GetElementById(ElementId);
-    if lResult <> nil then
-      exit new XmlElement(lResult)
-    else
-      exit nil;
-  end;
-
-  method XmlDocument.GetElementsByTagName(Name: String): array of XmlNode;
-  begin
-    exit ConvertNodeList(Doc.GetElementsByTagName(Name));
-  end;
-
-  method XmlDocument.GetElementsByTagName(LocalName: String; NamespaceUri: String): array of XmlNode;
-  begin
-    exit ConvertNodeList(Doc.GetElementsByTagName(LocalName, NamespaceUri));
-  end;
-
-  class method XmlDocument.LoadDocument(FileName: String): XmlDocument;
-  begin
-    var Document := new System.Xml.XmlDocument();
-    Document.PreserveWhitespace := false;
-    Document.Load(FileName);
-    exit new XmlDocument(Document);
-  end;
-
-  class method XmlDocument.CreateDocument: XmlDocument;
-  begin
-    exit new XmlDocument(new System.Xml.XmlDocument());
-  end;
-
-  method XmlDocument.Save(FileName: String);
-  begin
-    Save(FileName, nil);
-  end;
-
-  method XmlDocument.Save(FileName: String; Version: String; Encoding: String; Standalone: Boolean);
-  begin
-    Save(FileName, new XmlDocumentDeclaration(Version, Encoding, Standalone));
-  end;
-
-  method XmlDocument.Save(FileName: String; XmlDeclaration: XmlDocumentDeclaration);
-  begin    
-    var lDeclaration: System.Xml.XmlDeclaration := System.Xml.XmlDeclaration(Doc.FirstChild);
-  
-    if XmlDeclaration <> nil then begin
-      if lDeclaration <> nil then
-        Doc.RemoveChild(lDeclaration);
-    
-      lDeclaration := Doc.CreateXmlDeclaration(XmlDeclaration.Version, XmlDeclaration.Encoding, XmlDeclaration.StandaloneString);
-      Doc.InsertBefore(lDeclaration, Doc.FirstChild);
-    end;
-  
-    Doc.Save(FileName);
-  end;
-
-  method XmlDocument.AddChild(Node: XmlNode);
-  begin
-    Doc.appendChild(Node.Node);
-  end;
-
-  method XmlDocument.RemoveChild(Node: XmlNode);
-  begin
-    Doc.removeChild(Node.Node);
-  end;
-
-  method XmlDocument.ReplaceChild(Node: XmlNode; WithNode: XmlNode);
-  begin
-    Doc.replaceChild(WithNode.Node, Node.Node);
-  end;
-  {$ENDIF}
+  {using isoStore: IsolatedStorageFile := IsolatedStorageFile.GetUserStoreForApplication do
+    using isoStream: IsolatedStorageFileStream := new IsolatedStorageFileStream(FileName, System.IO.FileMode.Create, isoStore) do
+      doc.Save(isoStream);}
+  raise new SugarNotImplementedException;
+end;
 {$ELSEIF NOUGAT}
 method XmlDocument.AddChild(Node: XmlNode);
 begin

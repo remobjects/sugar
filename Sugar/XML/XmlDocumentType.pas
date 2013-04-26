@@ -7,7 +7,7 @@ interface
 uses
   {$IF COOPER}
   org.w3c.dom,
-  {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
+  {$ELSEIF ECHOES}
   System.Xml.Linq,
   {$ELSEIF NOUGAT}
   Foundation,
@@ -17,8 +17,8 @@ uses
 type
   XmlDocumentType = public class (XmlNode)
   private
-    property DocumentType: {$IF COOPER}DocumentType{$ELSEIF WINDOWS_PHONE OR NETFX_CORE}XDocumentType{$ELSEIF NOUGAT}NSXMLDTD{$ELSEIF ECHOES}System.Xml.XmlDocumentType{$ENDIF}
-                            read Node as {$IF COOPER}DocumentType{$ELSEIF WINDOWS_PHONE OR NETFX_CORE}XDocumentType{$ELSEIF NOUGAT}NSXMLDTD{$ELSEIF ECHOES}System.Xml.XmlDocumentType{$ENDIF};
+    property DocumentType: {$IF COOPER}DocumentType{$ELSEIF ECHOES}XDocumentType{$ELSEIF NOUGAT}NSXMLDTD{$ENDIF}
+                            read Node as {$IF COOPER}DocumentType{$ELSEIF ECHOES}XDocumentType{$ELSEIF NOUGAT}NSXMLDTD{$ENDIF};
 
     method GetEntities: array of XmlNode;
     method GetNotations: array of XmlNode;
@@ -31,7 +31,7 @@ type
   end;
 implementation
 
-{$IF WINDOWS_PHONE OR NETFX_CORE}
+{$IF ECHOES}
 method XmlDocumentType.GetEntities: array of XmlNode;
 begin
   exit new XmlNode[0];
@@ -41,10 +41,10 @@ method XmlDocumentType.GetNotations: array of XmlNode;
 begin
   exit new XmlNode[0];
 end;
-{$ELSEIF COOPER OR ECHOES}
+{$ELSEIF COOPER}
 method XmlDocumentType.GetEntities: array of XmlNode;
 begin
-  var ItemsCount: Integer := DocumentType.Entities.{$IF COOPER}length{$ELSEIF ECHOES}Count{$ENDIF};
+  var ItemsCount: Integer := DocumentType.Entities.length;
   var lEntitites: array of XmlNode := new XmlNode[ItemsCount];
   for i: Integer := 0 to ItemsCount-1 do
     lEntitites[i] := CreateCompatibleNode(DocumentType.Entities.Item(i));
@@ -54,7 +54,7 @@ end;
 
 method XmlDocumentType.GetNotations: array of XmlNode;
 begin
-  var ItemsCount: Integer := DocumentType.Notations.{$IF COOPER}length{$ELSEIF ECHOES}Count{$ENDIF};
+  var ItemsCount: Integer := DocumentType.Notations.length;
   var lNotations: array of XmlNode := new XmlNode[ItemsCount];
   for i: Integer := 0 to ItemsCount-1 do
     lNotations[i] := CreateCompatibleNode(DocumentType.Notations.Item(i));

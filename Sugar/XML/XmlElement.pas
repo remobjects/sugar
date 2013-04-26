@@ -7,7 +7,7 @@ interface
 uses
   {$IF COOPER}
   org.w3c.dom,
-  {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
+  {$ELSEIF ECHOES}
   System.Xml.Linq,
   System.Linq,
   {$ELSEIF NOUGAT}
@@ -18,11 +18,11 @@ uses
 type
   XmlElement = public class (XmlNode)
   private
-    property Element: {$IF COOPER}Element{$ELSEIF WINDOWS_PHONE OR NETFX_CORE}XElement{$ELSEIF ECHOES}System.Xml.XmlElement{$ELSEIF NOUGAT}NSXMLElement{$ENDIF} 
-                      read Node as {$IF COOPER}Element{$ELSEIF WINDOWS_PHONE OR NETFX_CORE}XElement{$ELSEIF ECHOES}System.Xml.XmlElement{$ELSEIF NOUGAT}NSXMLElement{$ENDIF};
+    property Element: {$IF COOPER}Element{$ELSEIF ECHOES}XElement{$ELSEIF NOUGAT}NSXMLElement{$ENDIF} 
+                      read Node as{$IF COOPER}Element{$ELSEIF ECHOES}XElement{$ELSEIF NOUGAT}NSXMLElement{$ENDIF};
     method GetAttributes: array of XmlAttribute;
   public
-    {$IF WINDOWS_PHONE OR NETFX_CORE}
+    {$IF ECHOES}
     property Name: String read Element.Name.ToString; override;
     property LocalName: String read Element.Name.LocalName; override;
     property Value: String read Element.Value write Element.Value; override;
@@ -53,7 +53,7 @@ type
   end;
 implementation
 
-{$IF WINDOWS_PHONE OR NETFX_CORE}
+{$IF ECHOES}
 method XmlElement.GetAttributes: array of XmlAttribute;
 begin
   var items := Element.Attributes:ToArray;
@@ -100,8 +100,7 @@ end;
 
 method XmlElement.GetAttributeNode(aLocalName: String; NamespaceUri: String): XmlAttribute;
 begin
-  var ns: XNamespace := System.String(NamespaceUri);
-  var attr := Element.Attribute(ns + aLocalName);
+  var attr := Element.Attribute(XNamespace(NamespaceUri) + aLocalName);
   if attr = nil then
     exit nil;
   exit new XmlAttribute(attr);
@@ -109,13 +108,12 @@ end;
 
 method XmlElement.SetAttribute(aName: String; aValue: String);
 begin
-  Element.SetAttributeValue(System.String(aName), aValue);
+  Element.SetAttributeValue(aName, aValue);
 end;
 
 method XmlElement.SetAttribute(aLocalName: String; NamespaceUri: String; aValue: String);
 begin
-  var ns: XNamespace := System.String(NamespaceUri);
-  Element.SetAttributeValue(ns + aLocalName, aValue);
+  Element.SetAttributeValue(XNamespace(NamespaceUri) + aLocalName, aValue);
 end;
 
 method XmlElement.SetAttributeNode(Node: XmlAttribute): XmlAttribute;
@@ -127,13 +125,12 @@ end;
 
 method XmlElement.RemoveAttribute(aName: String);
 begin
-  Element.SetAttributeValue(System.String(aName), nil);
+  Element.SetAttributeValue(aName, nil);
 end;
 
 method XmlElement.RemoveAttribute(aLocalName: String; NamespaceUri: String);
 begin
-  var ns: XNamespace := System.String(NamespaceUri);
-  Element.SetAttributeValue(ns + aLocalName, nil);
+  Element.SetAttributeValue(XNamespace(NamespaceUri) + aLocalName, nil);
 end;
 
 method XmlElement.RemoveAttributeNode(Node: XmlAttribute): XmlAttribute;
@@ -152,7 +149,7 @@ method XmlElement.HasAttribute(aLocalName: String; NamespaceUri: String): Boolea
 begin
   exit GetAttributeNode(aLocalName, NamespaceUri) <> nil;
 end;
-{$ELSEIF COOPER OR ECHOES}
+{$ELSEIF COOPER}
 method XmlElement.AddChild(Node: XmlNode);
 begin
   Element.appendChild(Node.Node);
@@ -170,7 +167,7 @@ end;
 
 method XmlElement.GetAttributes: array of XmlAttribute;
 begin
-  var ItemsCount: Integer := {$IF COOPER}Element.Attributes.Length{$ELSE}Element.Attributes.Count{$ENDIF};
+  var ItemsCount: Integer := Element.Attributes.Length;
   var lItems: array of XmlAttribute := new XmlAttribute[ItemsCount];
   for i: Integer := 0 to ItemsCount-1 do
     lItems[i] := new XmlAttribute(Element.Attributes.Item(i));
@@ -185,11 +182,7 @@ end;
 
 method XmlElement.GetAttribute(aLocalName: String; NamespaceUri: String): String;
 begin
-  {$IF COOPER}
   exit Element.getAttributeNS(NamespaceUri, aLocalName);
-  {$ELSE}
-  exit Element.GetAttribute(aLocalName, NamespaceUri);
-  {$ENDIF}
 end;
 
 method XmlElement.GetAttributeNode(aName: String): XmlAttribute;
@@ -201,11 +194,7 @@ end;
 
 method XmlElement.GetAttributeNode(aLocalName: String; NamespaceUri: String): XmlAttribute;
 begin
-  {$IF COOPER}
   var lResult := Element.getAttributeNodeNS(NamespaceUri, aLocalName);
-  {$ELSE}
-  var lResult := Element.GetAttributeNode(aLocalName, NamespaceUri);
-  {$ENDIF}  
   if lResult <> nil then
     exit new XmlAttribute(lResult);
 end;
@@ -217,20 +206,12 @@ end;
 
 method XmlElement.SetAttribute(aLocalName: String; NamespaceUri: String; aValue: String);
 begin
-  {$IF COOPER}
-  Element.setAttributeNS(NamespaceUri, aLocalName, aValue);
-  {$ELSE}
-  Element.SetAttribute(aLocalName, NamespaceUri, aValue);
-  {$ENDIF}    
+  Element.setAttributeNS(NamespaceUri, aLocalName, aValue); 
 end;
 
 method XmlElement.SetAttributeNode(Node: XmlAttribute): XmlAttribute;
 begin
-  {$IF COOPER}
   exit new XmlAttribute(Element.setAttributeNode(Node.Node as Attr));
-  {$ELSE}
-  exit new XmlAttribute(Element.SetAttributeNode(Node.Node as System.Xml.XmlAttribute));
-  {$ENDIF}
 end;
 
 method XmlElement.RemoveAttribute(aName: String);
@@ -240,20 +221,12 @@ end;
 
 method XmlElement.RemoveAttribute(aLocalName: String; NamespaceUri: String);
 begin
-  {$IF COOPER}
   Element.removeAttributeNS(NamespaceUri, aLocalName);
-  {$ELSE}
-  Element.RemoveAttribute(aLocalName, NamespaceUri);
-  {$ENDIF}
 end;
 
 method XmlElement.RemoveAttributeNode(Node: XmlAttribute): XmlAttribute;
 begin
-  {$IF COOPER}
   exit new XmlAttribute(Element.removeAttributeNode(Node.Node as Attr));
-  {$ELSE}
-  exit new XmlAttribute(Element.RemoveAttributeNode(Node.Node as System.Xml.XmlAttribute));
-  {$ENDIF}
 end;
 
 method XmlElement.HasAttribute(aName: String): Boolean;
@@ -263,13 +236,11 @@ end;
 
 method XmlElement.HasAttribute(aLocalName: String; NamespaceUri: String): Boolean;
 begin
-  {$IF COOPER}
   exit Element.hasAttributeNS(NamespaceUri, aLocalName);
-  {$ELSE}
-  exit Element.HasAttribute(LocalName, NamespaceUri);
-  {$ENDIF}
 end;
+
 {$ELSEIF NOUGAT}
+
 method XmlElement.AddChild(Node: XmlNode);
 begin
   Element.addChild(Node.Node);

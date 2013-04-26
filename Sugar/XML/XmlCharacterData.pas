@@ -7,7 +7,7 @@ interface
 uses
   {$IF COOPER}
   org.w3c.dom,
-  {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
+  {$ELSEIF ECHOES}
   System.Xml.Linq,
   {$ELSEIF NOUGAT}
   Foundation,
@@ -22,16 +22,16 @@ type
     method SetData(aValue: String);
     method GetLength: Integer;
     {$ELSE}
-    property CharacterData: {$IF COOPER}CharacterData{$ELSEIF WINDOWS_PHONE OR NETFX_CORE}XText{$ELSE}System.Xml.XmlCharacterData{$ENDIF} 
-                            read Node as {$IF COOPER}CharacterData{$ELSEIF WINDOWS_PHONE OR NETFX_CORE}XText{$ELSE}System.Xml.XmlCharacterData{$ENDIF};
+    property CharacterData: {$IF COOPER}CharacterData{$ELSEIF ECHOES}XText{$ENDIF} 
+                            read Node as {$IF COOPER}CharacterData{$ELSEIF ECHOES}XText{$ENDIF};
     {$ENDIF}
   public
-    {$IF WINDOWS_PHONE OR NETFX_CORE}
+    {$IF ECHOES}
     property Data: String read CharacterData.Value write CharacterData.Value; virtual;
     property Length: Integer read CharacterData.Value.Length; virtual;
     property Value: String read CharacterData.Value write CharacterData.Value; override;
     property InnerText: String read CharacterData.Value write CharacterData.Value; override; 
-    {$ELSEIF COOPER OR ECHOES}
+    {$ELSEIF COOPER}
     property Data: String read CharacterData.Data write CharacterData.Data;
     property Length: Integer read CharacterData.Length;
     {$ELSEIF NOUGAT}
@@ -47,14 +47,14 @@ type
   end;
 
   XmlCDataSection = public class (XmlCharacterData)
-  {$IF WINDOWS_PHONE OR NETFX_CORE}
+  {$IF ECHOES}
   public
     property Name: String read "#CDATA"; override;
   {$ENDIF}
   end;
 
   XmlComment = public class (XmlCharacterData)
-  {$IF WINDOWS_PHONE OR NETFX_CORE}
+  {$IF ECHOES}
   private
     property Comment: XComment read Node as XComment;
   public    
@@ -67,7 +67,7 @@ type
   end;
 
   XmlText = public class (XmlCharacterData)
-  {$IF WINDOWS_PHONE OR NETFX_CORE}
+  {$IF ECHOES}
   public
     property Name: String read "#text"; override;
   {$ENDIF}
@@ -93,9 +93,9 @@ end;
 
 method XmlCharacterData.AppendData(aValue: String);
 begin
-  {$IF WINDOWS_PHONE OR NETFX_CORE}
+  {$IF ECHOES}
   Value := Value + aValue;
-  {$ELSEIF COOPER OR ECHOES} 
+  {$ELSEIF COOPER} 
   CharacterData.AppendData(aValue);
   {$ELSEIF NOUGAT}
   var lData: NSMutableString := NSMutableString.stringWithString(Node.stringValue);
@@ -106,9 +106,9 @@ end;
 
 method XmlCharacterData.DeleteData(Offset: Integer; Count: Integer);
 begin
-  {$IF WINDOWS_PHONE OR NETFX_CORE}
+  {$IF ECHOES}
   Value := System.String(Value).Remove(Offset, Count);
-  {$ELSEIF COOPER OR ECHOES} 
+  {$ELSEIF COOPER} 
   CharacterData.DeleteData(Offset, Count);
   {$ELSEIF NOUGAT}
   var lData: NSMutableString := NSMutableString.stringWithString(Node.stringValue);
@@ -119,9 +119,9 @@ end;
 
 method XmlCharacterData.InsertData(Offset: Integer; aValue: String);
 begin
-  {$IF WINDOWS_PHONE OR NETFX_CORE}
+  {$IF ECHOES}
   Value := System.String(Value).Insert(Offset, aValue);
-  {$ELSEIF COOPER OR ECHOES} 
+  {$ELSEIF COOPER} 
   CharacterData.InsertData(Offset, aValue);
   {$ELSEIF NOUGAT}
   var lData: NSMutableString := NSMutableString.stringWithString(Node.stringValue);
@@ -132,10 +132,10 @@ end;
 
 method XmlCharacterData.ReplaceData(Offset: Integer; Count: Integer; WithValue: String);
 begin
-  {$IF WINDOWS_PHONE OR NETFX_CORE}
+  {$IF ECHOES}
   DeleteData(Offset, Count);
   InsertData(Offset, WithValue);
-  {$ELSEIF COOPER OR ECHOES} 
+  {$ELSEIF COOPER} 
   CharacterData.ReplaceData(Offset, Count, WithValue);
   {$ELSEIF NOUGAT}
   var lData: NSMutableString := NSMutableString.stringWithString(Node.stringValue);
@@ -146,12 +146,10 @@ end;
 
 method XmlCharacterData.Substring(Offset: Integer; Count: Integer): String;
 begin
-  {$IF WINDOWS_PHONE OR NETFX_CORE}
+  {$IF ECHOES}
   exit Value.Substring(Offset, Count);
   {$ELSEIF COOPER} 
   exit CharacterData.substringData(Offset, Count);
-  {$ELSEIF ECHOES}
-  exit CharacterData.Substring(Offset, Count);
   {$ELSEIF NOUGAT}
   exit Node.stringValue.substringWithRange(NSMakeRange(Offset, Count));
   {$ENDIF}
