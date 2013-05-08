@@ -108,8 +108,7 @@ begin
 end;
 
 method StringBuilder.Append(value: String; startIndex: Integer; count: Integer): StringBuilder;
-begin
-  Append(value.Substring(startIndex, count));
+begin  
   mapped.appendString(value.Substring(startIndex, count));
   exit mapped;
 end;
