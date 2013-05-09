@@ -75,7 +75,7 @@
       <HintPath>..\Sugar\bin\Debug\RemObjects.Oxygene.Cooper.jar</HintPath>
     </ProjectReference>
   </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Java.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Cooper.targets" />
   <PropertyGroup>
     <PreBuildEvent />
   </PropertyGroup>

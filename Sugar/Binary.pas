@@ -18,7 +18,7 @@ type
   private
     fData: java.io.ByteArrayOutputStream := new java.io.ByteArrayOutputStream();
   public
-    method Assign(Data: Binary);
+    method Assign(aData: Binary);
     method Clear;
 
     method ReadRangeOfBytes(Range: Range): array of Byte;
@@ -26,18 +26,22 @@ type
     
     method Subdata(Range: Range): Binary;
 
-    method WriteBytes(Data: array of Byte; aLength: Integer);
-    method WriteData(Data: Binary);
+    method WriteBytes(aData: array of Byte; aLength: Integer);
+    method WriteData(aData: Binary);
 
     method ToArray: array of Byte;
     property Length: Integer read fData.size;
+
+    class method FromArray(aArray: array of Byte): Binary;
   end;
   {$ELSEIF ECHOES}
   Binary = public class
   private
     fData: System.IO.MemoryStream := new System.IO.MemoryStream();
+  assembly
+    property Data: System.IO.MemoryStream read fData;
   public
-    method Assign(Data: Binary);
+    method Assign(aData: Binary);
     method Clear;
 
     method ReadRangeOfBytes(Range: Range): array of Byte;
@@ -45,18 +49,20 @@ type
     
     method Subdata(Range: Range): Binary;
 
-    method WriteBytes(Data: array of Byte; aLength: Integer);
-    method WriteData(Data: Binary);
+    method WriteBytes(aData: array of Byte; aLength: Integer);
+    method WriteData(aData: Binary);
 
     method ToArray: array of Byte;
     property Length: Integer read fData.Length;
+
+    class method FromArray(aArray: array of Byte): Binary;
   end;
   {$ELSEIF NOUGAT}
   Binary = public class mapped to Foundation.NSMutableData
   private
     method ConvertRange(Range: Range): Foundation.NSRange;
   public
-    method Assign(Data: Binary); mapped to setData(Data);
+    method Assign(aData: Binary); mapped to setData(aData);
     method Clear; mapped to setLength(0);
 
     method ReadRangeOfBytes(Range: Range): array of Byte;
@@ -64,11 +70,13 @@ type
     
     method Subdata(Range: Range): Binary;
 
-    method WriteBytes(Data: array of Byte; aLength: Integer); mapped to appendBytes(Data) length(aLength);
-    method WriteData(Data: Binary); mapped to appendData(Data);
+    method WriteBytes(aData: array of Byte; aLength: Integer); mapped to appendBytes(aData) length(aLength);
+    method WriteData(aData: Binary); mapped to appendData(aData);
 
     method ToArray: array of Byte;
     property Length: Integer read mapped.length;
+
+    class method FromArray(aArray: array of Byte): Binary; mapped to dataWithBytes(aArray) length(length(aArray)); 
   end;
   {$ENDIF}
 
@@ -79,11 +87,12 @@ class method Range.MakeRange(aLocation: Integer; aLength: Integer): Range;
 begin
   exit new Range(Location := aLocation, Length := aLength);
 end;
+
 {$IF COOPER}
-method Binary.Assign(Data: Binary);
+method Binary.Assign(aData: Binary);
 begin
   Clear;
-  fData.write(Data.ToArray, 0, Data.Length);
+  fData.write(aData.ToArray, 0, aData.Length);
 end;
 
 method Binary.ReadRangeOfBytes(Range: Range): array of Byte;
@@ -99,19 +108,19 @@ end;
 
 method Binary.Subdata(Range: Range): Binary;
 begin
-  var Data := ReadRangeOfBytes(Range);
+  var lData := ReadRangeOfBytes(Range);
   result := new Binary();
-  result.WriteBytes(Data, Data.length);
+  result.WriteBytes(lData, lData.length);
 end;
 
-method Binary.WriteBytes(Data: array of Byte; aLength: Integer);
+method Binary.WriteBytes(aData: array of Byte; aLength: Integer);
 begin
-  fData.write(Data, 0, aLength);
+  fData.write(aData, 0, aLength);
 end;
 
-method Binary.WriteData(Data: Binary);
+method Binary.WriteData(aData: Binary);
 begin
-  WriteBytes(Data.ToArray, Data.Length);
+  WriteBytes(aData.ToArray, aData.Length);
 end;
 
 method Binary.ToArray: array of Byte;
@@ -123,11 +132,17 @@ method Binary.Clear;
 begin
   fData.reset;
 end;
+
+class method Binary.FromArray(aArray: array of Byte): Binary;
+begin
+  {$WARNING Binary.FromArray not implemented for Cooper, yet}
+end;
+
 {$ELSEIF ECHOES}
-method Binary.Assign(Data: Binary);
+method Binary.Assign(aData: Binary);
 begin
   Clear;
-  fData.Write(Data.ToArray, 0, Data.Length);
+  fData.Write(aData.ToArray, 0, aData.Length);
 end;
 
 method Binary.ReadRangeOfBytes(Range: Range): array of Byte;
@@ -149,19 +164,19 @@ end;
 
 method Binary.Subdata(Range: Range): Binary;
 begin
-  var Data := ReadRangeOfBytes(Range);
+  var lData := ReadRangeOfBytes(Range);
   result := new Binary();
-  result.WriteBytes(Data, Data.Length);
+  result.WriteBytes(lData, lData.Length);
 end;
 
-method Binary.WriteBytes(Data: array of Byte; aLength: Integer);
+method Binary.WriteBytes(aData: array of Byte; aLength: Integer);
 begin
-  fData.Write(Data, 0, aLength);
+  fData.Write(aData, 0, aLength);
 end;
 
-method Binary.WriteData(Data: Binary);
+method Binary.WriteData(aData: Binary);
 begin
-  WriteBytes(Data.ToArray, Data.Length);
+  WriteBytes(aData.ToArray, aData.Length);
 end;
 
 method Binary.ToArray: array of Byte;
@@ -173,7 +188,14 @@ method Binary.Clear;
 begin
   fData.SetLength(0);
 end;
+
+class method Binary.FromArray(aArray: array of Byte): Binary;
+begin
+  {$WARNING Binary.FromArray not implemented for Echoes, yet}
+end;
+
 {$ELSEIF NOUGAT}
+
 method Binary.ToArray: array of Byte;
 begin
   result := new Byte[mapped.length];
@@ -202,6 +224,7 @@ begin
   result := new Byte[Range.Length];
   mapped.getBytes(result) range(ConvertRange(Range));
 end;
+
 {$ENDIF}
 
 end.

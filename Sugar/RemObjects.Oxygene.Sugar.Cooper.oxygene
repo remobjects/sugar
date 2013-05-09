@@ -69,6 +69,7 @@
     <Compile Include="Crypto\Digest.pas" />
     <Compile Include="DateTime.pas" />
     <Compile Include="Dispatch.pas" />
+    <Compile Include="HTTP.pas" />
     <Compile Include="IO\StandardFolders.pas" />
     <Compile Include="Random.pas" />
     <Compile Include="Environment.pas" />
@@ -107,7 +108,7 @@
     <Folder Include="Properties\" />
     <Folder Include="XML\" />
   </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Java.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Cooper.targets" />
   <PropertyGroup>
     <PreBuildEvent />
   </PropertyGroup>

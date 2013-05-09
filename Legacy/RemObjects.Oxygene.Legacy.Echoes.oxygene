@@ -88,7 +88,7 @@
       <HintPath>..\Sugar\bin\Debug\RemObjects.Oxygene.Sugar.dll</HintPath>
     </ProjectReference>
   </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Echoes.targets" />
   <PropertyGroup>
     <PreBuildEvent />
   </PropertyGroup>

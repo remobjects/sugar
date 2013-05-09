@@ -3,7 +3,6 @@
 interface
 
 type
-
   {$IF COOPER}
   Url = public class mapped to java.net.URL
   public
@@ -15,8 +14,7 @@ type
    // property Fragment: String read mapped;
     property ToString: String read mapped.toString;
   end;
-  {$ENDIF}
-  {$IF ECHOES}
+  {$ELSEIF ECHOES}
   Url = public class mapped to System.Uri
   public
     property Scheme: String read mapped.Scheme;
@@ -27,13 +25,12 @@ type
     property Fragment: String read mapped.Fragment;
     property ToString: String read mapped.ToString;
   end;
-  {$ENDIF}
-  {$IF NOUGAT}
+  {$ELSEIF NOUGAT}
   Url = public class mapped to Foundation.NSURL
   public
     property Scheme: String read mapped.scheme;
     property Host: String read mapped.host;
-    property Port: Int32 read mapped.port.intValue; // should be :intValue
+    property Port: Int32 read mapped.port:intValue;
     property Path: String read mapped.path;
     property QueryString: String read mapped.query;
     property Fragment: String read mapped.fragment;

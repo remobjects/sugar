@@ -15,11 +15,20 @@ uses
   {$ENDIF}
   RemObjects.Oxygene.Sugar;
 
+{$IF NOUGAT}
+  {$WARNING XmlDocument for Nougat should be re-written based on libxml2, for iOS support. }
+{$ENDIF}
+
 type
   XmlDocument = public class (XmlNode)
   private
-    property Doc: {$IF COOPER}Document{$ELSEIF ECHOES}XDocument{$ELSEIF NOUGAT}NSXMLDocument{$ENDIF} 
-                  read Node as {$IF COOPER}Document{$ELSEIF ECHOES}XDocument{$ELSEIF NOUGAT}NSXMLDocument{$ENDIF};
+    {$IF COOPER}
+    property Doc: Document read Node as Document;
+    {$ELSEIF ECHOES}
+    property Doc: XDocument read Node as XDocument;
+    {$ELSEIF NOUGAT}
+    property Doc: NSXMLDocument read Node as NSXMLDocument;
+    {$ENDIF}
     method GetElement(Name: String): XmlElement;
   public
     {$IF ECHOES}
@@ -52,7 +61,9 @@ type
     method GetElementsByTagName(Name: String): array of XmlNode;
     method GetElementsByTagName(LocalName, NamespaceUri: String): array of XmlNode;
 
-    class method LoadDocument(FileName: String): XmlDocument;
+    class method FromFile(FileName: String): XmlDocument;
+    class method FromBinary(aBinary: Binary): XmlDocument;
+    class method FromString(aString: String): XmlDocument;
     class method CreateDocument: XmlDocument;
 
     method Save(FileName: String);
@@ -147,11 +158,24 @@ begin
   exit ConvertNodeList(Doc.GetElementsByTagNameNs(NamespaceUri, LocalName));
 end;
 
-class method XmlDocument.LoadDocument(FileName: String): XmlDocument;
+class method XmlDocument.FromFile(FileName: String): XmlDocument;
 begin
   var Factory := javax.xml.parsers.DocumentBuilderFactory.newInstance;
   var Builder := Factory.newDocumentBuilder();  
   var Document := Builder.parse(new java.io.File(FileName));
+  exit new XmlDocument(Document);
+end;
+
+class method XmlDocument.FromBinary(aBinary: Binary): XmlDocument;
+begin
+  {$WARNING XmlDocument.FromBinary not implemented for Cooper, yet}
+end;
+
+class method XmlDocument.FromString(aString: String): XmlDocument;
+begin
+  var Factory := javax.xml.parsers.DocumentBuilderFactory.newInstance;
+  var Builder := Factory.newDocumentBuilder();  
+  var Document := Builder.parse(aString);
   exit new XmlDocument(Document);
 end;
 
@@ -309,10 +333,22 @@ begin
     result[I] := CreateCompatibleNode(items[I]);
 end;
 
-class method XmlDocument.LoadDocument(FileName: String): XmlDocument;
+class method XmlDocument.FromFile(FileName: String): XmlDocument;
 begin
   var document := XDocument.Load(FileName, LoadOptions.SetBaseUri);
-  exit new XmlDocument(document);
+  result := new XmlDocument(document);
+end;
+
+class method XmlDocument.FromBinary(aBinary: Binary): XmlDocument;
+begin
+  var document := Xdocument.Load(aBinary.Data);
+  result := new XmlDocument(document);
+end;
+
+class method XmlDocument.FromString(aString: String): XmlDocument;
+begin
+  var document := XDocument.Parse(aString);
+  result := new XmlDocument(document);
 end;
 
 method XmlDocument.RemoveChild(Node: XmlNode);
@@ -450,12 +486,29 @@ begin
   exit ConvertNodeList(Nodes);
 end;
 
-class method XmlDocument.LoadDocument(FileName: String): XmlDocument;
+class method XmlDocument.FromFile(FileName: String): XmlDocument;
 begin
   var Url := new NSURL fileURLWithPath(FileName);
   var lError: NSError;
   var lNode := new NSXMLDocument withContentsOfURL(Url) options(NSXMLDocumentTidyXML) error(var lError);
-  exit new XmlDocument(lNode);
+  if not assigned(lNode) then raise new SugarNSErrorException withError(lError);
+  result := new XmlDocument(lNode);
+end;
+
+class method XmlDocument.FromBinary(aBinary: Binary): XmlDocument;
+begin
+  var lError: NSError;
+  var lNode := new NSXMLDocument withData(aBinary) options(NSXMLDocumentTidyXML) error(var lError);
+  if not assigned(lNode) then raise new SugarNSErrorException withError(lError);
+  result := new XmlDocument(lNode);
+end;
+
+class method XmlDocument.FromString(aString: String): XmlDocument;
+begin
+  var lError: NSError;
+  var lNode := new NSXMLDocument withXMLString(aString) options(NSXMLDocumentTidyXML) error(var lError);
+  if not assigned(lNode) then raise new SugarNSErrorException withError(lError);
+  result := new XmlDocument(lNode);
 end;
 
 method XmlDocument.RemoveChild(Node: XmlNode);

@@ -94,6 +94,7 @@
     <Compile Include="Echoes\MonoHelpers\CoreFoundation.pas" />
     <Compile Include="Echoes\MonoHelpers\MacFolders.pas" />
     <Compile Include="Echoes\MonoHelpers\PlatformDetection.pas" />
+    <Compile Include="HTTP.pas" />
     <Compile Include="IO\StandardFolders.pas" />
     <Compile Include="Random.pas" />
     <Compile Include="Environment.pas" />
@@ -135,7 +136,7 @@
     <Folder Include="Threading" />
     <Folder Include="IO" />
   </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Echoes.targets" />
   <PropertyGroup>
     <PreBuildEvent />
   </PropertyGroup>
