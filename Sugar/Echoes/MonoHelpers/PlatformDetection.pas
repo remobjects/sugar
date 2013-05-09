@@ -1,6 +1,6 @@
 namespace RemObjects.Sugar.MonoHelpers;
 
-// Parts based on code by MJ Hutchinson http://mjhutchinson.com/journal/2010/01/25/integrating_gtk_application_mac
+// Parts based on code by Michael Hutchinson http://mjhutchinson.com/journal/2010/01/25/integrating_gtk_application_mac
 // This code has been converted from C# from https://github.com/remobjects/monohelpers
 
 {$IF NOT ECHOES}
