@@ -88,7 +88,7 @@ type
 
     method SelectNodes(XPath: String): array of XmlNode;
     method SelectSingleNode(XPath: String): XmlNode;
-    method ToString: String; override;
+    method ToString: java.lang.String; override;
   end;  
 {$ELSEIF NOUGAT}
 XmlNode = public class
@@ -268,7 +268,7 @@ begin
     exit Nodes[0];
 end;
 
-method XmlNode.ToString:String;
+method XmlNode.ToString: java.lang.String;
 begin
   exit fNode.ToString;
 end;
