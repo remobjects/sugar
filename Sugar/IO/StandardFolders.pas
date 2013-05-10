@@ -27,7 +27,7 @@ type
 
 implementation
 
-{$IF ECHOES AND NOT WINDOWS_PHONE}
+{$IF ECHOES AND NOT (WINDOWS_PHONE OR NETFX_CORE)}
 uses 
   RemObjects.Sugar.MonoHelpers;
 {$ENDIF}
