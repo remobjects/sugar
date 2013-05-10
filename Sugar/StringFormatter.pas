@@ -41,11 +41,11 @@ namespace RemObjects.Oxygene.Sugar;
 interface
 
 type
-  StringFormatter = assembly static class
+  StringFormatter = public static class
   private   
     class method ParseDecimal(aString: String; var ptr: Int32): Int32;
     class method ParseFormatSpecifier(aString: String; var ptr: Int32; out n: Int32; out width: Int32; out left_align: Boolean; out aFormat: String);
-  assembly
+  public
     class method FormatString(aFormat: String; params args: array of Object): String;
   end;
 

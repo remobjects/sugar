@@ -5,9 +5,6 @@ interface
 {ToDo: The Echoes implementations need platform checks and call proper APIs on Linux and other platforms}
 
 type
-  Folder = public class mapped to {$IF WINDOWS_PHONE}Windows.Storage.StorageFolder{$ELSE}String{$ENDIF}
-  end;
-
   StandardFolders = public static class
   private
     {$IF ECHOES AND NOT WINDOWS_PHONE}
@@ -47,8 +44,8 @@ method StandardFolders.UserLocal: Folder;
 begin
   {$IF COOPER}
   {$ELSEIF ECHOES}
-    {$IF WINDOWS_PHONE}
-      // not supported
+    {$IF WINDOWS_PHONE OR NETFX_CORE}
+      exit Windows.Storage.ApplicationData.Current.LocalFolder;
     {$ELSE}
     case PlatformSupport.Platform of
       PlatformType.Windows: result := Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
@@ -64,7 +61,7 @@ method StandardFolders.UserRoaming: Folder;
 begin
   {$IF COOPER}
   {$ELSEIF ECHOES}
-    {$IF WINDOWS_PHONE}
+    {$IF WINDOWS_PHONE OR NETFX_CORE}
       // not supported
     {$ELSE}
     case PlatformSupport.Platform of
@@ -82,7 +79,7 @@ begin
 
   {$IF COOPER}
   {$ELSEIF ECHOES}
-    {$IF WINDOWS_PHONE}
+    {$IF WINDOWS_PHONE OR NETFX_CORE}
       // not supported
     {$ELSE}
     case PlatformSupport.Platform of
@@ -99,7 +96,7 @@ method StandardFolders.UserDesktop: Folder;
 begin
   {$IF COOPER}
   {$ELSEIF ECHOES}
-    {$IF WINDOWS_PHONE}
+    {$IF WINDOWS_PHONE OR NETFX_CORE}
       // not supported
     {$ELSE}
     case PlatformSupport.Platform of
@@ -116,7 +113,7 @@ method StandardFolders.UserDocuments: Folder;
 begin
   {$IF COOPER}
   {$ELSEIF ECHOES}
-    {$IF WINDOWS_PHONE}
+    {$IF WINDOWS_PHONE OR NETFX_CORE}
     result := Windows.Storage.KnownFolders.DocumentsLibrary
     {$ELSE}
     case PlatformSupport.Platform of
@@ -133,7 +130,7 @@ method StandardFolders.UserDownloads: Folder;
 begin
   {$IF COOPER}
   {$ELSEIF ECHOES}
-    {$IF WINDOWS_PHONE}
+    {$IF WINDOWS_PHONE OR NETFX_CORE}
       // not supported
     {$ELSE}
     case PlatformSupport.Platform of

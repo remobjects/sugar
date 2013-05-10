@@ -96,11 +96,8 @@
     <Compile Include="Collections\List.pas" />
     <Compile Include="Collections\Queue.pas" />
     <Compile Include="Collections\Stack.pas" />
-    <Compile Include="IO\Directory.pas" />
     <Compile Include="IO\File.pas" />
-    <Compile Include="IO\FileStream.pas" />
-    <Compile Include="IO\MemoryStream.pas" />
-    <Compile Include="IO\Path.pas" />
+    <Compile Include="IO\Folder.pas" />
     <Compile Include="IO\StandardFolders.pas" />
     <Compile Include="Threading\AutoResetEvent.pas" />
     <Compile Include="Threading\ManualResetEvent.pas" />

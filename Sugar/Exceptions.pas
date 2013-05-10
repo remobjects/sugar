@@ -23,6 +23,8 @@ type
 
   SugarFormatException = public class(SugarException);
 
+  SugarIOException = public class(SugarException);
+
   {$IF NOUGAT}
   SugarNSErrorException = public class(SugarException)
   public
@@ -34,6 +36,8 @@ type
   ErrorMessage = assembly static class
   public
     class const FORMAT_ERROR = "Input string was not in a correct format";
+    class const FILE_EXISTS = "File {0} already exists";
+    class const FOLDER_EXISTS = "Folder {0} already exists";
   end;
 
 implementation

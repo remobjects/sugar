@@ -3,267 +3,386 @@
 interface
 
 uses
-  {$IFDEF NOUGAT}Foundation,{$ENDIF}
-  RemObjects.Oxygene.Sugar;
+  {$IF WINDOWS_PHONE OR NETFX_CORE}  
+  System.IO,
+  {$ELSEIF COOPER}
+  {$ELSEIF ECHOES}
+  {$ELSEIF NOUGAT}
+  {$ENDIF}
+  RemObjects.Oxygene.Sugar,
+  RemObjects.Oxygene.Sugar.Collections;
 
 type
-
-  {$IF ECHOES}
-  File = public class mapped to System.IO.File
+  File = public class mapped to {$IF WINDOWS_PHONE OR NETFX_CORE}Windows.Storage.StorageFile{$ELSEIF ECHOES}System.String{$ELSEIF COOPER}java.io.File{$ELSEIF NOUGAT}NSMutableString{$ENDIF}
+  private    
+    {$IF ECHOES}
+      {$IF NOT (WINDOWS_PHONE OR NETFX_CORE)}
+      method GetName: String;
+      {$ENDIF}
+    {$ELSEIF NOUGAT}
+    method Combine(BasePath: String; SubPath: String): String;
+    {$ENDIF}
   public
-    class method &Copy(aOldFileName, aNewFileName: String; aOverwriteFile: Boolean); mapped to &Copy(aOldFileName, aNewFileName, aOverwriteFile);
-    class method Delete(aFileName: String); mapped to Delete(aFileName);
-    class method Exists(aFileName: String): Boolean; mapped to Exists(aFileName);
-    class method Move(aOldFileName, aNewFileName: String); mapped to Move(aOldFileName, aNewFileName);
+    method &Copy(Destination: Folder): File;
+    method &Copy(Destination: Folder; NewName: String): File;
+    method Delete;
+    method Move(Destination: Folder);
+    method Move(Destination: Folder; NewName: String);
+    method Rename(NewName: String);
 
-    {$IF WINDOWS_PHONE}
-      class method AppendText(aFileName, aContents: String);
-      class method ReadBytes(aFileName: String): array of Byte;
-      class method ReadText(aFileName: String): String; 
-      class method WriteBytes(aFileName: String; aData:array of Byte);
-      class method WriteText(aFileName: String; aText: String);
-    {$ELSE}
-      class method AppendText(aFileName, aContents: String);  mapped to AppendAllText(aFileName, aContents);
-      class method ReadBytes(aFileName: String): array of Byte; mapped to ReadAllBytes(aFileName);
-      class method ReadText(aFileName: String): String; mapped to ReadAllText(aFileName);
-      class method WriteBytes(aFileName: String; aData:array of Byte); mapped to WriteAllBytes(aFileName, aData);
-      class method WriteText(aFileName: String; aText: String); mapped to WriteAllText(aFileName, aText);
-    {$ENDIF}    
-  {$ENDIF}
-  {$IF COOPER or NOUGAT}
-  File = public class
-  public
-    class method AppendText(aFileName, aContents: String); 
-    class method &Copy(aOldFileName, aNewFileName: String; aOverwriteFile: Boolean);
-    class method Delete(aFileName: String);
-    class method Exists(aFileName: String): Boolean; 
-    class method Move(aOldFileName, aNewFileName: String);
-    class method ReadBytes(aFileName: String): array of Byte;
-    class method ReadText(aFileName: String): String;
-    class method WriteBytes(aFileName: String; aData: array of Byte);
-    class method WriteText(aFileName: String; aText: String); 
-  {$ENDIF}
+    method AppendText(Content: String);
+    method ReadBytes: array of Byte;
+    method ReadText: String;
+    method WriteBytes(Data: array of Byte);
+    method WriteText(Content: String);
+
+    {$IF WINDOWS_PHONE OR NETFX_CORE}
+    property Path: String read mapped.Path;
+    property Name: String read mapped.Name;
+    {$ELSEIF ECHOES}
+    property Path: String read mapped;
+    property Name: String read GetName;
+    {$ELSEIF COOPER}
+    property Path: String read mapped.AbsolutePath;
+    property Name: String read mapped.Name;
+    {$ELSEIF NOUGAT}
+    property Path: String read mapped;
+    property Name: String read NSFileManager.defaultManager.displayNameAtPath(mapped);
+    {$ENDIF}
   end;
 
 implementation
 
-
-{$IF COOPER}
-class method File.AppendText(aFileName, aContents: String); 
+{$IF WINDOWS_PHONE OR NETFX_CORE}
+method File.&Copy(Destination: Folder): File;
 begin
-  var textFile: java.io.FileWriter;
-  try
-    textFile := new java.io.FileWriter(aFileName, true);
-    textFile.write(aContents);
-  finally
-    textFile.close();
-  end;
+  exit &Copy(Destination, mapped.Name);
 end;
 
-class method File.Copy(aOldFileName, aNewFileName: String; aOverwriteFile: Boolean);
+method File.&Copy(Destination: Folder; NewName: String): File;
 begin
-  var source := new java.io.File(aOldFileName);
-  var dest := new java.io.File(aNewFileName);
-  if aOverwriteFile then
-    java.nio.file.Files.copy(source.toPath(), dest.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING)
-  else
-    java.nio.file.Files.copy(source.toPath(), dest.toPath());
+  exit mapped.CopyAsync(Destination, NewName, Windows.Storage.NameCollisionOption.FailIfExists).Await;
 end;
 
-class method File.Delete(aFileName: String);
+method File.Delete;
 begin
-  var f := new java.io.File(aFileName);
-  f.delete();
+  mapped.DeleteAsync.AsTask.Wait;
 end;
 
-class method File.Exists(aFileName: String): Boolean; 
+method File.Move(Destination: Folder);
 begin
-  var f := new java.io.File(aFileName);
-  exit f.exists();
+  Move(Destination, mapped.Name);
 end;
 
-class method File.Move(aOldFileName, aNewFileName: String);
+method File.Move(Destination: Folder; NewName: String);
 begin
-  var source := new java.io.File(aOldFileName);
-  var dest := new java.io.File(aNewFileName);
-  java.nio.file.Files.move(source.toPath(), dest.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING)
+  mapped.MoveAsync(Destination, NewName, Windows.Storage.NameCollisionOption.FailIfExists).AsTask.Wait;
 end;
 
-class method File.ReadBytes(aFileName: String): array of Byte;
+method File.Rename(NewName: String);
 begin
-  var f := new java.io.File(aFileName);
-  result := new Byte[Integer(f.length())];
-  var dis: java.io.DataInputStream;
-  try
-    dis := new java.io.DataInputStream(new java.io.FileInputStream(f));
-    dis.readFully(result);
-  finally
-    dis.close();
-  end;
+  mapped.RenameAsync(NewName, Windows.Storage.NameCollisionOption.FailIfExists).AsTask.Wait;
 end;
 
-class method File.ReadText(aFileName: String): String;
+method File.AppendText(Content: String);
 begin
-  var file:= new java.io.File(aFileName);
-  var fileContents := new java.lang.StringBuilder(Integer(file.length()));
-  var scanner := new java.util.Scanner(file);
-  var lineSeparator := System.getProperty('line.separator');
-  try
-    while scanner.hasNextLine() do 
-    begin  
-      fileContents.append(scanner.nextLine());
-      fileContents.append(lineSeparator);
-    end;
-    exit fileContents.toString();
-  finally
-    scanner.close();
-  end;
+  var Stream := mapped.OpenStreamForWriteAsync.Result;
+  var data := System.Text.Encoding.UTF8.GetBytes(Content);
+  Stream.Seek(0, SeekOrigin.End);
+  Stream.Write(data, 0, data.Length);
+  Stream.Flush;
+  Stream.Dispose;
 end;
 
-class method File.WriteBytes(aFileName: String; aData: array of Byte);
+method File.ReadBytes: array of Byte;
 begin
-  var fos: java.io.FileOutputStream;
-  try
-    fos := new java.io.FileOutputStream(aFileName);
-    fos.write(aData);
-  finally
-    fos.close();
-  end;
+  var stream := mapped.OpenStreamForReadAsync.Result;
+  result := new Byte[stream.Length];
+  stream.Read(result, 0, stream.Length);
+  stream.Dispose;
 end;
 
-class method File.WriteText(aFileName: String; aText: String); 
+method File.ReadText: String;
 begin
-  var textFile: java.io.FileWriter;
-  try
-    textFile := new java.io.FileWriter(aFileName, false);
-    textFile.write(aText);
-  finally
-    textFile.close();
-  end;
+  var data := ReadBytes;
+  exit System.Text.Encoding.UTF8.GetString(data, 0, data.Length);
+end;
+
+method File.WriteBytes(Data: array of Byte);
+begin
+  var Stream := mapped.OpenStreamForWriteAsync.Result;
+  Stream.SetLength(0);
+  Stream.Write(Data, 0, Data.Length);
+  Stream.Flush;
+  Stream.Dispose;
+end;
+
+method File.WriteText(Content: String);
+begin
+  var data := System.Text.Encoding.UTF8.GetBytes(Content);
+  WriteBytes(data);
 end;
 {$ELSEIF ECHOES}
-{$IF WINDOWS_PHONE}
-class method File.AppendText(aFileName: String; aContents: String);
+method File.GetName: String;
 begin
-  var sw := System.IO.File.AppendText(aFileName);
-  sw.Write(aContents);
-  sw.Flush;
-  sw.Close;
+  exit System.IO.Path.GetFileName(mapped);
 end;
 
-class method File.ReadBytes(aFileName: String): array of Byte;
+method File.&Copy(Destination: Folder): File;
 begin
-  var fs := System.IO.File.OpenRead(aFileName);
-  fs.Seek(0, System.IO.SeekOrigin.Begin);
-  result := new Byte[fs.Length];
-  fs.Read(result, 0, fs.Length);
-  fs.Close;
+  &Copy(Destination, GetName);
 end;
 
-class method File.ReadText(aFileName: String): String;
+method File.&Copy(Destination: Folder; NewName: String): File;
 begin
- var sr := System.IO.File.OpenText(aFileName);
- result := sr.ReadToEnd;
- sr.Close;
+  var NewFile := System.IO.Path.Combine(Destination, NewName);
+  if System.IO.File.Exists(NewFile) then
+    raise new SugarIOException("File "+NewName+" already exists");
+
+  System.IO.File.Copy(mapped, NewFile);
+  exit NewFile;
 end;
 
-class method File.WriteBytes(aFileName: String; aData: array of Byte);
+method File.Delete;
 begin
-  var fs := System.IO.File.Create(aFileName);
-  fs.Seek(0, System.IO.SeekOrigin.Begin);
-  fs.Write(aData, 0, aData.Length);
-  fs.Flush;
-  fs.Close;
+  System.IO.File.Delete(mapped);
 end;
 
-class method File.WriteText(aFileName: String; aText: String);
+method File.Move(Destination: Folder);
 begin
-  var sw := System.IO.File.CreateText(aFileName);
-  sw.Write(aText);
-  sw.Flush;
-  sw.Close;
+  Move(Destination, GetName);
 end;
-{$ENDIF}
-{$ELSEIF NOUGAT}
-class method File.AppendText(aFileName, aContents: String); 
-begin
-  var lData := NSString(aContents).dataUsingEncoding(NSStringEncoding.NSUTF8StringEncoding);
 
-  if not Exists(aFileName) then begin
-    NSFileManager.defaultManager.createFileAtPath(aFileName) contents(lData) attributes(nil);
-    exit;
+method File.Move(Destination: Folder; NewName: String);
+begin
+  var NewFile := System.IO.Path.Combine(Destination, NewName);
+  if System.IO.File.Exists(NewFile) then
+    raise new SugarIOException("File "+NewName+" already exists");
+
+  System.IO.File.Move(mapped, NewFile);
+  mapped := NewFile;
+end;
+
+method File.Rename(NewName: String);
+begin
+  Move(System.IO.Path.GetDirectoryName(mapped), NewName);
+end;
+
+method File.AppendText(Content: String);
+begin
+  System.IO.File.AppendAllText(mapped, Content);
+end;
+
+method File.ReadBytes: array of Byte;
+begin
+  exit System.IO.File.ReadAllBytes(mapped);
+end;
+
+method File.ReadText: String;
+begin
+  exit System.IO.File.ReadAllText(mapped);
+end;
+
+method File.WriteBytes(Data: array of Byte);
+begin
+  System.IO.File.WriteAllBytes(mapped, Data);
+end;
+
+method File.WriteText(Content: String);
+begin
+  System.IO.File.WriteAllText(mapped, Content);
+end;
+{$ELSEIF COOPER}
+method File.&Copy(Destination: Folder): File;
+begin
+  exit &Copy(Destination, mapped.Name);
+end;
+
+method File.&Copy(Destination: Folder; NewName: String): File;
+begin
+  var NewFile := new java.io.File(Destination, NewName);
+  if NewFile.exists then
+    raise new SugarIOException(String.Format("File {0} already exists", NewName));
+
+  NewFile.createNewFile;
+  var source := new java.io.FileInputStream(mapped).Channel;
+  var dest := new java.io.FileOutputStream(NewFile).Channel;
+  dest.transferFrom(source, 0, source.size);
+
+  source.close;
+  dest.close;
+  exit NewFile;
+end;
+
+method File.Delete;
+begin
+  mapped.delete;
+end;
+
+method File.Move(Destination: Folder);
+begin
+  Move(Destination, mapped.Name);  
+end;
+
+method File.Move(Destination: Folder; NewName: String);
+begin
+  var NewFile := &Copy(Destination, NewName);
+  mapped.delete;
+  mapped := NewFile;
+end;
+
+method File.Rename(NewName: String);
+begin
+  var NewFile := new java.io.File(mapped, NewName);
+  if NewFile.exists then
+    raise new SugarIOException(String.Format("File {0} already exists", NewName));
+
+  mapped.renameTo(NewFile);
+end;
+
+method File.AppendText(Content: String);
+begin
+  var writer := new java.io.FileWriter(mapped, true);
+  writer.write(Content);
+  writer.close;
+end;
+
+method File.ReadBytes: array of Byte;
+begin
+  result := new Byte[Integer(mapped.length)];
+  var stream := new java.io.DataInputStream(new java.io.FileInputStream(mapped));
+  stream.readFully(result);
+  stream.close;
+end;
+
+method File.ReadText: String;
+begin
+  var fileContents := new java.lang.StringBuilder(Integer(mapped.length));
+  var scanner := new java.util.Scanner(mapped);
+  var lineSeparator := System.getProperty('line.separator');
+
+  while scanner.hasNextLine do 
+  begin  
+    fileContents.append(scanner.nextLine);
+    fileContents.append(lineSeparator);
   end;
-
-  var fileHandle := NSFileHandle.fileHandleForWritingAtPath(aFileName);
-  try
-    fileHandle.seekToEndOfFile;
-    fileHandle.writeData(lData);
-  finally
-    fileHandle.closeFile;
-  end;  
+  scanner.close;
+  exit fileContents.toString;
 end;
 
-class method File.Copy(aOldFileName, aNewFileName: String; aOverwriteFile: Boolean);
+method File.WriteBytes(Data: array of Byte);
 begin
+  var stream := new java.io.FileOutputStream(mapped);
+  stream.write(Data);
+  stream.close;
+end;
+
+method File.WriteText(Content: String);
+begin
+  var writer := new java.io.FileWriter(mapped, false);
+  writer.write(Content);
+  writer.close;  
+end;
+{$ELSEIF NOUGAT}
+method File.Combine(BasePath: String; SubPath: String): String;
+begin
+  result := NSString(BasePath):stringByAppendingPathComponent(SubPath);
+end;
+
+method File.&Copy(Destination: Folder): File;
+begin
+  &Copy(Destination, Name);
+end;
+
+method File.&Copy(Destination: Folder; NewName: String): File;
+begin
+  var NewFile := Combine(String(Destination), NewName);
+  var Manager := NSFileManager.defaultManager;
+
+  if Manager.fileExistsAtPath(NewFile) then
+    raise new SugarIOException(String.Format(ErrorMessage.FILE_EXISTS, NewName));
+
   var lError: Foundation.NSError := nil;
-  //ToDo: handle aOverwriteFile
-  if not NSFileManager.defaultManager.copyItemAtPath(aOldFileName) toPath(aNewFileName) error(var lError) then
+  if not Manager.copyItemAtPath(mapped) toPath(NewFile) error(var lError) then
     raise SugarNSErrorException.exceptionWithError(lError); 
+
+  exit File(NewFile);
 end;
 
-class method File.Delete(aFileName: String);
+method File.Delete;
 begin
+  var lError: NSError := nil;
+  if not NSFileManager.defaultManager.removeItemAtPath(mapped) error(var lError) then
+    raise SugarNSErrorException.exceptionWithError(lError);
+end;
+
+method File.Move(Destination: Folder);
+begin
+  Move(Destination, Name);
+end;
+
+method File.Move(Destination: Folder; NewName: String);
+begin
+  var NewFile := Combine(String(Destination), NewName);
+  var Manager := NSFileManager.defaultManager;
+
+  if Manager.fileExistsAtPath(NewFile) then
+    raise new SugarIOException(String.Format(ErrorMessage.FILE_EXISTS, NewName));
+
   var lError: Foundation.NSError := nil;
-  if not NSFileManager.defaultManager.removeItemAtPath(aFileName) error(var lError) then
+  if not Manager.moveItemAtPath(mapped) toPath(NewFile) error(var lError) then
     raise SugarNSErrorException.exceptionWithError(lError); 
+
+  mapped := File(NewFile);
 end;
 
-class method File.Exists(aFileName: String): Boolean; 
+method File.Rename(NewName: String);
 begin
-  var lIsDirectory := false;
-  result := NSFileManager.defaultManager.fileExistsAtPath(aFileName) isDirectory(@lIsDirectory) and not lIsDirectory
+  var CurrentFolder := NSString(mapped).stringByDeletingLastPathComponent;
+  Move(Folder(CurrentFolder), NewName);
 end;
 
-class method File.Move(aOldFileName, aNewFileName: String);
+method File.AppendText(Content: String);
+begin
+  var lData := NSString(Content).dataUsingEncoding(NSStringEncoding.NSUTF8StringEncoding);
+  var fileHandle := NSFileHandle.fileHandleForWritingAtPath(mapped);
+  fileHandle.seekToEndOfFile;
+  fileHandle.writeData(lData);
+  fileHandle.closeFile;
+end;
+
+method File.ReadBytes: array of Byte;
 begin
   var lError: Foundation.NSError := nil;
-  if not NSFileManager.defaultManager.moveItemAtPath(aOldFileName) toPath(aNewFileName) error(var lError) then
-    raise SugarNSErrorException.exceptionWithError(lError); 
-end;
-
-class method File.ReadBytes(aFileName: String): array of Byte;
-begin
-  var lError: Foundation.NSError := nil;
-  var lData := NSData.dataWithContentsOfFile(aFileName) options(NSDataReadingOptions.NSDataReadingMappedIfSafe) error(var lError);
+  var lData := NSData.dataWithContentsOfFile(mapped) options(NSDataReadingOptions.NSDataReadingMappedIfSafe) error(var lError);
   if not assigned(lData) then 
     raise SugarNSErrorException.exceptionWithError(lError); 
 
   result := new Byte[lData.length];
-  lData.getBytes(^Void(result)) length(lData.length);
+  lData.getBytes(result) length(lData.length);
 end;
 
-class method File.ReadText(aFileName: String): String;
+method File.ReadText: String;
 begin
   var lError: Foundation.NSError := nil;
-  result := Foundation.NSString.stringWithContentsOfFile(aFileName) encoding(NSStringEncoding.NSUTF8StringEncoding) error(var lError);
+  result := Foundation.NSString.stringWithContentsOfFile(mapped) encoding(NSStringEncoding.NSUTF8StringEncoding) error(var lError);
   if not assigned(result) then 
     raise SugarNSErrorException.exceptionWithError(lError); 
 end;
 
-class method File.WriteBytes(aFileName: String; aData: array of Byte);
+method File.WriteBytes(Data: array of Byte);
 begin
-  var lData := NSData.dataWithBytesNoCopy(^Void(aData)) length(length(aData));
-  if not lData:writeToFile(aFileName) atomically(true) then
-    raise NSException.exceptionWithName('NSData') reason('Failed to write NSData to file.') userInfo(nil); 
+  var lData := NSData.dataWithBytesNoCopy(^Void(Data)) length(length(Data));
+  if not lData:writeToFile(mapped) atomically(true) then
+    raise new SugarIOException("Failed to write data to a file");
 end;
 
-class method File.WriteText(aFileName: String; aText: String); 
+method File.WriteText(Content: String);
 begin
   var lError: Foundation.NSError := nil;
-  if not NSString(aText):writeToFile(aFileName) atomically(true) encoding(NSStringEncoding.NSUTF8StringEncoding) error(var lError) then
+  if not NSString(Content):writeToFile(mapped) atomically(true) encoding(NSStringEncoding.NSUTF8StringEncoding) error(var lError) then
     raise SugarNSErrorException.exceptionWithError(lError); 
 end;
 {$ENDIF}
-
 
 end.

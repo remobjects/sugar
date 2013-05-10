@@ -29,6 +29,8 @@ type
     method RemoveAt(&Index: Integer); mapped to RemoveAt(&Index);
     method RemoveRange(&Index: Integer; aCount: Integer); mapped to RemoveRange(&Index, aCount);
 
+    method ToArray: array of T; mapped to ToArray;
+
     property Count: Integer read mapped.Count;
     property Item[i: Integer]: T read mapped[i] write mapped[i]; default;
   end;
@@ -55,6 +57,8 @@ type
     method &Remove(Item: T): Boolean; mapped to &remove(Object(Item));
     method RemoveAt(&Index: Integer); mapped to &remove(&Index);
     method RemoveRange(&Index: Integer; aCount: Integer);
+
+    method ToArray: array of T; mapped to ToArray;
 
     property Count: Integer read mapped.size;
     property Item[i: Integer]: T read mapped[i] write mapped[i]; default;
@@ -86,6 +90,8 @@ type
     method &Remove(anItem: T): Boolean;
     method RemoveAt(&Index: Integer); mapped to removeObjectAtIndex(&Index);
     method RemoveRange(&Index: Integer; aCount: Integer);
+
+    method ToArray: array of T;
 
     property Count: Integer read mapped.count;
     property Item[i: Integer]: T read mapped[i] write mapped[i]; default;
@@ -123,8 +129,15 @@ end;
 method List<T>.LastIndexOf(anItem: T): Integer;
 begin
   //61865: Sugar: Invalid BR record exception for method with block
-  {var RetVal := mapped.indexOfObjectWithOptions(Foundation.NSEnumerationReverse) passingTest((x,y,z) -> x = anItem);
-  exit iif(RetVal = Foundation.NSNotFound, -1, RetVal);}
+  var RetVal := mapped.indexOfObjectWithOptions(Foundation.NSEnumerationReverse) passingTest((x,y,z) -> x = id(anItem));
+  exit iif(RetVal = Foundation.NSNotFound, -1, RetVal);
+end;
+
+method List<T>.ToArray: array of T;
+begin
+  result := new T[mapped.count];
+  for i: Integer := 0 to mapped.count - 1 do
+    result := mapped.objectAtIndex(i);
 end;
 {$ENDIF}
 
