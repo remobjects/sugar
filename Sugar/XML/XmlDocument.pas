@@ -378,7 +378,10 @@ begin
     Doc.Declaration := new XDeclaration(XmlDeclaration.Version, XmlDeclaration.Encoding, XmlDeclaration.StandaloneString);
 
   {$IF WINDOWS_PHONE OR NETFX_CORE}
-  ToDo: Write
+  var sb := new StringBuilder;
+  var writer := new System.IO.StringWriter(sb);
+  Doc.Save(writer);
+  aFile.WriteText(sb.ToString);
   {$ELSEIF ECHOES}
   Doc.Save(aFile);
   {$ENDIF}
