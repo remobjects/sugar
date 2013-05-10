@@ -13,7 +13,8 @@ uses
   {$ELSEIF NOUGAT}
   Foundation,
   {$ENDIF}
-  RemObjects.Oxygene.Sugar;
+  RemObjects.Oxygene.Sugar,
+  RemObjects.Oxygene.Sugar.IO;
 
 {$IF NOUGAT}
   {$WARNING XmlDocument for Nougat should be re-written based on libxml2, for iOS support. }
@@ -66,9 +67,9 @@ type
     class method FromString(aString: String): XmlDocument;
     class method CreateDocument: XmlDocument;
 
-    method Save(FileName: String);
-    method Save(FileName: String; XmlDeclaration: XmlDocumentDeclaration);
-    method Save(FileName: String; Version: String; Encoding: String; Standalone: Boolean);
+    method Save(aFile: File);
+    method Save(aFile: File; XmlDeclaration: XmlDocumentDeclaration);
+    method Save(aFile: File; Version: String; Encoding: String; Standalone: Boolean);
   end;
 
   XmlDocumentDeclaration = public class
@@ -186,17 +187,17 @@ begin
   exit new XmlDocument(Builder.newDocument());
 end;
 
-method XmlDocument.Save(FileName: String);
+method XmlDocument.Save(aFile: File);
 begin
-  Save(FileName, nil);
+  Save(aFile, nil);
 end;
 
-method XmlDocument.Save(FileName: String; Version: String; Encoding: String; Standalone: Boolean);
+method XmlDocument.Save(aFile: File; Version: String; Encoding: String; Standalone: Boolean);
 begin
-  Save(FileName, new XmlDocumentDeclaration(Version, Encoding, Standalone));
+  Save(aFile, new XmlDocumentDeclaration(Version, Encoding, Standalone));
 end;
 
-method XmlDocument.Save(FileName: String; XmlDeclaration: XmlDocumentDeclaration);
+method XmlDocument.Save(aFile: File; XmlDeclaration: XmlDocumentDeclaration);
 begin
   var Factory := javax.xml.transform.TransformerFactory.newInstance();
   var Transformer := Factory.newTransformer();
@@ -211,7 +212,7 @@ begin
     Transformer.setOutputProperty(javax.xml.transform.OutputKeys.STANDALONE, XmlDeclaration.StandaloneString);
   end;
 
-  var Stream := new javax.xml.transform.stream.StreamResult(new java.io.File(FileName));
+  var Stream := new javax.xml.transform.stream.StreamResult(aFile);
   Transformer.transform(Source, Stream);
 end;
 
@@ -361,25 +362,26 @@ begin
   (Node.Node as XNode):ReplaceWith(WithNode.Node);
 end;
 
-method XmlDocument.Save(FileName: String);
+method XmlDocument.Save(aFile: File);
 begin
-  Save(FileName, nil);
+  Save(aFile, nil);
 end;
 
-method XmlDocument.Save(FileName: String; Version: String; Encoding: String; Standalone: Boolean);
+method XmlDocument.Save(aFile: File; Version: String; Encoding: String; Standalone: Boolean);
 begin
-  Save(FileName, new XmlDocumentDeclaration(Version, Encoding, Standalone));
+  Save(aFile, new XmlDocumentDeclaration(Version, Encoding, Standalone));
 end;
 
-method XmlDocument.Save(FileName: String; XmlDeclaration: XmlDocumentDeclaration);
+method XmlDocument.Save(aFile: File; XmlDeclaration: XmlDocumentDeclaration);
 begin
   if XmlDeclaration <> nil then
     Doc.Declaration := new XDeclaration(XmlDeclaration.Version, XmlDeclaration.Encoding, XmlDeclaration.StandaloneString);
 
-  {using isoStore: IsolatedStorageFile := IsolatedStorageFile.GetUserStoreForApplication do
-    using isoStream: IsolatedStorageFileStream := new IsolatedStorageFileStream(FileName, System.IO.FileMode.Create, isoStore) do
-      doc.Save(isoStream);}
-  raise new SugarNotImplementedException;
+  {$IF WINDOWS_PHONE OR NETFX_CORE}
+  ToDo: Write
+  {$ELSEIF ECHOES}
+  Doc.Save(aFile);
+  {$ENDIF}
 end;
 {$ELSEIF NOUGAT}
 method XmlDocument.AddChild(Node: XmlNode);
@@ -521,17 +523,17 @@ begin
   Doc.replaceChildAtIndex(Node.Node.index) withNode(WithNode.Node);
 end;
 
-method XmlDocument.Save(FileName: String);
+method XmlDocument.Save(aFile: File);
 begin
-  Save(FileName, nil);  
+  Save(aFile, nil);  
 end;
 
-method XmlDocument.Save(FileName: String; Version: String; Encoding: String; Standalone: Boolean);
+method XmlDocument.Save(aFile: File; Version: String; Encoding: String; Standalone: Boolean);
 begin
-  Save(FileName, new XmlDocumentDeclaration(Version := Version, Encoding := Encoding, Standalone := Standalone));
+  Save(aFile, new XmlDocumentDeclaration(Version := Version, Encoding := Encoding, Standalone := Standalone));
 end;
 
-method XmlDocument.Save(FileName: String; XmlDeclaration: XmlDocumentDeclaration);
+method XmlDocument.Save(aFile: File; XmlDeclaration: XmlDocumentDeclaration);
 begin
   if XmlDeclaration <> nil then begin
     Doc.setCharacterEncoding(XmlDeclaration.Encoding);
@@ -540,7 +542,7 @@ begin
   end;
 
   var Data: NSData := Doc.XMLData;
-  Data.writeToFile(FileName) atomically(true);
+  Data.writeToFile(aFile) atomically(true);
 end;
 {$ENDIF}
 
