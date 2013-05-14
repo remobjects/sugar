@@ -169,7 +169,10 @@ end;
 
 class method XmlDocument.FromBinary(aBinary: Binary): XmlDocument;
 begin
-  {$WARNING XmlDocument.FromBinary not implemented for Cooper, yet}
+  var Factory := javax.xml.parsers.DocumentBuilderFactory.newInstance;
+  var Builder := Factory.newDocumentBuilder();  
+  var Document := Builder.parse(new java.io.ByteArrayInputStream(aBinary.ToArray));
+  exit new XmlDocument(Document);
 end;
 
 class method XmlDocument.FromString(aString: String): XmlDocument;
