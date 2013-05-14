@@ -135,7 +135,8 @@ end;
 
 class method Binary.FromArray(aArray: array of Byte): Binary;
 begin
-  {$WARNING Binary.FromArray not implemented for Cooper, yet}
+  result := new Binary;
+  result.WriteBytes(aArray, aArray.length);
 end;
 
 {$ELSEIF ECHOES}
@@ -191,7 +192,8 @@ end;
 
 class method Binary.FromArray(aArray: array of Byte): Binary;
 begin
-  {$WARNING Binary.FromArray not implemented for Echoes, yet}
+  result := new Binary;
+  result.WriteBytes(aArray, aArray.Length);
 end;
 
 {$ELSEIF NOUGAT}
