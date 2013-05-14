@@ -38,12 +38,14 @@ type
   end;
 {$ELSEIF NOUGAT}
   Dictionary<T, U> = public class mapped to Foundation.NSMutableDictionary
-    where T is Foundation.INSCopying;
+    where T is class, T is INSCopying, U is class;
   private
     method GetItem(Key: T): U;   
     method SetItem(Key: T; Value: U);
+    method GetKeys: array of T;
+    method GetValues: array of U;
   public
-    method &Add(Key: dynamic; Value: dynamic);
+    method &Add(Key: T; Value: U);
     method Clear; mapped to removeAllObjects;
     method ContainsKey(Key: T): Boolean;
     method ContainsValue(Value: U): Boolean;
@@ -51,8 +53,8 @@ type
 
     property Item[Key: T]: U read GetItem write SetItem; default;
     // 61584: Nougat: Support for "sequence of"
-    //property Keys: sequence of T read mapped.allKeys;
-    //property Values: sequence of U read mapped.allValues;
+    property Keys: array of T read GetKeys;
+    property Values: array of U read GetValues;
     property Count: Integer read mapped.count;
   end;
 {$ENDIF}
@@ -80,14 +82,29 @@ begin
   exit mapped.objectForKey(Key);
 end;
 
-method Dictionary<T, U>.Add(Key: dynamic; Value: dynamic);
+method Dictionary<T, U>.Add(Key: T; Value: U);
 begin
   mapped.setObject(Value) forKey(Key);
 end;
 
 method Dictionary<T, U>.SetItem(Key: T; Value: U);
 begin
-  raise new SugarNotImplementedException();
+  mapped.setObject(Value) forKey(Key);
+end;
+
+method Dictionary<T,U>.GetKeys: array of T;
+begin
+  result := new T[mapped.allKeys.count];
+  for i: Integer := 0 to mapped.allKeys.count - 1 do begin
+    result[i] := mapped.allKeys.objectAtIndex(i);
+  end;
+end;
+
+method Dictionary<T,U>.GetValues: array of U;
+begin
+  result := new U[mapped.allValues.count];
+  for i: Integer := 0 to mapped.allValues.count - 1 do
+    result[i] := mapped.allValues.objectAtIndex(i);
 end;
 {$ENDIF}
 end.
