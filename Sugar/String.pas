@@ -35,6 +35,8 @@ type
     method ToLower: String; mapped to toLowerCase;
     method ToUpper: String; mapped to toUpperCase;
     method Trim: String; mapped to trim;    
+
+    method ToByteArray: array of Byte;
   end;
   {$ELSEIF ECHOES}
   String = public class mapped to System.String
@@ -66,6 +68,8 @@ type
     method ToLower: String; mapped to ToLower;
     method ToUpper: String; mapped to ToUpper;
     method Trim: String; mapped to Trim;
+
+    method ToByteArray: array of Byte;
   end;
   {$ELSEIF NOUGAT}
   String = public class mapped to Foundation.NSString
@@ -97,6 +101,8 @@ type
     method ToLower: String; mapped to lowercaseString;
     method ToUpper: String; mapped to uppercaseString;
     method Trim: String;    
+
+    method ToByteArray: array of Byte;
   end;
   {$ENDIF}
 
@@ -109,11 +115,7 @@ uses
 
 class method String.Format(aFormat: String; params aParams: array of Object): String;
 begin
-  {$IF ECHOES}
   exit StringFormatter.FormatString(aFormat, aParams);
-  {$ELSE}
-  raise new SugarNotImplementedException();
-  {$ENDIF}
 end;
 
 class operator String.Add(aStringA: String; aStringB: String): String;
@@ -204,6 +206,13 @@ begin
   {$ELSEIF NOUGAT}
   result := mapped.characterAtIndex(aIndex);
   {$ENDIF}
+end;
+
+method String.ToByteArray: array of Byte;
+begin
+  result := new Byte[mapped.length];
+  for i: Integer := 0 to mapped.length-1 do
+    result[i] := Byte(Chars[i]);
 end;
 
 end.
