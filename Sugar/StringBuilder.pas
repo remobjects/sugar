@@ -6,6 +6,8 @@ type
 
   {$IF COOPER}
   StringBuilder = public class mapped to java.lang.StringBuilder
+  private
+    method set_Chars(aIndex: Int32; value: Char ) ;  
   public
     method Append(value: String): StringBuilder; mapped to append(value);
     method Append(value: String; startIndex, count: Integer): StringBuilder; mapped to append(value, startIndex, count);
@@ -21,6 +23,7 @@ type
     method Insert(Offset: Integer; Value: String): StringBuilder; mapped to insert(Offset, Value);
 
     property Length: Integer read mapped.length;
+    property Chars[aIndex: Int32]: Char read mapped.charAt(aIndex) write set_Chars; default;
   {$ELSEIF ECHOES}
   StringBuilder = public class mapped to System.Text.StringBuilder
   public
@@ -38,10 +41,13 @@ type
     method Insert(Offset: Integer; Value: String): StringBuilder; mapped to Insert(Offset, Value);
 
     property Length: Integer read mapped.Length;
+    property Chars[aIndex: Int32]: Char read mapped.Chars[aIndex] write mapped.Chars[aIndex]; default;
   {$ELSEIF NOUGAT}
   StringBuilder = public class mapped to Foundation.NSMutableString
   private
     method NSMakeRange(loc: Int32; len: Int32): Foundation.NSRange;
+    method get_Chars(aIndex : Int32): Char;
+    method set_Chars(aIndex : Int32; value: Char);
   public
     method Append(value: String): StringBuilder;
     method Append(value: String; startIndex, count: Integer): StringBuilder;
@@ -58,12 +64,18 @@ type
     method Insert(Offset: Integer; Value: String): StringBuilder;
 
     property Length: Integer read mapped.length;
+    property Chars[aIndex: Int32]: Char read get_Chars write set_Chars ; default;
   {$ENDIF}
   end;
 
 implementation
 
 {$IF COOPER}
+method StringBuilder.set_Chars(aIndex: Int32; value: Char ) ; 
+begin
+  mapped.setCharAt(aIndex,value);
+end;
+
 method StringBuilder.Append(value: Char; repeatCount: Integer): StringBuilder;
 begin
   for i: Int32 := 1 to repeatCount do mapped.append(value);
@@ -158,6 +170,16 @@ method StringBuilder.Delete(Start: Integer; &End: Integer): StringBuilder;
 begin
   mapped.deleteCharactersInRange(NSMakeRange(Start, &End));
   exit mapped;
+end;
+
+method StringBuilder.get_Chars(aIndex : Int32): Char;
+begin
+  result := mapped.characterAtIndex(aIndex);
+end;
+
+method StringBuilder.set_Chars(aIndex : Int32; value: Char);
+begin
+  mapped.replaceCharactersInRange(NSMakeRange(aIndex, aIndex)) withString(value);
 end;
 {$ENDIF}
 
