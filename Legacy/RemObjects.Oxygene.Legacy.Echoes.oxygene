@@ -73,6 +73,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MemIniFile.pas" />
     <Compile Include="OneBasedString.pas" />
     <Compile Include="Properties\AssemblyInfo.pas" />
     <Compile Include="String Functions.pas" />

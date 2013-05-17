@@ -63,6 +63,7 @@
     <Reference Include="Foundation.fx" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MemIniFile.pas" />
     <Compile Include="OneBasedString.pas" />
     <Compile Include="String Functions.pas" />
   </ItemGroup>
