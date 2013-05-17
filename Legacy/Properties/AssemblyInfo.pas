@@ -46,7 +46,9 @@ uses
 //
 [assembly: AssemblyDelaySign(false)]
 [assembly: AssemblyKeyFile('')]
-[assembly: AssemblyKeyName('')]
+{$IF CODESIGN}
+[assembly: AssemblyKeyName('RemObjectsSoftware')]
+{$ENDIF}
 
 implementation
 

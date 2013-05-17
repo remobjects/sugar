@@ -79,7 +79,7 @@ class method Environment.SysCtl(aLevel: Int32; aValue: Int32): String;
 begin
   var mib: array of Integer := [aLevel, aValue];
   var namelen: rtl.sys.u_int := sizeOf(mib) / sizeOf(mib[0]);
-  var bufferSize: rtl.stdio.size_t := 0;
+  var bufferSize: size_t := 0;
 
   rtl.sys.sysctl(@mib, namelen, nil, @bufferSize, nil, 0);
   var buildBuffer := new rtl.sys.u_char[bufferSize];

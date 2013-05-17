@@ -129,72 +129,72 @@ end;
 {$IF NOUGAT}
 class method Math.Pow(x, y: Double): Double;
 begin
-  exit rtl.Math.pow(x,y);  
+  exit rtl.pow(x,y);  
 end;
 
 class method Math.Acos(d: Double): Double;
 begin
-  exit rtl.Math.acos(d);   
+  exit rtl.acos(d);   
 end;
 
 class method Math.Cos(d: Double): Double;
 begin
-  exit rtl.Math.cos(d);   
+  exit rtl.cos(d);   
 end;
 
 class method Math.Ceiling(d: Double): Double;
 begin
-  exit rtl.Math.ceil(d);   
+  exit rtl.ceil(d);   
 end;
 
 class method Math.Cosh(d: Double): Double;
 begin
-  exit rtl.Math.cosh(d);   
+  exit rtl.cosh(d);   
 end;
 
 class method Math.Asin(d: Double): Double;
 begin
-  exit rtl.Math.asin(d);   
+  exit rtl.asin(d);   
 end;
 
 class method Math.Atan(d: Double): Double;
 begin
-  exit rtl.Math.atan(d);   
+  exit rtl.atan(d);   
 end;
 
 class method Math.Atan2(x,y: Double): Double;
 begin
-  exit rtl.Math.atan2(x,y);   
+  exit rtl.atan2(x,y);   
 end;
 
 class method Math.Abs(value: Double): Double;
 begin
-  exit rtl.Math.fabs(value);   
+  exit rtl.fabs(value);   
 end;
 
 class method Math.Exp(d: Double): Double;
 begin
-  exit rtl.Math.exp(d);   
+  exit rtl.exp(d);   
 end;
 
 class method Math.Floor(d: Double): Double;
 begin
-  exit rtl.Math.floor(d);   
+  exit rtl.floor(d);   
 end;
 
 class method Math.IEEERemainder(x,y: Double): Double;
 begin
-  exit rtl.Math.remainder(x,y);   
+  exit rtl.remainder(x,y);   
 end;
 
 class method Math.Log(a: Double): Double;
 begin
-  exit rtl.Math.log(a);   
+  exit rtl.log(a);   
 end;
 
 class method Math.Log10(a: Double): Double;
 begin
-  exit rtl.Math.log10(a);   
+  exit rtl.log10(a);   
 end;
 
 class method Math.Max(a,b: Double): Double;
@@ -209,42 +209,42 @@ end;
 
 class method Math.Round(a: Double): Double;
 begin
-  exit rtl.Math.round(a);   
+  exit rtl.round(a);   
 end;
 
 class method Math.RoundToInt(a: Double): Integer;
 begin
-  exit Integer(rtl.Math.round(a));   
+  exit Integer(rtl.round(a));   
 end;
 
 class method Math.Sin(x: Double): Double;
 begin
-  exit rtl.Math.sin(x);  
+  exit rtl.sin(x);  
 end;
 
 class method Math.Sinh(x: Double): Double;
 begin
-  exit rtl.Math.sinh(x);  
+  exit rtl.sinh(x);  
 end;
 
 class method Math.Sqrt(d: Double): Double;
 begin
-  exit rtl.Math.sqrt(d);  
+  exit rtl.sqrt(d);  
 end;
 
 class method Math.Tan(d: Double): Double;
 begin
-  exit rtl.Math.tan(d);  
+  exit rtl.tan(d);  
 end;
 
 class method Math.Tanh(d: Double): Double;
 begin
-  exit rtl.Math.tanh(d);  
+  exit rtl.tanh(d);  
 end;
 
 class method Math.Truncate(d: Double): Double;
 begin
-  exit rtl.Math.trunc(d);  
+  exit rtl.trunc(d);  
 end;
 {$ENDIF}
 

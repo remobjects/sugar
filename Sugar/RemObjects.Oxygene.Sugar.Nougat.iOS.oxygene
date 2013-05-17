@@ -69,7 +69,6 @@
     <Compile Include="Random.pas" />
     <Compile Include="Exceptions.pas" />
     <Compile Include="Guid.pas" />
-    <Compile Include="Properties.pas" />
     <Compile Include="IO\File.pas" />
     <Compile Include="IO\Folder.pas" />
     <Compile Include="IO\StandardFolders.pas" />

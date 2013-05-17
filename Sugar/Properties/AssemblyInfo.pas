@@ -20,7 +20,9 @@ uses
 
 [assembly: AssemblyDelaySign(false)]
 [assembly: AssemblyKeyFile('')]
+{$IF CODESIGN}
 [assembly: AssemblyKeyName('RemObjectsSoftware')]
+{$ENDIF}
 
 implementation
 

@@ -113,7 +113,7 @@
     <Compile Include="Exceptions.pas" />
     <Compile Include="Guid.pas" />
     <Compile Include="Math.pas" />
-    <Compile Include="Properties\AssemblyInfo_wp8.pas" />
+    <Compile Include="Properties\AssemblyInfo.WP8.pas" />
     <Compile Include="Random.pas" />
     <Compile Include="String.pas" />
     <Compile Include="StringBuilder.pas" />

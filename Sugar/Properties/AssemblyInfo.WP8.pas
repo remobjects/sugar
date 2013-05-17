@@ -40,5 +40,9 @@ uses System.Reflection,
 [assembly: AssemblyFileVersion("1.0.0.0")]
 [assembly: NeutralResourcesLanguageAttribute("en-US")]
 
+{$IF CODESIGN}
+[assembly: AssemblyKeyName('RemObjectsSoftware')]
+{$ENDIF}
+
 implementation
 end.
