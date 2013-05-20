@@ -18,6 +18,7 @@ type
     class method CharacterIsWhiteSpace(aChar: Char): Boolean;
     class method IsNullOrEmpty(Value: String): Boolean;
     class method IsNullOrWhiteSpace(Value: String): Boolean;
+    class method FromByteArray(Value: array of Byte): String;
 
     method CompareTo(Value: String): Integer; mapped to compareTo(Value);
     method CompareToIgnoreCase(Value: String): Integer; mapped to compareToIgnoreCase(Value);
@@ -51,6 +52,7 @@ type
     class method CharacterIsWhiteSpace(aChar: Char): Boolean;
     class method IsNullOrEmpty(Value: String): Boolean; mapped to IsNullOrEmpty(Value);
     class method IsNullOrWhiteSpace(Value: String): Boolean;
+    class method FromByteArray(Value: array of Byte): String;
 
     method CompareTo(Value: String): Integer; mapped to Compare(mapped, Value, StringComparison.Ordinal);
     method CompareToIgnoreCase(Value: String): Integer; mapped to Compare(mapped, Value, StringComparison.OrdinalIgnoreCase);
@@ -84,6 +86,7 @@ type
     class method CharacterIsWhiteSpace(aChar: Char): Boolean;
     class method IsNullOrEmpty(Value: String): Boolean;
     class method IsNullOrWhiteSpace(Value: String): Boolean;
+    class method FromByteArray(Value: array of Byte): String;
 
     method CompareTo(Value: String): Integer; mapped to compare(Value);
     method CompareToIgnoreCase(Value: String): Integer; mapped to caseInsensitiveCompare(Value);
@@ -210,9 +213,26 @@ end;
 
 method String.ToByteArray: array of Byte;
 begin
-  result := new Byte[mapped.length];
-  for i: Integer := 0 to mapped.length-1 do
-    result[i] := Byte(Chars[i]);
+  {$IF COOPER}
+  exit mapped.getBytes("UTF-8");
+  {$ELSEIF ECHOES}
+  exit System.Text.Encoding.UTF8.GetBytes(mapped);
+  {$ELSEIF NOUGAT}
+  var Data := Binary(mapped.dataUsingEncoding(NSStringEncoding.NSUTF8StringEncoding));
+  exit Data.ToArray;
+  {$ENDIF}
+end;
+
+class method String.FromByteArray(Value: array of Byte): String;
+begin
+  {$IF COOPER}
+  exit new java.lang.String(Value, "UTF-8");
+  {$ELSEIF ECHOES}
+  exit System.Text.Encoding.UTF8.GetString(Value);
+  {$ELSEIF NOUGAT}
+  //62395: Sugar: NRE in mapped method
+  //exit new NSString withBytes(Value) length(length(Value)) encoding(NSStringEncoding.NSUTF8StringEncoding);
+  {$ENDIF}
 end;
 
 end.
