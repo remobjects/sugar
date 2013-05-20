@@ -31,6 +31,7 @@ type
 
     method Substring(aStartIndex: Int32): String; mapped to substring(aStartIndex);
     method Substring(aStartIndex: Int32; aLength: Int32): String; mapped to substring(aStartIndex, aStartIndex+aLength);
+    method Split(Separator: String): array of String;
     method Replace(OldValue, NewValue: String): String; mapped to replace(OldValue, NewValue);
 
     method ToLower: String; mapped to toLowerCase;
@@ -65,6 +66,7 @@ type
 
     method Substring(aStartIndex: Int32): String; mapped to Substring(aStartIndex);
     method Substring(aStartIndex: Int32; aLength: Int32): String; mapped to Substring(aStartIndex, aLength);
+    method Split(Separator: String): array of String;
     method Replace(OldValue, NewValue: String): String; mapped to Replace(OldValue, NewValue);
 
     method ToLower: String; mapped to ToLower;
@@ -99,6 +101,7 @@ type
 
     method Substring(aStartIndex: Int32): String; mapped to substringFromIndex(aStartIndex);
     method Substring(aStartIndex: Int32; aLength: Int32): String; 
+    method Split(Separator: String): array of String;
     method Replace(OldValue, NewValue: String): String; mapped to stringByReplacingOccurrencesOfString(OldValue) withString(NewValue);
 
     method ToLower: String; mapped to lowercaseString;
@@ -232,6 +235,20 @@ begin
   {$ELSEIF NOUGAT}
   //62395: Sugar: NRE in mapped method
   //exit new NSString withBytes(Value) length(length(Value)) encoding(NSStringEncoding.NSUTF8StringEncoding);
+  {$ENDIF}
+end;
+
+method String.Split(Separator: String): array of String;
+begin
+  {$IF COOPER}
+  exit mapped.split(java.util.regex.Pattern.quote(Separator));
+  {$ELSEIF ECHOES}
+  exit mapped.Split([Separator], StringSplitOptions.None);
+  {$ELSEIF NOUGAT}
+  var Items := mapped.componentsSeparatedByString(Separator);
+  result := new String[Items.count];
+  for i: Integer := 0 to Items.count - 1 do
+    result[i] := Items.objectAtIndex(i);
   {$ENDIF}
 end;
 
