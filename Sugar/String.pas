@@ -13,8 +13,10 @@ type
     property Length: Int32 read mapped.length;
     property Chars[aIndex: Int32]: Char read get_Chars; default;
 
-    class method Format(aFormat: String; params aParams: array of Object): String;
     class operator Add(aStringA: String; aStringB: String): String;
+    class operator Implicit(Value: Char): String;
+
+    class method Format(aFormat: String; params aParams: array of Object): String;
     class method CharacterIsWhiteSpace(aChar: Char): Boolean;
     class method IsNullOrEmpty(Value: String): Boolean;
     class method IsNullOrWhiteSpace(Value: String): Boolean;
@@ -48,8 +50,10 @@ type
     property Length: Int32 read mapped.Length;
     property Chars[aIndex: Int32]: Char read get_Chars; default;
 
-    class method Format(aFormat: String; params aParams: array of Object): String;
     class operator Add(aStringA: String; aStringB: String): String;
+    class operator Implicit(Value: Char): String;
+
+    class method Format(aFormat: String; params aParams: array of Object): String;    
     class method CharacterIsWhiteSpace(aChar: Char): Boolean;
     class method IsNullOrEmpty(Value: String): Boolean; mapped to IsNullOrEmpty(Value);
     class method IsNullOrWhiteSpace(Value: String): Boolean;
@@ -83,8 +87,10 @@ type
     property Length: Int32 read mapped.length;
     property Chars[aIndex: Int32]: Char read get_Chars; default;
 
-    class method Format(aFormat: String; params aParams: array of Object): String;
     class operator Add(aStringA: String; aStringB: String): String;
+    class operator Implicit(Value: Char): String;
+
+    class method Format(aFormat: String; params aParams: array of Object): String;
     class method CharacterIsWhiteSpace(aChar: Char): Boolean;
     class method IsNullOrEmpty(Value: String): Boolean;
     class method IsNullOrWhiteSpace(Value: String): Boolean;
@@ -132,6 +138,17 @@ begin
   result := System.String(aStringA)+System.String(aStringB);
   {$ELSEIF NOUGAT}
   result := Foundation.NSString(aStringA).stringByAppendingString(aStringB);
+  {$ENDIF}
+end;
+
+class operator String.Implicit(Value: Char): String;
+begin
+  {$IF COOPER}
+  exit new java.lang.String(Value);
+  {$ELSEIF ECHOES}
+  exit new System.String(Value, 1);
+  {$ELSEIF NOUGAT}
+  exit NSString.stringWithFormat("%c", Value);
   {$ENDIF}
 end;
 
@@ -233,8 +250,7 @@ begin
   {$ELSEIF ECHOES}
   exit System.Text.Encoding.UTF8.GetString(Value);
   {$ELSEIF NOUGAT}
-  //62395: Sugar: NRE in mapped method
-  //exit new NSString withBytes(Value) length(length(Value)) encoding(NSStringEncoding.NSUTF8StringEncoding);
+  exit new NSString withBytes(Value) length(length(Value)) encoding(NSStringEncoding.NSUTF8StringEncoding);
   {$ENDIF}
 end;
 
