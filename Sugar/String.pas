@@ -248,7 +248,7 @@ begin
   {$IF COOPER}
   exit new java.lang.String(Value, "UTF-8");
   {$ELSEIF ECHOES}
-  exit System.Text.Encoding.UTF8.GetString(Value);
+  exit System.Text.Encoding.UTF8.GetString(Value, 0, Value.Length);
   {$ELSEIF NOUGAT}
   exit new NSString withBytes(Value) length(length(Value)) encoding(NSStringEncoding.NSUTF8StringEncoding);
   {$ENDIF}
