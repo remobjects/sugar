@@ -22,7 +22,7 @@ method &Copy(aString: String; aStart: Int32; aLength: Int32): String;
 begin
   if not assigned(aString) then exit ''; 
 
-  // Delphi's copy() handels lenths that exceed the string, and returns what's there. 
+  // Delphi's copy() handels lengths that exceed the string, and returns what's there. 
   // .NET and Sugar's SubString would throw an exception, so we need to account for that.
   var l := aString.Length;
   if (aStart-1)+aLength > l then aLength := l-(aStart+1); 
