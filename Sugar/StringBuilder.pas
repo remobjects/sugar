@@ -7,9 +7,11 @@ type
   {$IF COOPER}
   StringBuilder = public class mapped to java.lang.StringBuilder
   private
-    method set_Chars(aIndex: Int32; value: Char ) ;  
+    method set_Chars(aIndex: Int32; value: Char ) ;
+    method set_Length(value: Integer);  
   public
     method Append(value: String): StringBuilder; mapped to append(value);
+    method Append(value: Object): StringBuilder; mapped to append(value);
     method Append(value: String; startIndex, count: Integer): StringBuilder; mapped to append(value, startIndex, count);
     method Append(value: Char; repeatCount: Integer): StringBuilder;
     method AppendLine(): StringBuilder;
@@ -22,7 +24,7 @@ type
     method Substring(Start, &End: Integer): String; mapped to substring(Start, &End);
     method Insert(Offset: Integer; Value: String): StringBuilder; mapped to insert(Offset, Value);
 
-    property Length: Integer read mapped.length;
+    property Length: Integer read mapped.length write set_Length;
     property Chars[aIndex: Int32]: Char read mapped.charAt(aIndex) write set_Chars; default;
   {$ELSEIF ECHOES}
   StringBuilder = public class mapped to System.Text.StringBuilder
@@ -40,7 +42,7 @@ type
     method Substring(Start, &End: Integer): String; mapped to ToString(Start, &End);
     method Insert(Offset: Integer; Value: String): StringBuilder; mapped to Insert(Offset, Value);
 
-    property Length: Integer read mapped.Length;
+    property Length: Integer read mapped.Length write mapped.Length;
     property Chars[aIndex: Int32]: Char read mapped.Chars[aIndex] write mapped.Chars[aIndex]; default;
   {$ELSEIF NOUGAT}
   StringBuilder = public class mapped to Foundation.NSMutableString
@@ -48,6 +50,7 @@ type
     method NSMakeRange(loc: Int32; len: Int32): Foundation.NSRange;
     method get_Chars(aIndex : Int32): Char;
     method set_Chars(aIndex : Int32; value: Char);
+    method set_Length(value: Integer);  
   public
     method Append(value: String): StringBuilder;
     method Append(value: String; startIndex, count: Integer): StringBuilder;
@@ -63,7 +66,7 @@ type
     method Substring(Start, &End: Integer): String;
     method Insert(Offset: Integer; Value: String): StringBuilder;
 
-    property Length: Integer read mapped.length;
+    property Length: Integer read mapped.length write set_Length;
     property Chars[aIndex: Int32]: Char read get_Chars write set_Chars ; default;
   {$ENDIF}
   end;
@@ -74,6 +77,11 @@ implementation
 method StringBuilder.set_Chars(aIndex: Int32; value: Char ) ; 
 begin
   mapped.setCharAt(aIndex,value);
+end;
+
+method StringBuilder.set_Length(value: Integer);
+begin
+  mapped.setLength(value);
 end;
 
 method StringBuilder.Append(value: Char; repeatCount: Integer): StringBuilder;
@@ -94,6 +102,8 @@ begin
   mapped.append(Environment.NewLine);
   exit mapped;
 end;
+
+
 {$ELSEIF ECHOES}
 method StringBuilder.Clear;
 begin
@@ -179,7 +189,12 @@ end;
 
 method StringBuilder.set_Chars(aIndex : Int32; value: Char);
 begin
-  mapped.replaceCharactersInRange(NSMakeRange(aIndex, aIndex)) withString(value);
+  mapped.replaceCharactersInRange(NSMakeRange(aIndex, aIndex)) withString(value);  
+end;
+
+method StringBuilder.set_Length(value: Integer);
+begin
+  mapped.deleteCharactersInRange(NSMakeRange(value, length))
 end;
 {$ENDIF}
 
