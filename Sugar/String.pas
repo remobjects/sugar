@@ -39,6 +39,8 @@ type
     method ToLower: String; mapped to toLowerCase;
     method ToUpper: String; mapped to toUpperCase;
     method Trim: String; mapped to trim;    
+    method StartsWith(Value: String): Boolean; mapped to startsWith(Value);
+    method EndsWith(Value: String): Boolean; mapped to endsWith(Value);
 
     method ToByteArray: array of Byte;
   end;
@@ -76,6 +78,8 @@ type
     method ToLower: String; mapped to ToLower;
     method ToUpper: String; mapped to ToUpper;
     method Trim: String; mapped to Trim;
+    method StartsWith(Value: String): Boolean; mapped to StartsWith(Value);
+    method EndsWith(Value: String): Boolean; mapped to EndsWith(Value);
 
     method ToByteArray: array of Byte;
   end;
@@ -113,6 +117,8 @@ type
     method ToLower: String; mapped to lowercaseString;
     method ToUpper: String; mapped to uppercaseString;
     method Trim: String;    
+    method StartsWith(Value: String): Boolean; 
+    method EndsWith(Value: String): Boolean; 
 
     method ToByteArray: array of Byte;
   end;
@@ -217,6 +223,16 @@ end;
 method String.Contains(Value: String): Boolean;
 begin
   exit mapped.rangeOfString(Value).location <> NSNotFound;
+end;
+
+method String.StartsWith(Value: String): Boolean;
+begin
+  exit IndexOf(Value)=0 ;
+end;
+
+method String.EndsWith(Value: String): Boolean;
+begin
+  exit LastIndexOf(Value)=mapped.Length;
 end;
 {$ENDIF}
 
