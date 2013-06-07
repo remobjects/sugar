@@ -40,7 +40,6 @@ type
     property Name: String read Node.GetType.Name; virtual;
     property URI: String read Node.BaseUri; 
     property Value: String read nil write SetValue; virtual;
-    property InnerText: String read "" write SetInnerText; virtual;
     property LocalName: String read Name; virtual;
     
     property Document: XmlDocument read iif(Node.Document = nil, nil, new XmlDocument(Node.Document));
@@ -72,7 +71,6 @@ type
     property Name: String read Node.NodeName;
     property URI: String read Node.BaseUri;
     property Value: String read Node.NodeValue write Node.NodeValue;
-    property InnerText: String read Node.TextContent write Node.TextContent;
     property LocalName: String read Node.LocalName;
     
     property Document: XmlDocument read iif(Node.OwnerDocument = nil, nil, new XmlDocument(Node.OwnerDocument));
@@ -91,6 +89,7 @@ type
     method ToString: java.lang.String; override;
   end;  
 {$ELSEIF NOUGAT}
+{$IF OSX}
 XmlNode = public class
   private
     fNode: NSXMLNode;
@@ -109,7 +108,6 @@ XmlNode = public class
     property Name: String read Node.name write SetName;
     property URI: String read Node.URI;
     property Value: String read Node.stringValue write SetValue;
-    property InnerText: String read Node.stringValue write SetValue;
     property LocalName: String read Node.LocalName;
 
     property Document: XmlDocument read iif(Node.rootDocument = nil, nil, new XmlDocument withNode(Node.rootDocument));
@@ -126,6 +124,77 @@ XmlNode = public class
     method SelectSingleNode(XPath: String): XmlNode;
     method description: NSString; override;
   end;
+{$ELSEIF IOS}
+  XmlNode = public class
+  private
+    fNode: ^libxml.__struct__xmlNode;
+    fDocument: XmlDocument;
+
+    method GetName: String;
+    method GetURI: String;
+    method GetValue: String;
+    method SetValue(aValue: String);
+    method GetLocalName: String;
+
+    method GetItem(&Index: Integer): XmlNode;
+    method GetChildCount: Integer;
+    method GetChildNodes: array of XmlNode;
+  protected
+    class method CreateCompatibleNode(Node: ^libxml.__struct__xmlNode; Doc: XmlDocument): XmlNode;
+    class method IsNode(Node: ^libxml.__struct__xmlNode): Boolean;
+  assembly or protected 
+    property Node: ^libxml.__struct__xmlNode read fNode write fNode;
+    constructor(aNode: ^libxml.__struct__xmlNode; aDocument: XmlDocument);
+  public
+    property Name: String read GetName; virtual;
+    property URI: String read GetURI; virtual;
+    property Value: String read GetValue write SetValue; virtual;
+    property LocalName: String read GetLocalName; virtual;
+    
+    property Document: XmlDocument read fDocument;
+    property Parent: XmlNode read CreateCompatibleNode(^libxml.__struct__xmlNode(Node^.parent), Document);
+    property NextSibling: XmlNode read CreateCompatibleNode(^libxml.__struct__xmlNode(Node^.next), Document);
+    property PreviousSibling: XmlNode read CreateCompatibleNode(^libxml.__struct__xmlNode(Node^.prev), Document);
+
+    property FirstChild: XmlNode read CreateCompatibleNode(^libxml.__struct__xmlNode(Node^.children), Document);
+    property LastChild: XmlNode read CreateCompatibleNode(^libxml.__struct__xmlNode(Node^.last), Document);
+    property Item[&Index: Integer]: XmlNode read GetItem;
+    property ChildCount: Integer read GetChildCount;
+    property ChildNodes: array of XmlNode read GetChildNodes;
+    
+    method description: NSString; override;
+  end;
+
+  XmlNamespace nested in XmlNode = public class
+  private
+    fNode: ^libxml.__struct__xmlNode;
+    method GetLocalName: String;
+    method GetName: String;
+    method GetUri: String;
+  public
+    constructor(Node: ^libxml.__struct__xmlNode);
+    property LocalName: String read GetLocalName;
+    property Name: String read GetName;
+    property Uri: String read GetUri;
+  end;
+
+  XmlChar nested in XmlNode = public static class
+  public
+    method ToString(Value: ^libxml.xmlChar; FreeWhenDone: Boolean := false): String;
+    method FromString(Value: String): ^libxml.xmlChar;
+  end;
+
+  XmlNodeList nested in XmlNode = public class
+  private
+    Root: XmlNode;
+    method Match(Element: XmlNode; LocalName: String; NamespaceUri: String): Boolean;
+    method ListElementsByName(Element: XmlNode; LocalName: String; NamespaceUri: String): RemObjects.Oxygene.Sugar.Collections.List<XmlElement>;
+  public
+    constructor(RootElement: XmlNode); 
+    method ElementsByName(Name: String): array of XmlElement;
+    method ElementsByName(LocalName: String; NamespaceUri: String): array of XmlElement;
+  end;
+{$ENDIF}
 {$ENDIF}
 
 implementation
@@ -174,7 +243,7 @@ begin
   if Container = nil then
     exit nil;
 
-  exit CreateCompatibleNode(Container.Nodes.First);
+  exit CreateCompatibleNode(Container.Nodes.FirstOrDefault);
 end;
 
 method XmlNode.GetLastChild: XmlNode;
@@ -183,7 +252,7 @@ begin
   if Container = nil then
     exit nil;
 
-  exit CreateCompatibleNode(Container.Nodes.Last);
+  exit CreateCompatibleNode(Container.Nodes.LastOrDefault);
 end;
 
 method XmlNode.GetItem(&Index: Integer): XmlNode;
@@ -291,6 +360,7 @@ begin
   end;
 end;
 {$ELSEIF NOUGAT}
+{$IF OSX}
 method XmlNode.SetName(aValue: String);
 begin
   Node.setName(Value);
@@ -368,6 +438,202 @@ method XmlNode.description: NSString;
 begin
   exit fNode.description;
 end;
+{$ELSEIF IOS}
+constructor XmlNode(aNode: ^libxml.__struct__xmlNode; aDocument: XmlDocument);
+begin
+  fNode := aNode;
+  fDocument := aDocument;
+end;
+
+method XmlNode.GetName: String;
+begin
+  exit new XmlNamespace(fNode).Name;
+end;
+
+method XmlNode.GetURI: String;
+begin
+  exit XmlChar.ToString(libxml.xmlNodeGetBase(fNode^.doc, libxml.xmlNodePtr(fNode)), true);
+end;
+
+method XmlNode.GetValue: String;
+begin
+  var content := libxml.xmlNodeGetContent(libxml.xmlNodePtr(fNode));
+  if content = nil then
+    exit nil;
+
+  exit XmlChar.ToString(content, true);
+end;
+
+method XmlNode.SetValue(aValue: String);
+begin
+  libxml.xmlNodeSetContent(libxml.xmlNodePtr(fNode), XmlChar.FromString(aValue));
+end;
+
+method XmlNode.GetLocalName: String;
+begin
+  exit new XmlNamespace(fNode).LocalName;
+end;
+
+class method XmlNode.CreateCompatibleNode(Node: ^libxml.__struct__xmlNode; Doc: XmlDocument): XmlNode;
+begin
+  if Node = nil then
+    exit nil;
+
+  case Node^.type of
+    libxml.xmlElementType.XML_ATTRIBUTE_NODE : exit new XmlAttribute(Node, Doc);
+    libxml.xmlElementType.XML_CDATA_SECTION_NODE : exit new XmlCDataSection(Node, Doc);
+    libxml.xmlElementType.XML_COMMENT_NODE : exit new XmlComment(Node, Doc);
+    libxml.xmlElementType.XML_DOCUMENT_NODE : exit new XmlNode(Node, Doc);
+    libxml.xmlElementType.XML_DOCUMENT_TYPE_NODE : exit new XmlNode(Node, Doc);
+    libxml.xmlElementType.XML_DTD_NODE : exit new XmlNode(Node, Doc);
+    libxml.xmlElementType.XML_ELEMENT_NODE : exit new XmlElement(Node, Doc);
+    libxml.xmlElementType.XML_PI_NODE : exit new XmlProcessingInstruction(Node, Doc);
+    libxml.xmlElementType.XML_TEXT_NODE : exit new XmlText(Node, Doc);
+    else
+      exit new XmlNode(Node, Doc);
+  end;
+end;
+
+method XmlNode.description: NSString;
+begin
+  var bufferPtr := libxml.xmlBufferCreate;
+  try
+    if libxml.xmlNodeDump(bufferPtr, libxml.xmlDocPtr(fNode^.doc), libxml.xmlNodePtr(fNode), 1, 1) = 0 then
+      exit "";
+
+    exit XmlChar.ToString(libxml.xmlBufferContent(bufferPtr));
+  finally
+    libxml.xmlBufferFree(bufferPtr);
+  end;
+end;
+
+method XmlNode.GetItem(&Index: Integer): XmlNode;
+begin
+  exit GetChildNodes[&Index];
+end;
+
+method XmlNode.GetChildCount: Integer;
+begin
+  result := 0;
+  var ChildPtr := fNode^.children;
+  while ChildPtr <> nil do begin
+    inc(result);
+    ChildPtr := ^libxml.__struct__xmlNode(ChildPtr)^.next;
+  end;
+end;
+
+method XmlNode.GetChildNodes: array of XmlNode;
+begin
+  var List := new RemObjects.Oxygene.Sugar.Collections.List<XmlNode>;
+  var ChildPtr := fNode^.children;
+  while ChildPtr <> nil do begin
+    List.Add(CreateCompatibleNode( ^libxml.__struct__xmlNode(ChildPtr), Document));
+    ChildPtr := ^libxml.__struct__xmlNode(ChildPtr)^.next;
+  end;
+
+  exit List.ToArray;
+end;
+
+class method XmlNode.IsNode(Node: ^libxml.__struct__xmlNode): Boolean;
+begin
+  if Node = nil then
+    exit false;
+
+  exit not (Node^.type in [libxml.xmlElementType.XML_ATTRIBUTE_DECL, libxml.xmlElementType.XML_ELEMENT_DECL, libxml.xmlElementType.XML_ENTITY_DECL, 
+  libxml.xmlElementType.XML_NAMESPACE_DECL, libxml.xmlElementType.XML_XINCLUDE_END, libxml.xmlElementType.XML_XINCLUDE_START]);
+end;
+
+constructor XmlNode.XmlNamespace(Node: ^libxml.__struct__xmlNode);
+begin
+  fNode := Node;
+end;
+
+method XmlNode.XmlNamespace.GetLocalName: String;
+begin
+  exit XmlChar.ToString(fNode^.name);
+end;
+
+method XmlNode.XmlNamespace.GetName: String;
+begin
+  if (not XmlNode.IsNode(fNode)) or (fNode^.ns = nil) then
+    exit LocalName;
+
+  exit new String withFormat("{%@}%@", Uri, LocalName);
+end;
+
+method XmlNode.XmlNamespace.GetUri: String;
+begin
+  if (not XmlNode.IsNode(fNode)) or (fNode^.ns = nil) then
+    exit "";
+
+  var ns := ^libxml.__struct__xmlNs(fNode^.ns);
+  exit XmlChar.ToString(ns^.href);
+end;
+
+method XmlNode.XmlChar.FromString(Value: String): ^libxml.xmlChar;
+begin
+  exit ^libxml.xmlChar(NSString(Value).UTF8String);
+end;
+
+method XmlNode.XmlChar.ToString(Value: ^libxml.xmlChar; FreeWhenDone: Boolean := false): String;
+begin
+  if Value = nil then
+    exit "";
+
+  result := new String withUTF8String(^AnsiChar(Value));
+  if FreeWhenDone then
+    libxml.xmlFree(Value);
+end;
+
+constructor XmlNode.XmlNodeList(RootElement: XmlNode);
+begin
+  Root := RootElement;
+end;
+
+method XmlNode.XmlNodeList.Match(Element: XmlNode; LocalName: String; NamespaceUri: String): Boolean;
+begin
+  if Element.Node^.type <> libxml.xmlElementType.XML_ELEMENT_NODE then
+    exit false;
+
+  var Ns := new XmlNamespace(Element.Node);
+  if NamespaceUri = nil then 
+    exit LocalName = Ns.LocalName
+  else
+    exit (LocalName = Ns.LocalName) and (NamespaceUri = Ns.Uri);
+end;
+
+method XmlNode.XmlNodeList.ListElementsByName(Element: XmlNode; LocalName: String; NamespaceUri: String): RemObjects.Oxygene.Sugar.Collections.List<XmlElement>;
+begin
+  result := new RemObjects.Oxygene.Sugar.Collections.List<XmlElement>;
+
+  if Element = nil then
+    exit;
+
+  if Match(Element, LocalName, NamespaceUri) then
+    result.Add(XmlElement(Element));
+
+  result.AddRange(ListElementsByName(Element.FirstChild, LocalName, NamespaceUri));
+
+  while Element.NextSibling <> nil do begin
+    result.AddRange(ListElementsByName(Element.NextSibling, LocalName, NamespaceUri));
+    Element := Element.NextSibling;
+  end;
+end;
+
+method XmlNode.XmlNodeList.ElementsByName(LocalName: String; NamespaceUri: String): array of XmlElement;
+begin
+  if (NamespaceUri <> nil) and (NamespaceUri = "*") then
+    NamespaceUri := nil;
+
+  var Elements := ListElementsByName(Root, LocalName, NamespaceUri);
+  exit Elements.ToArray;
+end;
+
+method XmlNode.XmlNodeList.ElementsByName(Name: String): array of XmlElement;
+begin
+  exit ElementsByName(Name, nil);
+end;
+{$ENDIF}
 {$ENDIF}
 
 end.

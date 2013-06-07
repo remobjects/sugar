@@ -30,7 +30,6 @@ type
     property Data: String read CharacterData.Value write CharacterData.Value; virtual;
     property Length: Integer read CharacterData.Value.Length; virtual;
     property Value: String read CharacterData.Value write CharacterData.Value; override;
-    property InnerText: String read CharacterData.Value write CharacterData.Value; override; 
     {$ELSEIF COOPER}
     property Data: String read CharacterData.Data write CharacterData.Data;
     property Length: Integer read CharacterData.Length;
@@ -62,7 +61,6 @@ type
     property Length: Integer read Comment.Value.Length; override;
     property Value: String read Comment.Value write Comment.Value; override;
     property Name: String read "#comment"; override;
-    property InnerText: String read Comment.Value write Comment.Value; override;
   {$ENDIF}
   end;
 
@@ -77,17 +75,30 @@ implementation
 {$IF NOUGAT}
 method XmlCharacterData.GetData: String;
 begin
+  {$IF IOS}
+  exit Value;
+  {$ELSEIF OSX}
   exit Node.stringValue;
+  {$ENDIF}  
 end;
 
 method XmlCharacterData.SetData(aValue: String);
 begin
+  {$IF IOS}
+  Value := aValue;
+  {$ELSEIF OSX}
   Node.setStringValue(aValue);
+  {$ENDIF}  
 end;
 
 method XmlCharacterData.GetLength: Integer;
 begin
+  {$IF IOS}
+  //Can not get type for nullable
+  exit Value.Length;
+  {$ELSEIF OSX}
   exit Node.stringValue.length;
+  {$ENDIF}  
 end;
 {$ENDIF}
 
@@ -98,9 +109,9 @@ begin
   {$ELSEIF COOPER} 
   CharacterData.AppendData(aValue);
   {$ELSEIF NOUGAT}
-  var lData: NSMutableString := NSMutableString.stringWithString(Node.stringValue);
+  var lData: NSMutableString := NSMutableString.stringWithString(Data);
   lData.appendString(aValue);
-  Node.setStringValue(lData);
+  {$IF IOS}Value := lData;{$ELSEIF OSX}Node.setStringValue(lData);{$ENDIF}  
   {$ENDIF}
 end;
 
@@ -111,9 +122,9 @@ begin
   {$ELSEIF COOPER} 
   CharacterData.DeleteData(Offset, Count);
   {$ELSEIF NOUGAT}
-  var lData: NSMutableString := NSMutableString.stringWithString(Node.stringValue);
+  var lData: NSMutableString := NSMutableString.stringWithString(Data);
   lData.deleteCharactersInRange(NSMakeRange(Offset, Count));
-  Node.setStringValue(lData);
+  {$IF IOS}Value := lData;{$ELSEIF OSX}Node.setStringValue(lData);{$ENDIF}  
   {$ENDIF}
 end;
 
@@ -124,9 +135,9 @@ begin
   {$ELSEIF COOPER} 
   CharacterData.InsertData(Offset, aValue);
   {$ELSEIF NOUGAT}
-  var lData: NSMutableString := NSMutableString.stringWithString(Node.stringValue);
+  var lData: NSMutableString := NSMutableString.stringWithString(Data);
   lData.insertString(aValue) atIndex(Offset);
-  Node.setStringValue(lData);
+  {$IF IOS}Value := lData;{$ELSEIF OSX}Node.setStringValue(lData);{$ENDIF}
   {$ENDIF}
 end;
 
@@ -138,9 +149,9 @@ begin
   {$ELSEIF COOPER} 
   CharacterData.ReplaceData(Offset, Count, WithValue);
   {$ELSEIF NOUGAT}
-  var lData: NSMutableString := NSMutableString.stringWithString(Node.stringValue);
+  var lData: NSMutableString := NSMutableString.stringWithString(Data);
   lData.replaceCharactersInRange(NSMakeRange(Offset, Count)) withString(WithValue);
-  Node.setStringValue(lData);
+  {$IF IOS}Value := lData;{$ELSEIF OSX}Node.setStringValue(lData);{$ENDIF}
   {$ENDIF}
 end;
 
@@ -151,7 +162,7 @@ begin
   {$ELSEIF COOPER} 
   exit CharacterData.substringData(Offset, Count);
   {$ELSEIF NOUGAT}
-  exit Node.stringValue.substringWithRange(NSMakeRange(Offset, Count));
+  exit NSString(Data).substringWithRange(NSMakeRange(Offset, Count));
   {$ENDIF}
 end;
 

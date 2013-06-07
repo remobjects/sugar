@@ -23,7 +23,6 @@ type
   public
     {$IF ECHOES}
     property Name: String read "#processinginstruction"; override;
-    property InnerText: String read ProcessingInstruction.Data write ProcessingInstruction.Data; override;
     property Value: String read ProcessingInstruction.Data write ProcessingInstruction.Data; override;
     {$ENDIF}
     property Data: String read ProcessingInstruction.Data write ProcessingInstruction.Data;
@@ -31,17 +30,25 @@ type
   end;
 {$ELSEIF NOUGAT}
   XmlProcessingInstruction = public class (XmlNode)
+  {$IF OSX}
   private
     method GetData: String;
     method SetData(aValue: String);
+  {$ENDIF}
   public
+    {$IF IOS}
+    property Data: String read Value write Value;
+    property Target: String read Name;
+    {$ELSEIF OSX}
     property Data: String read GetData write SetData;
     property Target: String read Node.Name;
+    {$ENDIF}
   end;
 {$ENDIF}
 implementation
 
 {$IF NOUGAT}
+{$IF OSX}
 method XmlProcessingInstruction.GetData: String;
 begin
   exit Node.stringValue;
@@ -51,6 +58,7 @@ method XmlProcessingInstruction.SetData(aValue: String);
 begin
   Node.setStringValue(aValue);
 end;
+{$ENDIF}
 {$ENDIF}
 
 end.

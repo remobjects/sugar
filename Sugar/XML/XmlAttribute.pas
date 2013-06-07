@@ -26,13 +26,16 @@ type
     property Name: String read Attribute.Name.ToString; override;
     property Value: String read Attribute.Value write Attribute.Value; override;
     property LocalName: String read Attribute.Name.LocalName; override;
-    property InnerText: String read Attribute.Value write Attribute.Value; override; 
     {$ENDIF}
 
     {$IF ECHOES}
     property OwnerElement: XmlElement read iif(Attribute.Parent = nil, nil, new XmlElement(Attribute.Parent));
     {$ELSEIF NOUGAT}
+    {$IF IOS}
+    property OwnerElement: XmlElement read iif(Node^.parent = nil, nil, new XmlElement(^libxml.__struct__xmlNode(Node^.parent), Document));
+    {$ELSEIF OSX}
     property OwnerElement: XmlElement read iif(Node.parent = nil, nil, new XmlElement(Node.parent));
+    {$ENDIF}
     {$ELSEIF COOPER}
     property OwnerElement: XmlElement read iif(Attribute.OwnerElement = nil, nil, new XmlElement(Attribute.OwnerElement));
     {$ENDIF}

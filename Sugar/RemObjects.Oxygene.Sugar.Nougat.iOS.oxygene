@@ -20,7 +20,7 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <Optimize>False</Optimize>
     <OutputPath>.\bin\Debug</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;IOS</DefineConstants>
     <GenerateDebugInfo>True</GenerateDebugInfo>
     <EnableAsserts>True</EnableAsserts>
     <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
@@ -46,9 +46,11 @@
     <XmlDocWarningLevel>WarningOnPublicMembers</XmlDocWarningLevel>
     <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
     <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
+    <DefineConstants>DEBUG;TRACE;IOS</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Foundation.fx" />
+    <Reference Include="libxml2.fx" />
     <Reference Include="rtl.fx" />
     <Reference Include="UIKit.fx" />
   </ItemGroup>
@@ -65,6 +67,13 @@
     <Compile Include="Crypto\Digest.pas" />
     <Compile Include="DateTime.pas" />
     <Compile Include="Environment.pas" />
+    <Compile Include="XML\XmlAttribute.pas" />
+    <Compile Include="XML\XmlCharacterData.pas" />
+    <Compile Include="XML\XmlDocument.pas" />
+    <Compile Include="XML\XmlDocumentType.pas" />
+    <Compile Include="XML\XmlElement.pas" />
+    <Compile Include="XML\XmlNode.pas" />
+    <Compile Include="XML\XmlProcessingInstruction.pas" />
     <None Include="HTTP.pas" />
     <Compile Include="Random.pas" />
     <Compile Include="Exceptions.pas" />
@@ -91,6 +100,7 @@
     <Folder Include="Collections" />
     <Folder Include="Threading" />
     <Folder Include="IO" />
+    <Folder Include="XML" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Nougat.targets" />
   <PropertyGroup>
