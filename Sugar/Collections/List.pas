@@ -9,6 +9,7 @@ type
   List<T> = public class mapped to System.Collections.Generic.List<T>
   public
     method &Add(Item: T); mapped to &Add(Item);
+    method AddRange(Items: List<T>); mapped to AddRange(Items);
     method Clear; mapped to Clear;
     method Contains(Item: T): Boolean; mapped to Contains(Item);
 
@@ -38,6 +39,7 @@ type
   List<T> = public class mapped to java.util.ArrayList<T>
   public
     method &Add(Item: T); mapped to &add(Item);
+    method AddRange(Items: List<T>); mapped to addAll(Items);
     method Clear; mapped to clear;
     method Contains(Item: T): Boolean; mapped to contains(Item);
 
@@ -68,6 +70,7 @@ type
     where T is class;
   public
     method &Add(Item: T); mapped to addObject(Item);
+    method AddRange(Items: List<T>); mapped to addObjectsFromArray(Items);
     method Clear; mapped to removeAllObjects;
     method Contains(Item: T): Boolean; mapped to containsObject(Item);
 
