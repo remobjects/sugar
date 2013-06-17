@@ -4,6 +4,11 @@
 
 interface
 
+{$IF COOPER}
+uses
+  RemObjects.Oxygene.Sugar.Cooper;
+{$ENDIF}
+
 type
   {$IF COOPER}
   String = public class mapped to java.lang.String
@@ -250,7 +255,7 @@ end;
 method String.ToByteArray: array of Byte;
 begin
   {$IF COOPER}
-  exit mapped.getBytes("UTF-8");
+  exit ArrayUtils.FromSigendArray(mapped.getBytes("UTF-8"));
   {$ELSEIF ECHOES}
   exit System.Text.Encoding.UTF8.GetBytes(mapped);
   {$ELSEIF NOUGAT}
@@ -262,7 +267,7 @@ end;
 class method String.FromByteArray(Value: array of Byte): String;
 begin
   {$IF COOPER}
-  exit new java.lang.String(Value, "UTF-8");
+  exit new java.lang.String(ArrayUtils.FromUnsigendArray(Value), "UTF-8");
   {$ELSEIF ECHOES}
   exit System.Text.Encoding.UTF8.GetString(Value, 0, Value.Length);
   {$ELSEIF NOUGAT}

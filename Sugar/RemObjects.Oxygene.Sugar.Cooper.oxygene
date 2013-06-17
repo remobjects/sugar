@@ -62,6 +62,7 @@
     <Compile Include="Collections\Stack.pas" />
     <Compile Include="Color.pas" />
     <Compile Include="Console.pas" />
+    <Compile Include="Cooper\ArrayUtils.pas" />
     <Compile Include="Cooper\EnumerationSequence.pas" />
     <Compile Include="Crypto\Cipher.pas">
       <SubType>Code</SubType>

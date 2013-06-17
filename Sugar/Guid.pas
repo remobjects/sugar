@@ -61,10 +61,10 @@ implementation
 {$IF COOPER} 
 method Guid.ToByteArray: array of Byte;
 begin
-  var buffer := java.nio.ByteBuffer.wrap(new Byte[16]);
+  var buffer := java.nio.ByteBuffer.wrap(new SByte[16]);
   buffer.putLong(mapped.MostSignificantBits);
   buffer.putLong(mapped.LeastSignificantBits);
-  exit buffer.array;
+  exit RemObjects.Oxygene.Sugar.Cooper.ArrayUtils.FromSigendArray(buffer.array);
 end;
 
 class method Guid.EmptyGuid: Guid;

@@ -2,6 +2,8 @@
 
 interface
 
+
+
 type  
   DigestAlgorithms = public (MD5, SHA1, SHA256, SHA384, SHA512); 
   Crypto = public class
@@ -19,6 +21,7 @@ uses
   System.Security.Cryptography;
 {$ENDIF}
 {$IFDEF COOPER}
+  RemObjects.Oxygene.Sugar.Cooper,
   java.security;
 {$ENDIF}
 {$IFDEF NOUGAT}
@@ -50,7 +53,7 @@ begin
     DigestAlgorithms.SHA384: ha := MessageDigest.getInstance('SHA-384');
     DigestAlgorithms.SHA512: ha := MessageDigest.getInstance('SHA-512');
   end;
-  exit ha.digest(data);
+  exit ArrayUtils.FromSigendArray(ha.digest(ArrayUtils.FromUnsigendArray(data)));
   {$ENDIF}
   {$IFDEF NOUGAT}
   // TODO: CC_MD5

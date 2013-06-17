@@ -183,7 +183,7 @@ class method XmlDocument.FromBinary(aBinary: Binary): XmlDocument;
 begin
   var Factory := javax.xml.parsers.DocumentBuilderFactory.newInstance;
   var Builder := Factory.newDocumentBuilder();  
-  var Document := Builder.parse(new java.io.ByteArrayInputStream(aBinary.ToArray));
+  var Document := Builder.parse(new java.io.ByteArrayInputStream(RemObjects.Oxygene.Sugar.Cooper.ArrayUtils.FromUnsigendArray(aBinary.ToArray)));
   exit new XmlDocument(Document);
 end;
 

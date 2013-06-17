@@ -4,6 +4,11 @@
 
 interface
 
+{$IF COOPER}
+uses
+  RemObjects.Oxygene.Sugar.Cooper;
+{$ENDIF}
+
 type
   Range = public record {$IF NOUGAT}mapped to Foundation.NSRange{$ENDIF}
   public
@@ -92,7 +97,7 @@ end;
 method Binary.Assign(aData: Binary);
 begin
   Clear;
-  fData.write(aData.ToArray, 0, aData.Length);
+  fData.write(ArrayUtils.FromUnsigendArray(aData.ToArray), 0, aData.Length);
 end;
 
 method Binary.ReadRangeOfBytes(Range: Range): array of Byte;
@@ -115,7 +120,7 @@ end;
 
 method Binary.WriteBytes(aData: array of Byte; aLength: Integer);
 begin
-  fData.write(aData, 0, aLength);
+  fData.write(ArrayUtils.FromUnsigendArray(aData), 0, aLength);
 end;
 
 method Binary.WriteData(aData: Binary);
@@ -125,7 +130,7 @@ end;
 
 method Binary.ToArray: array of Byte;
 begin
-  exit fData.toByteArray;
+  exit ArrayUtils.FromSigendArray(fData.toByteArray);
 end;
 
 method Binary.Clear;
@@ -138,7 +143,6 @@ begin
   result := new Binary;
   result.WriteBytes(aArray, aArray.length);
 end;
-
 {$ELSEIF ECHOES}
 method Binary.Assign(aData: Binary);
 begin
