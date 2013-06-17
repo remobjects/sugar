@@ -64,7 +64,7 @@ begin
   var buffer := java.nio.ByteBuffer.wrap(new SByte[16]);
   buffer.putLong(mapped.MostSignificantBits);
   buffer.putLong(mapped.LeastSignificantBits);
-  exit RemObjects.Oxygene.Sugar.Cooper.ArrayUtils.FromSigendArray(buffer.array);
+  exit RemObjects.Oxygene.Sugar.Cooper.ArrayUtils.ToUnsignedArray(buffer.array);
 end;
 
 class method Guid.EmptyGuid: Guid;

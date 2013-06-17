@@ -6,6 +6,7 @@ uses
   {$IF WINDOWS_PHONE OR NETFX_CORE}  
   System.IO,
   {$ELSEIF COOPER}
+  RemObjects.Oxygene.Sugar.Cooper,
   {$ELSEIF ECHOES}
   {$ELSEIF NOUGAT}
   {$ENDIF}
@@ -249,10 +250,11 @@ end;
 
 method File.ReadBytes: array of Byte;
 begin
-  result := new Byte[Integer(mapped.length)];
+  var lData := new SByte[Integer(mapped.length)];
   var stream := new java.io.DataInputStream(new java.io.FileInputStream(mapped));
-  stream.readFully(result);
+  stream.readFully(lData);
   stream.close;
+  exit ArrayUtils.ToUnsignedArray(lData);
 end;
 
 method File.ReadText: String;
@@ -273,7 +275,7 @@ end;
 method File.WriteBytes(Data: array of Byte);
 begin
   var stream := new java.io.FileOutputStream(mapped);
-  stream.write(Data);
+  stream.write(ArrayUtils.ToSignedArray(Data));
   stream.close;
 end;
 

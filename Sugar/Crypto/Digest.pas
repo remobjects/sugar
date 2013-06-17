@@ -53,7 +53,7 @@ begin
     DigestAlgorithms.SHA384: ha := MessageDigest.getInstance('SHA-384');
     DigestAlgorithms.SHA512: ha := MessageDigest.getInstance('SHA-512');
   end;
-  exit ArrayUtils.FromSigendArray(ha.digest(ArrayUtils.FromUnsigendArray(data)));
+  exit ArrayUtils.ToUnsignedArray(ha.digest(ArrayUtils.ToSignedArray(data)));
   {$ENDIF}
   {$IFDEF NOUGAT}
   // TODO: CC_MD5

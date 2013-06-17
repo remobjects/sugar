@@ -97,7 +97,7 @@ end;
 method Binary.Assign(aData: Binary);
 begin
   Clear;
-  fData.write(ArrayUtils.FromUnsigendArray(aData.ToArray), 0, aData.Length);
+  fData.write(ArrayUtils.ToSignedArray(aData.ToArray), 0, aData.Length);
 end;
 
 method Binary.ReadRangeOfBytes(Range: Range): array of Byte;
@@ -120,7 +120,7 @@ end;
 
 method Binary.WriteBytes(aData: array of Byte; aLength: Integer);
 begin
-  fData.write(ArrayUtils.FromUnsigendArray(aData), 0, aLength);
+  fData.write(ArrayUtils.ToSignedArray(aData), 0, aLength);
 end;
 
 method Binary.WriteData(aData: Binary);
@@ -130,7 +130,7 @@ end;
 
 method Binary.ToArray: array of Byte;
 begin
-  exit ArrayUtils.FromSigendArray(fData.toByteArray);
+  exit ArrayUtils.ToUnsignedArray(fData.toByteArray);
 end;
 
 method Binary.Clear;

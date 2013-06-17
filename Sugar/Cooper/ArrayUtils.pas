@@ -9,20 +9,20 @@ interface
 type
   ArrayUtils = public static class
   public
-    method FromSigendArray(Value: array of SByte): array of Byte;
-    method FromUnsigendArray(Value: array of Byte): array of SByte;
+    method ToUnsignedArray(Value: array of SByte): array of Byte;
+    method ToSignedArray(Value: array of Byte): array of SByte;
   end;
 
 implementation
 
-class method ArrayUtils.FromSigendArray(Value: array of SByte): array of Byte;
+class method ArrayUtils.ToUnsignedArray(Value: array of SByte): array of Byte;
 begin
   result := new Byte[Value.length];
   for i: Int32 := 0 to Value.length-1 do
     result[i] := Byte(Value[i]);
 end;
 
-class method ArrayUtils.FromUnsigendArray(Value: array of Byte): array of SByte;
+class method ArrayUtils.ToSignedArray(Value: array of Byte): array of SByte;
 begin
   result := new SByte[Value.length];
   for i: Int32 := 0 to Value.length-1 do
