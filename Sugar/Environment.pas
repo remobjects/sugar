@@ -78,22 +78,23 @@ end;
 class method Environment.SysCtl(aLevel: Int32; aValue: Int32): String;
 begin
   var mib: array of Integer := [aLevel, aValue];
-  var namelen: rtl.sys.u_int := sizeOf(mib) / sizeOf(mib[0]);
+  var namelen: rtl.u_int := sizeOf(mib) / sizeOf(mib[0]);
+  
   var bufferSize: size_t := 0;
 
-  rtl.sys.sysctl(@mib, namelen, nil, @bufferSize, nil, 0);
-  var buildBuffer := new rtl.sys.u_char[bufferSize];
-  if rtl.sys.sysctl(mib, namelen, buildBuffer, @bufferSize, nil, 0) = 0 then
+  rtl.sysctl(@mib, namelen, nil, @bufferSize, nil, 0);
+  var buildBuffer := new rtl.u_char[bufferSize];
+  if rtl.sysctl(mib, namelen, buildBuffer, @bufferSize, nil, 0) = 0 then
     result := Foundation.NSString.alloc.initWithBytes(buildBuffer) length(bufferSize) encoding(Foundation.NSStringEncoding.NSUTF8StringEncoding);
  end;
 
 class method Environment.getOperatingSystemVersion: String;
 begin
   result := Foundation.NSString.stringWithFormat('%@ %@ (%@)',
-                                                 SysCtl(rtl.sys.CTL_KERN, rtl.sys.KERN_OSTYPE),
-                                                 SysCtl(rtl.sys.CTL_KERN, rtl.sys.KERN_OSRELEASE),
-                                                 SysCtl(rtl.sys.CTL_KERN, rtl.sys.KERN_OSVERSION));
- end;
+                                                 SysCtl(rtl.CTL_KERN, rtl.KERN_OSTYPE),
+                                                 SysCtl(rtl.CTL_KERN, rtl.KERN_OSRELEASE),
+                                                 SysCtl(rtl.CTL_KERN, rtl.KERN_OSVERSION));
+end;
 
 class method Environment.GetEnvironmentVariable(aVariableName: String): String;
 begin

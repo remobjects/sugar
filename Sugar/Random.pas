@@ -36,7 +36,7 @@ implementation
 {$IF NOUGAT}
 method Random.init: id;
 begin
-  var interval: rtl.sys.__struct_timeval;
+  var interval: rtl.__struct_timeval;
   gettimeofday(@interval, nil);
   srand(interval.tv_usec * interval.tv_sec);
   result := inherited;

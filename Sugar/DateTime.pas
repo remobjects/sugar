@@ -345,7 +345,7 @@ end;
 
 method DateTime.GetComponent(Component: NSCalendarUnit): Integer;
 begin
-  var lComponents := fCalendar.components(Integer(Component)) fromDate(fDate);
+  var lComponents := fCalendar.components(Component) fromDate(fDate);
   case Component of
     NSCalendarUnit.NSDayCalendarUnit: exit lComponents.day;
     NSCalendarUnit.NSHourCalendarUnit: exit lComponents.hour;
@@ -360,8 +360,8 @@ method DateTime.InternalGetDate: DateTime;
 begin
   var lCalendar: NSCalendar := NSCalendar.currentCalendar;
   var lDate: NSDate := new NSDate();
-  var lComponents := lCalendar.components(Integer(NSCalendarUnit.NSYearCalendarUnit or 
-    NSCalendarUnit.NSMonthCalendarUnit or NSCalendarUnit.NSDayCalendarUnit)) fromDate(lDate);
+  var lComponents := lCalendar.components(NSCalendarUnit.NSYearCalendarUnit or 
+    NSCalendarUnit.NSMonthCalendarUnit or NSCalendarUnit.NSDayCalendarUnit) fromDate(lDate);
   exit new DateTime withDate(lCalendar.dateFromComponents(lComponents));
 end;
 {$ENDIF}
