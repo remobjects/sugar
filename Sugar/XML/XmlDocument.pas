@@ -357,8 +357,14 @@ end;
 
 class method XmlDocument.FromBinary(aBinary: Binary): XmlDocument;
 begin
-  var document := Xdocument.Load(aBinary.Data);
-  result := new XmlDocument(document);
+  var Position := aBinary.Data.Position;
+  aBinary.Data.Position := 0;
+  try
+    var document := XDocument.Load(aBinary.Data, LoadOptions.SetBaseUri);
+    result := new XmlDocument(document);
+  finally
+    aBinary.Data.Position := Position;
+  end;  
 end;
 
 class method XmlDocument.FromString(aString: String): XmlDocument;
