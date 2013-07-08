@@ -37,6 +37,8 @@ type
     method WriteBytes(Data: array of Byte);
     method WriteText(Content: String);
 
+    class method FromPath(Value: String): File;
+
     {$IF WINDOWS_PHONE OR NETFX_CORE}
     property Path: String read mapped.Path;
     property Name: String read mapped.Name;
@@ -123,6 +125,11 @@ begin
   var data := System.Text.Encoding.UTF8.GetBytes(Content);
   WriteBytes(data);
 end;
+
+class method File.FromPath(Value: String): File;
+begin
+  exit Windows.Storage.StorageFile.GetFileFromPathAsync(Value).Await;
+end;
 {$ELSEIF ECHOES}
 method File.GetName: String;
 begin
@@ -192,6 +199,14 @@ end;
 method File.WriteText(Content: String);
 begin
   System.IO.File.WriteAllText(mapped, Content);
+end;
+
+class method File.FromPath(Value: String): File;
+begin
+  if not System.IO.File.Exists(Value) then
+    raise new SugarIOException(String.Format("File {0} not found", Value));
+ 
+  exit File(Value);
 end;
 {$ELSEIF COOPER}
 method File.&Copy(Destination: Folder): File;
@@ -284,6 +299,14 @@ begin
   var writer := new java.io.FileWriter(mapped, false);
   writer.write(Content);
   writer.close;  
+end;
+
+class method File.FromPath(Value: String): File;
+begin
+  var lFile := new java.io.File(Value);
+  if not lFile.exists then
+    raise new SugarIOException(String.Format("File {0} not found", Value));
+  exit File(lFile);
 end;
 {$ELSEIF NOUGAT}
 method File.Combine(BasePath: String; SubPath: String): String;
@@ -384,6 +407,14 @@ begin
   var lError: Foundation.NSError := nil;
   if not NSString(Content):writeToFile(mapped) atomically(true) encoding(NSStringEncoding.NSUTF8StringEncoding) error(var lError) then
     raise SugarNSErrorException.exceptionWithError(lError); 
+end;
+
+class method File.FromPath(Value: String): File;
+begin
+  if not NSFileManager.defaultManager.fileExistsAtPath(Value) then
+    raise new SugarIOException(String.Format("File {0} not found", Value));
+ 
+  exit File(Value);
 end;
 {$ENDIF}
 

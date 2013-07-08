@@ -33,6 +33,8 @@ type
     method GetFolders: array of Folder;
     method Rename(NewName: String);
 
+    class method FromPath(Value: String): Folder;
+
     {$IF WINDOWS_PHONE OR NETFX_CORE}
     property Path: String read mapped.Path;
     property Name: String read mapped.Name;
@@ -104,6 +106,11 @@ end;
 method Folder.Rename(NewName: String);
 begin
   mapped.RenameAsync(NewName, Windows.Storage.NameCollisionOption.FailIfExists).AsTask.Wait;
+end;
+
+class method Folder.FromPath(Value: String): Folder;
+begin
+  exit Windows.Storage.StorageFolder.GetFolderFromPathAsync(Value).Await;
 end;
 
 extension method Windows.Foundation.IAsyncOperation<TResult>.&Await<TResult>: TResult;
@@ -185,10 +192,18 @@ begin
   var TopLevel := System.IO.Path.GetDirectoryName(mapped);
   var FolderName := System.IO.Path.Combine(TopLevel, NewName);
   if System.IO.Directory.Exists(FolderName) then
-    raise new SugarException("Folder "+NewName+" already exists");
+    raise new SugarIOException("Folder "+NewName+" already exists");
 
   System.IO.Directory.Move(mapped, FolderName);
   mapped := FolderName;
+end;
+
+class method Folder.FromPath(Value: String): Folder;
+begin
+  if not System.IO.Directory.Exists(Value) then
+    raise new SugarIOException(String.Format("Folder {0} not found", Value));
+ 
+  exit Folder(Value);
 end;
 {$ELSEIF COOPER}
 method Folder.CreateFile(FileName: String; FailIfExists: Boolean): File;
@@ -263,6 +278,14 @@ begin
     raise new SugarIOException(String.Format("Folder {0} already exists", NewName));
 
   mapped.renameTo(NewFolder);
+end;
+
+class method Folder.FromPath(Value: String): Folder;
+begin
+  var lFile := new java.io.File(Value);
+  if not lFile.exists then
+    raise new SugarIOException(String.Format("Folder {0} not found", Value));
+  exit Folder(lFile);
 end;
 {$ELSEIF NOUGAT}
 method Folder.CreateFile(FileName: String; FailIfExists: Boolean): File;
@@ -374,6 +397,14 @@ end;
 method Folder.Combine(BasePath: String; SubPath: String): String;
 begin
   result := NSString(BasePath):stringByAppendingPathComponent(SubPath);
+end;
+
+class method Folder.FromPath(Value: String): Folder;
+begin
+  if not NSFileManager.defaultManager.fileExistsAtPath(Value) then
+    raise new SugarIOException(String.Format("Folder {0} not found", Value));
+ 
+  exit Folder(Value);
 end;
 {$ENDIF}
 
