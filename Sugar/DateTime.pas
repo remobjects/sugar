@@ -99,7 +99,7 @@ type
     method AddYears(Value: Integer): DateTime;
 
     method CompareTo(Value: DateTime): Integer;
-    method ToString: String;
+    method description: NSString; override;
     method ToString(Format: String): String;
 	  method ToLongDateString: String;
     method ToLongTimeString: String;
@@ -192,13 +192,14 @@ end;
 
 method DateTime.ToString: java.lang.String;
 begin
-  Result := fDate.toString;
+  //Result := fDate.toString;
+  exit java.text.DateFormat.getDateTimeInstance(java.text.DateFormat.MEDIUM, java.text.DateFormat.MEDIUM, new Locale(System.getProperty("user.language"))).format(fDate);
 end;
 
 method DateTime.ToString(Format: String): String;
 begin
   var lFormat: java.text.SimpleDateFormat := new java.text.SimpleDateFormat(Format);
-  exit lFormat.format(fDate);
+  exit lFormat.format(fDate);  
 end;
 
 method DateTime.ToLongDateString: String;
@@ -303,11 +304,6 @@ begin
   exit fDate.compare(Value.fDate);
 end;
 
-method DateTime.ToString: String;
-begin
-  exit fDate.description;
-end;
-
 method DateTime.ToString(Format: String): String;
 begin
   var lFormater: NSDateFormatter := new NSDateFormatter();
@@ -363,6 +359,11 @@ begin
   var lComponents := lCalendar.components(NSCalendarUnit.NSYearCalendarUnit or 
     NSCalendarUnit.NSMonthCalendarUnit or NSCalendarUnit.NSDayCalendarUnit) fromDate(lDate);
   exit new DateTime withDate(lCalendar.dateFromComponents(lComponents));
+end;
+
+method DateTime.description: NSString;
+begin
+  exit FormatWithStyle(NSDateFormatterStyle.NSDateFormatterMediumStyle, NSDateFormatterStyle.NSDateFormatterMediumStyle);
 end;
 {$ENDIF}
 
