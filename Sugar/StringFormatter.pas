@@ -101,15 +101,13 @@ begin
       end;
       start := ptr
     end
-    else begin
-      if ((c = '}') and (ptr < aFormat.Length)) then begin
+    else if ((c = '}') and (ptr < aFormat.Length) and (aFormat[ptr] = '}')) then begin
         sb.Append(aFormat, start, ptr - start - 1);
         start := ptr;
         inc(ptr);
-      end
-      else if c = '}' then begin
-        raise new SugarFormatException('Input string was not in a correct format.');
-      end;
+    end
+    else if c = '}' then begin
+      raise new SugarFormatException('Input string was not in a correct format.');
     end;
   end;
   if start < aFormat.Length then sb.Append(aFormat, start, aFormat.Length - start);
@@ -156,6 +154,7 @@ begin
   end;
   if ((ptr >= max)) or (aString[ptr] ≠ '}') then 
     raise new SugarFormatException('Input string was not in a correct format.'); 
+  inc(ptr);
 end;
 
 class method StringFormatter.ParseDecimal(aString: String; var ptr: Int32): Int32;
