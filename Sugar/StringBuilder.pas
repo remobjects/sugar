@@ -12,7 +12,7 @@ type
   public
     method Append(value: String): StringBuilder; mapped to append(value);
     method Append(value: Object): StringBuilder; mapped to append(value);
-    method Append(value: String; startIndex, count: Integer): StringBuilder; mapped to append(value, startIndex, count);
+    method Append(value: String; startIndex, count: Integer): StringBuilder; mapped to append(value, startIndex, startIndex + count);
     method Append(value: Char; repeatCount: Integer): StringBuilder;
     method AppendLine(): StringBuilder;
     method AppendLine(value: String): StringBuilder;
