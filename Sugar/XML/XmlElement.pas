@@ -23,6 +23,9 @@ type
                       read Node as{$IF COOPER}Element{$ELSEIF ECHOES}XElement{$ELSEIF NOUGAT}NSXMLElement{$ENDIF};
     {$ENDIF}
     method GetAttributes: array of XmlAttribute;
+    {$IF IOS}
+    method CopyNS(aNode: XmlAttribute);
+    {$ENDIF}
   public
     {$IF ECHOES}
     property Name: String read Element.Name.ToString; override;
@@ -308,16 +311,30 @@ end;
 
 method XmlElement.SetAttribute(aLocalName: String; NamespaceUri: String; aValue: String);
 begin
-  var QName := libxml.xmlBuildQName(XmlChar.FromString(aLocalName), XmlChar.FromString(NamespaceUri), nil, 0);
-  libxml.xmlSetProp(libxml.xmlNodePtr(Node), QName, XmlChar.FromString(aValue));
-  libxml.xmlFree(QName);
+  var ns := libxml.xmlSearchNsByHref(libxml.xmlDocPtr(Node^.doc), libxml.xmlNodePtr(Node), XmlChar.FromString(NamespaceUri));
+
+  //no namespace with specified uri
+  if ns = nil then
+    raise new SugarException("Namespace with specified URI not found");
+
+  libxml.xmlSetNsProp(libxml.xmlNodePtr(Node), ns, XmlChar.FromString(aLocalName), XmlChar.FromString(aValue));
 end;
 
 method XmlElement.SetAttributeNode(Node: XmlAttribute): XmlAttribute;
 begin
-  var Existing := GetAttributeNode(Node.Name);
+  if Node.Node^.parent <> nil then
+    raise new SugarException("Unable to insert attribute that is already owned by other element");
+
+  var Existing: XmlAttribute := nil;
+
+  if Node.Node^.ns <> nil then
+    Existing := GetAttributeNode(Node.Name)
+  else
+    Existing := GetAttributeNode(Node.LocalName, new XmlNamespace(Node.Node).Uri);
+
   AddChild(Node);
-  exit Existing;
+  CopyNS(Node);
+  exit if Existing = nil then Node else Existing;
 end;
 
 method XmlElement.RemoveAttribute(aName: String);
@@ -349,6 +366,43 @@ end;
 method XmlElement.HasAttribute(aLocalName: String; NamespaceUri: String): Boolean;
 begin
   exit GetAttributeNode(aLocalName, NamespaceUri) <> nil;
+end;
+
+method XmlElement.CopyNS(aNode: XmlAttribute);
+begin
+  //nothing to copy
+  if aNode.Node^.ns = nil then
+    exit;
+
+  //if nodes ns list is empty
+  if Node^.nsDef = nil then begin
+    Node^.nsDef := aNode.Node^.ns; //this ns will be our first element
+    exit;
+  end;
+
+  var curr := ^libxml.__struct__xmlNs(aNode.Node^.ns);
+  var prev := ^libxml.__struct__xmlNs(Node^.nsDef);
+
+  while prev <> nil do begin
+    //check if same ns already exists
+    if ((prev^.prefix = nil) and (curr^.prefix = nil)) or (libxml.xmlStrEqual(prev^.prefix, curr^.prefix) = 1) then begin
+      //if its a same ns
+      if libxml.xmlStrEqual(prev^.href, curr^.href) = 1 then
+        aNode.Node^.ns := libxml.xmlNsPtr(prev) //use existing
+      else
+        aNode.Node^.ns := nil; //else this ns is wrong
+        //maybe should be exception here
+      
+      //we must release this ns
+      libxml.xmlFreeNs(libxml.xmlNsPtr(curr));
+      exit;
+    end;
+
+    prev := ^libxml.__struct__xmlNs(prev^.next);
+  end;
+
+  //set new ns as a last element in the list
+  prev^.next := curr;
 end;
 {$ELSEIF OSX}
 method XmlElement.AddChild(aNode: XmlNode);

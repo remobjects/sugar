@@ -417,7 +417,7 @@ end;
 
 method XmlDocument.CreateAttribute(Name: String): XmlAttribute;
 begin
-  var NewObj := libxml.xmlNewProp(libxml.xmlNodePtr(Node), XmlChar.FromString(Name), XmlChar.FromString(""));
+  var NewObj := libxml.xmlNewProp(nil, XmlChar.FromString(Name), XmlChar.FromString(""));
   if NewObj = nil then
     exit nil;
 
@@ -426,11 +426,20 @@ end;
 
 method XmlDocument.CreateAttribute(QualifiedName: String; NamespaceUri: String): XmlAttribute;
 begin
-  {var NewObj := xmlNewProp(Node, XmlChar.FromString(Name), XmlChar.FromString(""));
+  var prefix: ^libxml.xmlChar;
+  var local := libxml.xmlSplitQName2(XmlChar.FromString(QualifiedName), var prefix);
+
+  if local = nil then
+    raise new SugarFormatException("Element name is not qualified name");
+
+  //create a new namespace definition
+  var ns := libxml.xmlNewNs(nil, XmlChar.FromString(NamespaceUri), prefix);
+  //create a new property and set reference to a namespace
+  var NewObj := libxml.xmlNewNsProp(nil, ns, local, XmlChar.FromString(""));
+  //This attribute MUST be added to a node, or we end up with namespace not being released
   if NewObj = nil then
     exit nil;
-
-  exit new XAttribute(^libxml.__struct__xmlNode(NewObj));}
+  exit new XmlAttribute(^libxml.__struct__xmlNode(NewObj), self);
 end;
 
 method XmlDocument.CreateCDataSection(Data: String): XmlCDataSection;
