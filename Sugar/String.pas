@@ -122,8 +122,8 @@ type
     method ToLower: String; mapped to lowercaseString;
     method ToUpper: String; mapped to uppercaseString;
     method Trim: String;    
-    method StartsWith(Value: String): Boolean; 
-    method EndsWith(Value: String): Boolean; 
+    method StartsWith(Value: String): Boolean; mapped to hasPrefix(Value);
+    method EndsWith(Value: String): Boolean; mapped to hasSuffix(Value);
 
     method ToByteArray: array of Byte;
   end;
@@ -227,16 +227,6 @@ end;
 method String.Contains(Value: String): Boolean;
 begin
   exit mapped.rangeOfString(Value).location <> NSNotFound;
-end;
-
-method String.StartsWith(Value: String): Boolean;
-begin
-  exit IndexOf(Value)=0 ;
-end;
-
-method String.EndsWith(Value: String): Boolean;
-begin
-  exit LastIndexOf(Value)=mapped.Length;
 end;
 {$ENDIF}
 
