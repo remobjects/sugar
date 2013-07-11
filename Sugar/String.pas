@@ -211,8 +211,7 @@ end;
 
 method String.Trim: String;
 begin
-  var Range := mapped.rangeOfString("^\\s*") options(NSStringCompareOptions.NSRegularExpressionSearch);
-  exit mapped.stringByReplacingCharactersInRange(Range) withString("");
+  exit mapped.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet);
 end;
 
 method String.Equals(Value: String): Boolean;
