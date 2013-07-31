@@ -184,7 +184,7 @@ end;
 class method String.IsNullOrWhiteSpace(Value: String): Boolean;
 begin
   if Value = nil then
-    exit;
+    exit true;
 
   for i: Integer := 0 to Value.Length-1 do
     if not CharacterIsWhiteSpace(Value.Chars[i]) then
