@@ -39,7 +39,7 @@ type
     method Substring(aStartIndex: Int32): String; mapped to substring(aStartIndex);
     method Substring(aStartIndex: Int32; aLength: Int32): String; mapped to substring(aStartIndex, aStartIndex+aLength);
     method Split(Separator: String): array of String;
-    method Replace(OldValue, NewValue: String): String; mapped to replace(OldValue, NewValue);
+    method Replace(OldValue, NewValue: String): String;
 
     method ToLower: String; mapped to toLowerCase;
     method ToUpper: String; mapped to toUpperCase;
@@ -277,5 +277,18 @@ begin
     result[i] := Items.objectAtIndex(i);
   {$ENDIF}
 end;
+
+{$IF COOPER}
+method String.Replace(OldValue: String; NewValue: String): String;
+begin
+  if IsNullOrEmpty(OldValue) then
+    raise new SugarArgumentNullException;
+
+  if NewValue = nil then
+    NewValue := "";
+
+  exit mapped.replace(OldValue, NewValue);
+end;
+{$ENDIF}
 
 end.
