@@ -1,5 +1,5 @@
 ﻿namespace Sugar.Test;
-{$HIDE W0} //supress case-mismatch errors
+
 interface
 
 uses
@@ -22,7 +22,7 @@ implementation
 
 class method ConsoleApp.Main(args: array of System.String);
 begin
-  var results := TestRunner.RunAll(new StringTest);
+  var results := TestRunner.RunAll(new StringTest, new BinaryTest);
   var output := PrintTestcase(results);
   Console.WriteLine(output);
 

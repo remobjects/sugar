@@ -61,8 +61,9 @@
     <Reference Include="System.Data" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.pas" />
+    <Compile Include="Program.Echoes.pas" />
     <Compile Include="Properties\AssemblyInfo.pas" />
+    <Compile Include="Tests\Binary.pas" />
     <Compile Include="Tests\String.pas" />
   </ItemGroup>
   <ItemGroup>
