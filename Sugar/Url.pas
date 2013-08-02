@@ -11,7 +11,7 @@ type
     property Port: Int32 read mapped.Port;
     property Path: String read mapped.Path;
     property QueryString: String read mapped.Query;
-   // property Fragment: String read mapped;
+    property Fragment: String read mapped.toURI.Fragment;
     property ToString: String read mapped.toString;
   end;
   {$ELSEIF ECHOES}
