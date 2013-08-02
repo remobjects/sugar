@@ -19,7 +19,11 @@ type
     {$ENDIF}
   end;
 
+  SugarNotSupportedException = public class (SugarException);
+
   SugarArgumentNullException = public class(SugarException);
+  
+  SugarArgumentOutOfRangeException = public class (SugarException);
 
   SugarFormatException = public class(SugarException);
 
@@ -38,6 +42,7 @@ type
     class const FORMAT_ERROR = "Input string was not in a correct format";
     class const FILE_EXISTS = "File {0} already exists";
     class const FOLDER_EXISTS = "Folder {0} already exists";
+    class const OUT_OF_RANGE_ERROR = "Range ({0},{1}) exceeds data length {2}";
   end;
 
 implementation
