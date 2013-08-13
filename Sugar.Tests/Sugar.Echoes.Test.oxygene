@@ -64,6 +64,8 @@
     <Compile Include="Program.Echoes.pas" />
     <Compile Include="Properties\AssemblyInfo.pas" />
     <Compile Include="Tests\Binary.pas" />
+    <Compile Include="Tests\DateTime.pas" />
+    <Compile Include="Tests\Guid.pas" />
     <Compile Include="Tests\String.pas" />
   </ItemGroup>
   <ItemGroup>
