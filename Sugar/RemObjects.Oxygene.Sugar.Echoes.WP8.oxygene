@@ -109,6 +109,7 @@
     <Compile Include="Color.pas" />
     <Compile Include="Console.pas" />
     <Compile Include="DateTime.pas" />
+    <Compile Include="DateFormatter.pas" />
     <Compile Include="Environment.pas" />
     <Compile Include="Exceptions.pas" />
     <Compile Include="Guid.pas" />

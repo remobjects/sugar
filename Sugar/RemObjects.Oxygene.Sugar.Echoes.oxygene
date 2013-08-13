@@ -90,6 +90,7 @@
     </Compile>
     <Compile Include="Crypto\Digest.pas" />
     <Compile Include="DateTime.pas" />
+    <Compile Include="DateFormatter.pas" />
     <Compile Include="Dispatch.pas" />
     <Compile Include="Echoes\MonoHelpers\CoreFoundation.pas" />
     <Compile Include="Echoes\MonoHelpers\MacFolders.pas" />
