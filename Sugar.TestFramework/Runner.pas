@@ -16,6 +16,13 @@ type
   public
     method Run(Test: Testcase): TestcaseResult;
     method RunAll(params Tests: array of Testcase): List<TestcaseResult>;
+    {$IF COOPER}
+    {$ELSEIF ECHOES}
+    method RunAll(Asm: System.Reflection.&Assembly): List<TestcaseResult>;
+    method RunAll(Domain: AppDomain): List<TestcaseResult>;
+    method RunAll: List<TestcaseResult>;
+    {$ELSEIF NOUGAT}
+    {$ENDIF}
   end;
 
 implementation
@@ -29,10 +36,20 @@ begin
   if Ex is System.Reflection.TargetInvocationException then
     Ex := System.Reflection.TargetInvocationException(Ex).InnerException;
   {$ENDIF}
+  var Message: String := Ex.{$IF NOUGAT}reason{$ELSE}Message{$ENDIF};
+  if Message = nil then
+  {$IF COOPER}
+    Message := Ex.Class.Name;
+  {$ELSEIF ECHOES}
+    Message := Ex.GetType.FullName;
+  {$ELSEIF NOUGAT}
+    Message := Foundation.NSString.stringWithUTF8String(class_getName(Ex.class));
+  {$ENDIF}
+
   if Ex is SugarTestException then
-    exit new TestResult(Name, true, SugarTestException(Ex).Message)
+    exit new TestResult(Name, true, Message)
   else
-    exit new TestResult(Name, true, "<Exception>: "+Ex.{$IF NOUGAT}reason{$ELSE}Message{$ENDIF});
+    exit new TestResult(Name, true, "<Exception>: "+Message);
 end;
 
 {$IF COOPER}
@@ -158,6 +175,45 @@ begin
   end;
 
   exit RetVal;
+end;
+
+class method TestRunner.RunAll(Asm: System.Reflection.Assembly): List<TestcaseResult>;
+begin
+  result := new List<TestcaseResult>;
+
+  if Asm = nil then
+    exit;
+
+  var lTypes := Asm.GetTypes;
+  var lTestcaseType := typeOf(Testcase);
+  for lType in lTypes do begin
+    if lTestcaseType.IsAssignableFrom(lType) and (not lType.Equals(lTestcaseType)) then begin
+      try
+        var Instance := Testcase(Asm.CreateInstance(lType.FullName));
+        result.AddRange(RunAll(Instance));
+      except
+        on Ex: Exception do
+          HandleException(lType.Name, Ex);
+      end;
+    end;
+  end;
+end;
+
+class method TestRunner.RunAll(Domain: AppDomain): List<TestcaseResult>;
+begin
+  result := new List<TestcaseResult>;
+
+  if Domain = nil then
+    exit;
+
+  var lAssemblies := Domain.GetAssemblies;
+  for lAssembly in lAssemblies do
+    result.AddRange(RunAll(lAssembly));
+end;
+
+class method TestRunner.RunAll: List<TestcaseResult>;
+begin
+  exit RunAll(AppDomain.CurrentDomain);
 end;
 {$ELSEIF NOUGAT}
 class method TestRunner.ProcessMethod(Obj: Testcase; M: &Method): TestResult;
