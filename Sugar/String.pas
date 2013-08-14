@@ -27,14 +27,14 @@ type
     class method IsNullOrWhiteSpace(Value: String): Boolean;
     class method FromByteArray(Value: array of Byte): String;
 
-    method CompareTo(Value: String): Integer; mapped to compareTo(Value);
+    method CompareTo(Value: String): Integer;
     method CompareToIgnoreCase(Value: String): Integer; mapped to compareToIgnoreCase(Value);
     method &Equals(Value: String): Boolean; mapped to &equals(Value);
     method EqualsIngoreCase(Value: String): Boolean; mapped to equalsIgnoreCase(Value);
     method Contains(Value: String): Boolean; mapped to contains(Value);
 
     method IndexOf(aString: String): Int32; mapped to indexOf(aString);
-    method LastIndexOf(aString: String): Int32; mapped to lastIndexOf(aString);
+    method LastIndexOf(aString: String): Int32;
 
     method Substring(aStartIndex: Int32): String; mapped to substring(aStartIndex);
     method Substring(aStartIndex: Int32; aLength: Int32): String; mapped to substring(aStartIndex, aStartIndex+aLength);
@@ -288,6 +288,22 @@ begin
     NewValue := "";
 
   exit mapped.replace(OldValue, NewValue);
+end;
+
+method String.CompareTo(Value: String): Integer;
+begin
+  if Value = nil then
+    exit 1;
+
+  exit mapped.compareTo(Value);
+end;
+
+method String.LastIndexOf(aString: String): Int32;
+begin
+  if aString = '' then
+    exit mapped.length - 1;
+
+  exit mapped.lastIndexOf(aString);
 end;
 {$ENDIF}
 
