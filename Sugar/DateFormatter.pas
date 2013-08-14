@@ -11,6 +11,7 @@ type
   DateFormater = public class
   private
     class method GetFormaters: List<FormatSpecifier>;
+    class method AppendEscaped(Value: String; Start, Count: Integer; sb: StringBuilder);
   public
     class method Format(Value: String): String;
   end;
@@ -88,10 +89,26 @@ type
 
 implementation
 
+class method DateFormater.AppendEscaped(Value: String; Start: Integer; Count: Integer; sb: StringBuilder);
+begin
+  if Count > 0 then
+    sb.Append("'");
+
+  sb.Append(Value, Start, Count);
+
+  if Count > 0 then
+    sb.Append("'");
+end;
+
 class method DateFormater.Format(Value: String): String;
 begin
   if Value = nil then
     raise new SugarArgumentNullException('Value');
+
+  {$IF COOPER}
+  //change escape character for java
+  Value := Value.Replace("\'", "''");
+  {$ENDIF}
 
   var sb := new StringBuilder;
   var Current: Integer := 0;
@@ -105,7 +122,7 @@ begin
     //possible format specifier
     if C = '{' then begin
       //copy preceding text
-      sb.Append("'").Append(Value, BlockStart, Current - BlockStart - 1).Append("'");
+      AppendEscaped(Value, BlockStart, Current - BlockStart - 1, sb);
 
       //check for escaped open bracket
       if Value[Current] = '{' then begin
@@ -149,7 +166,7 @@ begin
     end
     //escaped closing bracket
     else if (C = '}') and (Current < Value.Length) and (Value[Current] = '}') then begin
-      sb.Append("'").Append(Value, BlockStart, Current - BlockStart - 1).Append("'");
+      AppendEscaped(Value, BlockStart, Current - BlockStart - 1, sb);
       BlockStart := Current;
       inc(Current);
     end
@@ -160,7 +177,7 @@ begin
 
   //text left to copy
   if BlockStart < Value.Length then 
-    sb.Append("'").Append(Value, BlockStart, Value.Length - BlockStart).Append("'");
+    AppendEscaped(Value, BlockStart, Value.Length - BlockStart, sb);
   exit sb.ToString();
 end;
 

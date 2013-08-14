@@ -22,6 +22,9 @@ type
     constructor(aDate: Date);
   public
     constructor;    
+    constructor(aYear, aMonth, aDay: Integer);
+    constructor(aYear, aMonth, aDay, anHour, aMinute: Integer);
+    constructor(aYear, aMonth, aDay, anHour, aMinute, aSecond: Integer);
     method AddDays(Value: Integer): DateTime;
     method AddHours(Value: Integer): DateTime;
     method AddMilliseconds(Value: Integer): DateTime;
@@ -37,9 +40,9 @@ type
 
     property Date: DateTime read InternalGetDate;
     property Day: Integer read fCalendar.get(Calendar.DAY_OF_MONTH);
-    property Hour: Integer read fCalendar.get(Calendar.HOUR);
+    property Hour: Integer read fCalendar.get(Calendar.HOUR_OF_DAY); //Field Hour is for 12h, Hour_of_Day for 24h
     property Minute: Integer read fCalendar.get(Calendar.MINUTE);
-    property Month: Integer read fCalendar.get(Calendar.MONTH)+1;
+    property Month: Integer read fCalendar.get(Calendar.MONTH)+1; //in java month are 0-based
     class property Now: DateTime read new DateTime;
     property Second: Integer read fCalendar.get(Calendar.SECOND);
     class property Today: DateTime read Now.Date;
@@ -141,6 +144,30 @@ begin
   constructor(new Date);
 end;
 
+constructor DateTime(aYear: Integer; aMonth: Integer; aDay: Integer; anHour: Integer; aMinute: Integer; aSecond: Integer);
+begin
+  var lCalendar := Calendar.Instance;
+  lCalendar.Time := new Date;
+  lCalendar.set(Calendar.YEAR, aYear);
+  lCalendar.set(Calendar.MONTH, aMonth-1);
+  lCalendar.set(Calendar.DATE, aDay);
+  lCalendar.set(Calendar.HOUR_OF_DAY, anHour);
+  lCalendar.set(Calendar.MINUTE, aMinute);
+  lCalendar.set(Calendar.SECOND, aSecond);
+  lCalendar.set(Calendar.MILLISECOND, 0);
+  constructor(lCalendar.Time);
+end;
+
+constructor DateTime(aYear: Integer; aMonth: Integer; aDay: Integer; anHour: Integer; aMinute: Integer);
+begin
+  constructor(aYear, aMonth, aDay, anHour, aMinute, 0);
+end;
+
+constructor DateTime(aYear: Integer; aMonth: Integer; aDay: Integer);
+begin
+  constructor(aYear, aMonth, aDay, 0, 0, 0);
+end;
+
 constructor DateTime(aDate: Date);
 begin
   fDate := aDate;
@@ -165,7 +192,7 @@ end;
 
 method DateTime.AddHours(Value: Integer): DateTime;
 begin
-  exit new DateTime(AddComponent(Calendar.HOUR, Value).Time);
+  exit new DateTime(AddComponent(Calendar.HOUR_OF_DAY, Value).Time);
 end;
 
 method DateTime.AddMilliseconds(Value: Integer): DateTime;
