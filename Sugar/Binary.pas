@@ -103,6 +103,12 @@ end;
 
 method Binary.ReadRangeOfBytes(Range: Range): array of Byte;
 begin
+  if Range.Length = 0 then
+    exit [];
+
+  if Range.Location + Range.Length > fData.size then
+    raise new SugarArgumentOutOfRangeException(String.Format(ErrorMessage.OUT_OF_RANGE_ERROR, Range.Location, Range.Length, fData.size));
+
   result := new Byte[Range.Length];
   System.arraycopy(fData.toByteArray, Range.Location, result, 0, Range.Length);
 end;
