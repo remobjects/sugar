@@ -1,0 +1,10 @@
+include("$(Train)/ci2.train");
+
+var sugarVersion = getVersionNumberFromGlobalIni("Oxygene");
+export("CIVersionNumber", sugarVersion);
+saveVersionNumberToSharedIni("Sugar", sugarVersion);
+
+msbuild[rebuild]("RemObjects.Sugar.sln", {configuration: "Release", destinationFolder: "./Bin",  extraArgs: "/p:CrossBox=Onyx;CrossBoxDeviceID=Mac;CrossBoxDevice=Mac"});
+
+zip.compress("$(CIReleaseFolder)/Sugar - $(sugarVersion)", "./Bin", "*.*", true);
+
