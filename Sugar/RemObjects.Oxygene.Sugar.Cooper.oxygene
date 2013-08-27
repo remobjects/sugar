@@ -68,6 +68,7 @@
       <SubType>Code</SubType>
     </None>
     <None Include="Crypto\Digest.pas" />
+    <Compile Include="Cooper\LocaleUtils.pas" />
     <Compile Include="DateTime.pas" />
     <Compile Include="DateFormatter.pas" />
     <Compile Include="HTTP.pas" />

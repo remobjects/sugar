@@ -248,8 +248,8 @@ begin
 
   if String.IsNullOrEmpty(Culture) then
     Formatter := new java.text.SimpleDateFormat(DateFormater.Format(Format))
-  else
-    Formatter := new java.text.SimpleDateFormat(DateFormater.Format(Format), Locale.forLanguageTag(Culture));
+  else    
+    Formatter := new java.text.SimpleDateFormat(DateFormater.Format(Format), RemObjects.Oxygene.Sugar.Cooper.LocaleUtils.ForLanguageTag(Culture));
     
   exit Formatter.format(fDate);
 end;

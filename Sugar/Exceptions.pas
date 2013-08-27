@@ -37,7 +37,7 @@ type
   end;
   {$ENDIF}
 
-  ErrorMessage = assembly static class
+  ErrorMessage = public static class
   public
     class const FORMAT_ERROR = "Input string was not in a correct format";
     class const FILE_EXISTS = "File {0} already exists";
