@@ -78,7 +78,6 @@
     <Compile Include="IO\Folder.pas" />
     <Compile Include="IO\StandardFolders.pas" />
     <Compile Include="Random.pas" />
-    <Compile Include="Dispatch.pas" />
     <Compile Include="Environment.pas" />
     <Compile Include="UserSettings.pas" />
     <Compile Include="Threading\AutoResetEvent.pas" />

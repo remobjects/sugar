@@ -70,7 +70,6 @@
     <Compile Include="Crypto\Digest.pas" />
     <Compile Include="DateTime.pas" />
     <Compile Include="DateFormatter.pas" />
-    <Compile Include="Dispatch.pas" />
     <Compile Include="HTTP.pas" />
     <Compile Include="IO\File.pas" />
     <Compile Include="IO\Folder.pas" />
