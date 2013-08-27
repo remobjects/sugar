@@ -19,6 +19,7 @@ type
     class operator NotEqual(GuidA, GuidB: Guid): Boolean;
     method ToByteArray: array of Byte;
     method ToString(Format: GuidFormat): String;
+    method toString: java.lang.String; override;
   end;
   {$ELSEIF ECHOES}
   [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Auto, Size := 1)]
@@ -79,12 +80,19 @@ end;
 method Guid.ToString(Format: GuidFormat): String;
 begin
   case Format of
-    Format.Default: exit mapped.toString;
-    Format.Braces: exit "{"+mapped.toString+"}";
-    Format.Parentheses: exit "("+mapped.toString+")";
+    Format.Default: result := mapped.toString;
+    Format.Braces: result := "{"+mapped.toString+"}";
+    Format.Parentheses: result := "("+mapped.toString+")";
     else
-      exit mapped.toString;
+      result := mapped.toString;
   end;
+
+  exit result.ToUpper;
+end;
+
+method Guid.toString: java.lang.String;
+begin
+  exit toString(GuidFormat.Default);
 end;
 
 class method Guid.Parse(Value: String): Guid;
@@ -102,7 +110,8 @@ begin
   end;
 
   //remove {} or () symbols
-  Value := java.lang.String(Value.ToUpper).replaceAll("[^A-F0-9-]", "");
+  //Value := java.lang.String(Value.ToUpper).replaceAll("[^A-F0-9-]", "");
+  Value := java.lang.String(Value.ToUpper).replaceAll("[{}()]", "");
   exit mapped.fromString(Value);
 end;
 {$ENDIF}
@@ -110,6 +119,9 @@ end;
 {$IF ECHOES}
 class method Guid.Parse(Value: String): Guid;
 begin
+  //if (Value.Length <> 38) and (Value.Length <> 36) then
+  //  raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);
+
   exit new Guid(Value);
 end;
 

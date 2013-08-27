@@ -64,13 +64,13 @@
     <Compile Include="Console.pas" />
     <Compile Include="Cooper\ArrayUtils.pas" />
     <Compile Include="Cooper\EnumerationSequence.pas" />
-    <Compile Include="Crypto\Cipher.pas">
+    <None Include="Crypto\Cipher.pas">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Crypto\Digest.pas" />
+    </None>
+    <None Include="Crypto\Digest.pas" />
+    <Compile Include="Cooper\LocaleUtils.pas" />
     <Compile Include="DateTime.pas" />
     <Compile Include="DateFormatter.pas" />
-    <Compile Include="Dispatch.pas" />
     <Compile Include="HTTP.pas" />
     <Compile Include="IO\File.pas" />
     <Compile Include="IO\Folder.pas" />
