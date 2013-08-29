@@ -119,8 +119,8 @@ end;
 {$IF ECHOES}
 class method Guid.Parse(Value: String): Guid;
 begin
-  //if (Value.Length <> 38) and (Value.Length <> 36) then
-  //  raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);
+  if (Value.Length <> 38) and (Value.Length <> 36) then
+    raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);
 
   exit new Guid(Value);
 end;
