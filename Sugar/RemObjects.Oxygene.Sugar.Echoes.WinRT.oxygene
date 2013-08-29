@@ -7,7 +7,7 @@
         <OutputType>Library</OutputType>
         <AppDesignerFolder>Properties</AppDesignerFolder>
         <RootNamespace>RemObjects.Oxygene.Sugar.Echoes.WinRT</RootNamespace>
-        <AssemblyName>RemObjects.Oxygene.Sugar.Echoes.WinRT</AssemblyName>
+        <AssemblyName>RemObjects.Oxygene.Sugar</AssemblyName>
         <DefaultLanguage>en-US</DefaultLanguage>
         <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{656346D9-4656-40DA-A068-22D5425D4639}</ProjectTypeGuids>
         <Name>RemObjects.Oxygene.Sugar.Echoes.WinRT</Name>
@@ -29,7 +29,7 @@
     <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
         <GeneratePDB>True</GeneratePDB>
         <GenerateMDB>False</GenerateMDB>
-        <OutputPath>bin\ARM\Debug\</OutputPath>
+        <OutputPath>bin\ARM\Debug\WinRT\</OutputPath>
         <DefineConstants>DEBUG;TRACE;NETFX_CORE</DefineConstants>
         <CpuType>ARM</CpuType>
         <Prefer32Bit>true</Prefer32Bit>
@@ -37,7 +37,7 @@
     <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM'">
         <GeneratePDB>True</GeneratePDB>
         <GenerateMDB>False</GenerateMDB>
-        <OutputPath>bin\ARM\Release\</OutputPath>
+        <OutputPath>bin\ARM\Release\WinRT\</OutputPath>
         <DefineConstants>TRACE;NETFX_CORE</DefineConstants>
         <Optimize>true</Optimize>
         <CpuType>ARM</CpuType>
@@ -46,7 +46,7 @@
     <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
         <GeneratePDB>True</GeneratePDB>
         <GenerateMDB>False</GenerateMDB>
-        <OutputPath>bin\x64\Debug\</OutputPath>
+        <OutputPath>bin\x64\Debug\WinRT\</OutputPath>
         <DefineConstants>DEBUG;TRACE;NETFX_CORE</DefineConstants>
         <CpuType>x64</CpuType>
         <Prefer32Bit>true</Prefer32Bit>
@@ -54,7 +54,7 @@
     <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
         <GeneratePDB>True</GeneratePDB>
         <GenerateMDB>False</GenerateMDB>
-        <OutputPath>bin\x64\Release\</OutputPath>
+        <OutputPath>bin\x64\Release\WinRT\</OutputPath>
         <DefineConstants>TRACE;NETFX_CORE</DefineConstants>
         <Optimize>true</Optimize>
         <CpuType>x64</CpuType>
@@ -63,7 +63,7 @@
     <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
         <GeneratePDB>True</GeneratePDB>
         <DebugSymbols>true</DebugSymbols>
-        <OutputPath>bin\Debug\</OutputPath>
+        <OutputPath>bin\Debug\WinRT\</OutputPath>
         <DefineConstants>DEBUG;TRACE;NETFX_CORE</DefineConstants>
         <CpuType>x86</CpuType>
         <Prefer32Bit>true</Prefer32Bit>
@@ -72,7 +72,7 @@
     <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
         <GeneratePDB>True</GeneratePDB>
         <GenerateMDB>False</GenerateMDB>
-        <OutputPath>bin\x86\Release\</OutputPath>
+        <OutputPath>bin\x86\Release\WinRT\</OutputPath>
         <DefineConstants>TRACE;NETFX_CORE</DefineConstants>
         <Optimize>true</Optimize>
         <CpuType>x86</CpuType>
