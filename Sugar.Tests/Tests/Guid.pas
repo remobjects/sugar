@@ -74,21 +74,19 @@ end;
 method GuidTest.TestNewGuid;
 begin
   var Value := Guid.NewGuid;
-  Assert.CheckBool(false, Guid.Equals(Value, Guid.EmptyGuid));
+  Assert.CheckBool(false, Value.Equals(Guid.EmptyGuid));
 end;
 
 method GuidTest.TestParse;
 begin
   AreEqual(Guid.EmptyGuid, Guid.Parse("00000000-0000-0000-0000-000000000000"));
   AreEqual(Guid.EmptyGuid, Guid.Parse("{00000000-0000-0000-0000-000000000000}"));
-  AreEqual(Guid.EmptyGuid, Guid.Parse("(00000000-0000-0000-0000-000000000000)"));
-  AreEqual(Guid.EmptyGuid, Guid.Parse("00000000000000000000000000000000"));
+  AreEqual(Guid.EmptyGuid, Guid.Parse("(00000000-0000-0000-0000-000000000000)"));  
 
   AreEqual(Data, Guid.Parse(GuidString));
   AreNotEqual(Guid.EmptyGuid, Guid.Parse(GuidString));
   AreEqual(Data, Guid.Parse("5EB4BEC4-5509-4434-9D33-2A9C74CC54EE"));
   AreEqual(Data, Guid.Parse("(5EB4BEC4-5509-4434-9D33-2A9C74CC54EE)"));
-  AreEqual(Data, Guid.Parse("5EB4BEC4550944349D332A9C74CC54EE"));
 end;
 
 method GuidTest.TestParseExceptions;
@@ -108,6 +106,7 @@ begin
   Assert.IsException(->Guid.Parse("{5EB4BECJ-5509-4434-9D44-2A9C74CC54EE}"));
   Assert.IsException(->Guid.Parse("{5EB4BEC4 5509 4434 9D44 2A9C74CC54EE}"));
   Assert.IsException(->Guid.Parse("{5EB4BEC4550944349D442A9C74CC54EE}"));  
+  Assert.IsException(->Guid.Parse("00000000000000000000000000000000"));
   Assert.IsException(->Guid.Parse("0"));
 end;
 
