@@ -187,9 +187,6 @@ end;
 
 method UserSettings.ReadString(Key: String; DefaultValue: String): String;
 begin
-    raise new SugarException;
-  System.Diagnostics.Debug.WriteLine(mapped.Values.ContainsKey(Key));
-  System.Diagnostics.Debug.WriteLine(Key);
   if not mapped.Values.ContainsKey(Key) then 
     exit DefaultValue;
 
