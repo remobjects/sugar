@@ -242,7 +242,7 @@ method YearFormatSpecifier.Supports(Value: String): Boolean;
 begin
   result := inherited Supports(Value);
 
-  if Value.Length = 1 then
+  if Value.Length in [1, 3] then
     exit false;
 end;
 
