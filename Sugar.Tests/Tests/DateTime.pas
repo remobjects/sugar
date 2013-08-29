@@ -155,25 +155,21 @@ method DateTimeTest.FormatYears;
 begin
   //single digit not supported
   Assert.IsException(->Data.ToString("{y}"));
+  Assert.IsException(->Data.ToString("{yyy}"));
 
-  AssertFormat("61", "{yy}");
-  AssertFormat("1961", "{yyy}");
+  AssertFormat("61", "{yy}");  
   AssertFormat("1961", "{yyyy}");
 
   AssertFormat("05", new DateTime(5, 1, 1), "{yy}");
-  AssertFormat("005", new DateTime(5, 1, 1), "{yyy}");
   AssertFormat("0005", new DateTime(5, 1, 1), "{yyyy}");
 
   AssertFormat("25", new DateTime(25, 1, 1), "{yy}");
-  AssertFormat("025", new DateTime(25, 1, 1), "{yyy}");
   AssertFormat("0025", new DateTime(25, 1, 1), "{yyyy}");
 
   AssertFormat("25", new DateTime(325, 1, 1), "{yy}");
-  AssertFormat("325", new DateTime(325, 1, 1), "{yyy}");
   AssertFormat("0325", new DateTime(325, 1, 1), "{yyyy}");
 
   AssertFormat("05", new DateTime(2305, 1, 1), "{yy}");
-  AssertFormat("2305", new DateTime(2305, 1, 1), "{yyy}");
   AssertFormat("2305", new DateTime(2305, 1, 1), "{yyyy}");
 end;
 
@@ -313,9 +309,7 @@ begin
 
   //AM/PM sign
   AssertFormat("AM", new DateTime(1, 1, 1, 1, 0, 0), "en-US", "{a}");
-  AssertFormat("PM", new DateTime(1, 1, 1, 13, 0, 0), "en-US", "{a}");
-  AssertFormat("", new DateTime(1, 1, 1, 1, 0, 0), "fr-FR", "{a}"); //not available in some cultures
-  AssertFormat("", new DateTime(1, 1, 1, 13, 0, 0), "fr-FR", "{a}");
+  AssertFormat("PM", new DateTime(1, 1, 1, 13, 0, 0), "en-US", "{a}");  
 end;
 
 method DateTimeTest.FormatMinutesSeconds;
@@ -344,15 +338,13 @@ begin
   AssertFormat("1961/04/12 06:07:00", "{yyyy}/{MM}/{dd} {HH}:{mm}:{ss}");
   AssertFormat("On Wednesday, 12 April, 1961 at 6:07 – the first human traveled into outer space", "en-US",
               "On {dddd}, {dd} {MMMM}, {yyyy} at {h}:{mm} – the first human traveled into outer space");
-  AssertFormat("Formating year 1961, 1961, 61", "Formating year {yyyy}, {yyy}, {yy}");
+  AssertFormat("Formating year 1961, 61", "Formating year {yyyy}, {yy}");
   AssertFormat("Time is 6 o'clock", "Time is {h} o\'clock");
   Assert.IsException(->Data.ToString(nil));
   Assert.IsException(->Data.ToString("Year is {yyyy"));
   Assert.IsException(->Data.ToString("Year is yyyy}"));
   Assert.IsException(->Data.ToString("Year is {}"));
   Assert.IsException(->Data.ToString("Year is {Yyyy}"));  
-  {$WARNING Not completed due to compiler bug #63608}
-  //Assert.IsException(->Data.ToString("{dd}", ""));
   Assert.CheckString('', Data.ToString(''));
 end;
 
@@ -363,7 +355,16 @@ begin
   Assert.CheckInt(12, Data.Day);
   Assert.CheckInt(6, Data.Hour);
   Assert.CheckInt(7, Data.Minute);
-  Assert.CheckInt(35, new DateTime(1,1,1,1,1,35).Second);
+  Assert.CheckInt(0, Data.Second);
+
+  var Value := new DateTime(106, 12, 27, 23, 51, 37);
+  
+  Assert.CheckInt(106, Value.Year);
+  Assert.CheckInt(12, Value.Month);
+  Assert.CheckInt(27, Value.Day);
+  Assert.CheckInt(23, Value.Hour);
+  Assert.CheckInt(51, Value.Minute);
+  Assert.CheckInt(37, Value.Second);
 
   AreEqual(new DateTime(1961, 4, 12), Data.Date);
   Assert.CheckInt(0, Data.Date.Hour);
