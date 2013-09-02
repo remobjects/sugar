@@ -15,8 +15,8 @@ type
     method AreEqual(Expected, Actual: DateTime);
     method AssertFormat(Expected: String; Date: DateTime; Locale: String; Format: String);
     method AssertFormat(Expected: String; Date: DateTime; Format: String);
-    method AssertFormat(Expected: String; Locale: String; Format: String);
-    method AssertFormat(Expected: String; Format: String);
+    method AssertFormatDef(Expected: String; Locale: String; Format: String);
+    method AssertFormatDef(Expected: String; Format: String);
   public
     method Setup; override;
     method AddDays;
@@ -66,12 +66,12 @@ begin
   AssertFormat(Expected, Date, nil, Format);
 end;
 
-method DateTimeTest.AssertFormat(Expected: String; Locale: String; Format: String);
+method DateTimeTest.AssertFormatDef(Expected: String; Locale: String; Format: String);
 begin
   AssertFormat(Expected, Data, Locale, Format);
 end;
 
-method DateTimeTest.AssertFormat(Expected: String; Format: String);
+method DateTimeTest.AssertFormatDef(Expected: String; Format: String);
 begin
   AssertFormat(Expected, Data, Format);
 end;
@@ -157,8 +157,8 @@ begin
   Assert.IsException(->Data.ToString("{y}"));
   Assert.IsException(->Data.ToString("{yyy}"));
 
-  AssertFormat("61", "{yy}");  
-  AssertFormat("1961", "{yyyy}");
+  AssertFormatDef("61", "{yy}");  
+  AssertFormatDef("1961", "{yyyy}");
 
   AssertFormat("05", new DateTime(5, 1, 1), "{yy}");
   AssertFormat("0005", new DateTime(5, 1, 1), "{yyyy}");
@@ -175,12 +175,12 @@ end;
 
 method DateTimeTest.FormatMonths;
 begin
-  AssertFormat("4", "{M}");
-  AssertFormat("04", "{MM}");
+  AssertFormatDef("4", "{M}");
+  AssertFormatDef("04", "{MM}");
   AssertFormat("1", new DateTime(1,1,1), "{M}");
   AssertFormat("01", new DateTime(1,1,1), "{MM}");  
-  AssertFormat("апр", "ru-RU", "{MMM}");
-  AssertFormat("Апрель", "ru-RU", "{MMMM}");
+  AssertFormatDef("апр", "ru-RU", "{MMM}");
+  AssertFormatDef("Апрель", "ru-RU", "{MMMM}");
  
 
   //short
@@ -240,10 +240,10 @@ end;
 
 method DateTimeTest.FormatDays;
 begin
-  AssertFormat("12", "{d}");
-  AssertFormat("12", "{dd}");
-  AssertFormat("Ср", "ru-RU", "{ddd}");
-  AssertFormat("среда", "ru-RU", "{dddd}");
+  AssertFormatDef("12", "{d}");
+  AssertFormatDef("12", "{dd}");
+  AssertFormatDef("Ср", "ru-RU", "{ddd}");
+  AssertFormatDef("среда", "ru-RU", "{dddd}");
   
   AssertFormat("5", new DateTime(1, 1, 5), "{d}");
   AssertFormat("05", new DateTime(1, 1, 5), "{dd}");
@@ -285,8 +285,8 @@ end;
 
 method DateTimeTest.FormatHours;
 begin
-  AssertFormat("6", "{h}");
-  AssertFormat("6", "{H}");
+  AssertFormatDef("6", "{h}");
+  AssertFormatDef("6", "{H}");
 
   //1-12
   AssertFormat("1", new DateTime(1, 1, 1, 1, 0, 0), "{h}");
@@ -335,11 +335,11 @@ end;
 
 method DateTimeTest.ToStringFormat;
 begin
-  AssertFormat("1961/04/12 06:07:00", "{yyyy}/{MM}/{dd} {HH}:{mm}:{ss}");
-  AssertFormat("On Wednesday, 12 April, 1961 at 6:07 – the first human traveled into outer space", "en-US",
+  AssertFormatDef("1961/04/12 06:07:00", "{yyyy}/{MM}/{dd} {HH}:{mm}:{ss}");
+  AssertFormatDef("On Wednesday, 12 April, 1961 at 6:07 – the first human traveled into outer space", "en-US",
               "On {dddd}, {dd} {MMMM}, {yyyy} at {h}:{mm} – the first human traveled into outer space");
-  AssertFormat("Formating year 1961, 61", "Formating year {yyyy}, {yy}");
-  AssertFormat("Time is 6 o'clock", "Time is {h} o\'clock");
+  AssertFormatDef("Formating year 1961, 61", "Formating year {yyyy}, {yy}");
+  AssertFormatDef("Time is 6 o'clock", "Time is {h} o\'clock");
   Assert.IsException(->Data.ToString(nil));
   Assert.IsException(->Data.ToString("Year is {yyyy"));
   Assert.IsException(->Data.ToString("Year is yyyy}"));

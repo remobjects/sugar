@@ -122,12 +122,12 @@ method GuidTest.TestToByteArray;
 begin
   var Expected: array of Byte := [94, 180, 190, 196, 85, 9, 68, 52, 157, 51, 42, 156, 116, 204, 84, 238];
   var Actual := Data.ToByteArray;
-  Assert.CheckInt(16, Actual.Length);
+  Assert.CheckInt(16, length(Actual));
   for i: Int32 := 0 to length(Expected)-1 do 
     Assert.CheckInt(Expected[i], Actual[i]);
 
   Actual := Guid.EmptyGuid.ToByteArray;
-  Assert.CheckInt(16, Actual.Length);
+  Assert.CheckInt(16, length(Actual));
   for i: Int32 := 0 to length(Expected)-1 do 
     Assert.CheckInt(0, Actual[i]);
 end;

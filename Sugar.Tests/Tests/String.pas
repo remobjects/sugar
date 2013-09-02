@@ -243,7 +243,7 @@ end;
 
 method StringTest.TestTrim;
 begin
-  var Original := "   Data    ";
+  var Original: String := "   Data    ";
   Assert.CheckString("Data", Original.Trim);
   Assert.CheckString("", String("").Trim);
   Assert.CheckString("", String("    ").Trim);
