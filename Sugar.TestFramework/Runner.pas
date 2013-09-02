@@ -234,9 +234,6 @@ class method TestRunner.Run(Test: Testcase): TestcaseResult;
 begin  
   //Not available due to compiler bug
   var RetVal := new TestcaseResult(Foundation.NSString.stringWithUTF8String(class_getName(Test.class)));
-  RetVal.TestResults.Add(new TestResult("", false, "Objective-c is not supported at the moment"));
-  exit RetVal;
-
 
   //setup
   var Setup := method begin
@@ -287,6 +284,9 @@ begin
     //no setup/teardown
     var MethodName: String := String.stringWithUTF8String(sel_getName(method_getName(lMethod)));
     if (MethodName = "Setup") or (MethodName = "TearDown") then
+      continue;
+
+    if MethodName.hasPrefix(".") then
       continue;
 
     Setup;
