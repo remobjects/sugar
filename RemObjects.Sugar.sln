@@ -1,14 +1,6 @@
 
 Microsoft Visual Studio Solution File, Format Version 12.00
 # RemObjects Fire
-Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "RemObjects.Oxygene.Legacy.Cooper", "Legacy\RemObjects.Oxygene.Legacy.Cooper.oxygene", "{DCB8BC3B-F911-470F-A125-988D5EF46466}"
-EndProject
-Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "RemObjects.Oxygene.Legacy.Echoes", "Legacy\RemObjects.Oxygene.Legacy.Echoes.oxygene", "{5566157C-55C7-4334-B57E-FAF1E154D225}"
-EndProject
-Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "RemObjects.Oxygene.Legacy.Nougat.OSX", "Legacy\RemObjects.Oxygene.Legacy.Nougat.OSX.oxygene", "{4D7FE7A5-2A35-4915-B16B-3F2E84B64216}"
-EndProject
-Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "RemObjects.Oxygene.Legacy.Nougat.iOS", "Legacy\RemObjects.Oxygene.Legacy.Nougat.iOS.oxygene", "{731210B4-23B2-4D29-9098-0AC41A551241}"
-EndProject
 Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "RemObjects.Oxygene.Sugar.Cooper", "Sugar\RemObjects.Oxygene.Sugar.Cooper.oxygene", "{D1EE6C41-515B-4175-873F-EE188AC43450}"
 EndProject
 Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "RemObjects.Oxygene.Sugar.Echoes", "Sugar\RemObjects.Oxygene.Sugar.Echoes.oxygene", "{79301A0C-1F95-4FB0-9605-207E288C6171}"
@@ -20,6 +12,17 @@ EndProject
 Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "RemObjects.Oxygene.Sugar.Nougat.iOS", "Sugar\RemObjects.Oxygene.Sugar.Nougat.iOS.oxygene", "{91B301FC-331E-48A7-803B-4CBE3FFF6ED7}"
 EndProject
 Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "RemObjects.Oxygene.Sugar.Echoes.WinRT", "Sugar\RemObjects.Oxygene.Sugar.Echoes.WinRT.oxygene", "{3AB69816-9882-4FA6-ABE5-C146199F5279}"
+EndProject
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "RemObjects.Oxygene.Legacy.Cooper", "Legacy\RemObjects.Oxygene.Legacy.Cooper.oxygene", "{DCB8BC3B-F911-470F-A125-988D5EF46466}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D1EE6C41-515B-4175-873F-EE188AC43450} = {D1EE6C41-515B-4175-873F-EE188AC43450}
+	EndProjectSection
+EndProject
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "RemObjects.Oxygene.Legacy.Echoes", "Legacy\RemObjects.Oxygene.Legacy.Echoes.oxygene", "{5566157C-55C7-4334-B57E-FAF1E154D225}"
+EndProject
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "RemObjects.Oxygene.Legacy.Nougat.OSX", "Legacy\RemObjects.Oxygene.Legacy.Nougat.OSX.oxygene", "{4D7FE7A5-2A35-4915-B16B-3F2E84B64216}"
+EndProject
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "RemObjects.Oxygene.Legacy.Nougat.iOS", "Legacy\RemObjects.Oxygene.Legacy.Nougat.iOS.oxygene", "{731210B4-23B2-4D29-9098-0AC41A551241}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
