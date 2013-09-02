@@ -85,9 +85,12 @@ type
     method InternalGetDate: DateTime;
     method GetComponent(Component: NSCalendarUnit): Integer;
     method FormatWithStyle(DateStyle, TimeStyle: NSDateFormatterStyle): String;
+    method initWithDate(aDate: NSDate): id;
   public
     method init: id; override;
-    method initWithDate(aDate: NSDate): dynamic;
+    constructor(aYear, aMonth, aDay: Integer);
+    constructor(aYear, aMonth, aDay, anHour, aMinute: Integer);
+    constructor(aYear, aMonth, aDay, anHour, aMinute, aSecond: Integer);
     method AddDays(Value: Integer): DateTime;
     method AddHours(Value: Integer): DateTime;
     method AddMilliseconds(Value: Integer): DateTime;
@@ -260,10 +263,32 @@ begin
   result := inherited;
 end;
 
-method DateTime.initWithDate(aDate: NSDate): dynamic;
+method DateTime.initWithDate(aDate: NSDate): id;
 begin
   fDate := aDate;
   result := self;
+end;
+
+constructor DateTime(aYear: Integer; aMonth: Integer; aDay: Integer);
+begin
+  constructor(aYear, aMonth, aDay, 0, 0, 0);
+end;
+
+constructor DateTime(aYear: Integer; aMonth: Integer; aDay: Integer; anHour: Integer; aMinute: Integer);
+begin
+  constructor(aYear, aMonth, aDay, aDay, anHour, 0);
+end;
+
+constructor DateTime(aYear: Integer; aMonth: Integer; aDay: Integer; anHour: Integer; aMinute: Integer; aSecond: Integer);
+begin
+  var Components: NSDateComponents := new NSDateComponents();  
+  Components.setYear(aYear);
+  Components.setMonth(aMonth);
+  Components.setDay(aDay);
+  Components.setHour(anHour);
+  Components.setMinute(aMinute);
+  Components.setSecond(aSecond);
+  exit new DateTime withDate(fCalendar.dateFromComponents(Components));
 end;
 
 method DateTime.AddDays(Value: Integer): DateTime;
