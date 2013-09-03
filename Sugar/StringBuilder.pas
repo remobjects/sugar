@@ -7,11 +7,10 @@ type
   {$IF COOPER}
   StringBuilder = public class mapped to java.lang.StringBuilder
   private
-    method set_Chars(aIndex: Int32; value: Char ) ;
+    method set_Chars(aIndex: Integer; value: Char ) ;
     method set_Length(value: Integer);  
   public
     method Append(value: String): StringBuilder; mapped to append(value);
-    method Append(value: Object): StringBuilder; mapped to append(value);
     method Append(value: String; startIndex, count: Integer): StringBuilder; mapped to append(value, startIndex, startIndex + count);
     method Append(value: Char; repeatCount: Integer): StringBuilder;
     method AppendLine(): StringBuilder;
@@ -25,31 +24,30 @@ type
     method Insert(Offset: Integer; Value: String): StringBuilder; mapped to insert(Offset, Value);
 
     property Length: Integer read mapped.length write set_Length;
-    property Chars[aIndex: Int32]: Char read mapped.charAt(aIndex) write set_Chars; default;
+    property Chars[aIndex: Integer]: Char read mapped.charAt(aIndex) write set_Chars; default;
   {$ELSEIF ECHOES}
   StringBuilder = public class mapped to System.Text.StringBuilder
   public
-    method Append(value: String): StringBuilder; mapped to Append(value);
+    method Append(value: String): StringBuilder;
     method Append(value: String; startIndex, count: Integer): StringBuilder; mapped to Append(value, startIndex, count);
     method Append(value: Char; repeatCount: Integer): StringBuilder; mapped to Append(value, repeatCount);
     method AppendLine(): StringBuilder; mapped to AppendLine();
-    method AppendLine(value: String): StringBuilder; mapped to AppendLine(value);
+    method AppendLine(value: String): StringBuilder;
 
     method Clear;
     method Delete(Start, &End: Integer): StringBuilder; mapped to &Remove(Start, &End);
     method Replace(Start, &End: Integer; Value: String): StringBuilder;
-    method Substring(Start: Integer): String; mapped to ToString(Start, Length);
-    method Substring(Start, &End: Integer): String; mapped to ToString(Start, &End);
-    method Insert(Offset: Integer; Value: String): StringBuilder; mapped to Insert(Offset, Value);
+    method Substring(Start: Integer): String; mapped to ToString(Start, Length - Start);
+    method Substring(Start, &End: Integer): String;
+    method Insert(Offset: Integer; Value: String): StringBuilder;
 
     property Length: Integer read mapped.Length write mapped.Length;
-    property Chars[aIndex: Int32]: Char read mapped.Chars[aIndex] write mapped.Chars[aIndex]; default;
+    property Chars[aIndex: Integer]: Char read mapped.Chars[aIndex] write mapped.Chars[aIndex]; default;
   {$ELSEIF NOUGAT}
   StringBuilder = public class mapped to Foundation.NSMutableString
   private
-    method NSMakeRange(loc: Int32; len: Int32): Foundation.NSRange;
-    method get_Chars(aIndex : Int32): Char;
-    method set_Chars(aIndex : Int32; value: Char);
+    method get_Chars(aIndex : Integer): Char;
+    method set_Chars(aIndex : Integer; value: Char);
     method set_Length(value: Integer);  
   public
     method Append(value: String): StringBuilder;
@@ -67,14 +65,14 @@ type
     method Insert(Offset: Integer; Value: String): StringBuilder;
 
     property Length: Integer read mapped.length write set_Length;
-    property Chars[aIndex: Int32]: Char read get_Chars write set_Chars ; default;
+    property Chars[aIndex: Integer]: Char read get_Chars write set_Chars ; default;
   {$ENDIF}
   end;
 
 implementation
 
 {$IF COOPER}
-method StringBuilder.set_Chars(aIndex: Int32; value: Char ) ; 
+method StringBuilder.set_Chars(aIndex: Integer; value: Char ) ; 
 begin
   mapped.setCharAt(aIndex,value);
 end;
@@ -112,8 +110,43 @@ end;
 
 method StringBuilder.Replace(Start: Integer; &End: Integer; Value: String): StringBuilder;
 begin
-  mapped.Remove(Start, &End);
+  if value = nil then
+    raise new SugarArgumentNullException("value");
+
+  mapped.Remove(Start, &End - Start + 1);
   exit mapped.Insert(Start, Value);
+end;
+
+method StringBuilder.Append(value: String): StringBuilder;
+begin
+  if value = nil then
+    raise new SugarArgumentNullException("value");
+
+  exit mapped.Append(value);
+end;
+
+method StringBuilder.AppendLine(value: String): StringBuilder;
+begin
+  if value = nil then
+    raise new SugarArgumentNullException("value");
+
+  exit mapped.AppendLine(value);
+end;
+
+method StringBuilder.Substring(Start: Integer; &End: Integer): String;
+begin
+  if Start > &End then
+    raise new SugarArgumentOutOfRangeException("Start index is greater than end index");
+
+  exit mapped.ToString(Start, &End - Start + 1);
+end;
+
+method StringBuilder.Insert(Offset: Integer; Value: String): StringBuilder;
+begin
+  if value = nil then
+    raise new SugarArgumentNullException("value");
+
+  exit mapped.Insert(Offset, Value);
 end;
 {$ELSEIF NOUGAT}
 method StringBuilder.Append(value: String): StringBuilder;
@@ -159,12 +192,6 @@ begin
   exit mapped;
 end;
 
-method StringBuilder.NSMakeRange(loc: Int32; len: Int32): Foundation.NSRange;
-begin
-  result.location := loc;
-  result.length := len;
-end;
-
 method StringBuilder.Replace(Start: Integer; &End: Integer; Value: String): StringBuilder;
 begin
   mapped.replaceCharactersInRange(NSMakeRange(Start, &End)) withString(Value);
@@ -182,12 +209,12 @@ begin
   exit mapped;
 end;
 
-method StringBuilder.get_Chars(aIndex : Int32): Char;
+method StringBuilder.get_Chars(aIndex : Integer): Char;
 begin
   result := mapped.characterAtIndex(aIndex);
 end;
 
-method StringBuilder.set_Chars(aIndex : Int32; value: Char);
+method StringBuilder.set_Chars(aIndex : Integer; value: Char);
 begin
   mapped.replaceCharactersInRange(NSMakeRange(aIndex, aIndex)) withString(value);  
 end;
