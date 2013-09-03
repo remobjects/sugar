@@ -46,9 +46,7 @@
     <Reference Include="com.remobjects.oxygene.rtl.jar">
       <Private>True</Private>
     </Reference>
-    <Reference Include="rt.jar">
-      <Private>True</Private>
-    </Reference>
+    <Reference Include="rt.jar" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main\Cooper\Program.pas" />
@@ -57,6 +55,7 @@
     <Compile Include="Tests\DateTime.pas" />
     <Compile Include="Tests\Guid.pas" />
     <Compile Include="Tests\String.pas" />
+    <Compile Include="Tests\StringBuilder.pas" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Main\" />
