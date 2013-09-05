@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="app_name">sugar.cooper.android.test</string>
+  <string name="my_button_text">Click Me!</string>
+  <string name="my_button_text_2">%1$d clicks!</string>
+</resources>

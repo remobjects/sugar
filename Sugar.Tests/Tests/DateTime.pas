@@ -178,10 +178,7 @@ begin
   AssertFormatDef("4", "{M}");
   AssertFormatDef("04", "{MM}");
   AssertFormat("1", new DateTime(1,1,1), "{M}");
-  AssertFormat("01", new DateTime(1,1,1), "{MM}");  
-  AssertFormatDef("апр", "ru-RU", "{MMM}");
-  AssertFormatDef("Апрель", "ru-RU", "{MMMM}");
- 
+  AssertFormat("01", new DateTime(1,1,1), "{MM}");   
 
   //short
   AssertFormat("Jan", new DateTime(1, 1, 1), "en-US", "{MMM}");
