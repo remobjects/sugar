@@ -218,10 +218,16 @@ end;
 {$ELSEIF NOUGAT}
 class method TestRunner.ProcessMethod(Obj: Testcase; M: &Method): TestResult;
 begin
-  var MethodName: String := String.stringWithUTF8String(sel_getName(method_getName(M)));
+  var MethodSelector := method_getName(M);
+  var MethodName: String := String.stringWithUTF8String(sel_getName(MethodSelector));
   try
     //invoke test method
-    method_invoke(Obj, M, nil);
+    var Signature := Obj.methodSignatureForSelector(MethodSelector);
+    var Invocation := Foundation.NSInvocation.invocationWithMethodSignature(Signature);
+    Invocation.target := Obj;
+    Invocation.selector := MethodSelector;
+    Invocation.invoke;
+    
     //test passed
     exit new TestResult(MethodName, false, "");
   except
