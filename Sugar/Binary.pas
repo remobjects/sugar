@@ -64,8 +64,6 @@ type
   end;
   {$ELSEIF NOUGAT}
   Binary = public class mapped to Foundation.NSMutableData
-  private
-    method ConvertRange(Range: Range): Foundation.NSRange;
   public
     method Assign(aData: Binary); mapped to setData(aData);
     method Clear; mapped to setLength(0);
@@ -75,7 +73,7 @@ type
     
     method Subdata(Range: Range): Binary;
 
-    method WriteBytes(aData: array of Byte; aLength: UInt32); mapped to appendBytes(aData) length(aLength);
+    method WriteBytes(aData: array of Byte; aLength: UInt32);
     method WriteData(aData: Binary); mapped to appendData(aData);
 
     method ToArray: array of Byte;
@@ -220,15 +218,9 @@ begin
   mapped.getBytes(result) length(mapped.length);
 end;
 
-method Binary.ConvertRange(Range: Range): Foundation.NSRange;
-begin
-  result.length := Range.Length;
-  result.location := Range.Location;
-end;
-
 method Binary.Subdata(Range: Range): Binary;
 begin
-  exit Foundation.NSMutableData.dataWithData(mapped.subdataWithRange(ConvertRange(Range)));
+  exit Foundation.NSMutableData.dataWithData(mapped.subdataWithRange(Range));
 end;
 
 method Binary.ReadBytes(aLength: UInt32): array of Byte;
@@ -237,12 +229,22 @@ begin
   mapped.getBytes(result) length(aLength);
 end;
 
+method Binary.WriteBytes(aData: array of Byte; aLength: UInt32);
+begin
+  if aData = nil then
+    raise new SugarArgumentNullException("aData");
+
+  if aLength = 0 then
+    exit;
+
+  mapped.appendBytes(aData) length(aLength);
+end;
+
 method Binary.ReadRangeOfBytes(Range: Range): array of Byte;
 begin
   result := new Byte[Range.Length];
-  mapped.getBytes(result) range(ConvertRange(Range));
+  mapped.getBytes(result) range(Range);
 end;
-
 {$ENDIF}
 
 end.
