@@ -50,7 +50,9 @@
     <Compile Include="Tests\Binary.pas" />
     <Compile Include="Tests\DateTime.pas" />
     <Compile Include="Tests\Guid.pas" />
+    <Compile Include="Tests\Stack.pas" />
     <Compile Include="Tests\String.pas" />
+    <Compile Include="Tests\StringBuilder.pas" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Main\" />

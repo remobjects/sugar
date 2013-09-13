@@ -239,9 +239,7 @@ method DateTimeTest.FormatDays;
 begin
   AssertFormatDef("12", "{d}");
   AssertFormatDef("12", "{dd}");
-  AssertFormatDef("Ср", "ru-RU", "{ddd}");
-  AssertFormatDef("среда", "ru-RU", "{dddd}");
-  
+
   AssertFormat("5", new DateTime(1, 1, 5), "{d}");
   AssertFormat("05", new DateTime(1, 1, 5), "{dd}");
 
