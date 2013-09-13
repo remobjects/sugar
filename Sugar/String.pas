@@ -117,7 +117,7 @@ type
     method Substring(aStartIndex: Int32): String; mapped to substringFromIndex(aStartIndex);
     method Substring(aStartIndex: Int32; aLength: Int32): String; 
     method Split(Separator: String): array of String;
-    method Replace(OldValue, NewValue: String): String; mapped to stringByReplacingOccurrencesOfString(OldValue) withString(NewValue);
+    method Replace(OldValue, NewValue: String): String;
 
     method ToLower: String; mapped to lowercaseString;
     method ToUpper: String; mapped to uppercaseString;
@@ -196,11 +196,23 @@ end;
 {$IF NOUGAT}
 method String.IndexOf(aString: String): Int32;
 begin
+  if aString = nil then
+    raise new SugarArgumentNullException("aString");
+
+  if aString.Length = 0 then
+    exit 0;
+
   result := mapped.rangeOfString(aString).location;
 end;
 
 method String.LastIndexOf(aString: String): Int32;
 begin
+  if aString = nil then
+    raise new SugarArgumentNullException("aString");
+
+  if aString.Length = 0 then
+    exit mapped.length - 1;
+
   result := mapped.rangeOfString(aString) options(NSStringCompareOptions.NSBackwardsSearch).location;
 end;
 
@@ -227,6 +239,17 @@ end;
 method String.Contains(Value: String): Boolean;
 begin
   exit mapped.rangeOfString(Value).location <> NSNotFound;
+end;
+
+method String.Replace(OldValue: String; NewValue: String): String;
+begin
+  if IsNullOrEmpty(OldValue) then
+    raise new SugarArgumentNullException("OldValue");
+
+  if NewValue = nil then
+    NewValue := "";
+
+  exit mapped.stringByReplacingOccurrencesOfString(OldValue) withString(NewValue);
 end;
 {$ENDIF}
 
