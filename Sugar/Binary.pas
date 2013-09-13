@@ -79,7 +79,7 @@ type
     method ToArray: array of Byte;
     property Length: UInt32 read mapped.length;
 
-    class method FromArray(aArray: array of Byte): Binary; mapped to dataWithBytes(aArray) length(length(aArray)); 
+    class method FromArray(aArray: array of Byte): Binary;
   end;
   {$ENDIF}
 
@@ -244,6 +244,14 @@ method Binary.ReadRangeOfBytes(Range: Range): array of Byte;
 begin
   result := new Byte[Range.Length];
   mapped.getBytes(result) range(Range);
+end;
+
+class method Binary.FromArray(aArray: array of Byte): Binary;
+begin
+  if aArray = nil then
+    raise new SugarArgumentNullException("aArray");
+
+  exit NSMutableData.dataWithBytes(aArray) length(length(aArray)); 
 end;
 {$ENDIF}
 
