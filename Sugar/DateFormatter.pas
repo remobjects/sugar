@@ -105,7 +105,7 @@ begin
   if Value = nil then
     raise new SugarArgumentNullException('Value');
 
-  {$IF COOPER}
+  {$IF COOPER OR NOUGAT}
   //change escape character for java
   Value := Value.Replace("\'", "''");
   {$ENDIF}

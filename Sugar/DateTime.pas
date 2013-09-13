@@ -326,7 +326,9 @@ end;
 
 method DateTime.AddSeconds(Value: Integer): DateTime;
 begin
- exit new DateTime withDate(fDate.dateByAddingTimeInterval(Value / 1000));
+  var Component: NSDateComponents := new NSDateComponents();  
+  Component.setSecond(Value);
+  exit new DateTime withDate(fCalendar.dateByAddingComponents(Component) toDate(fDate) options(0));
 end;
 
 method DateTime.AddYears(Value: Integer): DateTime;
@@ -382,11 +384,7 @@ end;
 
 method DateTime.InternalGetDate: DateTime;
 begin
-  var lCalendar: NSCalendar := NSCalendar.currentCalendar;
-  var lDate: NSDate := new NSDate();
-  var lComponents := lCalendar.components(NSCalendarUnit.NSYearCalendarUnit or 
-    NSCalendarUnit.NSMonthCalendarUnit or NSCalendarUnit.NSDayCalendarUnit) fromDate(lDate);
-  exit new DateTime withDate(lCalendar.dateFromComponents(lComponents));
+  exit new DateTime(Year, Month, Day, 0, 0, 0);
 end;
 
 method DateTime.description: NSString;
