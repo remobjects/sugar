@@ -152,12 +152,14 @@ end;
 
 method Guid.ToByteArray: array of Byte;
 begin
-  result := mapped.ToByteArray;
+  var Value := mapped.ToByteArray;
   //reverse byte order to normal (.NET reverse first 4 bytes and next two 2 bytes groups)
-  Exchange(result, 0, 3);
-  Exchange(result, 1, 2);
-  Exchange(result, 4, 5);
-  Exchange(result, 6, 7);
+  Exchange(Value, 0, 3);
+  Exchange(Value, 1, 2);
+  Exchange(Value, 4, 5);
+  Exchange(Value, 6, 7);
+
+  exit Value;
 end;
 {$ENDIF}
 
