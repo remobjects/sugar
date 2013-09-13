@@ -13,6 +13,7 @@ type
     method Peek: T; mapped to Peek;
     method Pop: T; mapped to Pop;
     method Push(Item: T); mapped to Push(Item);
+    method ToArray: array of T; mapped to ToArray;
 
     property Count: Integer read {$IF ECHOES}mapped.Count{$ELSE}mapped.size{$ENDIF};
   end;
@@ -21,10 +22,10 @@ type
   public
     method Contains(Item: T): Boolean; mapped to containsObject(Item);
     method Clear; mapped to removeAllObjects;
-
     method Peek: T; mapped to lastObject;
     method Pop: T;
     method Push(Item: T); mapped to addObject(Item);
+    method ToArray: array of T;
 
     property Count: Integer read mapped.count;
   end;
@@ -37,6 +38,13 @@ method Stack<T>.Pop: T;
 begin
   result := mapped.lastObject;
   mapped.removeLastObject;
+end;
+
+method Stack<T>.ToArray: array of T;
+begin
+  result := new T[mapped.count];
+  for i: Integer := mapped.count - 1 downto 0 do
+    result := mapped.objectAtIndex(i);
 end;
 {$ENDIF}
 
