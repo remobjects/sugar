@@ -92,11 +92,10 @@ end;
 
 method StackTest.ToArray;
 begin
-  {$WARNING Disable due to #64075}
-  {var Expected: array of String := ["Three", "Two", "One"];
+  var Expected: array of String := ["Three", "Two", "One"];
   var Values: array of String := Data.ToArray;
   for i: Integer := 0 to length(Expected) - 1 do
-    Assert.CheckString(Expected[i], Values[i]);}
+    Assert.CheckString(Expected[i], Values[i]);
 end;
 
 end.

@@ -16,10 +16,10 @@ implementation
 
 method Program.Main(aArguments: array of String): Int32;
 begin
-  {$WARNING Unable to run due to compiler bug #63851}
-  //var results := TestRunner.RunAll(new StringTest, new BinaryTest, new DateTimeTest, new GuidTest);
-  //var output := new StringPrinter(results);
-  //NSLog("%@", output.Result);
+  var results := TestRunner.RunAll;
+  var output := new StringPrinter(results);
+  NSLog("%@", output.Result);
+  NSLog("");
 end;
 
 end.
