@@ -29,6 +29,8 @@ type
 
   SugarIOException = public class(SugarException);
 
+  SugarStackEmptyException = public class (SugarException);
+
   {$IF NOUGAT}
   SugarNSErrorException = public class(SugarException)
   public
