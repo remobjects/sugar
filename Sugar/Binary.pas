@@ -74,7 +74,7 @@ type
     method Subdata(Range: Range): Binary;
 
     method WriteBytes(aData: array of Byte; aLength: UInt32);
-    method WriteData(aData: Binary); mapped to appendData(aData);
+    method WriteData(aData: Binary);
 
     method ToArray: array of Byte;
     property Length: UInt32 read mapped.length;
@@ -225,8 +225,7 @@ end;
 
 method Binary.ReadBytes(aLength: UInt32): array of Byte;
 begin
-  result := new Byte[aLength];
-  mapped.getBytes(result) length(aLength);
+  result := ReadRangeOfBytes(Range.MakeRange(0, Math.Min(aLength, mapped.Length)));
 end;
 
 method Binary.WriteBytes(aData: array of Byte; aLength: UInt32);
@@ -236,14 +235,31 @@ begin
 
   if aLength = 0 then
     exit;
+  
+  if aLength > RemObjects.Oxygene.System.length(aData) then
+    raise new SugarArgumentOutOfRangeException(String.Format("Length {0} exceeds data length {1}", aLength, RemObjects.Oxygene.System.length(aData)));
 
   mapped.appendBytes(aData) length(aLength);
 end;
 
 method Binary.ReadRangeOfBytes(Range: Range): array of Byte;
 begin
+  if Range.Length = 0 then
+    exit [];
+
+  if Range.Location + Range.Length > mapped.length then
+    raise new SugarArgumentOutOfRangeException(String.Format(ErrorMessage.OUT_OF_RANGE_ERROR, Range.Location, Range.Length, mapped.length));
+
   result := new Byte[Range.Length];
   mapped.getBytes(result) range(Range);
+end;
+
+method Binary.WriteData(aData: Binary);
+begin
+  if aData = nil then
+    raise new SugarArgumentNullException("aData");
+
+  mapped.appendData(aData);
 end;
 
 class method Binary.FromArray(aArray: array of Byte): Binary;
