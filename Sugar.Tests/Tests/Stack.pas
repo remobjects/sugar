@@ -82,8 +82,8 @@ begin
   Data.Push("Four");
   Assert.CheckInt(4, Data.Count);
   Assert.CheckString("Four", Data.Peek);
-  Data.Push(nil); //nil allowed
-  Assert.IsNull(Data.Pop);
+  //nil's not allowed
+  Assert.IsException(->Data.Push(nil));
 
   //duplicates allowed
   Data.Push("x");

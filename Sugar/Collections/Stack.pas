@@ -12,7 +12,7 @@ type
     method Clear; mapped to Clear;
     method Peek: T; mapped to Peek;
     method Pop: T; mapped to Pop;
-    method Push(Item: T); mapped to Push(Item);
+    method Push(Item: T);
     method ToArray: array of T; {$IF ECHOES}mapped to ToArray;{$ENDIF}
 
     property Count: Integer read {$IF ECHOES}mapped.Count{$ELSE}mapped.size{$ENDIF};
@@ -32,6 +32,16 @@ type
   {$ENDIF}
 
 implementation
+
+{$IF COOPER OR ECHOES}
+method Stack<T>.Push(Item: T);
+begin
+  if Item = nil then
+    raise new RemObjects.Oxygene.Sugar.SugarArgumentNullException("Item");
+
+  mapped.Push(Item);
+end;
+{$ENDIF}
 
 {$IF COOPER}
 method Stack<T>.ToArray: array of T;
