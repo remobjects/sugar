@@ -296,7 +296,8 @@ begin
     raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);
 
   Result := new Byte[16];
-  var Idx, Idx2: UInt32 := 0;
+  var Idx: UInt32 := 0;
+  var Idx2: UInt32 := 0;
 
   //Convert hex to byte
   while Idx < HexString.length do begin
