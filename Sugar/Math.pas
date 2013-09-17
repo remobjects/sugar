@@ -98,12 +98,12 @@ type
     class method IEEERemainder(x, y: Double): Double; 
     class method Log(a: Double): Double;
     class method Log10(a: Double): Double;
-    class method Max(a,b: Double): Double;    
+    //class method Max(a,b: Double): Double;    
     //class method Max(a,b: Integer): Integer;    
-    //class method Max(a,b: Int64): Int64;  
-    class method Min(a,b: Double): Double;
+    class method Max(a,b: Int64): Int64;  
+    //class method Min(a,b: Double): Double;
     //class method Min(a,b: Integer): Integer;
-    //class method Min(a,b: Int64): Int64; 
+    class method Min(a,b: Int64): Int64; 
     class method Pow(x, y: Double): Double;
     class method Round(a: Double): Double;
     class method RoundToInt(a: Double): Integer;
@@ -215,12 +215,12 @@ begin
   exit rtl.log10(a);   
 end;
 
-class method Math.Max(a,b: Double): Double;
+class method Math.Max(a,b: Int64): Int64;
 begin
   exit iif(a > b, a, b);   
 end;
 
-class method Math.Min(a,b: Double): Double;
+class method Math.Min(a,b: Int64): Int64;
 begin
   exit iif(a < b, a, b);   
 end;
