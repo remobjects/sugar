@@ -199,13 +199,23 @@ end;
 
 method StringBuilder.Append(Value: Char; repeatCount: Integer): StringBuilder;
 begin
+  if repeatCount < 0 then
+    raise new SugarArgumentOutOfRangeException("Number of repeats can not be negative");
+
   for i: Int32 := 1 to repeatCount do
     mapped.appendString(Value);
+
   exit mapped;
 end;
 
 method StringBuilder.Append(Value: String; StartIndex: Integer; Count: Integer): StringBuilder;
 begin  
+  if (StartIndex < 0) or (Count < 0) then
+    raise new SugarArgumentOutOfRangeException("Start index and count can not be negative");
+
+  if (startIndex = 0) and (count = 0) then
+    exit mapped;
+
   mapped.appendString(Value.Substring(StartIndex, Count));
   exit mapped;
 end;
@@ -242,6 +252,9 @@ end;
 
 method StringBuilder.Substring(StartIndex: Integer; Count: Integer): String;
 begin
+  if (StartIndex < 0) or (Count < 0) then
+    raise new SugarArgumentOutOfRangeException("Start index and count can not be negative");
+
   exit mapped.substringWithRange(NSMakeRange(StartIndex, Count));
 end;
 
@@ -253,17 +266,26 @@ end;
 
 method StringBuilder.get_Chars(&Index : Integer): Char;
 begin
+  if &Index  < 0 then
+    raise new SugarArgumentOutOfRangeException("Index can not be negative");
+
   result := mapped.characterAtIndex(&Index);
 end;
 
 method StringBuilder.set_Chars(&Index : Integer; Value: Char);
 begin
+  if &Index  < 0 then
+    raise new SugarArgumentOutOfRangeException("Index can not be negative");
+
   mapped.replaceCharactersInRange(NSMakeRange(&Index, &Index)) withString(Value);  
 end;
 
 method StringBuilder.set_Length(Value: Integer);
 begin
-  mapped.deleteCharactersInRange(NSMakeRange(Value, length))
+  if Value > mapped.length then
+    Append(#0, Value - mapped.length)
+  else
+    mapped.deleteCharactersInRange(NSMakeRange(Value, mapped.length - Value));
 end;
 {$ENDIF}
 
