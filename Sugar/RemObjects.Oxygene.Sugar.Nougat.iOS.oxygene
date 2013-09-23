@@ -66,6 +66,7 @@
     <Compile Include="Crypto\Cipher.pas" />
     <Compile Include="Crypto\Digest.pas" />
     <Compile Include="DateTime.pas" />
+    <Compile Include="DateFormatter.pas" />
     <Compile Include="Environment.pas" />
     <Compile Include="XML\XmlAttribute.pas" />
     <Compile Include="XML\XmlCharacterData.pas" />

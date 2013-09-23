@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Package xmlns="http://schemas.microsoft.com/appx/2010/manifest">
+
+  <Identity Name="8652ee85-2573-44aa-867b-91b9dee8ce33"
+            Publisher="CN=Test"
+            Version="1.0.0.0" />
+
+  <Properties>
+    <DisplayName>Sugar.Echoes.WinRT.Test</DisplayName>
+    <PublisherDisplayName>Test</PublisherDisplayName>
+    <Logo>Assets\StoreLogo.png</Logo>
+  </Properties>
+
+  <Prerequisites>
+    <OSMinVersion>6.2.0</OSMinVersion>
+    <OSMaxVersionTested>6.2.0</OSMaxVersionTested>
+  </Prerequisites>
+
+  <Resources>
+    <Resource Language="x-generate"/>
+  </Resources>
+
+  <Applications>
+    <Application Id="App"
+        Executable="$targetnametoken$.exe"
+        EntryPoint="Sugar.Echoes.WinRT.Test.App">
+        <VisualElements
+            DisplayName="Sugar.Echoes.WinRT.Test"
+            Logo="Main\WinRT\Assets\Logo.png"
+            SmallLogo="Main\WinRT\Assets\SmallLogo.png"
+            Description="Sugar.Echoes.WinRT.Test"
+            ForegroundText="light"
+            BackgroundColor="#4b5195">
+            <DefaultTile ShowName="allLogos" WideLogo="Main\WinRT\Assets\WideLogo.png" />
+            <SplashScreen Image="Main\WinRT\Assets\SplashScreen.png" />
+        </VisualElements>
+    </Application>
+  </Applications>
+  <Capabilities>
+    <Capability Name="internetClient" />
+  </Capabilities>
+</Package>

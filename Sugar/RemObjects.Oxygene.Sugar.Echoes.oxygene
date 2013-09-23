@@ -25,7 +25,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <Optimize>False</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>bin\Debug\.NET\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <GeneratePDB>True</GeneratePDB>
     <GenerateMDB>True</GenerateMDB>
@@ -41,7 +41,7 @@
     <FutureHelperClassName />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>bin\Release\.NET\</OutputPath>
     <EnableAsserts>False</EnableAsserts>
     <CaptureConsoleOutput>False</CaptureConsoleOutput>
     <StartMode>Project</StartMode>
@@ -85,12 +85,12 @@
     <Compile Include="Collections\Stack.pas" />
     <Compile Include="Color.pas" />
     <Compile Include="Console.pas" />
-    <Compile Include="Crypto\Cipher.pas">
+    <None Include="Crypto\Cipher.pas">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Crypto\Digest.pas" />
+    </None>
+    <None Include="Crypto\Digest.pas" />
     <Compile Include="DateTime.pas" />
-    <Compile Include="Dispatch.pas" />
+    <Compile Include="DateFormatter.pas" />
     <Compile Include="Echoes\MonoHelpers\CoreFoundation.pas" />
     <Compile Include="Echoes\MonoHelpers\MacFolders.pas" />
     <Compile Include="Echoes\MonoHelpers\PlatformDetection.pas" />

@@ -14,7 +14,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <Optimize>False</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>bin\Debug\Java\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <CaptureConsoleOutput>False</CaptureConsoleOutput>
     <StartMode>Project</StartMode>
@@ -29,7 +29,7 @@
     <FutureHelperClassName />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>bin\Release\Java\</OutputPath>
     <GenerateDebugInfo>False</GenerateDebugInfo>
     <EnableAsserts>False</EnableAsserts>
     <CaptureConsoleOutput>False</CaptureConsoleOutput>
@@ -64,12 +64,13 @@
     <Compile Include="Console.pas" />
     <Compile Include="Cooper\ArrayUtils.pas" />
     <Compile Include="Cooper\EnumerationSequence.pas" />
-    <Compile Include="Crypto\Cipher.pas">
+    <None Include="Crypto\Cipher.pas">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Crypto\Digest.pas" />
+    </None>
+    <None Include="Crypto\Digest.pas" />
+    <Compile Include="Cooper\LocaleUtils.pas" />
     <Compile Include="DateTime.pas" />
-    <Compile Include="Dispatch.pas" />
+    <Compile Include="DateFormatter.pas" />
     <Compile Include="HTTP.pas" />
     <Compile Include="IO\File.pas" />
     <Compile Include="IO\Folder.pas" />

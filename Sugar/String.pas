@@ -27,14 +27,14 @@ type
     class method IsNullOrWhiteSpace(Value: String): Boolean;
     class method FromByteArray(Value: array of Byte): String;
 
-    method CompareTo(Value: String): Integer; mapped to compareTo(Value);
+    method CompareTo(Value: String): Integer;
     method CompareToIgnoreCase(Value: String): Integer; mapped to compareToIgnoreCase(Value);
     method &Equals(Value: String): Boolean; mapped to &equals(Value);
     method EqualsIngoreCase(Value: String): Boolean; mapped to equalsIgnoreCase(Value);
     method Contains(Value: String): Boolean; mapped to contains(Value);
 
     method IndexOf(aString: String): Int32; mapped to indexOf(aString);
-    method LastIndexOf(aString: String): Int32; mapped to lastIndexOf(aString);
+    method LastIndexOf(aString: String): Int32;
 
     method Substring(aStartIndex: Int32): String; mapped to substring(aStartIndex);
     method Substring(aStartIndex: Int32; aLength: Int32): String; mapped to substring(aStartIndex, aStartIndex+aLength);
@@ -117,13 +117,13 @@ type
     method Substring(aStartIndex: Int32): String; mapped to substringFromIndex(aStartIndex);
     method Substring(aStartIndex: Int32; aLength: Int32): String; 
     method Split(Separator: String): array of String;
-    method Replace(OldValue, NewValue: String): String; mapped to stringByReplacingOccurrencesOfString(OldValue) withString(NewValue);
+    method Replace(OldValue, NewValue: String): String;
 
     method ToLower: String; mapped to lowercaseString;
     method ToUpper: String; mapped to uppercaseString;
     method Trim: String;    
-    method StartsWith(Value: String): Boolean; mapped to hasPrefix(Value);
-    method EndsWith(Value: String): Boolean; mapped to hasSuffix(Value);
+    method StartsWith(Value: String): Boolean;
+    method EndsWith(Value: String): Boolean;
 
     method ToByteArray: array of Byte;
   end;
@@ -196,16 +196,31 @@ end;
 {$IF NOUGAT}
 method String.IndexOf(aString: String): Int32;
 begin
+  if aString = nil then
+    raise new SugarArgumentNullException("aString");
+
+  if aString.Length = 0 then
+    exit 0;
+
   result := mapped.rangeOfString(aString).location;
 end;
 
 method String.LastIndexOf(aString: String): Int32;
 begin
+  if aString = nil then
+    raise new SugarArgumentNullException("aString");
+
+  if aString.Length = 0 then
+    exit mapped.length - 1;
+
   result := mapped.rangeOfString(aString) options(NSStringCompareOptions.NSBackwardsSearch).location;
 end;
 
 method String.Substring(aStartIndex: Int32; aLength: Int32): String; 
 begin
+  if (aStartIndex < 0) or (aLength < 0) then
+    raise new SugarArgumentOutOfRangeException(ErrorMessage.NEGATIVE_VALUE_ERROR, "Start index and length");
+
   result := mapped.substringWithRange(Foundation.NSMakeRange(aStartIndex, aLength));
 end;
 
@@ -226,7 +241,37 @@ end;
 
 method String.Contains(Value: String): Boolean;
 begin
+  if Value.Length = 0 then
+    exit true;
+
   exit mapped.rangeOfString(Value).location <> NSNotFound;
+end;
+
+method String.Replace(OldValue: String; NewValue: String): String;
+begin
+  if IsNullOrEmpty(OldValue) then
+    raise new SugarArgumentNullException("OldValue");
+
+  if NewValue = nil then
+    NewValue := "";
+
+  exit mapped.stringByReplacingOccurrencesOfString(OldValue) withString(NewValue);
+end;
+
+method String.StartsWith(Value: String): Boolean;
+begin
+  if Value.Length = 0 then
+    exit true;
+
+  exit mapped.hasPrefix(Value);
+end;
+
+method String.EndsWith(Value: String): Boolean;
+begin
+  if Value.Length = 0 then
+    exit true;
+
+  exit mapped.hasSuffix(Value);
 end;
 {$ENDIF}
 
@@ -237,6 +282,8 @@ begin
   {$ELSEIF ECHOES}
   result := mapped[aIndex];
   {$ELSEIF NOUGAT}
+  if aIndex < 0 then
+    raise new SugarArgumentOutOfRangeException(ErrorMessage.NEGATIVE_VALUE_ERROR, "Index");
   result := mapped.characterAtIndex(aIndex);
   {$ENDIF}
 end;
@@ -260,13 +307,18 @@ begin
   {$ELSEIF ECHOES}
   exit System.Text.Encoding.UTF8.GetString(Value, 0, Value.Length);
   {$ELSEIF NOUGAT}
+  if Value = nil then
+    raise new SugarArgumentNullException("Value");
+
   exit new NSString withBytes(Value) length(length(Value)) encoding(NSStringEncoding.NSUTF8StringEncoding);
   {$ENDIF}
 end;
 
 method String.Split(Separator: String): array of String;
 begin
-  {$IF COOPER}
+  if IsNullOrEmpty(Separator) then
+    exit [mapped];
+  {$IF COOPER}  
   exit mapped.split(java.util.regex.Pattern.quote(Separator));
   {$ELSEIF ECHOES}
   exit mapped.Split([Separator], StringSplitOptions.None);
@@ -288,6 +340,22 @@ begin
     NewValue := "";
 
   exit mapped.replace(OldValue, NewValue);
+end;
+
+method String.CompareTo(Value: String): Integer;
+begin
+  if Value = nil then
+    exit 1;
+
+  exit mapped.compareTo(Value);
+end;
+
+method String.LastIndexOf(aString: String): Int32;
+begin
+  if aString = '' then
+    exit mapped.length - 1;
+
+  exit mapped.lastIndexOf(aString);
 end;
 {$ENDIF}
 

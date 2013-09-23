@@ -40,7 +40,11 @@ end;
 
 class method Assert.CheckBool(Expected: Boolean; Actual: Boolean);
 begin
+  {$IF NOUGAT}
+  FailIf(Expected <> Actual, iif(Expected, "true", "false"), iif(Actual, "true", "false"), nil);
+  {$ELSE}
   FailIf(Expected <> Actual, Expected, Actual, nil);
+  {$ENDIF}
 end;
 
 class method Assert.CheckInt(Expected: Integer; Actual: Integer; Message: String);

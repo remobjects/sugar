@@ -4,20 +4,16 @@ interface
 
 type 
   SugarException = public class({$IF NOUGAT}Foundation.NSException{$ELSE}Exception{$ENDIF})
-  {$IF NOUGAT}
   public
-    method init(aMessage: String): RemObjects.Oxygene.System.id;
+    constructor;
+    constructor(aMessage: String);
+    constructor(aFormat: String; params aParams: array of Object);
+  {$IF NOUGAT}
+    property Message: String read reason;
   {$ENDIF}
   end;
 
-  SugarNotImplementedException = public class(SugarException)
-  private
-  protected
-  public
-    {$IF NOUGATx}
-    method init: id; override;
-    {$ENDIF}
-  end;
+  SugarNotImplementedException = public class(SugarException);
 
   SugarNotSupportedException = public class (SugarException);
 
@@ -29,6 +25,8 @@ type
 
   SugarIOException = public class(SugarException);
 
+  SugarStackEmptyException = public class (SugarException);
+
   {$IF NOUGAT}
   SugarNSErrorException = public class(SugarException)
   public
@@ -37,29 +35,16 @@ type
   end;
   {$ENDIF}
 
-  ErrorMessage = assembly static class
+  ErrorMessage = public static class
   public
     class const FORMAT_ERROR = "Input string was not in a correct format";
     class const FILE_EXISTS = "File {0} already exists";
     class const FOLDER_EXISTS = "Folder {0} already exists";
     class const OUT_OF_RANGE_ERROR = "Range ({0},{1}) exceeds data length {2}";
+    class const NEGATIVE_VALUE_ERROR = "{0} can not be negative";
   end;
 
 implementation
-
-{$IF NOUGAT}
-method SugarException.init(aMessage: String): RemObjects.Oxygene.System.id;
-begin
-  result := inherited initWithName('SugarException') reason(aMessage) userInfo(nil);
-end;
-{$ENDIF}
-
-{$IF NOUGATx}
-method SugarNotImplementedException.init: id;
-begin
-  result := inherited init;
-end;
-{$ENDIF}
 
 {$IF NOUGAT}
 method SugarNSErrorException.initWithError(aError: Foundation.NSError): id;
@@ -72,5 +57,24 @@ begin
   result := inherited exceptionWithName('NSError') reason(aError.description) userInfo(aError.userInfo);
 end;
 {$ENDIF}
+
+constructor SugarException;
+begin
+  constructor("SugarException");
+end;
+
+constructor SugarException(aMessage: String);
+begin
+  {$IF NOUGAT}
+  inherited initWithName('SugarException') reason(aMessage) userInfo(nil);
+  {$ELSE}
+  inherited constructor(aMessage);
+  {$ENDIF}
+end;
+
+constructor SugarException(aFormat: String; params aParams: array of Object);
+begin
+  constructor(String.Format(aFormat, aParams));
+end;
 
 end.

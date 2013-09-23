@@ -22,6 +22,9 @@ type
     constructor(aDate: Date);
   public
     constructor;    
+    constructor(aYear, aMonth, aDay: Integer);
+    constructor(aYear, aMonth, aDay, anHour, aMinute: Integer);
+    constructor(aYear, aMonth, aDay, anHour, aMinute, aSecond: Integer);
     method AddDays(Value: Integer): DateTime;
     method AddHours(Value: Integer): DateTime;
     method AddMilliseconds(Value: Integer): DateTime;
@@ -33,16 +36,13 @@ type
     method CompareTo(Value: DateTime): Integer;
     method ToString: java.lang.String; override;
     method ToString(Format: String): String;
-	  method ToLongDateString: String;
-    method ToLongTimeString: String;
-    method ToShortDateString: String;
-	  method ToShortTimeString: String;
+    method ToString(Format: String; Culture: String): String;
 
     property Date: DateTime read InternalGetDate;
     property Day: Integer read fCalendar.get(Calendar.DAY_OF_MONTH);
-    property Hour: Integer read fCalendar.get(Calendar.HOUR);
+    property Hour: Integer read fCalendar.get(Calendar.HOUR_OF_DAY); //Field Hour is for 12h, Hour_of_Day for 24h
     property Minute: Integer read fCalendar.get(Calendar.MINUTE);
-    property Month: Integer read fCalendar.get(Calendar.MONTH)+1;
+    property Month: Integer read fCalendar.get(Calendar.MONTH)+1; //in java month are 0-based
     class property Now: DateTime read new DateTime;
     property Second: Integer read fCalendar.get(Calendar.SECOND);
     class property Today: DateTime read Now.Date;
@@ -61,11 +61,9 @@ type
     method AddYears(Value: Integer): DateTime; mapped to AddYears(Value);
     
     method CompareTo(Value: DateTime): Integer; mapped to CompareTo(Value);
-    method ToString(Format: String): String; mapped to ToString(Format);
-	  method ToLongDateString: String; {$IF NOT NETFX_CORE}mapped to ToLongDateString;{$ENDIF}
-    method ToLongTimeString: String; {$IF NOT NETFX_CORE}mapped to ToLongTimeString;{$ENDIF}
-    method ToShortDateString: String; {$IF NOT NETFX_CORE}mapped to ToShortDateString;{$ENDIF}
-	  method ToShortTimeString: String; {$IF NOT NETFX_CORE}mapped to ToShortTimeString;{$ENDIF}
+    method ToString: System.String; override;
+    method ToString(Format: String): String;
+    method ToString(Format: String; Culture: String): String;
 
     property Date: DateTime read mapped.Date;
     property Day: Integer read mapped.Day;
@@ -87,9 +85,12 @@ type
     method InternalGetDate: DateTime;
     method GetComponent(Component: NSCalendarUnit): Integer;
     method FormatWithStyle(DateStyle, TimeStyle: NSDateFormatterStyle): String;
+    method initWithDate(aDate: NSDate): id;
   public
     method init: id; override;
-    method initWithDate(aDate: NSDate): dynamic;
+    constructor(aYear, aMonth, aDay: Integer);
+    constructor(aYear, aMonth, aDay, anHour, aMinute: Integer);
+    constructor(aYear, aMonth, aDay, anHour, aMinute, aSecond: Integer);
     method AddDays(Value: Integer): DateTime;
     method AddHours(Value: Integer): DateTime;
     method AddMilliseconds(Value: Integer): DateTime;
@@ -101,15 +102,12 @@ type
     method CompareTo(Value: DateTime): Integer;
     method description: NSString; override;
     method ToString(Format: String): String;
-	  method ToLongDateString: String;
-    method ToLongTimeString: String;
-    method ToShortDateString: String;
-	  method ToShortTimeString: String;
+    method ToString(Format: String; Culture: String): String;
 
     property Date: DateTime read InternalGetDate;
     property Day: Integer read GetComponent(NSCalendarUnit.NSDayCalendarUnit);
     property Hour: Integer read GetComponent(NSCalendarUnit.NSHourCalendarUnit);
-    property Minute: Integer read GetComponent(NSCalendarUnit.NSMinuteCalendarUnit); //TODO: Milliseconds for Nougat
+    property Minute: Integer read GetComponent(NSCalendarUnit.NSMinuteCalendarUnit);
     property Month: Integer read GetComponent(NSCalendarUnit.NSMonthCalendarUnit);
     class property Now: DateTime read new DateTime;
     property Second: Integer read GetComponent(NSCalendarUnit.NSSecondCalendarUnit);
@@ -120,10 +118,57 @@ type
 
 implementation
 
+{$IF ECHOES}
+method DateTime.ToString(Format: String): String;
+begin
+  exit ToString(Format, nil);
+end;
+
+method DateTime.ToString: System.String;
+begin
+  exit ToString("{dd}/{MM}/{yyyy} {hh}:{mm}:{ss}");
+end;
+
+method DateTime.ToString(Format: String; Culture: String): String;
+begin
+  if Format = '' then
+    exit '';
+
+  if String.IsNullOrEmpty(Culture) then
+    exit mapped.ToString(DateFormater.Format(Format))
+  else
+    exit mapped.ToString(DateFormater.Format(Format), new System.Globalization.CultureInfo(Culture));
+end;
+{$ENDIF}
+
 {$IF COOPER}
 constructor DateTime;
 begin
   constructor(new Date);
+end;
+
+constructor DateTime(aYear: Integer; aMonth: Integer; aDay: Integer; anHour: Integer; aMinute: Integer; aSecond: Integer);
+begin
+  var lCalendar := Calendar.Instance;
+  lCalendar.Time := new Date;
+  lCalendar.set(Calendar.YEAR, aYear);
+  lCalendar.set(Calendar.MONTH, aMonth-1);
+  lCalendar.set(Calendar.DATE, aDay);
+  lCalendar.set(Calendar.HOUR_OF_DAY, anHour);
+  lCalendar.set(Calendar.MINUTE, aMinute);
+  lCalendar.set(Calendar.SECOND, aSecond);
+  lCalendar.set(Calendar.MILLISECOND, 0);
+  constructor(lCalendar.Time);
+end;
+
+constructor DateTime(aYear: Integer; aMonth: Integer; aDay: Integer; anHour: Integer; aMinute: Integer);
+begin
+  constructor(aYear, aMonth, aDay, anHour, aMinute, 0);
+end;
+
+constructor DateTime(aYear: Integer; aMonth: Integer; aDay: Integer);
+begin
+  constructor(aYear, aMonth, aDay, 0, 0, 0);
 end;
 
 constructor DateTime(aDate: Date);
@@ -150,7 +195,7 @@ end;
 
 method DateTime.AddHours(Value: Integer): DateTime;
 begin
-  exit new DateTime(AddComponent(Calendar.HOUR, Value).Time);
+  exit new DateTime(AddComponent(Calendar.HOUR_OF_DAY, Value).Time);
 end;
 
 method DateTime.AddMilliseconds(Value: Integer): DateTime;
@@ -192,54 +237,24 @@ end;
 
 method DateTime.ToString: java.lang.String;
 begin
-  //Result := fDate.toString;
-  exit java.text.DateFormat.getDateTimeInstance(java.text.DateFormat.MEDIUM, java.text.DateFormat.MEDIUM, new Locale(System.getProperty("user.language"))).format(fDate);
+  exit ToString("{dd}/{MM}/{yyyy} {hh}:{mm}:{ss}");
 end;
 
 method DateTime.ToString(Format: String): String;
 begin
-  var lFormat: java.text.SimpleDateFormat := new java.text.SimpleDateFormat(Format);
-  exit lFormat.format(fDate);  
+  exit ToString(Format, nil);
 end;
 
-method DateTime.ToLongDateString: String;
+method DateTime.ToString(Format: String; Culture: String): String;
 begin
-  exit java.text.DateFormat.getDateInstance(java.text.DateFormat.LONG).format(fDate);
-end;
+  var Formatter: java.text.SimpleDateFormat;
 
-method DateTime.ToLongTimeString: String;
-begin
-  exit java.text.DateFormat.getTimeInstance(java.text.DateFormat.LONG).format(fDate);
-end;
-
-method DateTime.ToShortDateString: String;
-begin
-  exit java.text.DateFormat.getDateInstance(java.text.DateFormat.SHORT).format(fDate);
-end;
-
-method DateTime.ToShortTimeString: String;
-begin
-  exit java.text.DateFormat.getTimeInstance(java.text.DateFormat.SHORT).format(fDate);
-end;
-{$ELSEIF NETFX_CORE}
-method DateTime.ToLongDateString: String;
-begin
-  exit Windows.Globalization.DateTimeFormatting.DateTimeFormatter.LongDate.Format(mapped);
-end;
-
-method DateTime.ToLongTimeString: String;
-begin
-  exit Windows.Globalization.DateTimeFormatting.DateTimeFormatter.LongTime.Format(mapped);
-end;
-
-method DateTime.ToShortDateString: String;
-begin
-  exit Windows.Globalization.DateTimeFormatting.DateTimeFormatter.ShortDate.Format(mapped);
-end;
-
-method DateTime.ToShortTimeString: String;
-begin
-  exit Windows.Globalization.DateTimeFormatting.DateTimeFormatter.ShortTime.Format(mapped);
+  if String.IsNullOrEmpty(Culture) then
+    Formatter := new java.text.SimpleDateFormat(DateFormater.Format(Format))
+  else    
+    Formatter := new java.text.SimpleDateFormat(DateFormater.Format(Format), RemObjects.Oxygene.Sugar.Cooper.LocaleUtils.ForLanguageTag(Culture));
+    
+  exit Formatter.format(fDate);
 end;
 {$ELSEIF NOUGAT}
 method DateTime.init: id;
@@ -248,10 +263,32 @@ begin
   result := inherited;
 end;
 
-method DateTime.initWithDate(aDate: NSDate): dynamic;
+method DateTime.initWithDate(aDate: NSDate): id;
 begin
   fDate := aDate;
   result := self;
+end;
+
+constructor DateTime(aYear: Integer; aMonth: Integer; aDay: Integer);
+begin
+  constructor(aYear, aMonth, aDay, 0, 0, 0);
+end;
+
+constructor DateTime(aYear: Integer; aMonth: Integer; aDay: Integer; anHour: Integer; aMinute: Integer);
+begin
+  constructor(aYear, aMonth, aDay, aDay, anHour, 0);
+end;
+
+constructor DateTime(aYear: Integer; aMonth: Integer; aDay: Integer; anHour: Integer; aMinute: Integer; aSecond: Integer);
+begin
+  var Components: NSDateComponents := new NSDateComponents();  
+  Components.setYear(aYear);
+  Components.setMonth(aMonth);
+  Components.setDay(aDay);
+  Components.setHour(anHour);
+  Components.setMinute(aMinute);
+  Components.setSecond(aSecond);
+  exit new DateTime withDate(fCalendar.dateFromComponents(Components));
 end;
 
 method DateTime.AddDays(Value: Integer): DateTime;
@@ -289,7 +326,9 @@ end;
 
 method DateTime.AddSeconds(Value: Integer): DateTime;
 begin
- exit new DateTime withDate(fDate.dateByAddingTimeInterval(Value / 1000));
+  var Component: NSDateComponents := new NSDateComponents();  
+  Component.setSecond(Value);
+  exit new DateTime withDate(fCalendar.dateByAddingComponents(Component) toDate(fDate) options(0));
 end;
 
 method DateTime.AddYears(Value: Integer): DateTime;
@@ -306,9 +345,20 @@ end;
 
 method DateTime.ToString(Format: String): String;
 begin
-  var lFormater: NSDateFormatter := new NSDateFormatter();
-  lFormater.setDateFormat(Format);
-  exit lFormater.stringFromDate(fDate);
+  exit ToString(Format, nil);
+end;
+
+method DateTime.ToString(Format: String; Culture: String): String;
+begin
+  var Formatter: NSDateFormatter := new NSDateFormatter();
+
+  if not String.IsNullOrEmpty(Culture) then begin
+    var Locale := new NSLocale withLocaleIdentifier(Culture);
+    Formatter.locale := Locale;
+  end;
+
+  Formatter.setDateFormat(DateFormater.Format(Format));
+  exit Formatter.stringFromDate(fDate);
 end;
 
 method DateTime.FormatWithStyle(DateStyle, TimeStyle: NSDateFormatterStyle): String;
@@ -317,26 +367,6 @@ begin
   lFormater.setDateStyle(DateStyle);
   lFormater.setTimeStyle(TimeStyle);
   exit lFormater.stringFromDate(fDate);
-end;
-
-method DateTime.ToLongDateString: String;
-begin
-  exit FormatWithStyle(NSDateFormatterStyle.NSDateFormatterLongStyle, NSDateFormatterStyle.NSDateFormatterNoStyle);
-end;
-
-method DateTime.ToLongTimeString: String;
-begin
-  exit FormatWithStyle(NSDateFormatterStyle.NSDateFormatterNoStyle, NSDateFormatterStyle.NSDateFormatterLongStyle);
-end;
-
-method DateTime.ToShortDateString: String;
-begin
-  exit FormatWithStyle(NSDateFormatterStyle.NSDateFormatterShortStyle, NSDateFormatterStyle.NSDateFormatterNoStyle);
-end;
-
-method DateTime.ToShortTimeString: String;
-begin
-  exit FormatWithStyle(NSDateFormatterStyle.NSDateFormatterNoStyle, NSDateFormatterStyle.NSDateFormatterShortStyle);
 end;
 
 method DateTime.GetComponent(Component: NSCalendarUnit): Integer;
@@ -354,16 +384,12 @@ end;
 
 method DateTime.InternalGetDate: DateTime;
 begin
-  var lCalendar: NSCalendar := NSCalendar.currentCalendar;
-  var lDate: NSDate := new NSDate();
-  var lComponents := lCalendar.components(NSCalendarUnit.NSYearCalendarUnit or 
-    NSCalendarUnit.NSMonthCalendarUnit or NSCalendarUnit.NSDayCalendarUnit) fromDate(lDate);
-  exit new DateTime withDate(lCalendar.dateFromComponents(lComponents));
+  exit new DateTime(Year, Month, Day, 0, 0, 0);
 end;
 
 method DateTime.description: NSString;
 begin
-  exit FormatWithStyle(NSDateFormatterStyle.NSDateFormatterMediumStyle, NSDateFormatterStyle.NSDateFormatterMediumStyle);
+  exit ToString("{dd}/{MM}/{yyyy} {hh}:{mm}:{ss}");
 end;
 {$ENDIF}
 

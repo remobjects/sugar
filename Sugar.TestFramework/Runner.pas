@@ -1,5 +1,5 @@
 ﻿namespace RemObjects.Oxygene.Sugar.TestFramework;
-
+{$HIDE W0}
 interface
 
 type
@@ -16,6 +16,14 @@ type
   public
     method Run(Test: Testcase): TestcaseResult;
     method RunAll(params Tests: array of Testcase): List<TestcaseResult>;
+    {$IF COOPER}
+    {$ELSEIF ECHOES}
+    method RunAll(Asm: System.Reflection.&Assembly): List<TestcaseResult>;
+    method RunAll(Domain: AppDomain): List<TestcaseResult>;
+    method RunAll: List<TestcaseResult>;
+    {$ELSEIF NOUGAT}
+    method RunAll: List<TestcaseResult>;
+    {$ENDIF}
   end;
 
 implementation
@@ -29,10 +37,20 @@ begin
   if Ex is System.Reflection.TargetInvocationException then
     Ex := System.Reflection.TargetInvocationException(Ex).InnerException;
   {$ENDIF}
+  var Message: String := Ex.{$IF NOUGAT}reason{$ELSE}Message{$ENDIF};
+  if Message = nil then
+  {$IF COOPER}
+    Message := Ex.Class.Name;
+  {$ELSEIF ECHOES}
+    Message := Ex.GetType.FullName;
+  {$ELSEIF NOUGAT}
+    Message := Foundation.NSString.stringWithUTF8String(class_getName(Ex.class));
+  {$ENDIF}
+
   if Ex is SugarTestException then
-    exit new TestResult(Name, true, SugarTestException(Ex).Message)
+    exit new TestResult(Name, true, Message)
   else
-    exit new TestResult(Name, true, "<Exception>: "+Ex.{$IF NOUGAT}reason{$ELSE}Message{$ENDIF});
+    exit new TestResult(Name, true, "<Exception>: "+Message);
 end;
 
 {$IF COOPER}
@@ -159,13 +177,58 @@ begin
 
   exit RetVal;
 end;
+
+class method TestRunner.RunAll(Asm: System.Reflection.Assembly): List<TestcaseResult>;
+begin
+  result := new List<TestcaseResult>;
+
+  if Asm = nil then
+    exit;
+
+  var lTypes := Asm.GetTypes;
+  var lTestcaseType := typeOf(Testcase);
+  for lType in lTypes do begin
+    if lTestcaseType.IsAssignableFrom(lType) and (not lType.Equals(lTestcaseType)) then begin
+      try
+        var Instance := Testcase(Asm.CreateInstance(lType.FullName));
+        result.AddRange(RunAll(Instance));
+      except
+        on Ex: Exception do
+          HandleException(lType.Name, Ex);
+      end;
+    end;
+  end;
+end;
+
+class method TestRunner.RunAll(Domain: AppDomain): List<TestcaseResult>;
+begin
+  result := new List<TestcaseResult>;
+
+  if Domain = nil then
+    exit;
+
+  var lAssemblies := Domain.GetAssemblies;
+  for lAssembly in lAssemblies do
+    result.AddRange(RunAll(lAssembly));
+end;
+
+class method TestRunner.RunAll: List<TestcaseResult>;
+begin
+  exit RunAll(AppDomain.CurrentDomain);
+end;
 {$ELSEIF NOUGAT}
 class method TestRunner.ProcessMethod(Obj: Testcase; M: &Method): TestResult;
 begin
-  var MethodName: String := String.stringWithUTF8String(sel_getName(method_getName(M)));
+  var MethodSelector := method_getName(M);
+  var MethodName: String := String.stringWithUTF8String(sel_getName(MethodSelector));
   try
     //invoke test method
-    method_invoke(Obj, M, nil);
+    var Signature := Obj.methodSignatureForSelector(MethodSelector);
+    var Invocation := Foundation.NSInvocation.invocationWithMethodSignature(Signature);
+    Invocation.target := Obj;
+    Invocation.selector := MethodSelector;
+    Invocation.invoke;
+    
     //test passed
     exit new TestResult(MethodName, false, "");
   except
@@ -178,9 +241,6 @@ class method TestRunner.Run(Test: Testcase): TestcaseResult;
 begin  
   //Not available due to compiler bug
   var RetVal := new TestcaseResult(Foundation.NSString.stringWithUTF8String(class_getName(Test.class)));
-  RetVal.TestResults.Add(new TestResult("", false, "Objective-c is not supported at the moment"));
-  exit RetVal;
-
 
   //setup
   var Setup := method begin
@@ -233,6 +293,9 @@ begin
     if (MethodName = "Setup") or (MethodName = "TearDown") then
       continue;
 
+    if MethodName.hasPrefix(".") then
+      continue;
+
     Setup;
     RetVal.TestResults.Add(ProcessMethod(Test, lMethod));
     TearDown;
@@ -240,6 +303,35 @@ begin
   
 
   exit RetVal;
+end;
+
+class method TestRunner.RunAll: List<TestcaseResult>;
+begin
+  result := new List<TestcaseResult>;
+  
+  var Count := objc_getClassList(nil, 0);
+  if Count <= 0 then
+    exit;
+
+  var Classes := new unretained &Class[Count];
+  Count := objc_getClassList(Classes, Count);
+
+  for i: Integer := 0 to Count - 1 do begin
+    var lClass: unretained &Class := Classes[i];
+    var Super: &Class := class_getSuperclass(lClass);
+
+    while Super <> nil do begin
+
+      //inherits from Testcase
+      if Super = Testcase.class then begin
+        var Instance := Foundation.NSClassFromString(class_getName(lClass)).alloc.init;
+        result.Add(Run(Instance));
+        break;
+      end;
+
+      Super := class_getSuperclass(Super);
+    end;
+  end;
 end;
 {$ENDIF}
 

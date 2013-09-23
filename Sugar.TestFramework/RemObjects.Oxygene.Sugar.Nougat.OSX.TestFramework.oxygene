@@ -15,7 +15,7 @@
     <DeploymentTargetVersion>10.6</DeploymentTargetVersion>
     <CreateHeaderFile>True</CreateHeaderFile>
     <Name>RemObjects.Oxygene.Sugar.Nougat.OSX.TestFramework</Name>
-    <DefaultUses />
+    <DefaultUses>Foundation</DefaultUses>
     <StartupClass />
     <BundleIdentifier>org.me.RemObjects.Oxygene.Sugar.TestFramework</BundleIdentifier>
     <BundleExtension />

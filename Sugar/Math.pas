@@ -9,9 +9,9 @@ type
   public
     const PI: Double = 3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679;
     const E: Double =  2.7182818284590452353602874713526624977572470936999595749669676277240766303535475945713821785251664274;
-    class method Abs(d: Double): Double; mapped to abs(d);
-    class method Abs(i: Int64): Int64; mapped to abs(i);
-    class method Abs(i: Integer): Integer; mapped to abs(i);
+    class method AbsDouble(d: Double): Double; mapped to abs(d);
+    class method AbsInt64(i: Int64): Int64; mapped to abs(i);
+    class method AbsInt(i: Integer): Integer; mapped to abs(i);
     class method Acos(d: Double): Double; mapped to acos(d);
     class method Asin(d: Double): Double; mapped to asin(d);
     class method Atan(d: Double): Double; mapped to atan(d);
@@ -24,12 +24,12 @@ type
     class method IEEERemainder(x, y: Double): Double; mapped to IEEEremainder(x, y); 
     class method Log(d: Double): Double; mapped to log(d);
     class method Log10(d: Double): Double; mapped to log10(d);
-    class method Max(a,b: Double): Double; mapped to max(a,b);   
-    class method Max(a,b: Integer): Integer; mapped to max(a,b);   
-    class method Max(a,b: Int64): Int64; mapped to max(a,b);   
-    class method Min(a,b: Double): Double; mapped to min(a,b);
-    class method Min(a,b: Integer): Integer; mapped to min(a,b);
-    class method Min(a,b: Int64): Int64; mapped to min(a,b);
+    class method MaxDouble(a,b: Double): Double; mapped to max(a,b);   
+    class method MaxInt(a,b: Integer): Integer; mapped to max(a,b);   
+    class method MaxInt64(a,b: Int64): Int64; mapped to max(a,b);   
+    class method MinDouble(a,b: Double): Double; mapped to min(a,b);
+    class method MinInt(a,b: Integer): Integer; mapped to min(a,b);
+    class method MinInt64(a,b: Int64): Int64; mapped to min(a,b);
     class method Pow(x, y: Double): Double; mapped to pow(x,y);
     class method Round(a: Double): Double; mapped to round(a);
     class method RoundToInt(a: Double): Integer;
@@ -46,9 +46,9 @@ type
   public
     const PI: Double = 3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679;
     const E: Double =  2.7182818284590452353602874713526624977572470936999595749669676277240766303535475945713821785251664274;
-    class method Abs(d: Double): Double; mapped to Abs(d);
-    class method Abs(i: Int64): Int64; mapped to Abs(i);
-    class method Abs(i: Integer): Integer; mapped to Abs(i);
+    class method AbsDouble(d: Double): Double; mapped to Abs(d);
+    class method AbsInt64(i: Int64): Int64; mapped to Abs(i);
+    class method AbsInt(i: Integer): Integer; mapped to Abs(i);
     class method Acos(d: Double): Double; mapped to Acos(d);
     class method Asin(d: Double): Double; mapped to Asin(d);
     class method Atan(d: Double): Double; mapped to Atan(d);
@@ -61,12 +61,12 @@ type
     class method IEEERemainder(x, y: Double): Double; mapped to IEEERemainder(x, y); 
     class method Log(d: Double): Double; mapped to Log(d);
     class method Log10(d: Double): Double; mapped to Log10(d);
-    class method Max(a,b: Double): Double; mapped to Max(a,b);   
-    class method Max(a,b: Integer): Integer; mapped to Max(a,b);   
-    class method Max(a,b: Int64): Int64; mapped to Max(a,b);   
-    class method Min(a,b: Double): Double; mapped to Min(a,b);
-    class method Min(a,b: Integer): Integer; mapped to Min(a,b);
-    class method Min(a,b: Int64): Int64; mapped to Min(a,b);
+    class method MaxDouble(a,b: Double): Double; mapped to Max(a,b);   
+    class method MaxInt(a,b: Integer): Integer; mapped to Max(a,b);   
+    class method MaxInt64(a,b: Int64): Int64; mapped to Max(a,b);   
+    class method MinDouble(a,b: Double): Double; mapped to Min(a,b);
+    class method MinInt(a,b: Integer): Integer; mapped to Min(a,b);
+    class method MinInt64(a,b: Int64): Int64; mapped to Min(a,b);
     class method Pow(x, y: Double): Double; mapped to Pow(x,y);
     class method Round(a: Double): Double; mapped to Round(a);
     class method RoundToInt(a: Double): Integer;
@@ -83,9 +83,9 @@ type
   public    
     const PI: Double = 3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679;
     const E: Double =  2.7182818284590452353602874713526624977572470936999595749669676277240766303535475945713821785251664274;
-    class method Abs(value: Double): Double;
-    //class method Abs(i: Int64): Int64; 
-    //class method Abs(i: Integer): Integer; 
+    class method AbsDouble(value: Double): Double;
+    class method AbsInt64(i: Int64): Int64; 
+    class method AbsInt(i: Integer): Integer; 
     class method Acos(d: Double): Double;
     class method Asin(d: Double): Double;
     class method Atan(d: Double): Double;
@@ -98,12 +98,12 @@ type
     class method IEEERemainder(x, y: Double): Double; 
     class method Log(a: Double): Double;
     class method Log10(a: Double): Double;
-    class method Max(a,b: Double): Double;    
-    //class method Max(a,b: Integer): Integer;    
-    //class method Max(a,b: Int64): Int64;  
-    class method Min(a,b: Double): Double;
-    //class method Min(a,b: Integer): Integer;
-    //class method Min(a,b: Int64): Int64; 
+    class method MaxDoube(a,b: Double): Double;    
+    class method MaxInt(a,b: Integer): Integer;    
+    class method MaxInt64(a,b: Int64): Int64;  
+    class method MinDouble(a,b: Double): Double;
+    class method MinInt(a,b: Integer): Integer;
+    class method MinInt64(a,b: Int64): Int64; 
     class method Pow(x, y: Double): Double;
     class method Round(a: Double): Double;
     class method RoundToInt(a: Double): Integer;
@@ -185,7 +185,7 @@ begin
   exit rtl.atan2(x,y);   
 end;
 
-class method Math.Abs(value: Double): Double;
+class method Math.AbsDouble(value: Double): Double;
 begin
   exit rtl.fabs(value);   
 end;
@@ -215,12 +215,12 @@ begin
   exit rtl.log10(a);   
 end;
 
-class method Math.Max(a,b: Double): Double;
+class method Math.MaxInt64(a,b: Int64): Int64;
 begin
   exit iif(a > b, a, b);   
 end;
 
-class method Math.Min(a,b: Double): Double;
+class method Math.MinInt64(a,b: Int64): Int64;
 begin
   exit iif(a < b, a, b);   
 end;
@@ -263,6 +263,36 @@ end;
 class method Math.Truncate(d: Double): Double;
 begin
   exit rtl.trunc(d);  
+end;
+
+class method Math.AbsInt64(i: Int64): Int64;
+begin
+  exit rtl.labs(i);
+end;
+
+class method Math.AbsInt(i: Integer): Integer;
+begin
+  exit rtl.abs(i);
+end;
+
+class method Math.MaxDoube(a: Double; b: Double): Double;
+begin
+  exit iif(a > b, a, b);
+end;
+
+class method Math.MaxInt(a: Integer; b: Integer): Integer;
+begin
+  exit iif(a > b, a, b);
+end;
+
+class method Math.MinDouble(a: Double; b: Double): Double;
+begin
+  exit iif(a < b, a, b);
+end;
+
+class method Math.MinInt(a: Integer; b: Integer): Integer;
+begin
+  exit iif(a < b, a, b);
 end;
 {$ENDIF}
 

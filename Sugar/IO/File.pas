@@ -1,4 +1,4 @@
-﻿namespace RemObjects.Oxygene.Sugar.IO;
+namespace RemObjects.Oxygene.Sugar.IO;
 
 interface
 
@@ -370,7 +370,7 @@ end;
 method File.AppendText(Content: String);
 begin
   var lData := NSString(Content).dataUsingEncoding(NSStringEncoding.NSUTF8StringEncoding);
-  var fileHandle := NSFileHandle.fileHandleForWritingAtPath(mapped);
+  var fileHandle := NSFileHandle.fileHandleForWritingAtPath(mapped) as NSFileHandle;
   fileHandle.seekToEndOfFile;
   fileHandle.writeData(lData);
   fileHandle.closeFile;

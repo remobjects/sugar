@@ -22,7 +22,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <Optimize>false</Optimize>
-    <OutputPath>.\bin\Debug</OutputPath>
+    <OutputPath>.\bin\Debug\.NET</OutputPath>
     <DefineConstants>DEBUG;TRACE;</DefineConstants>
     <GeneratePDB>True</GeneratePDB>
     <GenerateMDB>True</GenerateMDB>
@@ -40,7 +40,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <Optimize>true</Optimize>
-    <OutputPath>.\bin\Release</OutputPath>
+    <OutputPath>.\bin\Release\.NET</OutputPath>
     <GeneratePDB>False</GeneratePDB>
     <GenerateMDB>False</GenerateMDB>
     <EnableAsserts>False</EnableAsserts>
@@ -61,12 +61,21 @@
     <Reference Include="System.Data" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.Echoes.pas" />
+    <Compile Include="Main\Echoes\Program.pas" />
+    <Compile Include="Printer\Printer.pas" />
     <Compile Include="Properties\AssemblyInfo.pas" />
     <Compile Include="Tests\Binary.pas" />
+    <Compile Include="Tests\DateTime.pas" />
+    <Compile Include="Tests\Guid.pas" />
+    <Compile Include="Tests\HashSet.pas" />
+    <Compile Include="Tests\Stack.pas" />
     <Compile Include="Tests\String.pas" />
+    <Compile Include="Tests\StringBuilder.pas" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Main\" />
+    <Folder Include="Main\Echoes\" />
+    <Folder Include="Printer\" />
     <Folder Include="Tests" />
     <Folder Include="Properties\" />
   </ItemGroup>
@@ -81,7 +90,7 @@
       <Name>RemObjects.Oxygene.Sugar.Echoes</Name>
       <Project>{79301a0c-1f95-4fb0-9605-207e288c6171}</Project>
       <Private>True</Private>
-      <HintPath>..\Sugar\bin\Debug\RemObjects.Oxygene.Sugar.dll</HintPath>
+      <HintPath>..\Sugar\bin\Debug\.NET\RemObjects.Oxygene.Sugar.dll</HintPath>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Echoes.targets" />

@@ -9,6 +9,7 @@ type
 
   {$IF COOPER}
   Guid = public class mapped to java.util.UUID
+  public
     method CompareTo(Value: Guid): Integer; mapped to compareTo(Value);
     method &Equals(Value: Guid): Boolean; mapped to &equals(Value);
     class method NewGuid: Guid; mapped to randomUUID;
@@ -18,10 +19,13 @@ type
     class operator NotEqual(GuidA, GuidB: Guid): Boolean;
     method ToByteArray: array of Byte;
     method ToString(Format: GuidFormat): String;
+    method toString: java.lang.String; override;
   end;
   {$ELSEIF ECHOES}
   [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Auto, Size := 1)]
   Guid = public record mapped to System.Guid
+  private
+    method Exchange(Value: array of Byte; Index1, Index2: Integer);
   public
     method CompareTo(Value: Guid): Integer; mapped to CompareTo(Value);
     method &Equals(Value: Guid): Boolean; mapped to &Equals(Value);
@@ -30,8 +34,9 @@ type
     class method EmptyGuid: Guid; mapped to Empty;
     class operator Equal(GuidA, GuidB: Guid): Boolean;
     class operator NotEqual(GuidA, GuidB: Guid): Boolean;
-    method ToByteArray: array of Byte; mapped to ToByteArray;     
+    method ToByteArray: array of Byte;
     method ToString(Format: GuidFormat): String;
+    method ToString: System.String; override;
   end;
   {$ELSEIF NOUGAT}
   Guid = public class
@@ -75,12 +80,19 @@ end;
 method Guid.ToString(Format: GuidFormat): String;
 begin
   case Format of
-    Format.Default: exit mapped.toString;
-    Format.Braces: exit "{"+mapped.toString+"}";
-    Format.Parentheses: exit "("+mapped.toString+")";
+    Format.Default: result := mapped.toString;
+    Format.Braces: result := "{"+mapped.toString+"}";
+    Format.Parentheses: result := "("+mapped.toString+")";
     else
-      exit mapped.toString;
+      result := mapped.toString;
   end;
+
+  exit result.ToUpper;
+end;
+
+method Guid.toString: java.lang.String;
+begin
+  exit toString(GuidFormat.Default);
 end;
 
 class method Guid.Parse(Value: String): Guid;
@@ -98,7 +110,8 @@ begin
   end;
 
   //remove {} or () symbols
-  Value := java.lang.String(Value.ToUpper).replaceAll("[^A-F0-9]", "");
+  //Value := java.lang.String(Value.ToUpper).replaceAll("[^A-F0-9-]", "");
+  Value := java.lang.String(Value.ToUpper).replaceAll("[{}()]", "");
   exit mapped.fromString(Value);
 end;
 {$ENDIF}
@@ -106,18 +119,47 @@ end;
 {$IF ECHOES}
 class method Guid.Parse(Value: String): Guid;
 begin
+  if (Value.Length <> 38) and (Value.Length <> 36) then
+    raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);
+
   exit new Guid(Value);
+end;
+
+method Guid.ToString: System.String;
+begin
+  exit ToString(GuidFormat.Default);
 end;
 
 method Guid.ToString(Format: GuidFormat): String;
 begin
   case Format of
-    Format.Default: exit mapped.ToString("D");
-    Format.Braces: exit mapped.ToString("B");
-    Format.Parentheses: exit mapped.ToString("P");
+    Format.Default: result := mapped.ToString("D");
+    Format.Braces: result := mapped.ToString("B");
+    Format.Parentheses: result := mapped.ToString("P");
     else
-      exit mapped.ToString("D");
+      result := mapped.ToString("D");
   end;
+
+  exit result.ToUpper;
+end;
+
+method Guid.Exchange(Value: array of Byte; Index1: Integer; Index2: Integer);
+begin
+  var Temp := Value[Index1];
+  Value[Index1] := Value[Index2];
+  Value[Index2] := Temp;
+end;
+
+method Guid.ToByteArray: array of Byte;
+begin
+  var Value := mapped.ToByteArray;
+  //reverse byte order to normal (.NET reverse first 4 bytes and next two 2 bytes groups)
+  Exchange(Value, 0, 3);
+  Exchange(Value, 1, 2);
+  Exchange(Value, 4, 5);
+  Exchange(Value, 6, 7);
+
+  exit Value;
 end;
 {$ENDIF}
 
@@ -138,20 +180,17 @@ method Guid.init: id;
 begin
   fData := new Byte[16];
   memset(fData, 0, 16); 
-  result := self;
 end;
 
 method Guid.initWithString(Value: String): id;
 begin
   fData := InternalParse(Value);
-  result := self;
 end;
 
 method Guid.initWithBytes(Value: array of Byte): id;
 begin
   fData := new Byte[16];
-  memcpy(fData, Value, 16);
-  result := self;
+  memcpy(fData, Value, 16);  
 end;
 
 method Guid.CompareTo(Value: Guid): Integer;
@@ -257,7 +296,8 @@ begin
     raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);
 
   Result := new Byte[16];
-  var Idx, Idx2: UInt32 := 0;
+  var Idx: UInt32 := 0;
+  var Idx2: UInt32 := 0;
 
   //Convert hex to byte
   while Idx < HexString.length do begin
