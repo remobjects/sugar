@@ -73,9 +73,8 @@ end;
 
 method GuidTest.TestNewGuid;
 begin
-  {$WARNING Disabled due to bug #63961}
-  //var Value := Guid.NewGuid;
-  //Assert.CheckBool(false, Value.Equals(Guid.EmptyGuid));
+  var Value := Guid.NewGuid;
+  Assert.CheckBool(false, Value.Equals(Guid.EmptyGuid));
 end;
 
 method GuidTest.TestParse;
