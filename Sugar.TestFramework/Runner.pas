@@ -1,5 +1,5 @@
 ﻿namespace RemObjects.Oxygene.Sugar.TestFramework;
-
+{$HIDE W0}
 interface
 
 type
@@ -22,6 +22,7 @@ type
     method RunAll(Domain: AppDomain): List<TestcaseResult>;
     method RunAll: List<TestcaseResult>;
     {$ELSEIF NOUGAT}
+    method RunAll: List<TestcaseResult>;
     {$ENDIF}
   end;
 
@@ -302,6 +303,35 @@ begin
   
 
   exit RetVal;
+end;
+
+class method TestRunner.RunAll: List<TestcaseResult>;
+begin
+  result := new List<TestcaseResult>;
+  
+  var Count := objc_getClassList(nil, 0);
+  if Count <= 0 then
+    exit;
+
+  var Classes := new unretained &Class[Count];
+  Count := objc_getClassList(Classes, Count);
+
+  for i: Integer := 0 to Count - 1 do begin
+    var lClass: unretained &Class := Classes[i];
+    var Super: &Class := class_getSuperclass(lClass);
+
+    while Super <> nil do begin
+
+      //inherits from Testcase
+      if Super = Testcase.class then begin
+        var Instance := Foundation.NSClassFromString(class_getName(lClass)).alloc.init;
+        result.Add(Run(Instance));
+        break;
+      end;
+
+      Super := class_getSuperclass(Super);
+    end;
+  end;
 end;
 {$ENDIF}
 
