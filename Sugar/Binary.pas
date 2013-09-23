@@ -12,10 +12,10 @@ uses
 type
   Range = public record {$IF NOUGAT}mapped to Foundation.NSRange{$ENDIF}
   public
-    class method MakeRange(aLocation, aLength: UInt32): Range;
+    class method MakeRange(aLocation, aLength: Integer): Range;
 
-    property Location: UInt32 {$IF NOUGAT}read mapped.location write mapped.location{$ENDIF};
-    property Length: UInt32 {$IF NOUGAT} read mapped.length write mapped.length{$ENDIF};
+    property Location: Integer {$IF NOUGAT}read mapped.location write mapped.location{$ENDIF};
+    property Length: Integer {$IF NOUGAT} read mapped.length write mapped.length{$ENDIF};
   end;
 
   {$IF COOPER}
@@ -27,15 +27,15 @@ type
     method Clear;
 
     method ReadRangeOfBytes(Range: Range): array of Byte;
-    method ReadBytes(aLength: UInt32): array of Byte; 
+    method ReadBytes(aLength: Integer): array of Byte; 
     
     method Subdata(Range: Range): Binary;
 
-    method WriteBytes(aData: array of Byte; aLength: UInt32);
+    method WriteBytes(aData: array of Byte; aLength: Integer);
     method WriteData(aData: Binary);
 
     method ToArray: array of Byte;
-    property Length: UInt32 read fData.size;
+    property Length: Integer read fData.size;
 
     class method FromArray(aArray: array of Byte): Binary;
   end;
@@ -50,15 +50,15 @@ type
     method Clear;
 
     method ReadRangeOfBytes(Range: Range): array of Byte;
-    method ReadBytes(aLength: UInt32): array of Byte; 
+    method ReadBytes(aLength: Integer): array of Byte; 
     
     method Subdata(Range: Range): Binary;
 
-    method WriteBytes(aData: array of Byte; aLength: UInt32);
+    method WriteBytes(aData: array of Byte; aLength: Integer);
     method WriteData(aData: Binary);
 
     method ToArray: array of Byte;
-    property Length: UInt32 read fData.Length;
+    property Length: Integer read fData.Length;
 
     class method FromArray(aArray: array of Byte): Binary;
   end;
@@ -69,15 +69,15 @@ type
     method Clear; mapped to setLength(0);
 
     method ReadRangeOfBytes(Range: Range): array of Byte;
-    method ReadBytes(aLength: UInt32): array of Byte; 
+    method ReadBytes(aLength: Integer): array of Byte; 
     
     method Subdata(Range: Range): Binary;
 
-    method WriteBytes(aData: array of Byte; aLength: UInt32);
+    method WriteBytes(aData: array of Byte; aLength: Integer);
     method WriteData(aData: Binary);
 
     method ToArray: array of Byte;
-    property Length: UInt32 read mapped.length;
+    property Length: Integer read mapped.length;
 
     class method FromArray(aArray: array of Byte): Binary;
   end;
@@ -86,7 +86,7 @@ type
 
 implementation
 
-class method Range.MakeRange(aLocation: UInt32; aLength: UInt32): Range;
+class method Range.MakeRange(aLocation: Integer; aLength: Integer): Range;
 begin
   exit new Range(Location := aLocation, Length := aLength);
 end;
@@ -111,9 +111,9 @@ begin
   System.arraycopy(fData.toByteArray, Range.Location, result, 0, Range.Length);
 end;
 
-method Binary.ReadBytes(aLength: UInt32): array of Byte;
+method Binary.ReadBytes(aLength: Integer): array of Byte;
 begin
-  result := ReadRangeOfBytes(Range.MakeRange(0, Math.Min(aLength, fData.size)));
+  result := ReadRangeOfBytes(Range.MakeRange(0, Math.MinInt(aLength, fData.size)));
 end;
 
 method Binary.Subdata(Range: Range): Binary;
@@ -122,7 +122,7 @@ begin
   exit Binary.FromArray(lData);
 end;
 
-method Binary.WriteBytes(aData: array of Byte; aLength: UInt32);
+method Binary.WriteBytes(aData: array of Byte; aLength: Integer);
 begin
   fData.write(ArrayUtils.ToSignedArray(aData), 0, aLength);
 end;
@@ -173,9 +173,9 @@ begin
   end;
 end;
 
-method Binary.ReadBytes(aLength: UInt32): array of Byte;
+method Binary.ReadBytes(aLength: Integer): array of Byte;
 begin
-  result := ReadRangeOfBytes(Range.MakeRange(0, Math.Min(aLength, fData.Length)));
+  result := ReadRangeOfBytes(Range.MakeRange(0, Math.MinInt(aLength, fData.Length)));
 end;
 
 method Binary.Subdata(Range: Range): Binary;
@@ -184,7 +184,7 @@ begin
   exit Binary.FromArray(lData);
 end;
 
-method Binary.WriteBytes(aData: array of Byte; aLength: UInt32);
+method Binary.WriteBytes(aData: array of Byte; aLength: Integer);
 begin
   fData.Write(aData, 0, aLength);
 end;
@@ -223,19 +223,19 @@ begin
   exit Foundation.NSMutableData.dataWithData(mapped.subdataWithRange(Range));
 end;
 
-method Binary.ReadBytes(aLength: UInt32): array of Byte;
+method Binary.ReadBytes(aLength: Integer): array of Byte;
 begin
-  result := ReadRangeOfBytes(Range.MakeRange(0, Math.Min(aLength, mapped.Length)));
+  result := ReadRangeOfBytes(Range.MakeRange(0, Math.MinInt(aLength, mapped.Length)));
 end;
 
-method Binary.WriteBytes(aData: array of Byte; aLength: UInt32);
+method Binary.WriteBytes(aData: array of Byte; aLength: Integer);
 begin
   if aData = nil then
     raise new SugarArgumentNullException("aData");
 
   if aLength = 0 then
     exit;
-  
+
   if aLength > RemObjects.Oxygene.System.length(aData) then
     raise new SugarArgumentOutOfRangeException(String.Format("Length {0} exceeds data length {1}", aLength, RemObjects.Oxygene.System.length(aData)));
 
