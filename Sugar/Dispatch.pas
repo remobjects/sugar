@@ -1,4 +1,4 @@
-﻿namespace RemObjects.Oxygene.Sugar;
+namespace RemObjects.Oxygene.Sugar;
 
 interface
 
@@ -18,17 +18,7 @@ implementation
 
 method Dispatch.DispatchToBackgroundThread(aAction: DispatchAction; aPriority: DispatchPriority {$IF NOT COOPER} := DispatchPriority.Normal{$ENDIF});
 begin
-  {$IF COOPER OR ECHOES}
   async aAction();
-  {$ELSEIF NOUGAT}
-  dispatch_async(dispatch_get_global_queue(case aPriority of
-                                             DispatchPriority.High:DISPATCH_QUEUE_PRIORITY_HIGH;
-                                             DispatchPriority.Normal:DISPATCH_QUEUE_PRIORITY_DEFAULT;
-                                             DispatchPriority.Low:DISPATCH_QUEUE_PRIORITY_LOW;
-                                             DispatchPriority.Idle:DISPATCH_QUEUE_PRIORITY_BACKGROUND;
-                                             else DISPATCH_QUEUE_PRIORITY_DEFAULT;
-                                           end, 0), aAction);
-  {$ENDIF}
 end;
 
 method Dispatch.DispatchToMainThread(aAction: DispatchAction);
