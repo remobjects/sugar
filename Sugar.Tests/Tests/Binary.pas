@@ -102,7 +102,7 @@ begin
   AreEquals(BytesToWrite, Data.ReadRangeOfBytes(Range.MakeRange(5, 3)));
 
   Assert.IsException(->Data.WriteBytes(nil, 0)); //null
-  {$WARNING Disable due to compiler bug NOT LOGGED}
+  {$WARNING Disable due to compiler bug #64122}
   //Assert.IsException(->Data.WriteBytes(BytesToWrite, 4)); //out of range
 end;
 
@@ -111,8 +111,7 @@ begin
   var Expected: Binary := Binary.FromArray([1,2,3]);
   Data.WriteData(Expected);
   Assert.CheckInt(8, Data.Length);
-  {$WARNING Disable due to compiler bug #63959}
-  //AreEquals(Expected.ToArray, Data.ReadRangeOfBytes(Range.MakeRange(5, 3)));
+  AreEquals(Expected.ToArray, Data.ReadRangeOfBytes(Range.MakeRange(5, 3)));
 
   Assert.IsException(->Data.WriteData(nil));
   Data.WriteData(Binary.FromArray([]));
