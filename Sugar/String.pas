@@ -218,6 +218,9 @@ end;
 
 method String.Substring(aStartIndex: Int32; aLength: Int32): String; 
 begin
+  if (aStartIndex < 0) or (aLength < 0) then
+    raise new SugarArgumentOutOfRangeException(ErrorMessage.NEGATIVE_VALUE_ERROR, "Start index and length");
+
   result := mapped.substringWithRange(Foundation.NSMakeRange(aStartIndex, aLength));
 end;
 
@@ -279,6 +282,8 @@ begin
   {$ELSEIF ECHOES}
   result := mapped[aIndex];
   {$ELSEIF NOUGAT}
+  if aIndex < 0 then
+    raise new SugarArgumentOutOfRangeException(ErrorMessage.NEGATIVE_VALUE_ERROR, "Index");
   result := mapped.characterAtIndex(aIndex);
   {$ENDIF}
 end;
@@ -302,13 +307,18 @@ begin
   {$ELSEIF ECHOES}
   exit System.Text.Encoding.UTF8.GetString(Value, 0, Value.Length);
   {$ELSEIF NOUGAT}
+  if Value = nil then
+    raise new SugarArgumentNullException("Value");
+
   exit new NSString withBytes(Value) length(length(Value)) encoding(NSStringEncoding.NSUTF8StringEncoding);
   {$ENDIF}
 end;
 
 method String.Split(Separator: String): array of String;
 begin
-  {$IF COOPER}
+  if IsNullOrEmpty(Separator) then
+    exit [mapped];
+  {$IF COOPER}  
   exit mapped.split(java.util.regex.Pattern.quote(Separator));
   {$ELSEIF ECHOES}
   exit mapped.Split([Separator], StringSplitOptions.None);
