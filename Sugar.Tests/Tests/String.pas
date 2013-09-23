@@ -14,30 +14,30 @@ type
     Data: String;
   public
     method Setup; override;
-    method TestLength;
-    method TesChars;
-    method TestContactenation;
-    method TestImplicistCast;
-    method TestFormat; empty; //empty for now
-    method TestCharacterIsWhiteSpace;
-    method TestIsNullOrEmpty;
-    method TestIsNullOrWhiteSpace;
-    method TestFromByteArray;
-    method TestCompareTo;
-    method TestCompareToIgnoreCase;
-    method TestEquals;
-    method TestEqualsIngoreCase;
-    method TestContains;
-    method TestIndexOf;
-    method TestLastIndexOf;
-    method TestSubstring;
-    method TestSplit;
-    method TestReplace;
-    method TestLowerUpperCase;
-    method TestTrim;
-    method TestStartsWith;
-    method TestEndsWith;
-    method TestToByteArray;
+    method LengthProperty;
+    method CharsProperty;
+    method Contactenation;
+    method ImplicistCast;
+    method Format;
+    method CharacterIsWhiteSpace;
+    method IsNullOrEmpty;
+    method IsNullOrWhiteSpace;
+    method FromByteArray;
+    method CompareTo;
+    method CompareToIgnoreCase;
+    method &Equals;
+    method EqualsIngoreCase;
+    method Contains;
+    method IndexOf;
+    method LastIndexOf;
+    method Substring;
+    method Split;
+    method Replace;
+    method LowerUpperCase;
+    method Trim;
+    method StartsWith;
+    method EndsWith;
+    method ToByteArray;
   end;
 
 implementation
@@ -47,19 +47,23 @@ begin
   Data := "Hello";
 end;
 
-method StringTest.TestLength;
+method StringTest.LengthProperty;
 begin
   Assert.CheckInt(5, Data.Length);
 end;
 
-method StringTest.TesChars;
+method StringTest.CharsProperty;
 begin
   Assert.CheckString('e', Data.Chars[1]); //chars property
   Assert.CheckString('o', Data[4]);//default property
+  Assert.CheckString('H', Data[0]);  
+
   Assert.IsException(->Data.Chars[244]);//out of range
+  Assert.IsException(->Data.Chars[5]);
+  Assert.IsException(->Data.Chars[-1]);
 end;
 
-method StringTest.TestContactenation;
+method StringTest.Contactenation;
 begin
   //Native string
   var NativeString := Data + " World";
@@ -71,28 +75,65 @@ begin
   Assert.CheckString("Hello World", SugarString);
 end;
 
-method StringTest.TestImplicistCast;
+method StringTest.ImplicistCast;
 begin
   var C: Char := 'x';
   var SugarString: RemObjects.Oxygene.Sugar.String := C;
   Assert.CheckString("x", SugarString);
 end;
 
-method StringTest.TestCharacterIsWhiteSpace;
+method StringTest.CharacterIsWhiteSpace;
 begin
   Assert.CheckBool(false, String.CharacterIsWhiteSpace(Data[2]));
   Assert.CheckBool(true, String.CharacterIsWhiteSpace(' '));
   Assert.CheckBool(false, String.CharacterIsWhiteSpace('x'));
 end;
 
-method StringTest.TestIsNullOrEmpty;
+method StringTest.Format;
+begin
+  Assert.CheckString("Hello", String.Format("{0}", "Hello"));
+  Assert.CheckString("First Second Third", String.Format("First {0} Third", "Second"));
+  Assert.CheckString("white is so white", String.Format("{0} is so {0}", "white"));
+  Assert.CheckString("First Second Third", String.Format("{0} {1} {2}", "First", "Second", "Third"));
+
+  //parameters are converted by using ToString method
+  Assert.CheckString("42", String.Format("{0}", 42));  
+  
+  //accepts width
+  Assert.CheckString("   Text", String.Format("{0,7}", "Text"));
+  Assert.CheckString("Text   ", String.Format("{0,-7}", "Text"));
+
+  //accepts format specifiers but the are ignored
+  Assert.CheckString("255", String.Format("{0:X4}", 255));
+
+  //all specifiers together
+  Assert.CheckString("255  ", String.Format("{0,-5:X4}", 255));
+
+  //escaping brackets
+  Assert.CheckString("{42}", String.Format("{{{0}}}", 42));
+
+  Assert.IsException(->String.Format("{0", ""));
+  Assert.IsException(->String.Format("{0)", ""));
+  Assert.IsException(->String.Format("(0}", ""));
+  Assert.IsException(->String.Format("{0", ""));
+  Assert.IsException(->String.Format("{0}", nil));
+  Assert.IsException(->String.Format(nil, ""));  
+  Assert.IsException(->String.Format("{a}", ""));
+  Assert.IsException(->String.Format("{-1}", ""));
+  Assert.IsException(->String.Format("{0", ""));
+  Assert.IsException(->String.Format("{0,z}", ""));
+  Assert.IsException(->String.Format("{0,f}", ""));
+  Assert.IsException(->String.Format("{0,}", ""));  
+end;
+
+method StringTest.IsNullOrEmpty;
 begin
   Assert.CheckBool(false, String.IsNullOrEmpty(Data));
   Assert.CheckBool(true, String.IsNullOrEmpty(nil));
   Assert.CheckBool(true, String.IsNullOrEmpty(""));
 end;
 
-method StringTest.TestIsNullOrWhiteSpace;
+method StringTest.IsNullOrWhiteSpace;
 begin
   Assert.CheckBool(false, String.IsNullOrWhiteSpace(Data));
   Assert.CheckBool(true, String.IsNullOrWhiteSpace(nil));
@@ -100,16 +141,18 @@ begin
   Assert.CheckBool(true, String.IsNullOrWhiteSpace("       "));
 end;
 
-method StringTest.TestFromByteArray;
+method StringTest.FromByteArray;
 begin
   var Encoded: array of Byte := [103, 114, 195, 182, 195, 159, 101, 114, 101, 110];
   var Expected: String := "größeren";
   var Actual: String := String.FromByteArray(Encoded);
   Assert.CheckInt(8, Actual.Length);
   Assert.CheckString(Expected, Actual);
+  Assert.CheckString("", String.FromByteArray([]));
+  Assert.IsException(->String.FromByteArray(nil));
 end;
 
-method StringTest.TestCompareTo;
+method StringTest.CompareTo;
 begin
   Assert.CheckInt(0, Data.CompareTo("Hello"));
   Assert.CheckBool(true, Data.CompareTo("hElLo") <> 0); //Case sensitive
@@ -120,7 +163,7 @@ begin
   Assert.CheckBool(true, Sample.CompareTo("a") < 0); //A is less than a
 end;
 
-method StringTest.TestCompareToIgnoreCase;
+method StringTest.CompareToIgnoreCase;
 begin
   Assert.CheckInt(0, Data.CompareToIgnoreCase("Hello"));
   Assert.CheckInt(0, Data.CompareToIgnoreCase("hElLo"));
@@ -129,7 +172,7 @@ begin
   Assert.CheckInt(0, Sample.CompareToIgnoreCase("a")); //A equals a
 end;
 
-method StringTest.TestEquals;
+method StringTest.Equals;
 begin
   Assert.CheckBool(true, Data.Equals(Data));
   Assert.CheckBool(true, Data.Equals("Hello"));
@@ -137,7 +180,7 @@ begin
   Assert.CheckBool(false, Data.Equals(nil));
 end;
 
-method StringTest.TestEqualsIngoreCase;
+method StringTest.EqualsIngoreCase;
 begin
   Assert.CheckBool(true, Data.EqualsIngoreCase(Data));
   Assert.CheckBool(true, Data.EqualsIngoreCase("Hello"));
@@ -145,7 +188,7 @@ begin
   Assert.CheckBool(false, Data.EqualsIngoreCase(nil));
 end;
 
-method StringTest.TestContains;
+method StringTest.Contains;
 begin
   Assert.CheckBool(true, Data.Contains("Hello"));
   Assert.CheckBool(true, Data.Contains(Data));
@@ -158,7 +201,7 @@ begin
   Assert.IsException(->Data.Contains(nil)); //should throw an exception
 end;
 
-method StringTest.TestIndexOf;
+method StringTest.IndexOf;
 begin
   Assert.CheckInt(0, Data.IndexOf("Hello"));
   Assert.CheckInt(0, Data.IndexOf(Data));
@@ -172,7 +215,7 @@ begin
   Assert.IsException(->Data.IndexOf(nil));//should throw an exception
 end;
 
-method StringTest.TestLastIndexOf;
+method StringTest.LastIndexOf;
 begin
   Assert.CheckInt(0, Data.LastIndexOf("Hello"));
   Assert.CheckInt(0, Data.LastIndexOf(Data));
@@ -186,45 +229,52 @@ begin
   Assert.IsException(->Data.LastIndexOf(nil));//should throw an exception
 end;
 
-method StringTest.TestSubstring;
+method StringTest.Substring;
 begin
   Assert.CheckString("lo", Data.Substring(3));
   Assert.CheckString(Data, Data.Substring(0)); //start index is zero based 
   Assert.CheckString("", Data.Substring(Data.Length)); //start index is equal to string length, should return empty string
   Assert.IsException(->Data.Substring(55)); //out of range
+  Assert.IsException(->Data.Substring(-1));
 
   Assert.CheckString("el", Data.Substring(1, 2));
   Assert.CheckString("", Data.Substring(Data.Length, 0)); //should be empty string if index equals to string length and length is 0
+  Assert.CheckString("", Data.Substring(1, 0)); 
   Assert.IsException(->Data.Substring(55, 1));
   Assert.IsException(->Data.Substring(0, 244));
+  Assert.IsException(->Data.Substring(-1, 1));
+  Assert.IsException(->Data.Substring(1, -1));
 end;
 
-method StringTest.TestSplit;
+method StringTest.Split;
 begin
-  {$WARNING TestSplit is not completed due to compiler bug}
-  var Original: String := "string; with; separator";
-  {
-    Should split:
-    "" = no changes
-    nil = no changes
-    ";" = [string ]
-    "; " = [string]
-  }
-  var Expected: array of String := ["string","with","separator"];
-  
+  var Original: String := "x; x; x";
   var Actual := Original.Split("; ");
+  
   Assert.CheckInt(3, length(Actual));
-  //compiler bug: cannot assign string to system.string
-  //for i: Integer := 0 to length(Actual)-1 do
-  //  Assert.CheckString(Expected[i], Actual[i]);
+  for i: Integer := 0 to length(Actual)-1 do
+    Assert.CheckString("x", Actual[i]);
 
-  Actual := Original.Split(",");  
+  Actual := Original.Split(";");
+  var Expected: array of String := ["x", " x", " x"];
+  Assert.CheckInt(3, length(Actual));
+  for i: Integer := 0 to length(Actual)-1 do
+    Assert.CheckString(Expected[i], Actual[i]);
+
+  Actual := Original.Split(","); //not exists
   Assert.CheckInt(1, length(Actual));
-  var Value: String := Actual[0]; //bug workaround
-  Assert.CheckString(Original, Value);
+  Assert.CheckString(Original, Actual[0]);
+
+  Actual := Original.Split(""); //no changes
+  Assert.CheckInt(1, length(Actual));
+  Assert.CheckString(Original, Actual[0]);  
+
+  Actual := Original.Split(nil); //no changes
+  Assert.CheckInt(1, length(Actual));
+  Assert.CheckString(Original, Actual[0]);
 end;
 
-method StringTest.TestReplace;
+method StringTest.Replace;
 begin
   Assert.CheckString("HeLLo", Data.Replace("ll", "LL"));
   Assert.CheckString(Data, Data.Replace("x", "y")); //not existing
@@ -235,13 +285,13 @@ begin
   Assert.CheckString("Heo", Data.Replace("l", "")); //remove
 end;
 
-method StringTest.TestLowerUpperCase;
+method StringTest.LowerUpperCase;
 begin
   Assert.CheckString("hello", Data.ToLower);
   Assert.CheckString("HELLO", Data.ToUpper);
 end;
 
-method StringTest.TestTrim;
+method StringTest.Trim;
 begin
   var Original: String := "   Data    ";
   Assert.CheckString("Data", Original.Trim);
@@ -249,7 +299,7 @@ begin
   Assert.CheckString("", String("    ").Trim);
 end;
 
-method StringTest.TestStartsWith;
+method StringTest.StartsWith;
 begin
   Assert.CheckBool(true, Data.StartsWith("Hell"));
   Assert.CheckBool(false, Data.StartsWith("x"));
@@ -259,7 +309,7 @@ begin
   Assert.CheckBool(true, Data.StartsWith(Data));
 end;
 
-method StringTest.TestEndsWith;
+method StringTest.EndsWith;
 begin
   Assert.CheckBool(true, Data.EndsWith("llo"));
   Assert.CheckBool(false, Data.EndsWith("x"));
@@ -269,7 +319,7 @@ begin
   Assert.CheckBool(true, Data.EndsWith(Data));
 end;
 
-method StringTest.TestToByteArray;
+method StringTest.ToByteArray;
 begin
   var Expected: array of Byte := [103, 114, 195, 182, 195, 159, 101, 114, 101, 110];
   
