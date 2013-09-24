@@ -21,8 +21,14 @@ EndProject
 Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "RemObjects.Oxygene.Legacy.Echoes", "Legacy\RemObjects.Oxygene.Legacy.Echoes.oxygene", "{5566157C-55C7-4334-B57E-FAF1E154D225}"
 EndProject
 Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "RemObjects.Oxygene.Legacy.Nougat.OSX", "Legacy\RemObjects.Oxygene.Legacy.Nougat.OSX.oxygene", "{4D7FE7A5-2A35-4915-B16B-3F2E84B64216}"
+	ProjectSection(ProjectDependencies) = postProject
+		{AB7AB88B-2370-43BF-844B-54D015DA9E57} = {AB7AB88B-2370-43BF-844B-54D015DA9E57}
+	EndProjectSection
 EndProject
 Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "RemObjects.Oxygene.Legacy.Nougat.iOS", "Legacy\RemObjects.Oxygene.Legacy.Nougat.iOS.oxygene", "{731210B4-23B2-4D29-9098-0AC41A551241}"
+	ProjectSection(ProjectDependencies) = postProject
+		{91B301FC-331E-48A7-803B-4CBE3FFF6ED7} = {91B301FC-331E-48A7-803B-4CBE3FFF6ED7}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
