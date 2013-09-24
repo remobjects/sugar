@@ -202,7 +202,8 @@ begin
   if aString.Length = 0 then
     exit 0;
 
-  result := mapped.rangeOfString(aString).location;
+  var r := mapped.rangeOfString(aString);
+  exit if (r.location = NSNotFound) and (r.length = 0) then -1 else r.location;
 end;
 
 method String.LastIndexOf(aString: String): Int32;
@@ -213,7 +214,8 @@ begin
   if aString.Length = 0 then
     exit mapped.length - 1;
 
-  result := mapped.rangeOfString(aString) options(NSStringCompareOptions.NSBackwardsSearch).location;
+  var r := mapped.rangeOfString(aString) options(NSStringCompareOptions.NSBackwardsSearch);
+  exit if (r.location = NSNotFound) and (r.length = 0) then -1 else r.location;
 end;
 
 method String.Substring(aStartIndex: Int32; aLength: Int32): String; 
