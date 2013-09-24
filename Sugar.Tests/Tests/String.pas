@@ -5,6 +5,10 @@ interface
 {$HIDE W0} //supress case-mismatch errors
 
 uses
+  {$IF NOUGAT}
+  {$WARNING Workaround for compiler bug #64218}
+  Foundation,
+  {$ENDIF}
   RemObjects.Oxygene.Sugar,
   RemObjects.Oxygene.Sugar.TestFramework;
 
@@ -143,14 +147,13 @@ end;
 
 method StringTest.FromByteArray;
 begin
-  {$WARNING Temp. disabled}
-  {var Encoded: array of Byte := [103, 114, 195, 182, 195, 159, 101, 114, 101, 110];
+  var Encoded: array of Byte := [103, 114, 195, 182, 195, 159, 101, 114, 101, 110];
   var Expected: String := "größeren";
   var Actual: String := String.FromByteArray(Encoded);
   Assert.CheckInt(8, Actual.Length);
   Assert.CheckString(Expected, Actual);
   Assert.CheckString("", String.FromByteArray([]));
-  Assert.IsException(->String.FromByteArray(nil));}
+  Assert.IsException(->String.FromByteArray(nil));
 end;
 
 method StringTest.CompareTo;
