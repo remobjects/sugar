@@ -74,7 +74,12 @@ end;
 
 class method Assert.CheckString(Expected: String; Actual: String);
 begin
+  {$IF iOS}
+  {$WARNING Workaround for compiler bug #64212}
+  FailIf(not Expected.isEqualToString(Actual), Expected, Actual, nil);
+  {$ELSE}
   FailIf(Expected <> Actual, Expected, Actual, nil);
+  {$ENDIF}
 end;
 
 class method Assert.IsNotNull(Value: Object; Message: String);
