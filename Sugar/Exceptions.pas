@@ -17,7 +17,10 @@ type
 
   SugarNotSupportedException = public class (SugarException);
 
-  SugarArgumentNullException = public class(SugarException);
+  SugarArgumentNullException = public class(SugarException)
+  public
+    constructor(aMessage: String);
+  end;
   
   SugarArgumentOutOfRangeException = public class (SugarException);
 
@@ -43,6 +46,7 @@ type
     class const OUT_OF_RANGE_ERROR = "Range ({0},{1}) exceeds data length {2}";
     class const NEGATIVE_VALUE_ERROR = "{0} can not be negative";
     class const ARG_OUT_OF_RANGE_ERROR = "{0} argument was out of range of valid values.";
+    class const ARG_NULL_ERROR = "Argument {0} can not be nil";
   end;
 
 implementation
@@ -76,6 +80,11 @@ end;
 constructor SugarException(aFormat: String; params aParams: array of Object);
 begin
   constructor(String.Format(aFormat, aParams));
+end;
+
+constructor SugarArgumentNullException(aMessage: String);
+begin
+  inherited constructor(ErrorMessage.ARG_NULL_ERROR, aMessage)
 end;
 
 end.
