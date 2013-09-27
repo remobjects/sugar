@@ -54,6 +54,7 @@
     <Compile Include="Tests\DateTime.pas" />
     <Compile Include="Tests\Guid.pas" />
     <Compile Include="Tests\HashSet.pas" />
+    <Compile Include="Tests\List.pas" />
     <Compile Include="Tests\Stack.pas" />
     <Compile Include="Tests\String.pas" />
     <Compile Include="Tests\StringBuilder.pas" />
