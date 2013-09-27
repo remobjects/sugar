@@ -4,11 +4,16 @@
 
 interface
 
+uses
+  RemObjects.Oxygene.Sugar;
+
 type
   {$IF ECHOES}
   List<T> = public class mapped to System.Collections.Generic.List<T>
+  private
+    method SetItem(&Index: Integer; Value: T);
   public
-    method &Add(Item: T); mapped to &Add(Item);
+    method &Add(&Item: T);
     method AddRange(Items: List<T>); mapped to AddRange(Items);
     method Clear; mapped to Clear;
     method Contains(Item: T): Boolean; mapped to Contains(Item);
@@ -23,7 +28,7 @@ type
     method TrueForAll(Match: Predicate<T>): Boolean;
 
     method IndexOf(Item: T): Integer; mapped to IndexOf(Item);
-    method Insert(&Index: Integer; Item: T); mapped to Insert(&Index, Item);
+    method Insert(&Index: Integer; &Item: T);
     method LastIndexOf(Item: T): Integer; mapped to LastIndexOf(Item);
 
     method &Remove(Item: T): Boolean; mapped to &Remove(&Item);
@@ -33,12 +38,14 @@ type
     method ToArray: array of T; mapped to ToArray;
 
     property Count: Integer read mapped.Count;
-    property Item[i: Integer]: T read mapped[i] write mapped[i]; default;
+    property Item[i: Integer]: T read mapped[i] write SetItem; default;
   end;
   {$ELSEIF COOPER}
   List<T> = public class mapped to java.util.ArrayList<T>
+  private
+    method SetItem(&Index: Integer; Value: T);
   public
-    method &Add(Item: T); mapped to &add(Item);
+    method &Add(&Item: T);
     method AddRange(Items: List<T>); mapped to addAll(Items);
     method Clear; mapped to clear;
     method Contains(Item: T): Boolean; mapped to contains(Item);
@@ -53,28 +60,27 @@ type
     method TrueForAll(Match: Predicate<T>): Boolean;
 
     method IndexOf(Item: T): Integer; mapped to indexOf(Item);
-    method Insert(&Index: Integer; Item: T); mapped to &add(&Index, Item);
+    method Insert(&Index: Integer; &Item: T);
     method LastIndexOf(Item: T): Integer; mapped to lastIndexOf(Item);
 
     method &Remove(Item: T): Boolean; mapped to &remove(Object(Item));
     method RemoveAt(&Index: Integer); mapped to &remove(&Index);
     method RemoveRange(&Index: Integer; aCount: Integer);
 
-    method ToArray: array of T; mapped to ToArray;
+    method ToArray: array of T;
 
     property Count: Integer read mapped.size;
-    property Item[i: Integer]: T read mapped[i] write mapped[i]; default;
+    property Item[i: Integer]: T read mapped[i] write SetItem; default;
   end;
   {$ELSEIF NOUGAT}
   List<T> = public class mapped to Foundation.NSMutableArray
     where T is class;
   public
     method &Add(Item: T); mapped to addObject(Item);
-    method AddRange(Items: List<T>); mapped to addObjectsFromArray(Items);
+    method AddRange(Items: List<T>);
     method Clear; mapped to removeAllObjects;
     method Contains(Item: T): Boolean; mapped to containsObject(Item);
 
-    {$IF NOT NOUGAT}
     method Exists(Match: Predicate<T>): Boolean;
     method FindIndex(Match: Predicate<T>): Integer;
     method FindIndex(StartIndex: Integer; Match: Predicate<T>): Integer;
@@ -83,12 +89,10 @@ type
     method Find(Match: Predicate<T>): T;
     method FindAll(Match: Predicate<T>): List<T>;
     method TrueForAll(Match: Predicate<T>): Boolean;
-    method LastIndexOf(Item: T): Integer;
-    {$ENDIF}
+    method LastIndexOf(anItem: T): Integer;
 
-    method IndexOf(Item: T): Integer; mapped to indexOfObject(Item);
+    method IndexOf(Item: T): Integer;
     method Insert(&Index: Integer; Item: T); mapped to insertObject(Item) atIndex(&Index);
-    method LastIndexOf(anItem: T): Integer;   
 
     method &Remove(anItem: T): Boolean;
     method RemoveAt(&Index: Integer); mapped to removeObjectAtIndex(&Index);
@@ -101,17 +105,49 @@ type
   end;
   {$ENDIF}  
 
-  {$IF NOT NOUGAT}
-  Predicate<T> = public interface
-    method Check(Obj: T): Boolean;
-  end;
-  {$ENDIF}
+  Predicate<T> = public block (Obj: T): Boolean;
 
 
 implementation
 
+{$IF COOPER OR ECHOES}
+method List<T>.&Add(&Item: T);
+begin
+  if Item = nil then
+    raise new RemObjects.Oxygene.Sugar.SugarArgumentNullException("Item");
 
-{$IFNDEF ECHOES}
+  mapped.Add(Item);
+end;
+
+method List<T>.Insert(&Index: Integer; &Item: T);
+begin
+  if Item = nil then
+    raise new RemObjects.Oxygene.Sugar.SugarArgumentNullException("Item");
+
+  {$IF COOPER}
+  mapped.Add(&Index, Item);
+  {$ELSE}
+  mapped.Insert(&Index, Item);
+  {$ENDIF} 
+end;
+
+method List<T>.SetItem(&Index: Integer; Value: T);
+begin
+  if Value = nil then
+    raise new RemObjects.Oxygene.Sugar.SugarArgumentNullException("Value");
+
+  mapped[&Index] := Value;
+end;
+{$ENDIF}
+
+{$IF COOPER}
+method List<T>.ToArray: array of T;
+begin
+  exit mapped.toArray(new T[0]);
+end;
+{$ENDIF}
+
+{$IF COOPER OR NOUGAT}
 method List<T>.RemoveRange(&Index: Integer; aCount: Integer);
 begin
  {$IF COOPER}
@@ -125,15 +161,25 @@ end;
 {$IF NOUGAT}
 method List<T>.Remove(anItem: T): Boolean;
 begin
-  result := mapped.containsObject(anItem);
-  mapped.removeObject(anItem);
+  var lIndex := IndexOf(anItem);
+  if lIndex <> -1 then begin
+    RemoveAt(lIndex);
+    exit true;
+  end;
+  
+  exit false;
+end;
+
+method List<T>.IndexOf(Item: T): Integer;
+begin
+  var lIndex := mapped.indexOfObject(Item);
+  exit if lIndex = NSNotFound then -1 else lIndex;
 end;
 
 method List<T>.LastIndexOf(anItem: T): Integer;
 begin
-  //61865: Sugar: Invalid BR record exception for method with block
-  var RetVal := mapped.indexOfObjectWithOptions(Foundation.NSEnumerationReverse) passingTest((x,y,z) -> x = id(anItem));
-  exit iif(RetVal = Foundation.NSNotFound, -1, RetVal);
+  var lIndex := mapped.indexOfObjectWithOptions(Foundation.NSEnumerationReverse) passingTest((x,y,z) -> x = id(anItem));
+  exit if lIndex = NSNotFound then -1 else lIndex;
 end;
 
 method List<T>.ToArray: array of T;
@@ -142,13 +188,20 @@ begin
   for i: Integer := 0 to mapped.count - 1 do
     result := mapped.objectAtIndex(i);
 end;
+
+method List<T>.AddRange(Items: List<T>);
+begin
+  if Items = nil then
+    raise new RemObjects.Oxygene.Sugar.SugarArgumentNullException("Items");
+
+   mapped.addObjectsFromArray(Items);
+end;
 {$ENDIF}
 
-{$IF NOT NOUGAT}
 method List<T>.TrueForAll(Match: Predicate<T>): Boolean;
 begin
   for i: Integer := 0 to self.Count-1 do begin
-    if not Match(mapped[i]) then  // Retest: Item[i] causes crash in Cooper
+    if not Match(mapped[i]) then
       exit false;
   end;
   exit true;
@@ -166,16 +219,31 @@ end;
 
 method List<T>.FindIndex(StartIndex: Integer; Match: Predicate<T>): Integer;
 begin
+  System.Diagnostics.Debug.WriteLine(StartIndex);
   exit self.FindIndex(StartIndex, Count - StartIndex, Match);
 end;
 
 method List<T>.FindIndex(StartIndex: Integer; aCount: Integer; Match: Predicate<T>): Integer;
 begin
-  var Num := StartIndex + aCount;
-  for i: Int32 := StartIndex to Num-1 do begin
+  System.Diagnostics.Debug.WriteLine(StartIndex);
+  if StartIndex > Count then
+    raise new SugarArgumentOutOfRangeException(ErrorMessage.ARG_OUT_OF_RANGE_ERROR, "StartIndex");
+
+  if (aCount < 0) or (StartIndex > Count - aCount) then begin
+    System.Diagnostics.Debug.WriteLine(StartIndex);
+    System.Diagnostics.Debug.WriteLine(String.Format("StartIndex = {0} Count = {1} aCount = {2} StartIndex > Count - aCount = {3}", StartIndex, Count, aCount, StartIndex > Count - aCount));
+    raise new SugarArgumentOutOfRangeException(ErrorMessage.ARG_OUT_OF_RANGE_ERROR, "Count");
+  end;
+
+  if Match = nil then
+    raise new SugarArgumentNullException("Match");
+
+  var Length := StartIndex + aCount; 
+
+  for i: Int32 := StartIndex to Length - 1 do
     if Match(mapped[i]) then
       exit i;
-  end;
+
   exit -1;
 end;
 
@@ -196,6 +264,5 @@ begin
       lList.Add(mapped[i]);
   end;
 end;
-{$ENDIF}
 
 end.
