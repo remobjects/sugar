@@ -42,6 +42,7 @@ type
     class const FOLDER_EXISTS = "Folder {0} already exists";
     class const OUT_OF_RANGE_ERROR = "Range ({0},{1}) exceeds data length {2}";
     class const NEGATIVE_VALUE_ERROR = "{0} can not be negative";
+    class const ARG_OUT_OF_RANGE_ERROR = "{0} argument was out of range of valid values.";
   end;
 
 implementation
