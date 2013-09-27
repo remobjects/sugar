@@ -290,7 +290,12 @@ begin
 
     //no setup/teardown
     var MethodName: String := String.stringWithUTF8String(sel_getName(method_getName(lMethod)));
+  {$IF iOS}
+  {$WARNING Workaround for compiler bug #64212}
+  if MethodName.isEqualToString("Setup") or MethodName.isEqualToString("TearDown") then
+  {$ELSE}
     if (MethodName = "Setup") or (MethodName = "TearDown") then
+  {$ENDIF}
       continue;
 
     if MethodName.hasPrefix(".") then
