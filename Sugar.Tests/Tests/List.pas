@@ -96,24 +96,21 @@ end;
 
 method ListTest.Exists;
 begin
-  Assert.CheckBool(true, Data.Exists(x -> x = "Two"));
+  {$WARNING Disabled due to compiler but #59424}
+  {Assert.CheckBool(true, Data.Exists(x -> x = "Two"));
   Assert.CheckBool(false, Data.Exists(x -> x = "tWo"));
-  Assert.CheckBool(true, Data.Exists(x -> x.EqualsIngoreCase("tWo")));
+  Assert.CheckBool(true, Data.Exists(x -> x.EqualsIngoreCase("tWo")));}
 end;
 
 method ListTest.FindIndex;
 begin
-  Assert.CheckInt(1, Data.FindIndex(x -> x = "Two"));
+  {$WARNING Disabled due to compiler bug #64282}
+  {Assert.CheckInt(1, Data.FindIndex(x -> x = "Two"));
   Assert.CheckInt(-1, Data.FindIndex(x -> x = "two"));
 
-  try
   Assert.CheckInt(1, Data.FindIndex(1, x -> x = "Two"));
   Assert.CheckInt(-1, Data.FindIndex(1, x -> x = "two"));
   Assert.CheckInt(-1, Data.FindIndex(2, x -> x = "Two"));
-  except
-    on E: Exception do
-      System.Diagnostics.Debug.WriteLine(E.Message);
-  end;
 
   Assert.CheckInt(1, Data.FindIndex(1, 2, x -> x = "Two"));
   Assert.CheckInt(-1, Data.FindIndex(1, 2, x -> x = "two"));
@@ -124,7 +121,7 @@ begin
   Assert.IsException(->Data.FindIndex(-1, 3, x -> x = "Two"));
   Assert.IsException(->Data.FindIndex(55, 3, x -> x = "Two"));
   Assert.IsException(->Data.FindIndex(0, 55, x -> x = "Two"));
-  Assert.IsException(->Data.FindIndex(0, -1, x -> x = "Two"));
+  Assert.IsException(->Data.FindIndex(0, -1, x -> x = "Two"));}
 end;
 
 method ListTest.Find;
@@ -139,8 +136,9 @@ end;
 
 method ListTest.TrueForAll;
 begin
-  Assert.CheckBool(true, Data.TrueForAll(x -> x <> ""));
-  Assert.CheckBool(false, Data.TrueForAll(x -> x = ""));
+  {$WARNING Disabled due to compiler but #59424}
+  {Assert.CheckBool(true, Data.TrueForAll(x -> x <> ""));
+  Assert.CheckBool(false, Data.TrueForAll(x -> x = ""));}
 end;
 
 method ListTest.IndexOf;
