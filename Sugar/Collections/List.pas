@@ -13,7 +13,7 @@ type
   private
     method SetItem(&Index: Integer; Value: T);
   public
-    method &Add(&Item: T);
+    method &Add(anItem: T);
     method AddRange(Items: List<T>); mapped to AddRange(Items);
     method Clear; mapped to Clear;
     method Contains(Item: T): Boolean; mapped to Contains(Item);
@@ -28,7 +28,7 @@ type
     method TrueForAll(Match: Predicate<T>): Boolean;
 
     method IndexOf(Item: T): Integer; mapped to IndexOf(Item);
-    method Insert(&Index: Integer; &Item: T);
+    method Insert(&Index: Integer; anItem: T);
     method LastIndexOf(Item: T): Integer; mapped to LastIndexOf(Item);
 
     method &Remove(Item: T): Boolean; mapped to &Remove(&Item);
@@ -45,7 +45,7 @@ type
   private
     method SetItem(&Index: Integer; Value: T);
   public
-    method &Add(&Item: T);
+    method &Add(anItem: T);
     method AddRange(Items: List<T>); mapped to addAll(Items);
     method Clear; mapped to clear;
     method Contains(Item: T): Boolean; mapped to contains(Item);
@@ -60,7 +60,7 @@ type
     method TrueForAll(Match: Predicate<T>): Boolean;
 
     method IndexOf(Item: T): Integer; mapped to indexOf(Item);
-    method Insert(&Index: Integer; &Item: T);
+    method Insert(&Index: Integer; anItem: T);
     method LastIndexOf(Item: T): Integer; mapped to lastIndexOf(Item);
 
     method &Remove(Item: T): Boolean; mapped to &remove(Object(Item));
@@ -91,7 +91,7 @@ type
     method TrueForAll(Match: Predicate<T>): Boolean;
     method LastIndexOf(anItem: T): Integer;
 
-    method IndexOf(Item: T): Integer;
+    method IndexOf(anItem: T): Integer;
     method Insert(&Index: Integer; Item: T); mapped to insertObject(Item) atIndex(&Index);
 
     method &Remove(anItem: T): Boolean;
@@ -111,23 +111,23 @@ type
 implementation
 
 {$IF COOPER OR ECHOES}
-method List<T>.&Add(&Item: T);
+method List<T>.&Add(anItem: T);
 begin
-  if Item = nil then
+  if anItem = nil then
     raise new RemObjects.Oxygene.Sugar.SugarArgumentNullException("Item");
 
-  mapped.Add(Item);
+  mapped.Add(anItem);
 end;
 
-method List<T>.Insert(&Index: Integer; &Item: T);
+method List<T>.Insert(&Index: Integer; anItem: T);
 begin
-  if Item = nil then
+  if anItem = nil then
     raise new RemObjects.Oxygene.Sugar.SugarArgumentNullException("Item");
 
   {$IF COOPER}
-  mapped.Add(&Index, Item);
+  mapped.Add(&Index, anItem);
   {$ELSE}
-  mapped.Insert(&Index, Item);
+  mapped.Insert(&Index, anItem);
   {$ENDIF} 
 end;
 
@@ -170,9 +170,9 @@ begin
   exit false;
 end;
 
-method List<T>.IndexOf(Item: T): Integer;
+method List<T>.IndexOf(anItem: T): Integer;
 begin
-  var lIndex := mapped.indexOfObject(Item);
+  var lIndex := mapped.indexOfObject(anItem);
   exit if lIndex = NSNotFound then -1 else lIndex;
 end;
 
@@ -200,10 +200,14 @@ end;
 
 method List<T>.TrueForAll(Match: Predicate<T>): Boolean;
 begin
+  if Match = nil then
+    raise new SugarArgumentNullException("Match");
+
   for i: Integer := 0 to self.Count-1 do begin
     if not Match(mapped[i]) then
       exit false;
   end;
+
   exit true;
 end;
 
@@ -219,21 +223,16 @@ end;
 
 method List<T>.FindIndex(StartIndex: Integer; Match: Predicate<T>): Integer;
 begin
-  System.Diagnostics.Debug.WriteLine(StartIndex);
   exit self.FindIndex(StartIndex, Count - StartIndex, Match);
 end;
 
 method List<T>.FindIndex(StartIndex: Integer; aCount: Integer; Match: Predicate<T>): Integer;
 begin
-  System.Diagnostics.Debug.WriteLine(StartIndex);
-  if StartIndex > Count then
+    if StartIndex > Count then
     raise new SugarArgumentOutOfRangeException(ErrorMessage.ARG_OUT_OF_RANGE_ERROR, "StartIndex");
 
-  if (aCount < 0) or (StartIndex > Count - aCount) then begin
-    System.Diagnostics.Debug.WriteLine(StartIndex);
-    System.Diagnostics.Debug.WriteLine(String.Format("StartIndex = {0} Count = {1} aCount = {2} StartIndex > Count - aCount = {3}", StartIndex, Count, aCount, StartIndex > Count - aCount));
+  if (aCount < 0) or (StartIndex > Count - aCount) then
     raise new SugarArgumentOutOfRangeException(ErrorMessage.ARG_OUT_OF_RANGE_ERROR, "Count");
-  end;
 
   if Match = nil then
     raise new SugarArgumentNullException("Match");
@@ -249,15 +248,22 @@ end;
 
 method List<T>.Find(Match: Predicate<T>): T;
 begin
+  if Match = nil then
+    raise new SugarArgumentNullException("Match");
+
   for i: Integer := 0 to Count-1 do begin
     if Match(mapped[i]) then
       exit mapped[i];
   end;
+
   exit &default(T);
 end;
 
 method List<T>.FindAll(Match: Predicate<T>): List<T>;
 begin
+  if Match = nil then
+    raise new SugarArgumentNullException("Match");
+
   var lList := new List<T>();
   for i: Integer := 0 to Count-1 do begin
     if Match(mapped[i]) then
