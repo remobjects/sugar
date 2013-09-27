@@ -336,7 +336,7 @@ end;
 method String.Replace(OldValue: String; NewValue: String): String;
 begin
   if IsNullOrEmpty(OldValue) then
-    raise new SugarArgumentNullException;
+    raise new SugarArgumentNullException("OldValue");
 
   if NewValue = nil then
     NewValue := "";
