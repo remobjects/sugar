@@ -17,10 +17,10 @@ type
 
   SugarNotSupportedException = public class (SugarException);
 
-  SugarArgumentNullException = public class(SugarException)
-  public
-    constructor(aMessage: String);
-  end;
+  SugarArgumentNullException = public class(SugarException);
+  //public
+    //constructor(aMessage: String);
+  //end;
   
   SugarArgumentOutOfRangeException = public class (SugarException);
 
@@ -82,9 +82,9 @@ begin
   constructor(String.Format(aFormat, aParams));
 end;
 
-constructor SugarArgumentNullException(aMessage: String);
+{constructor SugarArgumentNullException(aMessage: String);
 begin
   inherited constructor(ErrorMessage.ARG_NULL_ERROR, aMessage)
-end;
+end;}
 
 end.
