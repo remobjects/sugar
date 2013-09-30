@@ -76,7 +76,7 @@ method Stack<T>.ToArray: array of T;
 begin
   result := new T[mapped.count];
   for i: Integer := mapped.count - 1 downto 0 do
-    result := mapped.objectAtIndex(i);
+    result[mapped.count - i - 1] := mapped.objectAtIndex(i);
 end;
 {$ENDIF}
 
