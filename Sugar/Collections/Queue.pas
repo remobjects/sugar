@@ -11,9 +11,10 @@ type
     method Contains(Item: T): Boolean; mapped to Contains(Item);
     method Clear; mapped to Clear;
 
-    method Peek: T; mapped to Peek;    
-    method Enqueue(Item: T); mapped to {$IF ECHOES}Enqueue(Item){$ELSE}add(Item){$ENDIF};
-    method Dequeue: T; mapped to {$IF ECHOES}Dequeue{$ELSE}poll{$ENDIF};    
+    method Peek: T; {$IF ECHOES}mapped to Peek;{$ENDIF}    
+    method Enqueue(Item: T);
+    method Dequeue: T; {$IF ECHOES}mapped to Dequeue;{$ENDIF}
+    method ToArray: array of T; {$IF ECHOES}mapped to ToArray;{$ENDIF}
 
     property Count: Integer read {$IF ECHOES}mapped.Count{$ELSE}mapped.size{$ENDIF};
   end;
@@ -34,7 +35,44 @@ type
 
 implementation
 
-{$IF NOUGAT}
+{$IF COOPER}
+method Queue<T>.ToArray: array of T;
+begin
+  exit mapped.toArray(new T[0]);
+end;
+
+method Queue<T>.Enqueue(Item: T);
+begin
+  if Item = nil then
+    raise new RemObjects.Oxygene.Sugar.SugarArgumentNullException("Item");
+
+  mapped.add(Item);
+end;
+
+method Queue<T>.Dequeue: T;
+begin
+  if mapped.size = 0 then
+    raise new RemObjects.Oxygene.Sugar.SugarInvalidOperationException("Queue is empty");
+
+  exit mapped.poll;
+end;
+
+method Queue<T>.Peek: T;
+begin
+  if mapped.size = 0 then
+    raise new RemObjects.Oxygene.Sugar.SugarInvalidOperationException("Queue is empty");
+
+  exit mapped.peek;
+end;
+{$ELSEIF ECHOES}
+method Queue<T>.Enqueue(Item: T);
+begin
+  if Item = nil then
+    raise new RemObjects.Oxygene.Sugar.SugarArgumentNullException("Item");
+
+  mapped.Enqueue(Item);
+end;
+{$ELSEIF NOUGAT}
 method Queue<T>.Dequeue: T;
 begin
   result := mapped.objectAtIndex(0);
