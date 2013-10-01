@@ -26,6 +26,7 @@ type
     method Peek: T; mapped to objectAtIndex(0);
     method Enqueue(Item: T); mapped to addObject(Item);
     method Dequeue: T;
+    method ToArray: array of T;
 
     property Count: Integer read mapped.count;
   end;
@@ -38,6 +39,13 @@ method Queue<T>.Dequeue: T;
 begin
   result := mapped.objectAtIndex(0);
   mapped.removeObjectAtIndex(0);
+end;
+
+method Queue<T>.ToArray: array of T;
+begin
+  result := new T[mapped.count];
+  for i: Integer := 0 to mapped.count - 1 do
+    result[i] := mapped.objectAtIndex(i);
 end;
 {$ENDIF}
 
