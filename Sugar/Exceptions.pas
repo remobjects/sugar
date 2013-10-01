@@ -30,6 +30,8 @@ type
 
   SugarStackEmptyException = public class (SugarException);
 
+  SugarInvalidOperationException = public class (SugarException);
+
   {$IF NOUGAT}
   SugarNSErrorException = public class(SugarException)
   public
