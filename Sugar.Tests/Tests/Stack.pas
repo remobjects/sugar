@@ -22,6 +22,7 @@ type
     method Pop;
     method Push;
     method ToArray;
+    method Enumerator;
   end;
 
 implementation
@@ -96,6 +97,19 @@ begin
   var Values: array of String := Data.ToArray;
   for i: Integer := 0 to length(Expected) - 1 do
     Assert.CheckString(Expected[i], Values[i]);
+end;
+
+method StackTest.Enumerator;
+begin
+  var Expected: array of String := ["Three", "Two", "One"];
+  var &Index: Integer := 0;
+
+  for Item: String in Data do begin
+    Assert.CheckString(Expected[&Index], Item);
+    inc(&Index);
+  end;
+
+  Assert.CheckInt(3, &Index);
 end;
 
 end.
