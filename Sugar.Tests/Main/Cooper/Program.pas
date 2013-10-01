@@ -16,7 +16,7 @@ implementation
 
 class method ConsoleApp.Main(args: array of String);
 begin
-  var results := TestRunner.RunAll(new StringTest, new BinaryTest, new DateTimeTest, new GuidTest, new StringBuilderTest, new StackTest, new HashSetTest, new ListTest);
+  var results := TestRunner.RunAll(new StringTest, new BinaryTest, new DateTimeTest, new GuidTest, new StringBuilderTest, new StackTest, new HashSetTest, new ListTest, new QueueTest);
   var output := new StringPrinter(results);
   System.out.println(output.Result);
 
