@@ -40,7 +40,7 @@ method List<T>.ToArray: array of T;
 begin
   result := new T[mapped.count];
   for i: Integer := 0 to mapped.count - 1 do
-    result := mapped.objectAtIndex(i);
+    result[i] := mapped.objectAtIndex(i);
 end;
 {$ENDIF}
 

@@ -220,7 +220,7 @@ end;
 class method TestRunner.ProcessMethod(Obj: Testcase; M: &Method): TestResult;
 begin
   var MethodSelector := method_getName(M);
-  var MethodName: String := String.stringWithUTF8String(sel_getName(MethodSelector));
+  var MethodName: String := String.stringWithUTF8String(sel_getName(MethodSelector));  
   try
     //invoke test method
     var Signature := Obj.methodSignatureForSelector(MethodSelector);
