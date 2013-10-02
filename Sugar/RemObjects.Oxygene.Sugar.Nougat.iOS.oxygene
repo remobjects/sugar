@@ -89,7 +89,7 @@
     <Compile Include="Threading\Thread.pas" />
     <Compile Include="Threading\ThreadPool.pas" />
     <Compile Include="Math.pas" />
-    <Compile Include="Object.pas" />
+    <Compile Include="Extensions.pas" />
     <Compile Include="String.pas" />
     <Compile Include="StringBuilder.pas" />
     <Compile Include="StringFormatter.pas" />

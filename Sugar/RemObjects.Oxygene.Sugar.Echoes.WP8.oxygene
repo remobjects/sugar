@@ -112,6 +112,7 @@
         <Compile Include="DateFormatter.pas"/>
         <Compile Include="Environment.pas"/>
         <Compile Include="Exceptions.pas"/>
+        <Compile Include="Extensions.pas" />
         <Compile Include="Guid.pas"/>
         <Compile Include="Math.pas"/>
         <Compile Include="Properties\AssemblyInfo.WP8.pas"/>

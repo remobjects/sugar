@@ -88,7 +88,7 @@
     <Compile Include="Exceptions.pas" />
     <Compile Include="Guid.pas" />
     <Compile Include="Math.pas" />
-    <Compile Include="Object.pas" />
+    <Compile Include="Extensions.pas" />
     <Compile Include="String.pas" />
     <Compile Include="StringBuilder.pas" />
     <Compile Include="StringFormatter.pas" />

@@ -101,6 +101,7 @@
     <Compile Include="Random.pas" />
     <Compile Include="Environment.pas" />
     <Compile Include="Exceptions.pas" />
+    <Compile Include="Extensions.pas" />
     <Compile Include="Guid.pas" />
     <Compile Include="Threading\AutoResetEvent.pas" />
     <Compile Include="Threading\ManualResetEvent.pas" />
