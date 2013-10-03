@@ -20,7 +20,7 @@ type
     method TestHashCode;
   end;
   
-  CodeClass = public class
+  CodeClass = public class {$IF NOUGAT}(INSCopying){$ENDIF} //required for other tests
   public
     constructor(aCode: Integer);
 
@@ -28,6 +28,7 @@ type
     method {$IF NOUGAT}isEqual(obj: id){$ELSE}&Equals(Obj: Object){$ENDIF}: Boolean; override;
     method {$IF NOUGAT}description: Foundation.NSString{$ELSEIF COOPER}ToString: java.lang.String{$ELSEIF ECHOES}ToString: System.String{$ENDIF}; override;
     method {$IF NOUGAT}hash: Foundation.NSUInteger{$ELSEIF COOPER}hashCode: Integer{$ELSEIF ECHOES}GetHashCode: Integer{$ENDIF}; override;
+    {$IF NOUGAT}method copyWithZone(zone: ^Foundation.NSZone): id;{$ENDIF}
 
     property Code: Integer read write;
   end;
@@ -42,7 +43,8 @@ end;
 
 method CodeClass.{$IF NOUGAT}isEqual(obj: id){$ELSE}&Equals(Obj: Object){$ENDIF}: Boolean;
 begin
-  if (obj = nil) or (obj is not CodeClass) then
+  //(obj is not CodeClass)
+  if (obj = nil) or (not (obj is CodeClass)) then
     exit false;
   
   exit self.Code = CodeClass(obj).Code;
@@ -57,6 +59,13 @@ method CodeClass.{$IF NOUGAT}description: Foundation.NSString{$ELSEIF COOPER}ToS
 begin
   exit Code.ToString;
 end;
+
+{$IF NOUGAT}
+method CodeClass.copyWithZone(zone: ^Foundation.NSZone): id;
+begin
+  exit new CodeClass(Code);
+end;
+{$ENDIF}
 
 { ExtensionsTest }
 
