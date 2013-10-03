@@ -14,6 +14,7 @@ type
   private
     method GetKeys: array of T;
     method GetValues: array of U;
+    method SetItem(Key: T; Value: U);
   public
     method &Add(Key: T; Value: U);
     method Clear; mapped to Clear;
@@ -21,7 +22,7 @@ type
     method ContainsValue(Value: U): Boolean;
     method &Remove(Key: T): Boolean; mapped to &Remove(Key);
 
-    property Item[Key: T]: U read mapped[Key] write mapped[Key]; default;
+    property Item[Key: T]: U read mapped[Key] write SetItem; default;
     property Keys: array of T read GetKeys;
     property Values: array of U read GetValues;
     property Count: Integer read mapped.Count;
@@ -98,6 +99,17 @@ begin
     raise new SugarArgumentNullException("Value");
 
   exit mapped.ContainsValue(Value);
+end;
+
+method Dictionary<T, U>.SetItem(Key: T; Value: U);
+begin
+  if Key = nil then
+    raise new SugarArgumentNullException("Key");
+
+  if Value = nil then
+    raise new SugarArgumentNullException("Value");
+
+  mapped[Key] := Value;
 end;
 
 method ArrayHelper.ToArray<T>(Value: System.Collections.Generic.IEnumerable<T>): array of T;
