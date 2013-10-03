@@ -5,22 +5,31 @@
 interface
 
 uses
+  {$IF ECHOES}System.Linq,{$ENDIF}
   RemObjects.Oxygene.Sugar;
 
 type
 {$IF ECHOES}
   Dictionary<T, U> = public class mapped to System.Collections.Generic.Dictionary<T,U>
+  private
+    method GetKeys: array of T;
+    method GetValues: array of U;
   public
-    method &Add(Key: T; Value: U); mapped to &Add(Key, Value);
+    method &Add(Key: T; Value: U);
     method Clear; mapped to Clear;
     method ContainsKey(Key: T): Boolean; mapped to ContainsKey(Key);
-    method ContainsValue(Value: U): Boolean; mapped to ContainsValue(Value);
-    method &Remove(Key: T); mapped to &Remove(Key);
+    method ContainsValue(Value: U): Boolean;
+    method &Remove(Key: T): Boolean; mapped to &Remove(Key);
 
     property Item[Key: T]: U read mapped[Key] write mapped[Key]; default;
-    property Keys: sequence of T read mapped.Keys;
-    property Values: sequence of U read mapped.Values;
+    property Keys: array of T read GetKeys;
+    property Values: array of U read GetValues;
     property Count: Integer read mapped.Count;
+  end;
+
+  ArrayHelper = public static class
+  public
+    method ToArray<T>(Value: System.Collections.Generic.IEnumerable<T>): array of T;
   end;
 {$ELSEIF COOPER}
   Dictionary<T, U> = public class mapped to java.util.HashMap<T,U>
@@ -61,7 +70,41 @@ type
 
 implementation
 
-{$IF NOUGAT}
+{$IF ECHOES}
+method Dictionary<T, U>.GetKeys: array of T;
+begin
+  exit ArrayHelper.ToArray<T>(mapped.Keys);
+end;
+
+method Dictionary<T, U>.GetValues: array of U;
+begin
+  exit ArrayHelper.ToArray<U>(mapped.Values);
+end;
+
+method Dictionary<T, U>.&Add(Key: T; Value: U);
+begin
+  if Key = nil then
+    raise new SugarArgumentNullException("Key");
+
+  if Value = nil then
+    raise new SugarArgumentNullException("Value");
+
+  mapped.Add(Key, Value);
+end;
+
+method Dictionary<T, U>.ContainsValue(Value: U): Boolean;
+begin
+  if Value = nil then
+    raise new SugarArgumentNullException("Value");
+
+  exit mapped.ContainsValue(Value);
+end;
+
+method ArrayHelper.ToArray<T>(Value: System.Collections.Generic.IEnumerable<T>): array of T;
+begin
+  exit Value.ToArray;
+end;
+{$ELSEIF NOUGAT}
 method Dictionary<T, U>.ContainsKey(Key: T): Boolean;
 begin
   exit mapped.objectForKey(Key) <> nil;
