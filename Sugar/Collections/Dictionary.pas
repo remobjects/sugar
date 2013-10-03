@@ -34,16 +34,21 @@ type
   end;
 {$ELSEIF COOPER}
   Dictionary<T, U> = public class mapped to java.util.HashMap<T,U>
+  private
+    method GetKeys: array of T;
+    method GetValues: array of U;
+    method GetItem(Key: T): U;
+    method SetItem(Key: T; Value: U);
   public
-    method &Add(Key: T; Value: U); mapped to put(Key, Value);
+    method &Add(Key: T; Value: U);
     method Clear; mapped to clear;
-    method ContainsKey(Key: T): Boolean; mapped to containsKey(Key);
-    method ContainsValue(Value: U): Boolean; mapped to containsValue(Value);
-    method &Remove(Key: T); mapped to &remove(Key);
+    method ContainsKey(Key: T): Boolean;
+    method ContainsValue(Value: U): Boolean;
+    method &Remove(Key: T): Boolean;
 
-    property Item[Key: T]: U read mapped[Key] write mapped[Key]; default;
-    property Keys: sequence of T read mapped.keySet;
-    property Values: sequence of U read mapped.values;
+    property Item[Key: T]: U read GetItem write SetItem; default;
+    property Keys: array of T read GetKeys;
+    property Values: array of U read GetValues;
     property Count: Integer read mapped.size;
   end;
 {$ELSEIF NOUGAT}
@@ -71,7 +76,74 @@ type
 
 implementation
 
-{$IF ECHOES}
+{$IF COOPER}
+method Dictionary<T, U>.&Add(Key: T; Value: U);
+begin
+  if Key = nil then
+    raise new SugarArgumentNullException("Key");
+
+  if Value = nil then
+    raise new SugarArgumentNullException("Value");
+
+  if mapped.containsKey(Key) then
+    raise new SugarArgumentException("An element with the same key already exists in the dictionary");
+
+  mapped.put(Key, Value);
+end;
+
+method Dictionary<T, U>.&Remove(Key: T): Boolean;
+begin
+  if Key = nil then
+    raise new SugarArgumentNullException("Key");
+
+  exit mapped.remove(Key) <> nil;
+end;
+
+method Dictionary<T, U>.GetKeys: array of T;
+begin
+  exit mapped.keySet.toArray(new T[0]);
+end;
+
+method Dictionary<T, U>.GetValues: array of U;
+begin
+  exit mapped.values.toArray(new U[0]);
+end;
+
+method Dictionary<T, U>.GetItem(Key: T): U;
+begin
+  result := mapped[Key];
+
+  if result = nil then
+    raise new SugarKeyNotFoundException("Entry with specified key does not exist");
+end;
+
+method Dictionary<T, U>.SetItem(Key: T; Value: U);
+begin
+  if Key = nil then
+    raise new SugarArgumentNullException("Key");
+
+  if Value = nil then
+    raise new SugarArgumentNullException("Value");
+
+  mapped[Key] := Value;
+end;
+
+method Dictionary<T, U>.ContainsKey(Key: T): Boolean;
+begin
+  if Key = nil then
+    raise new SugarArgumentNullException("Key");
+
+  exit mapped.containsKey(Key);
+end;
+
+method Dictionary<T, U>.ContainsValue(Value: U): Boolean;
+begin
+  if Value = nil then
+    raise new SugarArgumentNullException("Value");
+
+  exit mapped.containsValue(Value);
+end;
+{$ELSEIF ECHOES}
 method Dictionary<T, U>.GetKeys: array of T;
 begin
   exit ArrayHelper.ToArray<T>(mapped.Keys);
