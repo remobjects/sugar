@@ -17,6 +17,8 @@ type
 
   SugarNotSupportedException = public class (SugarException);
 
+  SugarArgumentException = public class (SugarException);
+
   SugarArgumentNullException = public class(SugarException);
   //public
     //constructor(aMessage: String);
@@ -31,6 +33,8 @@ type
   SugarStackEmptyException = public class (SugarException);
 
   SugarInvalidOperationException = public class (SugarException);
+
+  SugarKeyNotFoundException = public class (SugarException);
 
   {$IF NOUGAT}
   SugarNSErrorException = public class(SugarException)
