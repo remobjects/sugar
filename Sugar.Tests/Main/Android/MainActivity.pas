@@ -26,7 +26,7 @@ begin
   inherited;
   ContentView := R.layout.main;
 
-  var results := TestRunner.RunAll(new StringTest, new BinaryTest, new DateTimeTest, new GuidTest, new StringBuilderTest, new StackTest, new HashSetTest, new ListTest);
+  var results := TestRunner.RunAll("sugar.test");
   var output := new StringPrinter(results);
 
   var MaxLogSize := 1000;

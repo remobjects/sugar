@@ -27,13 +27,8 @@ type
 
   Message = public class
   public
-    constructor(aData: String; aCode: Integer); 
-   
-    {$IF COOPER OR ECHOES}
-    method &Equals(obj: Object): Boolean; override;
-    {$ELSEIF NOUGAT}
-    method isEqual(obj: id): Boolean; override; 
-    {$ENDIF}
+    constructor(aData: String; aCode: Integer);    
+    method {$IF NOUGAT}isEqual(obj: id){$ELSE}&Equals(Obj: Object){$ENDIF}: Boolean; override;
 
     property Data: String read write;
     property Code: Integer read write;
@@ -48,11 +43,7 @@ begin
   Code := aCode;
 end;
 
-{$IF COOPER OR ECHOES}
-method Message.&Equals(obj: Object): Boolean;
-{$ELSEIF NOUGAT}
-method Message.isEqual(obj: id): Boolean;
-{$ENDIF}
+method Message.{$IF NOUGAT}isEqual(obj: id){$ELSE}&Equals(Obj: Object){$ENDIF}: Boolean;
 begin
   if obj = nil then
     exit false;
