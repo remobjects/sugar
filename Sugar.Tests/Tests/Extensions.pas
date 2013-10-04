@@ -20,7 +20,7 @@ type
     method TestHashCode;
   end;
   
-  CodeClass = public class {$IF NOUGAT}(INSCopying){$ENDIF} //required for other tests
+  CodeClass = public class {$IF NOUGAT}(Foundation.INSCopying){$ENDIF} //required for other tests
   public
     constructor(aCode: Integer);
 
