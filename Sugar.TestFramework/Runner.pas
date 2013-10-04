@@ -17,6 +17,8 @@ type
     method Run(Test: Testcase): TestcaseResult;
     method RunAll(params Tests: array of Testcase): List<TestcaseResult>;
     {$IF COOPER}
+    method RunAll(P: Package): List<TestcaseResult>;
+    method RunAll(PackageName: String): List<TestcaseResult>;
     {$ELSEIF ECHOES}
     method RunAll(Asm: System.Reflection.&Assembly): List<TestcaseResult>;
     method RunAll(Domain: AppDomain): List<TestcaseResult>;
@@ -113,6 +115,52 @@ begin
   end;
 
   exit RetVal;
+end;
+
+method TestRunner.RunAll(P: Package): List<TestcaseResult>;
+begin
+  result := new List<TestcaseResult>;
+
+  if P = nil then
+    exit;
+  
+  var Loader : ClassLoader := Thread.currentThread.ContextClassLoader;
+  var Res := Loader.getResources(P.Name.replace(".", "/"));
+
+  while Res.hasMoreElements do begin
+    var item := Res.nextElement;
+    var RelPath := P.Name.replace(".", "/");
+    var JarPath := Item.Path.replaceFirst("[.]jar[!].*", ".jar").replaceFirst("file:", "");
+
+    try
+      var file := new java.util.jar.JarFile(JarPath);
+
+      for entry: java.util.jar.JarEntry in file.entries do begin
+        var ClassName: String := nil;
+        if (entry.Name.endsWith(".class") and entry.Name.startsWith(RelPath) and (entry.Name.length > (RelPath.length + 1))) then
+          ClassName := entry.Name.replace("/", ".").replace("\\", ".").replace(".class", "");
+
+        if (ClassName <> nil) and (not ClassName.contains("$")) then begin
+          var C := &Class.forName(ClassName);
+          if typeOf(Testcase).isAssignableFrom(C) then begin
+            var ctor := C.getConstructor([]);            
+            result.Add(Run(Testcase(ctor.newInstance(nil))));
+          end;
+        end;
+      end;      
+    except 
+      on E: Exception do begin
+        var RetVal := new TestcaseResult(P.Name);
+        RetVal.TestResults.Add(HandleException("RunAll", E));
+        result.Add(RetVal);
+      end;
+    end;
+  end;
+end;
+
+method TestRunner.RunAll(PackageName: String): List<TestcaseResult>;
+begin
+  exit RunAll(Package.Package[PackageName]);
 end;
 {$ELSEIF ECHOES}
 class method TestRunner.ProcessMethod(Obj: Testcase; M: System.Reflection.MethodInfo): TestResult;
