@@ -64,7 +64,7 @@ type
     method Clear; mapped to removeAllObjects;
     method ContainsKey(Key: T): Boolean;
     method ContainsValue(Value: U): Boolean;
-    method &Remove(Key: T); 
+    method &Remove(Key: T): Boolean;
 
     property Item[Key: T]: U read GetItem write SetItem; default;
     // 61584: Nougat: Support for "sequence of"
@@ -191,26 +191,46 @@ end;
 {$ELSEIF NOUGAT}
 method Dictionary<T, U>.ContainsKey(Key: T): Boolean;
 begin
+  if Key = nil then
+    raise new SugarArgumentNullException("Key");
+
   exit mapped.objectForKey(Key) <> nil;
 end;
 
 method Dictionary<T, U>.ContainsValue(Value: U): Boolean;
 begin
+  if Value = nil then
+    raise new SugarArgumentNullException("Value");
+
   exit mapped.allValues.containsObject(Value);
 end;
 
-method Dictionary<T, U>.Remove(Key: T);
+method Dictionary<T, U>.Remove(Key: T): Boolean;
 begin
-  mapped.removeObjectForKey(Key);
+  result := ContainsKey(Key);
+  if result then
+    mapped.removeObjectForKey(Key);
 end;
 
 method Dictionary<T, U>.GetItem(Key: T): U;
 begin
-  exit mapped.objectForKey(Key);
+  result := mapped.objectForKey(Key);
+
+  if result = nil then
+    raise new SugarKeyNotFoundException("Entry with specified key does not exist");
 end;
 
 method Dictionary<T, U>.Add(Key: T; Value: U);
 begin
+  if Key = nil then
+    raise new SugarArgumentNullException("Key");
+
+  if Value = nil then
+    raise new SugarArgumentNullException("Value");
+
+  if mapped.objectForKey(Key) <> nil then
+    raise new SugarArgumentException("An element with the same key already exists in the dictionary");
+
   mapped.setObject(Value) forKey(Key);
 end;
 
