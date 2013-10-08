@@ -62,6 +62,7 @@
     <Compile Include="Tests\Stack.pas" />
     <Compile Include="Tests\String.pas" />
     <Compile Include="Tests\StringBuilder.pas" />
+    <Compile Include="Tests\UserSettings.pas" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Main\" />

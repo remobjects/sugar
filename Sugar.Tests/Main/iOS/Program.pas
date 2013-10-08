@@ -20,7 +20,8 @@ begin
     var results := TestRunner.RunAll;
     var output := new StringPrinter(results);
     NSLog("%@", output.Result);
-    NSLog("");
+    //giving time for output to catch our log
+    NSThread.sleepForTimeInterval(0.2);
     result := 0;
   end;
 end;

@@ -117,6 +117,7 @@
     <Compile Include="Tests\Stack.pas" />
     <Compile Include="Tests\String.pas" />
     <Compile Include="Tests\StringBuilder.pas" />
+    <Compile Include="Tests\UserSettings.pas" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Main\WinRT\Package.appxmanifest">
