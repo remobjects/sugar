@@ -30,8 +30,7 @@ begin
   Instance := self;
   ContentView := R.layout.main;
 
-  var results := TestRunner.RunAll([new BinaryTest, new DateTimeTest, new DictionaryTest, new ExtensionsTest, new GuidTest, new HashSetTest,
-                                    new ListTest, new QueueTest, new StackTest, new StringTest, new StringBuilderTest, new UserSettingsTest]);//RunAll("sugar.test");
+  var results := TestRunner.RunAll(self);
   var output := new StringPrinter(results);
 
   var MaxLogSize := 1000;
@@ -39,8 +38,10 @@ begin
   for i: Integer := 0 to output.Result.Length / MaxLogSize do begin
     var Start := i * MaxLogSize;
     var Count := if Start + MaxLogSize > output.Result.Length then output.Result.Length - Start else MaxLogSize;
-    Log.v("Sugar.Test", output.Result.Substring(Start, Count));
+    Log.i("Sugar.Test", output.Result.Substring(Start, Count));
   end;
+
+  self.finish;
 end;
 
 class method MainActivity.CurrentContext: Context;

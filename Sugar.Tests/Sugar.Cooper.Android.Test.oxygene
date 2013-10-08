@@ -98,11 +98,11 @@
     <Compile Include="Tests\UserSettings.pas" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Sugar.TestFramework\RemObjects.Oxygene.Sugar.Cooper.TestFramework.oxygene">
-      <Name>RemObjects.Oxygene.Sugar.Cooper.TestFramework</Name>
-      <Project>{dba17ca8-59bc-4544-a0f5-c632737d5aa0}</Project>
+    <ProjectReference Include="..\Sugar.TestFramework\RemObjects.Oxygene.Sugar.Android.TestFramework.oxygene">
+      <Name>RemObjects.Oxygene.Sugar.Android.TestFramework</Name>
+      <Project>{d4c017d4-e773-4138-872d-72adae69da3d}</Project>
       <Private>True</Private>
-      <HintPath>..\Sugar.TestFramework\bin\Debug\RemObjects.Oxygene.Sugar.TestFramework.jar</HintPath>
+      <HintPath>..\Sugar.TestFramework\bin\Debug\Android\RemObjects.Oxygene.Sugar.TestFramework.jar</HintPath>
     </ProjectReference>
     <ProjectReference Include="..\Sugar\RemObjects.Oxygene.Sugar.Cooper.Android.oxygene">
       <Name>RemObjects.Oxygene.Sugar.Cooper.Android</Name>
