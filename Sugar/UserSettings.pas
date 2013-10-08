@@ -91,6 +91,13 @@ type
 
       class method &Default: UserSettings;
     end;
+
+    UserSettingsHelper = public static class
+    private
+      class property Instance: System.Configuration.Configuration read write;
+    public
+      method GetConfiguration: System.Configuration.Configuration;
+    end;
     {$ENDIF}
   {$ELSEIF NOUGAT}
   UserSettings = public class mapped to Foundation.NSUserDefaults
@@ -228,8 +235,18 @@ begin
   mapped.Values.Add(Key, Value);
 end;
   {$ELSE}
+class method UserSettingsHelper.GetConfiguration: System.Configuration.Configuration;
+begin
+  if Instance = nil then
+    Instance := System.Configuration.ConfigurationManager.OpenExeConfiguration(System.Configuration.ConfigurationUserLevel.None);
+
+  exit Instance;
+end;
+
 method UserSettings.ReadString(Key: String; DefaultValue: String): String;
 begin
+  SugarArgumentNullException.RaiseIfNil(Key, "Key");
+
   if mapped.AppSettings.Settings[Key] = nil then
     exit DefaultValue;
 
@@ -238,25 +255,31 @@ end;
 
 method UserSettings.ReadInteger(Key: String; DefaultValue: Integer): Integer;
 begin
+  SugarArgumentNullException.RaiseIfNil(Key, "Key");
   if not Integer.TryParse(mapped.AppSettings.Settings[Key]:Value, out Result) then
     exit DefaultValue;
 end;
 
 method UserSettings.ReadBoolean(Key: String; DefaultValue: Boolean): Boolean;
 begin
+  SugarArgumentNullException.RaiseIfNil(Key, "Key");
   if not Boolean.TryParse(mapped.AppSettings.Settings[Key]:Value, out Result) then
     exit DefaultValue;
 end;
 
 method UserSettings.ReadDouble(Key: String; DefaultValue: Double): Double;
 begin
+  SugarArgumentNullException.RaiseIfNil(Key, "Key");
   if not Double.TryParse(mapped.AppSettings.Settings[Key]:Value, out Result) then
     exit DefaultValue;
 end;
 
 method UserSettings.WriteString(Key: String; Value: String);
 begin
-  mapped.AppSettings.Settings.Add(Key, Value);
+  if mapped.AppSettings.Settings[Key] = nil then
+    mapped.AppSettings.Settings.Add(Key, Value)
+  else
+    mapped.AppSettings.Settings[Key].Value := Value.ToString;
 end;
 
 method UserSettings.WriteInteger(Key: String; Value: Integer);
@@ -281,12 +304,15 @@ end;
 
 method UserSettings.Remove(Key: String);
 begin
+  if Key = nil then
+    raise new SugarArgumentNullException("Key");
+
   mapped.AppSettings.Settings.Remove(Key);
 end;
 
 class method UserSettings.&Default: UserSettings;
-begin
-  exit System.Configuration.ConfigurationManager.OpenExeConfiguration(System.Configuration.ConfigurationUserLevel.None);
+begin  
+  exit UserSettingsHelper.GetConfiguration;
 end;
   {$ENDIF}
 {$ELSEIF NOUGAT}
@@ -297,7 +323,6 @@ end;
 
 method UserSettings.ReadString(Key: String; DefaultValue: String): String;
 begin
-  //result := iif(Exists(Key), mapped.stringForKey(Key), DefaultValue);
   if Exists(Key) then
     exit mapped.stringForKey(Key)
   else
