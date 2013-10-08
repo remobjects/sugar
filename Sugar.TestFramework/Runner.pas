@@ -17,8 +17,12 @@ type
     method Run(Test: Testcase): TestcaseResult;
     method RunAll(params Tests: array of Testcase): List<TestcaseResult>;
     {$IF COOPER}
-    method RunAll(P: Package): List<TestcaseResult>;
-    method RunAll(PackageName: String): List<TestcaseResult>;
+      {$IF ANDROID}
+      method RunAll(Context: android.content.Context): List<TestcaseResult>;
+      {$ELSE}
+      method RunAll(P: Package): List<TestcaseResult>;
+      method RunAll(PackageName: String): List<TestcaseResult>;    
+      {$ENDIF}
     {$ELSEIF ECHOES}
     method RunAll(Asm: System.Reflection.&Assembly): List<TestcaseResult>;
     method RunAll(Domain: AppDomain): List<TestcaseResult>;
@@ -116,7 +120,39 @@ begin
 
   exit RetVal;
 end;
+  {$IF ANDROID}
+method TestRunner.RunAll(Context: android.content.Context): List<TestcaseResult>;
+begin
+  result := new List<TestcaseResult>;
+  
+  if Context = nil then
+    exit;
 
+  try
+    var Content := new dalvik.system.DexFile(Context.PackageCodePath):entries;
+
+    if Content = nil then
+      exit;
+
+    for Item: String in Content do begin
+      if (Item <> nil) and (not Item.contains("%")) then begin
+        var C := &Class.forName(Item);
+        if typeOf(Testcase).isAssignableFrom(C) then begin
+          var ctor := C.getConstructor([]);            
+          result.Add(Run(Testcase(ctor.newInstance(nil))));
+        end;
+      end;
+    end;
+
+  except
+    on E: Exception do begin
+      var RetVal := new TestcaseResult(Context.PackageName);
+      RetVal.TestResults.Add(HandleException("RunAll", E));
+      result.Add(RetVal);
+    end;
+  end;
+end;
+  {$ELSE}
 method TestRunner.RunAll(P: Package): List<TestcaseResult>;
 begin
   result := new List<TestcaseResult>;
@@ -162,6 +198,7 @@ method TestRunner.RunAll(PackageName: String): List<TestcaseResult>;
 begin
   exit RunAll(Package.Package[PackageName]);
 end;
+  {$ENDIF}
 {$ELSEIF ECHOES}
 class method TestRunner.ProcessMethod(Obj: Testcase; M: System.Reflection.MethodInfo): TestResult;
 begin
