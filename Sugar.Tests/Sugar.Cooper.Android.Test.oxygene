@@ -10,12 +10,9 @@
     <RootNamespace>sugar.cooper.android.test</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <Optimize>false</Optimize>
-    <OutputPath>.\bin\Debug\Android</OutputPath>
-    <DefineConstants>DEBUG;TRACE;</DefineConstants>
-    <GenerateDebugInfo>True</GenerateDebugInfo>
-    <EnableAsserts>True</EnableAsserts>
-    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <Optimize>False</Optimize>
+    <OutputPath>bin\Debug\Android\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;Android;</DefineConstants>
     <CaptureConsoleOutput>False</CaptureConsoleOutput>
     <StartMode>Project</StartMode>
     <RegisterForComInterop>False</RegisterForComInterop>
@@ -27,11 +24,9 @@
     <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <Optimize>true</Optimize>
-    <OutputPath>.\bin\Release\Android</OutputPath>
+    <OutputPath>bin\Release\Android\</OutputPath>
     <GenerateDebugInfo>False</GenerateDebugInfo>
     <EnableAsserts>False</EnableAsserts>
-    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
     <CaptureConsoleOutput>False</CaptureConsoleOutput>
     <StartMode>Project</StartMode>
     <RegisterForComInterop>False</RegisterForComInterop>
@@ -41,6 +36,7 @@
     <XmlDocWarningLevel>WarningOnPublicMembers</XmlDocWarningLevel>
     <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
     <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
+    <DefineConstants>Android;</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="Main\" />
@@ -99,6 +95,7 @@
     <Compile Include="Tests\Stack.pas" />
     <Compile Include="Tests\String.pas" />
     <Compile Include="Tests\StringBuilder.pas" />
+    <Compile Include="Tests\UserSettings.pas" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Sugar.TestFramework\RemObjects.Oxygene.Sugar.Cooper.TestFramework.oxygene">
@@ -107,11 +104,11 @@
       <Private>True</Private>
       <HintPath>..\Sugar.TestFramework\bin\Debug\RemObjects.Oxygene.Sugar.TestFramework.jar</HintPath>
     </ProjectReference>
-    <ProjectReference Include="..\Sugar\RemObjects.Oxygene.Sugar.Cooper.oxygene">
-      <Name>RemObjects.Oxygene.Sugar.Cooper</Name>
-      <Project>{d1ee6c41-515b-4175-873f-ee188ac43450}</Project>
+    <ProjectReference Include="..\Sugar\RemObjects.Oxygene.Sugar.Cooper.Android.oxygene">
+      <Name>RemObjects.Oxygene.Sugar.Cooper.Android</Name>
+      <Project>{8dac177a-64eb-4175-ac9c-e6b121b6f34b}</Project>
       <Private>True</Private>
-      <HintPath>..\Sugar\bin\Debug\Java\RemObjects.Oxygene.Sugar.jar</HintPath>
+      <HintPath>..\Sugar\bin\Debug\Android\RemObjects.Oxygene.Sugar.jar</HintPath>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Cooper.Android.targets" />
