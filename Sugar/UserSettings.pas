@@ -28,6 +28,7 @@ type
 
     class method &Default: UserSettings; mapped to userRoot;
   end;
+  {$ENDIF}
   {$ELSEIF ECHOES}    
     {$IF WINDOWS_PHONE}
     UserSettings = public class mapped to System.IO.IsolatedStorage.IsolatedStorageSettings
@@ -110,17 +111,22 @@ type
     method ReadBoolean(Key: String; DefaultValue: Boolean): Boolean;
     method ReadDouble(Key: String; DefaultValue: Double): Double;
 
-    method WriteString(Key: String; Value: String); mapped to setObject(Value) forKey(Key);
-    method WriteInteger(Key: String; Value: Integer); mapped to setInteger(Value) forKey(Key);
-    method WriteBoolean(Key: String; Value: Boolean); mapped to setBool(Value) forKey(Key);
-    method WriteDouble(Key: String; Value: Double); mapped to setDouble(Value) forKey(Key);
+    method WriteString(Key: String; Value: String);
+    method WriteInteger(Key: String; Value: Integer);
+    method WriteBoolean(Key: String; Value: Boolean);
+    method WriteDouble(Key: String; Value: Double);
 
     method Save; mapped to synchronize;
-    method Clear; mapped to removePersistentDomainForName(Foundation.NSBundle.mainBundle.bundleIdentifier);
-    method &Remove(Key: String); mapped to removeObjectForKey(Key);
+    method Clear;
+    method &Remove(Key: String);
     property Keys: array of String read GetKeys;
 
     class method &Default: UserSettings; mapped to standardUserDefaults;
+  end;
+
+  UserSettingsHelper = public static class
+  public
+    method GetBundleIdentifier: String;
   end;
   {$ENDIF}
 
@@ -318,7 +324,14 @@ end;
 {$ELSEIF NOUGAT}
 method UserSettings.Exists(Key: String): Boolean;
 begin
+  SugarArgumentNullException.RaiseIfNil(Key, "Key");
   exit mapped.objectForKey(Key) <> nil;
+end;
+
+method UserSettings.Clear;
+begin
+  mapped.removePersistentDomainForName(UserSettingsHelper.GetBundleIdentifier);
+  mapped.synchronize;
 end;
 
 method UserSettings.ReadString(Key: String; DefaultValue: String): String;
@@ -344,12 +357,53 @@ begin
   result := iif(Exists(Key), mapped.doubleForKey(Key), DefaultValue);
 end;
 
+method UserSettings.WriteString(Key: String; Value: String);
+begin
+  SugarArgumentNullException.RaiseIfNil(Key, "Key");
+  mapped.setObject(Value) forKey(Key);
+end;
+
+method UserSettings.WriteInteger(Key: String; Value: Integer);
+begin
+  SugarArgumentNullException.RaiseIfNil(Key, "Key");
+  mapped.setInteger(Value) forKey(Key);
+end;
+
+method UserSettings.WriteBoolean(Key: String; Value: Boolean);
+begin
+  SugarArgumentNullException.RaiseIfNil(Key, "Key");
+  mapped.setBool(Value) forKey(Key);
+end;
+
+method UserSettings.WriteDouble(Key: String; Value: Double);
+begin
+  SugarArgumentNullException.RaiseIfNil(Key, "Key");
+  mapped.setDouble(Value) forKey(Key);
+end;
+
+method UserSettings.&Remove(Key: String);
+begin
+  SugarArgumentNullException.RaiseIfNil(Key, "Key");
+  mapped.removeObjectForKey(Key);
+end;
+
 method UserSettings.GetKeys: array of String;
 begin
-  var lValues := mapped.dictionaryRepresentation.allKeys;
+  mapped.synchronize;
+  var lValues := mapped.persistentDomainForName(UserSettingsHelper.GetBundleIdentifier):allKeys;
+  if lValues = nil then
+    exit [];
+
   result := new String[lValues.count];
   for i: Integer := 0 to lValues.count - 1 do
     result[i] := lValues.objectAtIndex(i);
+end;
+
+class method UserSettingsHelper.GetBundleIdentifier: String;
+begin
+  result := Foundation.NSBundle.mainBundle.bundleIdentifier;
+  if result = nil then
+    result := Foundation.NSBundle.mainBundle.executablePath.lastPathComponent.stringByDeletingPathExtension;  
 end;
 {$ENDIF}
 
