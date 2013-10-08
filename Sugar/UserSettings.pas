@@ -9,6 +9,32 @@ uses
 
 type
   {$IF COOPER}
+  {$IF ANDROID}
+  UserSettings = public class //interface mapped to android.content.SharedPreferences
+  private    
+    method get_Keys: array of String;
+    property Instance: android.content.SharedPreferences read write;
+    constructor;
+    constructor(anInstance: android.content.SharedPreferences);
+  public
+    method ReadString(Key: String; DefaultValue: String): String;
+    method ReadInteger(Key: String; DefaultValue: Integer): Integer;
+    method ReadBoolean(Key: String; DefaultValue: Boolean): Boolean;
+    method ReadDouble(Key: String; DefaultValue: Double): Double;
+
+    method WriteString(Key: String; Value: String);
+    method WriteInteger(Key: String; Value: Integer);
+    method WriteBoolean(Key: String; Value: Boolean);
+    method WriteDouble(Key: String; Value: Double);
+
+    method Save; empty;
+    method Clear;
+    method &Remove(Key: String);
+    property Keys: array of String read get_Keys;
+
+    class method &Default(CurrentContext: android.content.Context): UserSettings;
+  end;
+  {$ELSE}
   UserSettings = public class mapped to java.util.prefs.Preferences
   public
     method ReadString(Key: String; DefaultValue: String): String; mapped to get(Key, DefaultValue);
@@ -132,7 +158,88 @@ type
 
 implementation
 
-{$IF ECHOES}
+{$IF ANDROID}
+constructor UserSettings;
+begin
+  constructor(nil);
+end;
+
+constructor UserSettings(anInstance: android.content.SharedPreferences);
+begin
+  SugarArgumentNullException.RaiseIfNil(anInstance, "Instance");
+  Instance := anInstance;
+end;
+
+method UserSettings.Clear;
+begin
+  Instance.edit.clear.apply;
+end;
+
+class method UserSettings.&Default(CurrentContext: android.content.Context): UserSettings;
+begin  
+  SugarArgumentNullException.RaiseIfNil(CurrentContext, "CurrentContext");
+  exit new UserSettings(CurrentContext.getSharedPreferences("Sugar", android.content.Context.MODE_PRIVATE));
+end;
+
+method UserSettings.get_Keys: array of String;
+begin
+  exit Instance.All.keySet.toArray(new String[0]);
+end;
+
+method UserSettings.ReadBoolean(Key: String; DefaultValue: Boolean): Boolean;
+begin
+  SugarArgumentNullException.RaiseIfNil(Key, "Key");
+  exit Instance.getBoolean(Key, DefaultValue);
+end;
+
+method UserSettings.ReadDouble(Key: String; DefaultValue: Double): Double;
+begin
+  SugarArgumentNullException.RaiseIfNil(Key, "Key");
+  exit Double.longBitsToDouble(Instance.getLong(Key, Double.doubleToRawLongBits(DefaultValue)));
+end;
+
+method UserSettings.ReadInteger(Key: String; DefaultValue: Integer): Integer;
+begin
+  SugarArgumentNullException.RaiseIfNil(Key, "Key");
+  exit Instance.getInt(Key, DefaultValue);
+end;
+
+method UserSettings.ReadString(Key: String; DefaultValue: String): String;
+begin
+  SugarArgumentNullException.RaiseIfNil(Key, "Key");
+  exit Instance.getString(Key, DefaultValue);
+end;
+
+method UserSettings.&Remove(Key: String);
+begin
+  SugarArgumentNullException.RaiseIfNil(Key, "Key");
+  Instance.edit.remove(Key).apply;
+end;
+
+method UserSettings.WriteBoolean(Key: String; Value: Boolean);
+begin
+  SugarArgumentNullException.RaiseIfNil(Key, "Key");
+  Instance.edit.putBoolean(Key, Value).apply;
+end;
+
+method UserSettings.WriteDouble(Key: String; Value: Double);
+begin
+  SugarArgumentNullException.RaiseIfNil(Key, "Key");
+  Instance.edit.putLong(Key, Double.doubleToRawLongBits(Value)).apply;
+end;
+
+method UserSettings.WriteInteger(Key: String; Value: Integer);
+begin
+  SugarArgumentNullException.RaiseIfNil(Key, "Key");
+  Instance.edit.putInt(Key, Value).apply;
+end;
+
+method UserSettings.WriteString(Key: String; Value: String);
+begin
+  SugarArgumentNullException.RaiseIfNil(Key, "Key");
+  Instance.edit.putString(Key, Value).apply;
+end;
+{$ELSEIF ECHOES}
   {$IF WINDOWS_PHONE}
 method UserSettings.ReadBoolean(Key: String; DefaultValue: Boolean): Boolean;
 begin
