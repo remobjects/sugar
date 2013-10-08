@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # RemObjects Fire
 Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "RemObjects.Oxygene.Sugar.Cooper", "Sugar\RemObjects.Oxygene.Sugar.Cooper.oxygene", "{D1EE6C41-515B-4175-873F-EE188AC43450}"
 EndProject
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "RemObjects.Oxygene.Sugar.Cooper.Android", "Sugar\RemObjects.Oxygene.Sugar.Cooper.Android.oxygene", "{8DAC177A-64EB-4175-AC9C-E6B121B6F34B}"
+EndProject
 Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "RemObjects.Oxygene.Sugar.Echoes", "Sugar\RemObjects.Oxygene.Sugar.Echoes.oxygene", "{79301A0C-1F95-4FB0-9605-207E288C6171}"
 EndProject
 Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "RemObjects.Oxygene.Sugar.Echoes.WP8", "Sugar\RemObjects.Oxygene.Sugar.Echoes.WP8.oxygene", "{BD5D51E2-B11A-4356-9450-64566F8CDC38}"
@@ -76,6 +78,10 @@ Global
 		{3AB69816-9882-4FA6-ABE5-C146199F5279}.Debug|AnyCPU.Build.0 = Debug|AnyCPU
 		{3AB69816-9882-4FA6-ABE5-C146199F5279}.Release|AnyCPU.ActiveCfg = Release|AnyCPU
 		{3AB69816-9882-4FA6-ABE5-C146199F5279}.Release|AnyCPU.Build.0 = Release|AnyCPU
+		{8DAC177A-64EB-4175-AC9C-E6B121B6F34B}.Debug|AnyCPU.ActiveCfg = Debug|AnyCPU
+		{8DAC177A-64EB-4175-AC9C-E6B121B6F34B}.Debug|AnyCPU.Build.0 = Debug|AnyCPU
+		{8DAC177A-64EB-4175-AC9C-E6B121B6F34B}.Release|AnyCPU.ActiveCfg = Release|AnyCPU
+		{8DAC177A-64EB-4175-AC9C-E6B121B6F34B}.Release|AnyCPU.Build.0 = Release|AnyCPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		ideSolutionNode = FALSE
