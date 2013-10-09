@@ -66,10 +66,10 @@ type
       method ReadBoolean(Key: String; DefaultValue: Boolean): Boolean;
       method ReadDouble(Key: String; DefaultValue: Double): Double;
 
-      method WriteString(Key: String; Value: String); mapped to &Add(Key, Value);
-      method WriteInteger(Key: String; Value: Integer); mapped to &Add(Key, Value);
-      method WriteBoolean(Key: String; Value: Boolean); mapped to &Add(Key, Value);
-      method WriteDouble(Key: String; Value: Double); mapped to &Add(Key, Value);
+      method WriteString(Key: String; Value: String);
+      method WriteInteger(Key: String; Value: Integer);
+      method WriteBoolean(Key: String; Value: Boolean);
+      method WriteDouble(Key: String; Value: Double);
 
       method Save; mapped to Save;
       method Clear; mapped to Clear;
@@ -270,8 +270,28 @@ begin
   exit mapped.ApplicationSettings;
 end;
 
-method UserSettings.get_Keys: array of String;
+method UserSettings.WriteBoolean(Key: String; Value: Boolean);
 begin
+  mapped[Key] := Value;
+end;
+
+method UserSettings.WriteDouble(Key: String; Value: Double);
+begin
+  mapped[Key] := Value;
+end;
+
+method UserSettings.WriteInteger(Key: String; Value: Integer);
+begin
+  mapped[Key] := Value;
+end;
+
+method UserSettings.WriteString(Key: String; Value: String);
+begin
+  mapped[Key] := Value;
+end;
+
+method UserSettings.get_Keys: array of String;
+begin  
   result := new String[mapped.ApplicationSettings.Keys.Count];
   var Count := 0;
   var Enumerator := mapped.ApplicationSettings.Keys.GetEnumerator;
