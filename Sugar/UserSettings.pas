@@ -350,22 +350,22 @@ end;
 
 method UserSettings.WriteBoolean(Key: String; Value: Boolean);
 begin
-  mapped.Values.Add(Key, Value);
+  mapped.Values[Key] := Value;
 end;
 
 method UserSettings.WriteDouble(Key: String; Value: Double);
 begin
-  mapped.Values.Add(Key, Value);
+  mapped.Values[Key] := Value;
 end;
 
 method UserSettings.WriteInteger(Key: String; Value: Integer);
 begin
-  mapped.Values.Add(Key, Value);
+  mapped.Values[Key] := Value;
 end;
 
 method UserSettings.WriteString(Key: String; Value: String);
 begin
-  mapped.Values.Add(Key, Value);
+  mapped.Values[Key] := Value;
 end;
   {$ELSE}
 class method UserSettingsHelper.GetConfiguration: System.Configuration.Configuration;
