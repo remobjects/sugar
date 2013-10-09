@@ -121,7 +121,7 @@
     <Compile Include="..\..\Tests\Stack.pas" />
     <Compile Include="..\..\Tests\String.pas" />
     <Compile Include="..\..\Tests\StringBuilder.pas" />
-    <Compile Include="Tests\UserSettings.pas" />
+    <Compile Include="..\..\Tests\UserSettings.pas" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -172,6 +172,7 @@
     <Folder Include="Resources\" />
     <Folder Include="..\..\Printer\" />
     <Folder Include="..\..\Tests\" />
+    <Folder Include="Tests\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Sugar.TestFramework\RemObjects.Oxygene.Sugar.Echoes.WP8.TestFramework.oxygene">
@@ -198,7 +199,7 @@
     <VisualStudio>
       <FlavorProperties Guid="{c089c8c0-30e0-4e22-80c0-ce093f111a43}" User="">
         <SilverlightMobileCSProjectFlavor>
-          <FullDeploy>True</FullDeploy>
+          <FullDeploy>False</FullDeploy>
           <DebuggerType>Managed</DebuggerType>
           <DebuggerAgentType>Managed</DebuggerAgentType>
           <Tombstone>False</Tombstone>

@@ -36,6 +36,7 @@ begin
   var Results := RemObjects.Oxygene.Sugar.TestFramework.TestRunner.RunAll;
   var Output := new Sugar.Test.StringPrinter(Results);
   System.Diagnostics.Debug.WriteLine(Output.Result);
+  Application.Current.Terminate;
 end;
 
 end.
