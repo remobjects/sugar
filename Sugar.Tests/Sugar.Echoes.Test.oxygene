@@ -75,6 +75,7 @@
     <Compile Include="Tests\HashSet.pas" />
     <Compile Include="Tests\List.pas" />
     <Compile Include="Tests\Queue.pas" />
+    <Compile Include="Tests\Random.pas" />
     <Compile Include="Tests\Stack.pas" />
     <Compile Include="Tests\String.pas" />
     <Compile Include="Tests\StringBuilder.pas" />

@@ -46,6 +46,14 @@
     <Reference Include="com.remobjects.oxygene.rtl.jar">
       <Private>True</Private>
     </Reference>
+    <Reference Include="RemObjects.Oxygene.Sugar.jar">
+      <HintPath>..\Sugar\bin\Debug\Java\RemObjects.Oxygene.Sugar.jar</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="RemObjects.Oxygene.Sugar.TestFramework.jar">
+      <HintPath>..\Sugar.TestFramework\bin\Debug\Java\RemObjects.Oxygene.Sugar.TestFramework.jar</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="rt.jar" />
   </ItemGroup>
   <ItemGroup>
@@ -59,6 +67,7 @@
     <Compile Include="Tests\HashSet.pas" />
     <Compile Include="Tests\List.pas" />
     <Compile Include="Tests\Queue.pas" />
+    <Compile Include="Tests\Random.pas" />
     <Compile Include="Tests\Stack.pas" />
     <Compile Include="Tests\String.pas" />
     <Compile Include="Tests\StringBuilder.pas" />
@@ -70,20 +79,6 @@
     <Folder Include="Printer\" />
     <Folder Include="Tests" />
     <Folder Include="Properties\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Sugar.TestFramework\RemObjects.Oxygene.Sugar.Cooper.TestFramework.oxygene">
-      <Name>RemObjects.Oxygene.Sugar.Cooper.TestFramework</Name>
-      <Project>{dba17ca8-59bc-4544-a0f5-c632737d5aa0}</Project>
-      <Private>True</Private>
-      <HintPath>..\Sugar.TestFramework\bin\Debug\RemObjects.Oxygene.Sugar.TestFramework.jar</HintPath>
-    </ProjectReference>
-    <ProjectReference Include="..\Sugar\RemObjects.Oxygene.Sugar.Cooper.oxygene">
-      <Name>RemObjects.Oxygene.Sugar.Cooper</Name>
-      <Project>{d1ee6c41-515b-4175-873f-ee188ac43450}</Project>
-      <Private>True</Private>
-      <HintPath>..\Sugar\bin\Debug\Java\RemObjects.Oxygene.Sugar.jar</HintPath>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Cooper.targets" />
   <PropertyGroup>
