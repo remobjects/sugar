@@ -47,10 +47,7 @@
     <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="android.jar">
-      <HintPath>C:\Android\platforms\android-18\android.jar</HintPath>
-      <Private>True</Private>
-    </Reference>
+    <Reference Include="android.jar" />
     <Reference Include="com.remobjects.oxygene.rtl.jar">
       <Private>True</Private>
     </Reference>
@@ -111,7 +108,7 @@
     <Folder Include="Properties\" />
     <Folder Include="XML\" />
   </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Cooper.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Cooper.Android.targets" />
   <PropertyGroup>
     <PreBuildEvent />
   </PropertyGroup>
