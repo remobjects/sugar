@@ -58,13 +58,15 @@ begin
 end;
 
 class method Assert.CheckDouble(Expected: Double; Actual: Double; Message: String);
-begin
-  FailIf(Expected <> Actual, Message);
+begin  
+  var RetVal := {$IF COOPER}java.lang.Math.abs{$ELSEIF ECHOES}Math.Abs{$ELSEIF NOUGAT}rtl.fabs{$ENDIF}(Expected - Actual) < 0.000000000000001;
+  FailIf(not RetVal, Message);
 end;
 
 class method Assert.CheckDouble(Expected: Double; Actual: Double);
 begin
-  FailIf(Expected <> Actual, Expected, Actual, nil);
+  var RetVal := {$IF COOPER}java.lang.Math.abs{$ELSEIF ECHOES}Math.Abs{$ELSEIF NOUGAT}rtl.fabs{$ENDIF}(Expected - Actual) < 0.000000000000001;
+  FailIf(not RetVal, Expected, Actual, nil);
 end;
 
 class method Assert.CheckString(Expected: String; Actual: String; Message: String);
