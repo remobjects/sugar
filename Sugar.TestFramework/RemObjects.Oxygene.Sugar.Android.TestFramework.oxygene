@@ -58,12 +58,9 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="android.jar">
-      <HintPath>C:\Android\platforms\android-18\android.jar</HintPath>
-      <Private>True</Private>
-    </Reference>
+    <Reference Include="android.jar" />
   </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Cooper.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Cooper.Android.targets" />
   <PropertyGroup>
     <PreBuildEvent />
   </PropertyGroup>
