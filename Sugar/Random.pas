@@ -12,18 +12,17 @@ type
     method NextInt(MaxValue: Integer): Integer; mapped to nextInt(MaxValue);
     method NextDouble: Double; mapped to nextDouble;
   end;
-  {$ELSEIF ECHOES}
-  Random = public class mapped to System.Random
+  {$ELSE}
+  Random = public class 
+  private
+    const Multiplier: UInt64 = $5DEECE66D;
+    const Mask: UInt64 = (UInt64(1) shl 48) - 1;
+  private
+    Seed: UInt64 := 0;
+    method Next(Bits: Integer): UInt32;
   public
-    method NextInt: Integer; mapped to Next;
-    method NextInt(MaxValue: Integer): Integer; mapped to Next(MaxValue);
-    method NextDouble: Double; mapped to NextDouble;
-  end;
-  {$ELSEIF NOUGAT}
-  Random = public class
-  public
-    method init: id; override;
-    method initWithSeed(Seed: Integer): id;
+    constructor;
+    constructor(aSeed: UInt64);
 
     method NextInt: Integer;
     method NextInt(MaxValue: Integer): Integer;
@@ -33,34 +32,56 @@ type
 
 implementation
 
-{$IF NOUGAT}
-method Random.init: id;
+{$IF NOT COOPER}
+method Random.Next(Bits: Integer): UInt32;
 begin
-  var interval: rtl.__struct_timeval;
-  gettimeofday(@interval, nil);
-  srand(interval.tv_usec * interval.tv_sec);
-  result := inherited;
+  Seed := (Seed * Multiplier + $B) and Mask;
+  exit UInt32(Seed shr (48 - Bits));
 end;
 
-method Random.initWithSeed(Seed: Integer): id;
+constructor Random;
 begin
-  srand(Seed);
-  result := self;
+  {$IF ECHOES}
+  constructor(System.DateTime.Now.Ticks);
+  {$ELSEIF NOUGAT}
+  var interval: rtl.__struct_timeval;
+  gettimeofday(@interval, nil);  
+  constructor(interval.tv_usec * interval.tv_sec);
+  {$ENDIF}
+end;
+
+constructor Random(aSeed: UInt64);
+begin
+  Seed := (aSeed xor Multiplier) and Mask;
 end;
 
 method Random.NextInt: Integer;
 begin
-  exit rand;
+  exit Integer(Next(32))
 end;
 
 method Random.NextInt(MaxValue: Integer): Integer;
 begin
-  exit rand mod MaxValue;
+  if MaxValue <= 0 then
+    raise new SugarArgumentException("MaxValue must be positive");
+
+  if (MaxValue and -MaxValue) = MaxValue then
+    exit Integer((MaxValue * Int64(Next(31))) shr 31);
+
+  var Bits: Int64;
+  var Val: Int64;
+
+  repeat
+    Bits := Next(31);
+    Val := Bits mod UInt32(MaxValue);
+  until not (Bits - Val + (MaxValue - 1) < 0);
+
+  exit Integer(Val);
 end;
 
 method Random.NextDouble: Double;
 begin
-  result := Double(rand) / Double(RAND_MAX);
+  exit ((Int64(Next(26)) shl 27) + Next(27)) / Double((Int64(1) shl 53));
 end;
 {$ENDIF}
 
