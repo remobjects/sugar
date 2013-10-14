@@ -12,7 +12,7 @@ type
     property Path: String read mapped.Path;
     property QueryString: String read mapped.Query;
     property Fragment: String read mapped.toURI.Fragment;
-    property ToString: String read mapped.toString;
+    property UserInfo: String read mapped.UserInfo;
 
     class method FromString(UriString: String): Url;
   end;
