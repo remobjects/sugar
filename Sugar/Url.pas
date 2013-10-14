@@ -13,6 +13,8 @@ type
     property QueryString: String read mapped.Query;
     property Fragment: String read mapped.toURI.Fragment;
     property ToString: String read mapped.toString;
+
+    class method FromString(UriString: String): Url;
   end;
   {$ELSEIF ECHOES}
   Url = public class mapped to System.Uri
@@ -24,6 +26,8 @@ type
     property QueryString: String read mapped.Query;
     property Fragment: String read mapped.Fragment;
     property ToString: String read mapped.ToString;
+
+    class method FromString(UriString: String): Url;
   end;
   {$ELSEIF NOUGAT}
   Url = public class mapped to Foundation.NSURL
@@ -34,10 +38,34 @@ type
     property Path: String read mapped.path;
     property QueryString: String read mapped.query;
     property Fragment: String read mapped.fragment;
-    property ToString: String read mapped.absoluteString;
+    property ToString: String read mapped.absoluteString;    
+    
+    class method FromString(UriString: String): Url;
   end;
   {$ENDIF}
 
 implementation
+
+class method Url.FromString(UriString: String): Url;
+begin
+  if String.IsNullOrEmpty(UriString) then
+    raise new SugarArgumentNullException("UriString");
+
+  {$IF COOPER}
+  exit new java.net.URI(UriString).toURL; //URI performs validation
+  {$ELSEIF ECHOES}
+  exit new System.Uri(UriString);
+  {$ELSEIF NOUGAT}
+  var Value := Foundation.NSURL.URLWithString(UriString);
+  if Value = nil then
+    raise new SugarArgumentException("Url was not in correct format");
+
+  var Req := Foundation.NSURLRequest.requestWithURL(Value);
+  if not Foundation.NSURLConnection.canHandleRequest(Req) then
+    raise new SugarArgumentException("Url was not in correct format");
+
+  exit Value;
+  {$ENDIF}
+end;
 
 end.
