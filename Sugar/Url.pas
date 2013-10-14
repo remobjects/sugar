@@ -18,14 +18,19 @@ type
   end;
   {$ELSEIF ECHOES}
   Url = public class mapped to System.Uri
+  private
+    method GetPort: Integer;
+    method GetFragment: String;
+    method GetUserInfo: String;
+    method GetQueryString: String;
   public
     property Scheme: String read mapped.Scheme;
     property Host: String read mapped.Host;
-    property Port: Int32 read mapped.Port;
+    property Port: Int32 read GetPort;
     property Path: String read mapped.AbsolutePath;
-    property QueryString: String read mapped.Query;
-    property Fragment: String read mapped.Fragment;
-    property ToString: String read mapped.ToString;
+    property QueryString: String read GetQueryString;
+    property Fragment: String read GetFragment;
+    property UserInfo: String read GetUserInfo;
 
     class method FromString(UriString: String): Url;
   end;
@@ -70,6 +75,46 @@ end;
 method Url.GetPort: Integer;
 begin
   exit if mapped.port = nil then -1 else mapped.port.intValue;
+end;
+{$ENDIF}
+
+{$IF ECHOES}
+method Url.GetPort: Integer;
+begin
+  if mapped.IsDefaultPort then
+    exit -1;
+
+  exit mapped.Port;
+end;
+
+method Url.GetFragment: String;
+begin
+  if mapped.Fragment.Length = 0 then
+    exit nil;
+
+  if mapped.Fragment.StartsWith("#") then
+    exit mapped.Fragment.Substring(1);
+
+  exit mapped.Fragment;
+end;
+
+method Url.GetQueryString: String;
+begin
+  if mapped.Query.Length = 0 then
+    exit nil;
+
+  if mapped.Query.StartsWith("?") then
+    exit mapped.Query.Substring(1);
+
+  exit mapped.Query;
+end;
+
+method Url.GetUserInfo: String;
+begin
+  if mapped.UserInfo.Length = 0 then
+    exit nil;
+
+  exit mapped.UserInfo;
 end;
 {$ENDIF}
 
