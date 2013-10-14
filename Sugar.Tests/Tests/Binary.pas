@@ -102,8 +102,7 @@ begin
   AreEquals(BytesToWrite, Data.ReadRangeOfBytes(Range.MakeRange(5, 3)));
 
   Assert.IsException(->Data.WriteBytes(nil, 0)); //null
-  {$WARNING Disable due to compiler bug #64122}
-  //Assert.IsException(->Data.WriteBytes(BytesToWrite, 4)); //out of range
+  Assert.IsException(->Data.WriteBytes(BytesToWrite, 4)); //out of range
 end;
 
 method BinaryTest.TestWriteData;
