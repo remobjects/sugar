@@ -31,20 +31,47 @@ type
   end;
   {$ELSEIF NOUGAT}
   Url = public class mapped to Foundation.NSURL
+  private
+    method GetUserInfo: String;
+    method GetPort: Integer;
   public
     property Scheme: String read mapped.scheme;
     property Host: String read mapped.host;
-    property Port: Int32 read mapped.port:intValue;
+    property Port: Int32 read GetPort;
     property Path: String read mapped.path;
     property QueryString: String read mapped.query;
     property Fragment: String read mapped.fragment;
-    property ToString: String read mapped.absoluteString;    
+    property UserInfo: String read GetUserInfo;
     
+    method description: NSString; override;
     class method FromString(UriString: String): Url;
   end;
   {$ENDIF}
 
 implementation
+
+{$IF NOUGAT}
+method Url.description: NSString;
+begin
+  exit mapped.absoluteString;
+end;
+
+method Url.GetUserInfo: String;
+begin
+  if mapped.user = nil then
+    exit nil;
+
+  if mapped.password <> nil then
+    exit mapped.user + ":" + mapped.password
+  else
+    exit mapped.user;
+end;
+
+method Url.GetPort: Integer;
+begin
+  exit if mapped.port = nil then -1 else mapped.port.intValue;
+end;
+{$ENDIF}
 
 class method Url.FromString(UriString: String): Url;
 begin
