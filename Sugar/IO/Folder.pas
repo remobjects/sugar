@@ -34,6 +34,7 @@ type
     method Rename(NewName: String);
 
     class method FromPath(Value: String): Folder;
+    class method UserLocal: Folder;
 
     {$IF WINDOWS_PHONE OR NETFX_CORE}
     property Path: String read mapped.Path;
@@ -60,6 +61,9 @@ implementation
 method Folder.GetName: String;
 begin
 
+class method Folder.UserLocal: Folder;
+begin
+  exit Windows.Storage.ApplicationData.Current.LocalFolder;
 end;
 
 method Folder.CreateFile(FileName: String; FailIfExists: Boolean): File;
@@ -121,6 +125,11 @@ end;
 method Folder.GetName: String;
 begin
   exit new System.IO.DirectoryInfo(mapped).Name;
+end;
+
+class method Folder.UserLocal: Folder;
+begin
+  exit Folder(System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile));
 end;
 
 method Folder.CreateFile(FileName: String; FailIfExists: Boolean): File;
@@ -220,6 +229,11 @@ begin
   exit NewFile;
 end;
 
+class method Folder.UserLocal: Folder;
+begin
+  exit System.getProperty("user.home");
+end;
+
 method Folder.CreateFolder(FolderName: String; FailIfExists: Boolean): Folder;
 begin
   var NewFolder := new java.io.File(mapped, FolderName);
@@ -301,6 +315,11 @@ begin
 
   Manager.createFileAtPath(NewFileName) contents(nil) attributes(nil);
   exit File(NewFileName);
+end;
+
+class method Folder.UserLocal: Folder;
+begin
+  exit GetSystemPath(NSSearchPathDirectory.NSUserDirectory, NSSearchPathDomainMask.NSUserDomainMask);
 end;
 
 method Folder.CreateFolder(FolderName: String; FailIfExists: Boolean): Folder;
