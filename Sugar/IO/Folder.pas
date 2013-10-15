@@ -55,6 +55,13 @@ type
   extension method Windows.Foundation.IAsyncOperation<TResult>.Await<TResult>: TResult;  
   {$ENDIF}
 
+  {$IF COOPER}
+  FolderHelper = public static class
+  public
+    method DeleteFolder(Value: java.io.File);
+  end;
+  {$ENDIF}
+
 implementation
 
 {$IF WINDOWS_PHONE OR NETFX_CORE}
@@ -233,7 +240,7 @@ end;
 
 class method Folder.UserLocal: Folder;
 begin
-  exit System.getProperty("user.home");
+  exit new java.io.File(System.getProperty("user.home"));
 end;
 
 method Folder.CreateFolder(FolderName: String; FailIfExists: Boolean): Folder;
@@ -246,13 +253,31 @@ begin
     exit NewFolder;
   end;
 
-  NewFolder.mkdir;
+  if not NewFolder.mkdir then
+    raise new SugarIOException("Failed to create new folder '{0}'", FolderName);
+
   exit NewFolder;
+end;
+
+class method FolderHelper.DeleteFolder(Value: java.io.File);
+begin
+  if Value.isDirectory then begin
+    var Items := Value.list;
+    for Item in Items do
+      DeleteFolder(new java.io.File(Value, Item));
+
+    Value.delete;
+  end
+  else
+    Value.delete;
 end;
 
 method Folder.Delete;
 begin
-  mapped.delete;
+  if not mapped.exists then
+    raise new SugarIOException(String.Format("Folder {0} not found", mapped.Name));
+
+  FolderHelper.DeleteFolder(mapped);
 end;
 
 method Folder.GetFile(FileName: String): File;
@@ -266,7 +291,7 @@ end;
 
 method Folder.GetFiles: array of File;
 begin
-  exit mapped.listFiles;
+  exit mapped.listFiles((f,n)->new java.io.File(f, n).isFile);
 end;
 
 method Folder.GetFolder(FolderName: String): Folder;
@@ -280,20 +305,19 @@ end;
 
 method Folder.GetFolders: array of Folder;
 begin
-  var Folders := mapped.list((f,n)->new java.io.File(f, n).isDirectory);
-  result := new Folder[Folders.length];
-  for i: Integer := 0 to Folders.length-1 do begin
-    result[i] := new java.io.File(mapped, Folders[i]);
-  end;
+  exit mapped.listFiles((f,n)->new java.io.File(f, n).isDirectory);
 end;
 
 method Folder.Rename(NewName: String);
 begin
-  var NewFolder := new java.io.File(mapped, NewName);
+  var NewFolder := new java.io.File(mapped.ParentFile, NewName);
   if NewFolder.exists then
     raise new SugarIOException(String.Format("Folder {0} already exists", NewName));
 
-  mapped.renameTo(NewFolder);
+  if not mapped.renameTo(NewFolder) then
+    raise new SugarIOException("Unable to rename folder '{0}' to '{1}'", mapped.Name, NewName);
+
+  mapped := NewFolder;
 end;
 
 class method Folder.FromPath(Value: String): Folder;
