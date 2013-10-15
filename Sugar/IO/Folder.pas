@@ -60,6 +60,8 @@ implementation
 {$IF WINDOWS_PHONE OR NETFX_CORE}
 method Folder.GetName: String;
 begin
+  exit mapped.Name;
+end;
 
 class method Folder.UserLocal: Folder;
 begin
@@ -152,7 +154,7 @@ method Folder.CreateFolder(FolderName: String; FailIfExists: Boolean): Folder;
 begin
   var NewFolderName := System.IO.Path.Combine(mapped, FolderName);
 
-  if System.IO.File.Exists(NewFolderName) then begin
+  if System.IO.Directory.Exists(NewFolderName) then begin
     if FailIfExists then
       raise new SugarIOException(String.Format(ErrorMessage.FOLDER_EXISTS, FolderName));
 
