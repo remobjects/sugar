@@ -15,12 +15,12 @@ uses
   RemObjects.Oxygene.Sugar.Collections;
 
 type
-  Folder = public class mapped to {$IF WINDOWS_PHONE OR NETFX_CORE}Windows.Storage.StorageFolder{$ELSEIF ECHOES}System.String{$ELSEIF COOPER}java.io.File{$ELSEIF NOUGAT}NSMutableString{$ENDIF}
+  Folder = public class mapped to {$IF WINDOWS_PHONE OR NETFX_CORE}Windows.Storage.StorageFolder{$ELSEIF ECHOES}System.String{$ELSEIF COOPER}java.io.File{$ELSEIF NOUGAT}Foundation.NSString{$ENDIF}
   private
+    class method GetSeparator: String;
   {$IF ECHOES}
     method GetName: String;
   {$ELSEIF NOUGAT}
-    method IsDirectory(aPath: String): Boolean;
     method Combine(BasePath: String; SubPath: String): String;
   {$ENDIF}
   public
@@ -49,16 +49,19 @@ type
     property Path: String read mapped;
     property Name: String read NSFileManager.defaultManager.displayNameAtPath(mapped);
     {$ENDIF}
+
+    class property Separator: String read GetSeparator;
   end;
 
   {$IF WINDOWS_PHONE OR NETFX_CORE}
   extension method Windows.Foundation.IAsyncOperation<TResult>.Await<TResult>: TResult;  
   {$ENDIF}
 
-  {$IF COOPER}
+  {$IF COOPER OR NOUGAT}
   FolderHelper = public static class
   public
-    method DeleteFolder(Value: java.io.File);
+    {$IF COOPER}method DeleteFolder(Value: java.io.File);{$ENDIF}
+    {$IF NOUGAT}method IsDirectory(Value: String): Boolean;{$ENDIF}
   end;
   {$ENDIF}
 
@@ -68,6 +71,11 @@ implementation
 method Folder.GetName: String;
 begin
   exit mapped.Name;
+end;
+
+class method Folder.GetSeparator: String;
+begin
+  exit "\";
 end;
 
 class method Folder.UserLocal: Folder;
@@ -134,6 +142,11 @@ end;
 method Folder.GetName: String;
 begin
   exit new System.IO.DirectoryInfo(mapped).Name;
+end;
+
+class method Folder.GetSeparator: String;
+begin
+  exit System.IO.Path.DirectorySeparatorChar;
 end;
 
 class method Folder.UserLocal: Folder;
@@ -236,6 +249,11 @@ begin
 
   NewFile.createNewFile;
   exit NewFile;
+end;
+
+class method Folder.GetSeparator: String;
+begin
+  exit java.io.File.separator;
 end;
 
 class method Folder.UserLocal: Folder;
@@ -343,9 +361,14 @@ begin
   exit File(NewFileName);
 end;
 
+class method Folder.GetSeparator: String;
+begin
+  exit "/";
+end;
+
 class method Folder.UserLocal: Folder;
 begin
-  exit GetSystemPath(NSSearchPathDirectory.NSUserDirectory, NSSearchPathDomainMask.NSUserDomainMask);
+  exit Folder(Foundation.NSHomeDirectory);
 end;
 
 method Folder.CreateFolder(FolderName: String; FailIfExists: Boolean): Folder;
@@ -359,7 +382,7 @@ begin
     exit Folder(NewFolderName);
   end;
 
-  Manager.createDirectoryAtPath(NewFolderName) attributes(nil);
+  Manager.createDirectoryAtPath(NewFolderName) withIntermediateDirectories(false) attributes(nil) error(nil);
   exit Folder(NewFolderName);
 end;
 
@@ -379,9 +402,9 @@ begin
   exit File(ExistingFileName);
 end;
 
-method Folder.IsDirectory(aPath: String): Boolean;
-begin
-  Foundation.NSFileManager.defaultManager.fileExistsAtPath(aPath) isDirectory(@Result);
+class method FolderHelper.IsDirectory(Value: String): Boolean;
+begin  
+  Foundation.NSFileManager.defaultManager.fileExistsAtPath(Value) isDirectory(@Result);
 end;
 
 method Folder.GetFiles: array of File;
@@ -392,9 +415,9 @@ begin
 
   var Files := new List<File>;
   for i: Integer := 0 to Items.count - 1 do begin
-    var item := Items.objectAtIndex(i);
-    if not IsDirectory(item) then
-      Files.Add(item);
+    var item := Combine(mapped, Items.objectAtIndex(i));
+    if not FolderHelper.IsDirectory(item) then
+      Files.Add(File(item));
   end;
 
   exit Files.ToArray;
@@ -417,9 +440,9 @@ begin
 
   var Folders := new List<Folder>;
   for i: Integer := 0 to Items.count - 1 do begin
-    var item := Items.objectAtIndex(i);
-    if IsDirectory(item) then
-      Folders.Add(item);
+    var item := Combine(mapped, Items.objectAtIndex(i));
+    if FolderHelper.IsDirectory(item) then
+      Folders.Add(Folder(item));
   end;
 
   exit Folders.ToArray;
@@ -437,6 +460,8 @@ begin
   var lError: NSError := nil; 
   if not Manager.moveItemAtPath(mapped) toPath(NewFolderName) error(var lError) then
     raise SugarNSErrorException.exceptionWithError(lError);
+
+  mapped := NewFolderName;
 end;
 
 method Folder.Combine(BasePath: String; SubPath: String): String;
