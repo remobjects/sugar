@@ -11,7 +11,7 @@ uses
 type
   UserSettingsTest = public class (Testcase)
   var
-    Data: UserSettings := UserSettings.Default{$IF ANDROID}(sugar.cooper.android.test.MainActivity.CurrentContext){$ENDIF};
+    Data: UserSettings := UserSettings.Default;
   public
     method TearDown; override;
 
@@ -177,12 +177,11 @@ end;
 
 method UserSettingsTest.&Default;
 begin
-  var Def := UserSettings.Default{$IF ANDROID}(sugar.cooper.android.test.MainActivity.CurrentContext){$ENDIF};
-  Assert.IsNotNull(Def);
-  Assert.CheckInt(0, length(Def.Keys));
+  Assert.IsNotNull(UserSettings.Default);
+  Assert.CheckInt(0, length(UserSettings.Default.Keys));
   Assert.CheckInt(0, length(Data.Keys));
-  Def.WriteBoolean("Boolean", true);
-  Assert.CheckInt(1, length(Def.Keys));
+  UserSettings.Default.WriteBoolean("Boolean", true);
+  Assert.CheckInt(1, length(UserSettings.Default.Keys));
   Assert.CheckInt(1, length(Data.Keys));
 end;
 
