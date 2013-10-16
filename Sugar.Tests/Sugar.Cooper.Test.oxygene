@@ -64,6 +64,7 @@
     <Compile Include="Tests\Dictionary.pas" />
     <Compile Include="Tests\Extensions.pas" />
     <Compile Include="Tests\Folder.pas" />
+    <Compile Include="Tests\File.pas" />
     <Compile Include="Tests\Guid.pas" />
     <Compile Include="Tests\HashSet.pas" />
     <Compile Include="Tests\List.pas" />

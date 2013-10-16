@@ -15,11 +15,8 @@ uses
 
 type
   MainActivity = public class(Activity)
-  private
-    class property Instance: MainActivity read write;
   public
     method onCreate(savedInstanceState: Bundle); override;
-    class method CurrentContext: Context;
   end;
 
 implementation
@@ -27,7 +24,7 @@ implementation
 method MainActivity.onCreate(savedInstanceState: Bundle);
 begin
   inherited;
-  Instance := self;
+  remobjects.oxygene.sugar.Environment.AppContext := self.ApplicationContext;
   ContentView := R.layout.main;
 
   var results := TestRunner.RunAll(self);
@@ -44,9 +41,5 @@ begin
   self.finish;
 end;
 
-class method MainActivity.CurrentContext: Context;
-begin
-  exit Instance;
-end;
 
 end.
