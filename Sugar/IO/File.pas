@@ -373,7 +373,7 @@ end;
 
 method File.&Copy(Destination: Folder): File;
 begin
-  &Copy(Destination, Name);
+  exit &Copy(Destination, Name);
 end;
 
 method File.&Copy(Destination: Folder; NewName: String): File;
@@ -418,14 +418,16 @@ begin
   exit File(NewFile);
 end;
 
-method File.Rename(NewName: String);
+method File.Rename(NewName: String): File;
 begin
   var CurrentFolder := NSString(mapped).stringByDeletingLastPathComponent;
-  Move(Folder(CurrentFolder), NewName);
+  exit Move(Folder(CurrentFolder), NewName);
 end;
 
 method File.AppendText(Content: String);
 begin
+  SugarArgumentNullException.RaiseIfNil(Content, "Data");
+
   var lData := NSString(Content).dataUsingEncoding(NSStringEncoding.NSUTF8StringEncoding);
   var fileHandle := NSFileHandle.fileHandleForWritingAtPath(mapped) as NSFileHandle;
   fileHandle.seekToEndOfFile;
@@ -454,6 +456,9 @@ end;
 
 method File.WriteBytes(Data: array of Byte);
 begin
+  if Data = nil then
+    raise new SugarArgumentNullException(Name);
+
   var lData := NSData.dataWithBytesNoCopy(^Void(Data)) length(length(Data));
   if not lData:writeToFile(mapped) atomically(true) then
     raise new SugarIOException("Failed to write data to a file");
@@ -461,6 +466,8 @@ end;
 
 method File.WriteText(Content: String);
 begin
+  SugarArgumentNullException.RaiseIfNil(Content, "Content");
+
   var lError: Foundation.NSError := nil;
   if not NSString(Content):writeToFile(mapped) atomically(true) encoding(NSStringEncoding.NSUTF8StringEncoding) error(var lError) then
     raise SugarNSErrorException.exceptionWithError(lError); 
