@@ -258,7 +258,11 @@ end;
 
 class method Folder.UserLocal: Folder;
 begin
+  {$IF ANDROID}
+  exit Environment.AppContext.FilesDir;
+  {$ELSE}
   exit new java.io.File(System.getProperty("user.home"));
+  {$ENDIF}
 end;
 
 method Folder.CreateFolder(FolderName: String; FailIfExists: Boolean): Folder;
