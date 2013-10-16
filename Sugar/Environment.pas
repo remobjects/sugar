@@ -4,15 +4,18 @@ interface
 
 type
   {$IF COOPER}
-  Environment = public class mapped to System
+  Environment = public class
   public 
-    class property NewLine: String read mapped.getProperty("line.separator");
-    class property UserName: String read mapped.getProperty("user.name");
-    class property OperatingSystemName: String read  mapped.getProperty("os.name");
-    class property OperatingSystemVersion: String read mapped.getProperty("os.version");
+    class property NewLine: String read System.getProperty("line.separator");
+    class property UserName: String read System.getProperty("user.name");
+    class property OperatingSystemName: String read System.getProperty("os.name");
+    class property OperatingSystemVersion: String read System.getProperty("os.version");
     class property TargetPlatform: TargetPlatform read TargetPlatform.Java;
     class property TargetPlatforName: String read 'Java';
-    class method GetEnvironmentVariable(aVariableName: String): String; mapped to getenv(aVariableName);
+    class method GetEnvironmentVariable(aVariableName: String): String;
+    {$IF ANDROID}
+    class property AppContext: android.content.Context read write;
+    {$ENDIF}
   {$ELSEIF ECHOES}
   Environment = public class mapped to System.Environment
   private
@@ -49,6 +52,13 @@ type
   TargetPlatform = public enum(Net, Java, Cocoa);
 
 implementation
+
+{$IF COOPER}
+class method Environment.GetEnvironmentVariable(aVariableName: String): String;
+begin
+  exit System.getenv(aVariableName);
+end;
+{$ENDIF}
 
 {$IF NETFX_CORE}
 class method Environment.GetUserName: String;

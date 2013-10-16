@@ -32,7 +32,7 @@ type
     method &Remove(Key: String);
     property Keys: array of String read get_Keys;
 
-    class method &Default(CurrentContext: android.content.Context): UserSettings;
+    class method &Default: UserSettings;
   end;
   {$ELSE}
   UserSettings = public class mapped to java.util.prefs.Preferences
@@ -175,10 +175,10 @@ begin
   Instance.edit.clear.apply;
 end;
 
-class method UserSettings.&Default(CurrentContext: android.content.Context): UserSettings;
+class method UserSettings.&Default: UserSettings;
 begin  
-  SugarArgumentNullException.RaiseIfNil(CurrentContext, "CurrentContext");
-  exit new UserSettings(CurrentContext.getSharedPreferences("Sugar", android.content.Context.MODE_PRIVATE));
+  SugarArgumentNullException.RaiseIfNil(Environment.AppContext, "Environment.AppContext");
+  exit new UserSettings(Environment.AppContext.getSharedPreferences("Sugar", android.content.Context.MODE_PRIVATE));
 end;
 
 method UserSettings.get_Keys: array of String;
