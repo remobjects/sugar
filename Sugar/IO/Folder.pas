@@ -395,6 +395,7 @@ end;
 
 method Folder.GetFile(FileName: String): File;
 begin
+  SugarArgumentNullException.RaiseIfNil(FileName, "FileName");
   var ExistingFileName := Combine(mapped, FileName);
   if not NSFileManager.defaultManager.fileExistsAtPath(ExistingFileName) then
     exit nil;
@@ -425,6 +426,7 @@ end;
 
 method Folder.GetFolder(FolderName: String): Folder;
 begin
+  SugarArgumentNullException.RaiseIfNil(FolderName, "FolderName");
   var ExistingFolderName := Combine(mapped, FolderName);
   if not NSFileManager.defaultManager.fileExistsAtPath(ExistingFolderName) then
     exit nil;
