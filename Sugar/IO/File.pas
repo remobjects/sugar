@@ -14,7 +14,7 @@ uses
   RemObjects.Oxygene.Sugar.Collections;
 
 type
-  File = public class mapped to {$IF WINDOWS_PHONE OR NETFX_CORE}Windows.Storage.StorageFile{$ELSEIF ECHOES}System.String{$ELSEIF COOPER}java.io.File{$ELSEIF NOUGAT}NSMutableString{$ENDIF}
+  File = public class mapped to {$IF WINDOWS_PHONE OR NETFX_CORE}Windows.Storage.StorageFile{$ELSEIF ECHOES}System.String{$ELSEIF COOPER}java.io.File{$ELSEIF NOUGAT}NSString{$ENDIF}
   private    
     {$IF ECHOES}
       {$IF NOT (WINDOWS_PHONE OR NETFX_CORE)}
@@ -27,8 +27,8 @@ type
     method &Copy(Destination: Folder): File;
     method &Copy(Destination: Folder; NewName: String): File;
     method Delete;
-    method Move(Destination: Folder);
-    method Move(Destination: Folder; NewName: String);
+    method Move(Destination: Folder): File;
+    method Move(Destination: Folder; NewName: String): File;
     method Rename(NewName: String);
 
     method AppendText(Content: String);
@@ -138,7 +138,7 @@ end;
 
 method File.&Copy(Destination: Folder): File;
 begin
-  &Copy(Destination, GetName);
+  exit &Copy(Destination, GetName);
 end;
 
 method File.&Copy(Destination: Folder; NewName: String): File;
@@ -153,22 +153,26 @@ end;
 
 method File.Delete;
 begin
+  if not System.IO.File.Exists(mapped) then
+    raise new SugarIOException("File {0} not found", mapped);
+
   System.IO.File.Delete(mapped);
 end;
 
-method File.Move(Destination: Folder);
+method File.Move(Destination: Folder): File;
 begin
-  Move(Destination, GetName);
+  exit Move(Destination, GetName);
 end;
 
-method File.Move(Destination: Folder; NewName: String);
+method File.Move(Destination: Folder; NewName: String): File;
 begin
   var NewFile := System.IO.Path.Combine(Destination, NewName);
+
   if System.IO.File.Exists(NewFile) then
     raise new SugarIOException("File "+NewName+" already exists");
 
   System.IO.File.Move(mapped, NewFile);
-  mapped := NewFile;
+  exit NewFile;
 end;
 
 method File.Rename(NewName: String);
@@ -178,6 +182,7 @@ end;
 
 method File.AppendText(Content: String);
 begin
+  SugarArgumentNullException.RaiseIfNil(Content, "Content");
   System.IO.File.AppendAllText(mapped, Content);
 end;
 
@@ -198,6 +203,7 @@ end;
 
 method File.WriteText(Content: String);
 begin
+  SugarArgumentNullException.RaiseIfNil(Content, "Content");
   System.IO.File.WriteAllText(mapped, Content);
 end;
 
@@ -235,16 +241,16 @@ begin
   mapped.delete;
 end;
 
-method File.Move(Destination: Folder);
+method File.Move(Destination: Folder): File;
 begin
-  Move(Destination, mapped.Name);  
+  exit Move(Destination, mapped.Name);  
 end;
 
-method File.Move(Destination: Folder; NewName: String);
+method File.Move(Destination: Folder; NewName: String): File;
 begin
   var NewFile := &Copy(Destination, NewName);
   mapped.delete;
-  mapped := NewFile;
+  exit NewFile;
 end;
 
 method File.Rename(NewName: String);
@@ -341,12 +347,12 @@ begin
     raise SugarNSErrorException.exceptionWithError(lError);
 end;
 
-method File.Move(Destination: Folder);
+method File.Move(Destination: Folder): File;
 begin
-  Move(Destination, Name);
+  exit Move(Destination, Name);
 end;
 
-method File.Move(Destination: Folder; NewName: String);
+method File.Move(Destination: Folder; NewName: String): File;
 begin
   var NewFile := Combine(String(Destination), NewName);
   var Manager := NSFileManager.defaultManager;
@@ -358,7 +364,7 @@ begin
   if not Manager.moveItemAtPath(mapped) toPath(NewFile) error(var lError) then
     raise SugarNSErrorException.exceptionWithError(lError); 
 
-  mapped := File(NewFile);
+  exit File(NewFile);
 end;
 
 method File.Rename(NewName: String);
