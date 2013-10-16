@@ -110,10 +110,14 @@ begin
   Assert.CheckInt(2, length(Data.GetFolders));
   Assert.CheckInt(3, length(Data.GetFiles));
 
+  var Expected := new RemObjects.Oxygene.Sugar.Collections.List<String>;
+  Expected.Add("1");
+  Expected.Add("2");
+  Expected.Add("3");
   var Value := Data.GetFiles;
   Assert.CheckInt(3, length(Value));
-  for i: Integer := 1 to length(Value) do
-    Assert.CheckString(i.ToString, Value[i - 1].Name);
+  for i: Integer := 0 to length(Value) - 1 do
+    Assert.CheckBool(true, Expected.Contains(Value[i].Name));
 end;
 
 method FolderTest.GetFolder;
@@ -138,10 +142,13 @@ begin
   Assert.CheckInt(2, length(Data.GetFolders));
   Assert.CheckInt(3, length(Data.GetFiles));
 
+  var Expected := new RemObjects.Oxygene.Sugar.Collections.List<String>;
+  Expected.Add("Temp1");
+  Expected.Add("Temp2");
   var Value := Data.GetFolders;
   Assert.CheckInt(2, length(Value));
-  for i: Integer := 1 to length(Value) do
-    Assert.CheckString("Temp" + i.ToString, Value[i - 1].Name);
+  for i: Integer := 0 to length(Value) - 1 do
+    Assert.CheckBool(true, Expected.Contains(Value[i].Name));
 end;
 
 method FolderTest.Rename;
