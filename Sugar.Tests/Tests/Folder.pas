@@ -34,7 +34,8 @@ implementation
 
 method FolderTest.Setup;
 begin
-  Data := Folder.UserLocal.CreateFolder("SugarTest", false);
+  Data := Folder.UserLocal.CreateFolder("SugarTest", true);
+  Assert.IsNotNull(Data);
 end;
 
 method FolderTest.TearDown;
@@ -55,6 +56,7 @@ begin
 
   Assert.IsException(->Data.CreateFile("Sample.txt", true));
   Assert.IsException(->Data.CreateFile("/", true));
+  Assert.IsException(->Data.CreateFile(nil, true));
 end;
 
 method FolderTest.CreateFolder;
@@ -70,6 +72,7 @@ begin
 
   Assert.IsException(->Data.CreateFolder("Sample", true));
   Assert.IsException(->Data.CreateFolder("/", true));
+  Assert.IsException(->Data.CreateFolder(nil, true));
 end;
 
 method FolderTest.Delete;
@@ -91,6 +94,7 @@ begin
   Assert.IsNotNull(Data.CreateFile("Sample.txt", true));
   var Value := Data.GetFile("Sample.txt");
   Assert.IsNotNull(Value);
+  Assert.IsException(->Data.GetFile(nil));
 end;
 
 method FolderTest.GetFiles;
@@ -118,6 +122,7 @@ begin
   Assert.IsNotNull(Data.CreateFolder("Sample", true));
   var Value := Data.GetFolder("Sample");
   Assert.IsNotNull(Value);
+  Assert.IsException(->Data.GetFolder(nil));
 end;
 
 method FolderTest.GetFolders;
@@ -155,6 +160,8 @@ begin
   Data.CreateFolder("Temp1", true);
   Assert.IsException(->Value.Rename("Temp1"));
   Assert.IsException(->Value.Rename("/"));
+  Assert.IsException(->Value.Rename(nil));
+  Assert.IsException(->Value.Rename(""));
 end;
 
 method FolderTest.FromPath;
@@ -162,6 +169,7 @@ begin
   Assert.IsNotNull(Data.CreateFolder("Sample", true));
   Assert.IsNotNull(Folder.FromPath(Data.Path +Folder.Separator+"Sample"));
   Assert.IsException(->Folder.FromPath(Data.Path +Folder.Separator+"Unknown"));
+  Assert.IsException(->Folder.FromPath(nil));
 end;
 
 method FolderTest.UserLocal;
