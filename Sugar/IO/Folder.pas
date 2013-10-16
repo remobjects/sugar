@@ -284,10 +284,12 @@ begin
     for Item in Items do
       DeleteFolder(new java.io.File(Value, Item));
 
-    Value.delete;
+    if not Value.delete then
+      raise new SugarIOException("Unable to delete folder {0}", Value.Name);
   end
   else
-    Value.delete;
+    if not Value.delete then
+      raise new SugarIOException("Unable to delete file {0}", Value.Name);
 end;
 
 method Folder.Delete;
