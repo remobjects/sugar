@@ -29,7 +29,7 @@ type
     method Delete;
     method Move(Destination: Folder): File;
     method Move(Destination: Folder; NewName: String): File;
-    method Rename(NewName: String);
+    method Rename(NewName: String): File;
 
     method AppendText(Content: String);
     method ReadBytes: array of Byte;
@@ -53,6 +53,16 @@ type
     property Name: String read NSFileManager.defaultManager.displayNameAtPath(mapped);
     {$ENDIF}
   end;
+
+  {$IF COOPER}
+  FileUtils = public static class
+  public
+    method WriteString(File: java.io.File; Content: String; Append: Boolean);
+    method WriteBytes(File: java.io.File; Data: array of Byte; Append: Boolean);
+    method ReadBytes(File: java.io.File): array of Byte;
+    method ReadString(File: java.io.File): String;
+  end;
+  {$ENDIF}
 
 implementation
 
@@ -175,9 +185,9 @@ begin
   exit NewFile;
 end;
 
-method File.Rename(NewName: String);
+method File.Rename(NewName: String): File;
 begin
-  Move(System.IO.Path.GetDirectoryName(mapped), NewName);
+  exit Move(System.IO.Path.GetDirectoryName(mapped), NewName);
 end;
 
 method File.AppendText(Content: String);
@@ -215,6 +225,58 @@ begin
   exit File(Value);
 end;
 {$ELSEIF COOPER}
+class method FileUtils.WriteString(File: java.io.File; Content: String; Append: Boolean);
+begin
+  WriteBytes(File, Content.ToByteArray, Append);
+end;
+
+class method FileUtils.WriteBytes(File: java.io.File; Data: array of Byte; Append: Boolean);
+begin
+  if not File.exists then
+    raise new SugarIOException("File {0} does not exists", File.Name);
+
+  if not File.canWrite then
+    raise new SugarIOException("File {0} can not be written", File.Name);
+
+  var Writer := new java.io.FileOutputStream(File, Append);
+  try
+    Writer.write(ArrayUtils.ToSignedArray(Data));
+  finally
+    Writer.close;
+  end;
+end;
+
+class method FileUtils.ReadString(File: java.io.File): String;
+begin
+  var Data := ReadBytes(File);
+
+  if Data = nil then
+    raise new SugarIOException("Unable to read string from file {0}", File.Name);
+
+  exit String.FromByteArray(Data);
+end;
+
+class method FileUtils.ReadBytes(File: java.io.File): array of Byte;
+begin
+  if not File.exists then
+    raise new SugarIOException("File {0} does not exists", File.Name);
+
+  if not File.canRead then
+    raise new SugarIOException("File {0} can not be read", File.Name);
+
+  if File.length = 0 then
+    exit [];
+
+  var Reader := new java.io.FileInputStream(File);
+  try
+    var Data := new SByte[Integer(File.length)];
+    Reader.read(Data);
+    exit ArrayUtils.ToUnsignedArray(Data);
+  finally
+    Reader.close;
+  end;
+end;
+
 method File.&Copy(Destination: Folder): File;
 begin
   exit &Copy(Destination, mapped.Name);
@@ -238,6 +300,9 @@ end;
 
 method File.Delete;
 begin
+  if not mapped.exists then
+    raise new SugarIOException("File {0} not found", mapped.Name);
+
   mapped.delete;
 end;
 
@@ -253,65 +318,51 @@ begin
   exit NewFile;
 end;
 
-method File.Rename(NewName: String);
+method File.Rename(NewName: String): File;
 begin
-  var NewFile := new java.io.File(mapped, NewName);
+  var NewFile := new java.io.File(mapped.ParentFile, NewName);
+  
   if NewFile.exists then
-    raise new SugarIOException(String.Format("File {0} already exists", NewName));
+    raise new SugarIOException("File {0} already exists", NewName);
 
-  mapped.renameTo(NewFile);
+  if not mapped.renameTo(NewFile) then
+    raise new SugarIOException("Unable to reanme file {0} to {1}", mapped.Name, NewName);
+
+  exit NewFile;
 end;
 
 method File.AppendText(Content: String);
 begin
-  var writer := new java.io.FileWriter(mapped, true);
-  writer.write(Content);
-  writer.close;
+  FileUtils.WriteString(mapped, Content, true);
 end;
 
 method File.ReadBytes: array of Byte;
 begin
-  var lData := new SByte[Integer(mapped.length)];
-  var stream := new java.io.DataInputStream(new java.io.FileInputStream(mapped));
-  stream.readFully(lData);
-  stream.close;
-  exit ArrayUtils.ToUnsignedArray(lData);
+  exit FileUtils.ReadBytes(mapped);
 end;
 
 method File.ReadText: String;
 begin
-  var fileContents := new java.lang.StringBuilder(Integer(mapped.length));
-  var scanner := new java.util.Scanner(mapped);
-  var lineSeparator := System.getProperty('line.separator');
-
-  while scanner.hasNextLine do 
-  begin  
-    fileContents.append(scanner.nextLine);
-    fileContents.append(lineSeparator);
-  end;
-  scanner.close;
-  exit fileContents.toString;
+  exit FileUtils.ReadString(mapped);
 end;
 
 method File.WriteBytes(Data: array of Byte);
 begin
-  var stream := new java.io.FileOutputStream(mapped);
-  stream.write(ArrayUtils.ToSignedArray(Data));
-  stream.close;
+  FileUtils.WriteBytes(mapped, Data, false);
 end;
 
 method File.WriteText(Content: String);
 begin
-  var writer := new java.io.FileWriter(mapped, false);
-  writer.write(Content);
-  writer.close;  
+  FileUtils.WriteString(mapped, Content, false);
 end;
 
 class method File.FromPath(Value: String): File;
 begin
   var lFile := new java.io.File(Value);
+  
   if not lFile.exists then
     raise new SugarIOException(String.Format("File {0} not found", Value));
+
   exit File(lFile);
 end;
 {$ELSEIF NOUGAT}
