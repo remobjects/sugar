@@ -63,11 +63,40 @@ type
     {$IF COOPER}method DeleteFolder(Value: java.io.File);{$ENDIF}
     {$IF NOUGAT}method IsDirectory(Value: String): Boolean;{$ENDIF}
   end;
+  {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
+  type
+  FolderHelper = public static class
+  public
+    method GetFile(Folder: Windows.Storage.StorageFolder; FileName: String): Windows.Storage.StorageFile;
+    method GetFolder(Folder: Windows.Storage.StorageFolder; FolderName: String): Windows.Storage.StorageFolder;
+  end;
   {$ENDIF}
 
 implementation
 
 {$IF WINDOWS_PHONE OR NETFX_CORE}
+class method FolderHelper.GetFile(Folder: Windows.Storage.StorageFolder; FileName: String): Windows.Storage.StorageFile;
+begin
+  SugarArgumentNullException.RaiseIfNil(Folder, "Folder");
+  SugarArgumentNullException.RaiseIfNil(FileName, "FileName");
+  try
+    exit Folder.GetFileAsync(FileName).Await;
+  except
+    exit nil;
+  end;
+end;
+
+class method FolderHelper.GetFolder(Folder: Windows.Storage.StorageFolder; FolderName: String): Windows.Storage.StorageFolder;
+begin
+  SugarArgumentNullException.RaiseIfNil(Folder, "Folder");
+  SugarArgumentNullException.RaiseIfNil(FolderName, "FolderName");
+  try
+    exit Folder.GetFolderAsync(FolderName).Await;
+  except
+    exit nil;
+  end;
+end;
+
 method Folder.GetName: String;
 begin
   exit mapped.Name;
@@ -100,7 +129,7 @@ end;
 
 method Folder.GetFile(FileName: String): File;
 begin
-  exit mapped.GetFileAsync(FileName).Await;
+  exit FolderHelper.GetFile(mapped, FileName);
 end;
 
 method Folder.GetFiles: array of File;
@@ -113,7 +142,7 @@ end;
 
 method Folder.GetFolder(FolderName: String): Folder;
 begin
-  exit mapped.GetFolderAsync(FolderName).Await;
+  exit FolderHelper.GetFolder(mapped, FolderName);
 end;
 
 method Folder.GetFolders: array of Folder;
