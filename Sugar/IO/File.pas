@@ -62,11 +62,68 @@ type
     method ReadBytes(File: java.io.File): array of Byte;
     method ReadString(File: java.io.File): String;
   end;
+  {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
+  FileUtils = public static class
+  public
+    method WriteString(File: Windows.Storage.StorageFile; Content: String; Append: Boolean);
+    method WriteBytes(File: Windows.Storage.StorageFile; Data: array of Byte; Append: Boolean);
+    method ReadBytes(File: Windows.Storage.StorageFile): array of Byte;
+    method ReadString(File: Windows.Storage.StorageFile): String;
+    method Move(File: Windows.Storage.StorageFile; Destination: Windows.Storage.StorageFolder; NewName: String): Windows.Storage.StorageFile;
+  end;
   {$ENDIF}
 
 implementation
 
 {$IF WINDOWS_PHONE OR NETFX_CORE}
+class method FileUtils.ReadBytes(File: Windows.Storage.StorageFile): array of Byte;
+begin
+  using Stream := File.OpenStreamForReadAsync.Result do begin
+    result := new Byte[stream.Length];
+    Stream.Read(result, 0, stream.Length);    
+  end;  
+end;
+
+class method FileUtils.ReadString(File: Windows.Storage.StorageFile): String;
+begin
+  var Data := ReadBytes(File);
+  exit System.Text.Encoding.UTF8.GetString(Data, 0, Data.Length);
+end;
+
+class method FileUtils.WriteBytes(File: Windows.Storage.StorageFile; Data: array of Byte; Append: Boolean);
+begin
+  using Stream := File.OpenStreamForWriteAsync.Result do begin
+    
+    if Append then
+      Stream.Seek(0, SeekOrigin.End)
+    else
+      Stream.SetLength(0);
+
+    Stream.Write(Data, 0, Data.Length);
+    Stream.Flush;    
+  end;  
+end;
+
+class method FileUtils.WriteString(File: Windows.Storage.StorageFile; Content: String; Append: Boolean);
+begin
+  var Data := System.Text.Encoding.UTF8.GetBytes(Content);
+  WriteBytes(File, Data, Append);
+end;
+
+class method FileUtils.Move(File: Windows.Storage.StorageFile; Destination: Windows.Storage.StorageFolder; NewName: String): Windows.Storage.StorageFile;
+begin
+  SugarArgumentNullException.RaiseIfNil(File, "File");
+  SugarArgumentNullException.RaiseIfNil(File, "Folder");
+  SugarArgumentNullException.RaiseIfNil(File, "NewName");
+
+  result := File.CopyAsync(Destination, NewName, Windows.Storage.NameCollisionOption.FailIfExists).Await;
+
+  if result = nil then
+    exit;
+
+  File.DeleteAsync.AsTask.Wait;
+end;
+
 method File.&Copy(Destination: Folder): File;
 begin
   exit &Copy(Destination, mapped.Name);
@@ -82,58 +139,47 @@ begin
   mapped.DeleteAsync.AsTask.Wait;
 end;
 
-method File.Move(Destination: Folder);
+method File.Move(Destination: Folder): File;
 begin
-  Move(Destination, mapped.Name);
+  exit Move(Destination, mapped.Name);
 end;
 
-method File.Move(Destination: Folder; NewName: String);
+method File.Move(Destination: Folder; NewName: String): File;
 begin
-  mapped.MoveAsync(Destination, NewName, Windows.Storage.NameCollisionOption.FailIfExists).AsTask.Wait;
+  exit FileUtils.Move(mapped, Destination, NewName);
 end;
 
-method File.Rename(NewName: String);
+method File.Rename(NewName: String): File;
 begin
+  var BaseDir := System.IO.Path.GetDirectoryName(mapped.Path);
+  var Dir := Folder.FromPath(BaseDir);
   mapped.RenameAsync(NewName, Windows.Storage.NameCollisionOption.FailIfExists).AsTask.Wait;
+  exit Dir.GetFile(NewName);
 end;
 
 method File.AppendText(Content: String);
 begin
-  var Stream := mapped.OpenStreamForWriteAsync.Result;
-  var data := System.Text.Encoding.UTF8.GetBytes(Content);
-  Stream.Seek(0, SeekOrigin.End);
-  Stream.Write(data, 0, data.Length);
-  Stream.Flush;
-  Stream.Dispose;
+  FileUtils.WriteString(mapped, Content, true);
 end;
 
 method File.ReadBytes: array of Byte;
 begin
-  var stream := mapped.OpenStreamForReadAsync.Result;
-  result := new Byte[stream.Length];
-  stream.Read(result, 0, stream.Length);
-  stream.Dispose;
+  exit FileUtils.ReadBytes(mapped);
 end;
 
 method File.ReadText: String;
 begin
-  var data := ReadBytes;
-  exit System.Text.Encoding.UTF8.GetString(data, 0, data.Length);
+  exit FileUtils.ReadString(mapped);
 end;
 
 method File.WriteBytes(Data: array of Byte);
 begin
-  var Stream := mapped.OpenStreamForWriteAsync.Result;
-  Stream.SetLength(0);
-  Stream.Write(Data, 0, Data.Length);
-  Stream.Flush;
-  Stream.Dispose;
+  FileUtils.WriteBytes(mapped, Data, false);
 end;
 
 method File.WriteText(Content: String);
 begin
-  var data := System.Text.Encoding.UTF8.GetBytes(Content);
-  WriteBytes(data);
+  FileUtils.WriteString(mapped, Content, false);
 end;
 
 class method File.FromPath(Value: String): File;
