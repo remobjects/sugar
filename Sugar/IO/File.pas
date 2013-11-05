@@ -330,6 +330,9 @@ end;
 
 method File.&Copy(Destination: Folder; NewName: String): File;
 begin
+  SugarArgumentNullException.RaiseIfNil(Destination, "Destination");
+  SugarArgumentNullException.RaiseIfNil(NewName, "NewName");
+
   var NewFile := new java.io.File(Destination, NewName);
   if NewFile.exists then
     raise new SugarIOException(String.Format("File {0} already exists", NewName));
