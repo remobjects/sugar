@@ -20,12 +20,13 @@ type
   private
     property ProcessingInstruction: {$IF COOPER}ProcessingInstruction{$ELSEIF ECHOES}XProcessingInstruction{$ENDIF} 
                                     read Node as {$IF COOPER}ProcessingInstruction{$ELSEIF ECHOES}XProcessingInstruction{$ENDIF};
+    {$IF COOPER}method SetData(aValue: String);{$ENDIF}
   public
     {$IF ECHOES}
     property Name: String read "#processinginstruction"; override;
     property Value: String read ProcessingInstruction.Data write ProcessingInstruction.Data; override;
     {$ENDIF}
-    property Data: String read ProcessingInstruction.Data write ProcessingInstruction.Data;
+    property Data: String read ProcessingInstruction.Data write {$IF COOPER}SetData{$ELSE}ProcessingInstruction.Data{$ENDIF};
     property Target: String read ProcessingInstruction.Target;
   end;
 {$ELSEIF NOUGAT}
@@ -59,6 +60,14 @@ begin
   Node.setStringValue(aValue);
 end;
 {$ENDIF}
+{$ENDIF}
+
+{$IF COOPER}
+method XmlProcessingInstruction.SetData(aValue: String);
+begin
+  SugarArgumentNullException.RaiseIfNil(aValue, "Value");
+  ProcessingInstruction.Data := aValue;
+end;
 {$ENDIF}
 
 end.
