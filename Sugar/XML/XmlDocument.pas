@@ -24,6 +24,7 @@ type
   XmlDocument = public class (XmlNode)
   private
     {$IF COOPER}
+    class method ParseXml(Content: String; BaseUri: String): XmlDocument;
     property Doc: Document read Node as Document;
     {$ELSEIF ECHOES}
     property Doc: XDocument read Node as XDocument;
@@ -73,7 +74,7 @@ type
     method GetElementsByTagName(Name: String): array of XmlNode;
     method GetElementsByTagName(LocalName, NamespaceUri: String): array of XmlNode;
 
-    class method FromFile(FileName: String): XmlDocument;
+    class method FromFile(aFile: File): XmlDocument;
     class method FromBinary(aBinary: Binary): XmlDocument;
     class method FromString(aString: String): XmlDocument;
     class method CreateDocument: XmlDocument;
@@ -171,33 +172,48 @@ begin
   exit ConvertNodeList(Doc.GetElementsByTagNameNs(NamespaceUri, LocalName));
 end;
 
-class method XmlDocument.FromFile(FileName: String): XmlDocument;
+class method XmlDocument.ParseXml(Content: String; BaseUri: String): XmlDocument;
 begin
+  SugarArgumentNullException.RaiseIfNil(Content, "Content");
+
+  //java can not ignore insignificant whitespaces, do a manual cleanup
+  Content := java.lang.String(Content).replaceAll(">\s+<", "><");
+
   var Factory := javax.xml.parsers.DocumentBuilderFactory.newInstance;
-  var Builder := Factory.newDocumentBuilder();  
-  var Document := Builder.parse(new java.io.File(FileName));
+  //handle namespaces
+  Factory.NamespaceAware := true;
+
+  var Builder := Factory.newDocumentBuilder();    
+  var Input := new org.xml.sax.InputSource(new java.io.StringReader(Content));
+  if BaseUri <> nil then
+    Input.SystemId := BaseUri;
+  var Document := Builder.parse(Input);
+
+  //Normalize text content
+  Document.normalize;
+
   exit new XmlDocument(Document);
+end;
+
+class method XmlDocument.FromFile(aFile: File): XmlDocument;
+begin
+  exit ParseXml(aFile.ReadText, aFile.Path);
 end;
 
 class method XmlDocument.FromBinary(aBinary: Binary): XmlDocument;
 begin
-  var Factory := javax.xml.parsers.DocumentBuilderFactory.newInstance;
-  var Builder := Factory.newDocumentBuilder();  
-  var Document := Builder.parse(new java.io.ByteArrayInputStream(RemObjects.Oxygene.Sugar.Cooper.ArrayUtils.ToSignedArray(aBinary.ToArray)));
-  exit new XmlDocument(Document);
+  exit ParseXml(String.FromByteArray(aBinary.ToArray), nil);
 end;
 
 class method XmlDocument.FromString(aString: String): XmlDocument;
 begin
-  var Factory := javax.xml.parsers.DocumentBuilderFactory.newInstance;
-  var Builder := Factory.newDocumentBuilder();  
-  var Document := Builder.parse(aString);
-  exit new XmlDocument(Document);
+  exit ParseXml(aString, nil);
 end;
 
 class method XmlDocument.CreateDocument: XmlDocument;
 begin
   var Factory := javax.xml.parsers.DocumentBuilderFactory.newInstance;
+  Factory.NamespaceAware := true;
   var Builder := Factory.newDocumentBuilder();  
   exit new XmlDocument(Builder.newDocument());
 end;
@@ -218,7 +234,7 @@ begin
   var Transformer := Factory.newTransformer();
   var Source: javax.xml.transform.dom.DOMSource := new javax.xml.transform.dom.DOMSource(Doc);
   
-  Transformer.setOutputProperty(javax.xml.transform.OutputKeys.INDENT, "yes");
+  Transformer.setOutputProperty(javax.xml.transform.OutputKeys.INDENT, "no");
   Transformer.setOutputProperty(javax.xml.transform.OutputKeys.METHOD, "xml");
 
   if XmlDeclaration <> nil then begin
@@ -349,9 +365,9 @@ begin
     result[I] := CreateCompatibleNode(items[I]);
 end;
 
-class method XmlDocument.FromFile(FileName: String): XmlDocument;
+class method XmlDocument.FromFile(aFile: File): XmlDocument;
 begin
-  var document := XDocument.Load(FileName, LoadOptions.SetBaseUri);
+  var document := XDocument.Load(System.String(aFile), LoadOptions.SetBaseUri);
   result := new XmlDocument(document);
 end;
 
@@ -556,9 +572,9 @@ begin
   exit new XmlNodeList(self).ElementsByName(Name);
 end;
 
-class method XmlDocument.FromFile(FileName: String): XmlDocument;
+class method XmlDocument.FromFile(aFile: File): XmlDocument;
 begin
-  var NewObj := libxml.xmlReadFile(NSString(FileName), "UTF-8", libxml.xmlParserOption.XML_PARSE_NOBLANKS);
+  var NewObj := libxml.xmlReadFile(NSString(aFile), "UTF-8", libxml.xmlParserOption.XML_PARSE_NOBLANKS);
   if NewObj = nil then
     exit nil;
 
@@ -741,9 +757,9 @@ begin
   exit ConvertNodeList(Nodes);
 end;
 
-class method XmlDocument.FromFile(FileName: String): XmlDocument;
+class method XmlDocument.FromFile(aFile: File): XmlDocument;
 begin
-  var Url := new NSURL fileURLWithPath(FileName);
+  var Url := new NSURL fileURLWithPath(Foundation.NSString(aFile));
   var lError: NSError;
   var lNode := new NSXMLDocument withContentsOfURL(Url) options(NSXMLDocumentTidyXML) error(var lError);
   if not assigned(lNode) then raise new SugarNSErrorException withError(lError);
