@@ -60,6 +60,10 @@ type
   XmlNode = public class
   private
     fNode: Node;
+    method GetName: String;
+    method GetItem(&Index: Integer): XmlNode;
+    method GetParent: XmlNode;
+    method SetValue(aValue: String);
   protected
     method ConvertNodeList(List: NodeList): array of XmlNode;
     class method CreateCompatibleNode(Node: Node): XmlNode;
@@ -67,29 +71,28 @@ type
     property Node: Node read fNode;
     constructor(aNode: Node);
   public
-    property Name: String read Node.NodeName;
-    property URI: String read Node.BaseUri;
-    property Value: String read Node.NodeValue write Node.NodeValue;
-    property LocalName: String read Node.LocalName;
+    property Name: String read GetName;
+    property URI: String read iif(Node.BaseUri = nil, "", Node.BaseURI);
+    property Value: String read Node.TextContent write SetValue;
+    property LocalName: String read iif(Node.LocalName = nil, Node.NodeName, Node.LocalName);
     
     property Document: XmlDocument read iif(Node.OwnerDocument = nil, nil, new XmlDocument(Node.OwnerDocument));
-    property Parent: XmlNode read CreateCompatibleNode(Node.ParentNode);
+    property Parent: XmlNode read GetParent;
     property NextSibling: XmlNode read CreateCompatibleNode(Node.NextSibling);
     property PreviousSibling: XmlNode read CreateCompatibleNode(Node.PreviousSibling);
 
     property FirstChild: XmlNode read CreateCompatibleNode(Node.FirstChild);
     property LastChild: XmlNode read CreateCompatibleNode(Node.LastChild);
-    property Item[&Index: Integer]: XmlNode read CreateCompatibleNode(Node.ChildNodes.Item(&Index));
+    property Item[&Index: Integer]: XmlNode read GetItem; default;
     property ChildCount: Integer read Node.ChildNodes.length;
     property ChildNodes: array of XmlNode read ConvertNodeList(Node.ChildNodes);
 
-    method SelectNodes(XPath: String): array of XmlNode;
-    method SelectSingleNode(XPath: String): XmlNode;
+    method &equals(arg1: Object): Boolean; override;
     method ToString: java.lang.String; override;
   end;  
 {$ELSEIF NOUGAT}
 {$IF OSX}
-XmlNode = public class
+  XmlNode = public class
   private
     fNode: NSXMLNode;
 
@@ -97,6 +100,7 @@ XmlNode = public class
     method GetFirstChild: XmlNode;
     method GetLastChild: XmlNode;
     method SetValue(aValue: String);
+    method GetChildNodes: array of XmlNode;
   protected
     method ConvertNodeList(List: NSArray): array of XmlNode;
     class method CreateCompatibleNode(Node: NSXMLNode): XmlNode;
@@ -116,11 +120,11 @@ XmlNode = public class
 
     property FirstChild: XmlNode read GetFirstChild;
     property LastChild: XmlNode read GetLastChild;
-    property Item[&Index: Integer]: XmlNode read CreateCompatibleNode(Node.childAtIndex(&Index));
+    property Item[&Index: Integer]: XmlNode read CreateCompatibleNode(Node.childAtIndex(&Index)); default;
     property ChildCount: Integer read Node.childCount;
+    property ChildNodes: array of XmlNode read GetChildNodes;
 
-    method SelectNodes(XPath: String): array of XmlNode;
-    method SelectSingleNode(XPath: String): XmlNode;
+    method isEqual(obj: id): Boolean; override;
     method description: NSString; override;
   end;
 {$ELSEIF IOS}
@@ -157,7 +161,7 @@ XmlNode = public class
 
     property FirstChild: XmlNode read CreateCompatibleNode(^libxml.__struct__xmlNode(Node^.children), Document);
     property LastChild: XmlNode read CreateCompatibleNode(^libxml.__struct__xmlNode(Node^.last), Document);
-    property Item[&Index: Integer]: XmlNode read GetItem;
+    property Item[&Index: Integer]: XmlNode read GetItem; default;
     property ChildCount: Integer read GetChildCount;
     property ChildNodes: array of XmlNode read GetChildNodes;
     
@@ -301,6 +305,14 @@ begin
   fNode := aNode;
 end;
 
+method XmlNode.GetName: String;
+begin
+  if fNode.NamespaceURI = nil then
+    exit fNode.NodeName;
+
+  exit "{"+fNode.NamespaceURI+"}"+fNode.LocalName;
+end;
+
 method XmlNode.ConvertNodeList(List: NodeList): array of XmlNode;
 begin  
   if List = nil then
@@ -314,23 +326,45 @@ begin
   exit lItems;
 end;
 
-method XmlNode.SelectNodes(XPath: String): array of XmlNode;
-begin
-  var Path := javax.xml.xpath.XPathFactory.newInstance().newXPath();
-  var Nodes := NodeList(Path.evaluate(XPath, Node, javax.xml.xpath.XPathConstants.NODESET));
-  exit ConvertNodeList(Nodes);
-end;
-
-method XmlNode.SelectSingleNode(XPath: String): XmlNode;
-begin
-  var Nodes := SelectNodes(XPath);
-  if (Nodes <> nil) and (Nodes.length > 0) then
-    exit Nodes[0];
-end;
-
 method XmlNode.ToString: java.lang.String;
 begin
   exit fNode.ToString;
+end;
+
+method XmlNode.&equals(arg1: Object): Boolean;
+begin
+  if arg1 = nil then
+    exit false;
+
+  if not (arg1 is XmlNode) then
+    exit false;
+
+  exit fNode.isSameNode(XmlNode(arg1).Node);
+end;
+
+method XmlNode.GetItem(&Index: Integer): XmlNode;
+begin
+  if (&Index < 0) or (&Index >= fNode.ChildNodes.Length) then
+    raise new SugarArgumentOutOfRangeException(ErrorMessage.ARG_OUT_OF_RANGE_ERROR, "Index");
+
+  exit CreateCompatibleNode(fNode.ChildNodes.Item(&Index));
+end;
+
+method XmlNode.GetParent: XmlNode;
+begin
+  if fNode.ParentNode = nil then
+    exit nil;
+
+  if fNode.ParentNode.isSameNode(fNode.OwnerDocument) then
+    exit nil;
+
+  exit CreateCompatibleNode(Node.ParentNode);
+end;
+
+method XmlNode.SetValue(aValue: String);
+begin
+  SugarArgumentNullException.RaiseIfNil(aValue, "Value");
+  Node.TextContent := aValue;
 end;
 
 class method XmlNode.CreateCompatibleNode(Node: Node): XmlNode;
@@ -382,6 +416,14 @@ begin
   end;
 end;
 
+method XmlNode.GetChildNodes: array of XmlNode;
+begin
+  var lValue := fNode.children;
+  result := new XmlNode[lValue.count];
+  for i: Integer := 0 to lValue.count - 1 do
+    result[i] := CreateCompatibleNode(lValue.objectAtIndex(i));
+end;
+
 method XmlNode.GetLastChild: XmlNode;
 begin
   if Node.childCount = 0 then
@@ -403,18 +445,6 @@ begin
   Node.setStringValue(aValue);
 end;
 
-method XmlNode.SelectNodes(XPath: String): array of XmlNode;
-begin
-  var lError: NSError := nil;
-  var lNodes := Node.nodesForXPath(XPath) error(var lError);
-  exit ConvertNodeList(lNodes);
-end;
-
-method XmlNode.SelectSingleNode(XPath: String): XmlNode;
-begin
-  exit SelectNodes(XPath)[0];
-end;
-
 method XmlNode.ConvertNodeList(List: NSArray): array of XmlNode;
 begin
   if List = nil then
@@ -423,6 +453,17 @@ begin
   result := new XmlNode[List.count];
   for i: Integer := 0 to List.count-1 do
     result[i] := CreateCompatibleNode(List.objectAtIndex(i));
+end;
+
+method XmlNode.isEqual(obj: id): Boolean;
+begin
+  if obj = nil then
+    exit false;
+
+  if obj is not XmlNode then
+    exit false;
+
+  exit fNode.isEqual(XmlNode(obj).Node);
 end;
 
 method XmlNode.description: NSString;
