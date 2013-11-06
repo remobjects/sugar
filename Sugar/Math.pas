@@ -144,6 +144,7 @@ begin
   {$ELSEIF ECHOES}
   exit Double.IsNaN(Value);
   {$ELSEIF NOUGAT}
+  exit rtl.isnan(Value);
   {$ENDIF}
 end;
 
@@ -154,6 +155,7 @@ begin
   {$ELSEIF ECHOES}
   exit Double.IsInfinity(Value);
   {$ELSEIF NOUGAT}
+  exit isinf(Value);
   {$ENDIF}
 end;
 
@@ -164,6 +166,7 @@ begin
   {$ELSEIF ECHOES}
   exit Double.IsNegativeInfinity(Value);
   {$ELSEIF NOUGAT}
+  exit Value = NegativeInfinity;
   {$ENDIF}
 end;
 
@@ -174,6 +177,7 @@ begin
   {$ELSEIF ECHOES}
   exit Double.IsPositiveInfinity(Value);
   {$ELSEIF NOUGAT}
+  exit Value = PositiveInfinity;
   {$ENDIF}
 end;
 {$IF COOPER}
@@ -234,6 +238,9 @@ end;
 {$IF NOUGAT}
 class method Math.Pow(x, y: Double): Double;
 begin
+  if (x = -1) and Consts.IsInfinity(y) then
+    exit Consts.NaN;
+
   exit rtl.pow(x,y);  
 end;
 
@@ -269,6 +276,9 @@ end;
 
 class method Math.Atan2(x,y: Double): Double;
 begin
+  if Consts.IsInfinity(x) and Consts.IsInfinity(y) then
+    exit Consts.NaN;
+
   exit rtl.atan2(x,y);   
 end;
 
@@ -314,12 +324,12 @@ end;
 
 class method Math.Round(a: Double): Double;
 begin
-  exit rtl.round(a);   
+  exit rtl.floor(a + 0.4);   
 end;
 
 class method Math.RoundToInt(a: Double): Integer;
 begin
-  exit Integer(rtl.round(a));   
+  exit Integer(Round(a));   
 end;
 
 class method Math.Sin(x: Double): Double;
@@ -354,16 +364,25 @@ end;
 
 class method Math.AbsInt64(i: Int64): Int64;
 begin
+  if i = Consts.MinInt64 then
+    raise new SugarArgumentException("Value can not equals minimum value of Int64");
+
   exit rtl.labs(i);
 end;
 
 class method Math.AbsInt(i: Integer): Integer;
 begin
+  if i = Consts.MinInteger then
+    raise new SugarArgumentException("Value can not equals minimum value of Int32");
+
   exit rtl.abs(i);
 end;
 
 class method Math.MaxDouble(a: Double; b: Double): Double;
 begin
+  if Consts.IsNaN(a) or Consts.IsNaN(b) then
+    exit Consts.NaN;
+
   exit iif(a > b, a, b);
 end;
 
@@ -374,6 +393,9 @@ end;
 
 class method Math.MinDouble(a: Double; b: Double): Double;
 begin
+  if Consts.IsNaN(a) or Consts.IsNaN(b) then
+    exit Consts.NaN;
+
   exit iif(a < b, a, b);
 end;
 
