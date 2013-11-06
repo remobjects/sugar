@@ -19,6 +19,8 @@ type
     method CheckBool(Expected, Actual: Boolean);
     method CheckInt(Expected, Actual: Integer; Message: String);
     method CheckInt(Expected, Actual: Integer);
+    method CheckInt64(Expected, Actual: Int64; Message: String);
+    method CheckInt64(Expected, Actual: Int64);
     method CheckDouble(Expected, Actual: Double; Message: String);
     method CheckDouble(Expected, Actual: Double);
     method CheckString(Expected, Actual: String; Message: String);
@@ -53,6 +55,16 @@ begin
 end;
 
 class method Assert.CheckInt(Expected: Integer; Actual: Integer);
+begin
+  FailIf(Expected <> Actual, Expected, Actual, nil);
+end;
+
+class method Assert.CheckInt64(Expected: Int64; Actual: Int64; Message: String);
+begin
+  FailIf(Expected <> Actual, Message);
+end;
+
+class method Assert.CheckInt64(Expected: Int64; Actual: Int64);
 begin
   FailIf(Expected <> Actual, Expected, Actual, nil);
 end;

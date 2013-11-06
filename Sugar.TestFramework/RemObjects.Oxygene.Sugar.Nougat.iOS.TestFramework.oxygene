@@ -12,7 +12,7 @@
     <AllowUnsafeCode>False</AllowUnsafeCode>
     <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
     <SDK>iOS</SDK>
-    <DeploymentTargetVersion>5.0</DeploymentTargetVersion>
+    <DeploymentTargetVersion>5.1</DeploymentTargetVersion>
     <CreateHeaderFile>True</CreateHeaderFile>
     <Name>RemObjects.Oxygene.Sugar.Nougat.iOS.TestFramework</Name>
     <DefaultUses />
@@ -27,6 +27,7 @@
     <CaptureConsoleOutput>False</CaptureConsoleOutput>
     <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
     <XmlDocWarningLevel>WarningOnPublicMembers</XmlDocWarningLevel>
+    <SimulatorArchitectures>i386</SimulatorArchitectures>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <Optimize>true</Optimize>

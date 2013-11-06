@@ -41,7 +41,9 @@ begin
     Ex := Exception(java.lang.reflect.InvocationTargetException(Ex).TargetException);
   {$ELSEIF ECHOES}
   if Ex is System.Reflection.TargetInvocationException then
-    Ex := System.Reflection.TargetInvocationException(Ex).InnerException;
+    Ex := System.Reflection.TargetInvocationException(Ex).InnerException
+  else if Ex is System.AggregateException then
+    Ex := System.AggregateException(Ex).InnerException;
   {$ENDIF}
   var Message: String := Ex.{$IF NOUGAT}reason{$ELSE}Message{$ENDIF};
   if Message = nil then
