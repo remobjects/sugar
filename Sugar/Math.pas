@@ -7,15 +7,13 @@ type
   {$IF COOPER}
   Math = public class mapped to java.lang.Math
   public
-    const PI: Double = 3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679;
-    const E: Double =  2.7182818284590452353602874713526624977572470936999595749669676277240766303535475945713821785251664274;
     class method AbsDouble(d: Double): Double; mapped to abs(d);
-    class method AbsInt64(i: Int64): Int64; mapped to abs(i);
-    class method AbsInt(i: Integer): Integer; mapped to abs(i);
+    class method AbsInt64(i: Int64): Int64;
+    class method AbsInt(i: Integer): Integer;
     class method Acos(d: Double): Double; mapped to acos(d);
     class method Asin(d: Double): Double; mapped to asin(d);
     class method Atan(d: Double): Double; mapped to atan(d);
-    class method Atan2(x,y: Double): Double; mapped to atan2(x,y);
+    class method Atan2(x,y: Double): Double;
     class method Ceiling(a: Double): Double; mapped to ceil(a);
     class method Cos(d: Double): Double; mapped to cos(d);
     class method Cosh(d: Double): Double; mapped to cosh(d);
@@ -31,7 +29,7 @@ type
     class method MinInt(a,b: Integer): Integer; mapped to min(a,b);
     class method MinInt64(a,b: Int64): Int64; mapped to min(a,b);
     class method Pow(x, y: Double): Double; mapped to pow(x,y);
-    class method Round(a: Double): Double; mapped to round(a);
+    class method Round(a: Double): Double;
     class method RoundToInt(a: Double): Integer;
     class method Sign(d: Double): Integer;
     class method Sin(d: Double): Double; mapped to sin(d);
@@ -43,9 +41,7 @@ type
   {$ENDIF}
   {$IF ECHOES}
   Math = public class mapped to System.Math
-  public
-    const PI: Double = 3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679;
-    const E: Double =  2.7182818284590452353602874713526624977572470936999595749669676277240766303535475945713821785251664274;
+  public    
     class method AbsDouble(d: Double): Double; mapped to Abs(d);
     class method AbsInt64(i: Int64): Int64; mapped to Abs(i);
     class method AbsInt(i: Integer): Integer; mapped to Abs(i);
@@ -81,8 +77,6 @@ type
   {$IF NOUGAT}
   Math = public class
   public    
-    const PI: Double = 3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679;
-    const E: Double =  2.7182818284590452353602874713526624977572470936999595749669676277240766303535475945713821785251664274;
     class method AbsDouble(value: Double): Double;
     class method AbsInt64(i: Int64): Int64; 
     class method AbsInt(i: Integer): Integer; 
@@ -98,7 +92,7 @@ type
     class method IEEERemainder(x, y: Double): Double; 
     class method Log(a: Double): Double;
     class method Log10(a: Double): Double;
-    class method MaxDoube(a,b: Double): Double;    
+    class method MaxDouble(a,b: Double): Double;    
     class method MaxInt(a,b: Integer): Integer;    
     class method MaxInt64(a,b: Int64): Int64;  
     class method MinDouble(a,b: Double): Double;
@@ -117,27 +111,120 @@ type
   {$ENDIF}
   end;
 
+  Consts = public static class
+  public
+    const PI: Double = 3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679;
+    const E: Double =  2.7182818284590452353602874713526624977572470936999595749669676277240766303535475945713821785251664274;
+
+    property MaxInteger: Integer read {$IF COOPER}Int32.MAX_VALUE{$ELSEIF ECHOES}Int32.MaxValue{$ELSEIF NOUGAT}rtl.INT32_MAX{$ENDIF};
+    property MinInteger: Integer read {$IF COOPER}Int32.MIN_VALUE{$ELSEIF ECHOES}Int32.MinValue{$ELSEIF NOUGAT}rtl.INT32_MIN{$ENDIF};
+    property MaxInt64: Int64 read {$IF COOPER}Int64.MAX_VALUE{$ELSEIF ECHOES}Int64.MaxValue{$ELSEIF NOUGAT}rtl.INT64_MAX{$ENDIF};
+    property MinInt64: Int64 read {$IF COOPER}Int64.MIN_VALUE{$ELSEIF ECHOES}Int64.MinValue{$ELSEIF NOUGAT}rtl.INT64_MIN{$ENDIF};
+
+    property MaxDouble: Double read {$IF COOPER}Double.MAX_VALUE{$ELSEIF ECHOES}Double.MaxValue{$ELSEIF NOUGAT}1.7976931348623157E+308{$ENDIF};
+    property MinDouble: Double read {$IF COOPER}-Double.MAX_VALUE{$ELSEIF ECHOES}Double.MinValue{$ELSEIF NOUGAT}-1.7976931348623157E+308{$ENDIF};
+    property PositiveInfinity: Double read {$IF COOPER}Double.POSITIVE_INFINITY{$ELSEIF ECHOES}Double.PositiveInfinity{$ELSEIF NOUGAT}INFINITY{$ENDIF};
+    property NegativeInfinity: Double read {$IF COOPER}Double.NEGATIVE_INFINITY{$ELSEIF ECHOES}Double.NegativeInfinity{$ELSEIF NOUGAT}-INFINITY{$ENDIF};
+    property NaN: Double read {$IF COOPER}Double.NaN{$ELSEIF ECHOES}Double.NaN{$ELSEIF NOUGAT}rtl.nan{$ENDIF};
+
+    method IsNaN(Value: Double): Boolean;
+    method IsInfinity(Value: Double): Boolean;
+    method IsPositiveInfinity(Value: Double): Boolean;
+    method IsNegativeInfinity(Value: Double): Boolean;
+  end;
+
 implementation
 
 {$HIDE W0} //supress case-mismatch errors
 
+class method Consts.IsNaN(Value: Double): Boolean;
+begin
+  {$IF COOPER}
+  exit Double.isNaN(Value);
+  {$ELSEIF ECHOES}
+  exit Double.IsNaN(Value);
+  {$ELSEIF NOUGAT}
+  {$ENDIF}
+end;
+
+class method Consts.IsInfinity(Value: Double): Boolean;
+begin
+  {$IF COOPER}
+  exit Double.isInfinite(Value);
+  {$ELSEIF ECHOES}
+  exit Double.IsInfinity(Value);
+  {$ELSEIF NOUGAT}
+  {$ENDIF}
+end;
+
+class method Consts.IsNegativeInfinity(Value: Double): Boolean;
+begin
+  {$IF COOPER}
+  exit Value = NegativeInfinity;
+  {$ELSEIF ECHOES}
+  exit Double.IsNegativeInfinity(Value);
+  {$ELSEIF NOUGAT}
+  {$ENDIF}
+end;
+
+class method Consts.IsPositiveInfinity(Value: Double): Boolean;
+begin
+  {$IF COOPER}
+  exit Value = PositiveInfinity;
+  {$ELSEIF ECHOES}
+  exit Double.IsPositiveInfinity(Value);
+  {$ELSEIF NOUGAT}
+  {$ENDIF}
+end;
 {$IF COOPER}
 class method Math.Truncate(d: Double): Double;
 begin
   exit iif(d < 0, mapped.ceil(d), mapped.floor(d));
+end;
+
+class method Math.AbsInt64(i: Int64): Int64;
+begin
+  if i = Consts.MinInt64 then
+    raise new SugarArgumentException("Value can not equals minimum value of Int64");
+
+  exit mapped.abs(i);
+end;
+
+class method Math.AbsInt(i: Integer): Integer;
+begin
+  if i = Consts.MinInteger then
+    raise new SugarArgumentException("Value can not equals minimum value of Int32");
+
+  exit mapped.abs(i);
+end;
+
+class method Math.Atan2(x: Double; y: Double): Double;
+begin
+  if Consts.IsInfinity(x) and Consts.IsInfinity(y) then
+    exit Consts.NaN;
+
+  exit mapped.atan2(x,y);
+end;
+
+class method Math.Round(a: Double): Double;
+begin
+  exit java.lang.Math.floor(a + 0.4);
 end;
 {$ENDIF}
 
 {$IF COOPER or ECHOES}
 class method Math.RoundToInt(a: Double): Integer;
 begin
-  exit Integer(mapped.Round(a));
+  exit Integer(Round(a));
 end;
 {$ENDIF}
 
 {$IF COOPER or NOUGAT}
 class method Math.Sign(d: Double): Integer;
 begin
+  if Consts.IsNaN(d) then
+    raise new SugarArgumentException("Value can not be NaN");
+
   if d > 0 then exit 1;
   if d < 0 then exit -1;
   exit 0;
@@ -275,7 +362,7 @@ begin
   exit rtl.abs(i);
 end;
 
-class method Math.MaxDoube(a: Double; b: Double): Double;
+class method Math.MaxDouble(a: Double; b: Double): Double;
 begin
   exit iif(a > b, a, b);
 end;
