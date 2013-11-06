@@ -19,18 +19,14 @@ type
   private
     property DocumentType: {$IF COOPER}DocumentType{$ELSEIF ECHOES}XDocumentType{$ELSEIF NOUGAT}{$IF IOS}^libxml.__struct__xmlDtd{$ELSEIF OSX}NSXMLDTD{$ENDIF}{$ENDIF}
                             read {$IF IOS}^libxml.__struct__xmlDtd(Node){$ELSE}Node as {$IF COOPER}DocumentType{$ELSEIF ECHOES}XDocumentType{$ELSEIF NOUGAT}NSXMLDTD{$ENDIF}{$ENDIF};
-
-    method GetEntities: array of XmlNode;
-    method GetNotations: array of XmlNode;
   public
-    property Entities: array of XmlNode read GetEntities;
     property InternalSubset: String read {$IF NOUGAT}{$IF IOS}ToString{$ELSEIF OSX}DocumentType.description{$ENDIF}{$ELSE}DocumentType.InternalSubset{$ENDIF};
     property PublicId: String read {$IF IOS}XmlChar.ToString(DocumentType^.ExternalID){$ELSE}DocumentType.PublicId{$ENDIF};
     property SystemId: String read {$IF IOS}XmlChar.ToString(DocumentType^.SystemID){$ELSE}DocumentType.SystemId{$ENDIF};
-    property Notations: array of XmlNode read GetNotations;
   end;
 implementation
 
+(*
 {$IF ECHOES}
 method XmlDocumentType.GetEntities: array of XmlNode;
 begin
@@ -96,5 +92,6 @@ begin
   {$ENDIF}
 end;
 {$ENDIF}
+*)
 
 end.
