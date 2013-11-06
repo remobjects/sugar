@@ -110,7 +110,10 @@
     <Compile Include="Tests\StringBuilder.pas" />
     <Compile Include="Tests\Url.pas" />
     <Compile Include="Tests\UserSettings.pas" />
+    <Compile Include="Tests\Xml\CharacterData.pas" />
     <Compile Include="Tests\Xml\Node.pas" />
+    <Compile Include="Tests\Xml\ProcessingInstruction.pas" />
+    <Compile Include="Tests\Xml\TestData.pas" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Cooper.Android.targets" />
   <PropertyGroup>

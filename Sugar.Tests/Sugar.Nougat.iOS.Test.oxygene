@@ -72,7 +72,10 @@
     <Compile Include="Tests\StringBuilder.pas" />
     <Compile Include="Tests\Url.pas" />
     <Compile Include="Tests\UserSettings.pas" />
+    <Compile Include="Tests\Xml\CharacterData.pas" />
     <Compile Include="Tests\Xml\Node.pas" />
+    <Compile Include="Tests\Xml\ProcessingInstruction.pas" />
+    <Compile Include="Tests\Xml\TestData.pas" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Main\iOS\Resources\Info.plist" />
