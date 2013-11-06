@@ -192,7 +192,7 @@ end;
 method List<T>.AddRange(Items: List<T>);
 begin
   if Items = nil then
-    raise new RemObjects.Oxygene.Sugar.SugarArgumentNullException("Items");
+    raise new SugarArgumentNullException("Items");
 
    mapped.addObjectsFromArray(Items);
 end;

@@ -4,6 +4,9 @@
 
 interface
 
+uses
+  RemObjects.Oxygene.Sugar;
+
 type
   {$IF ECHOES OR COOPER}
   Stack<T> = public class mapped to {$IF ECHOES}System.Collections.Generic.Stack<T>{$ELSE}java.util.Stack<T>{$ENDIF}
@@ -58,7 +61,7 @@ end;
 method Stack<T>.Pop: T;
 begin
   if mapped.count = 0 then
-    raise new RemObjects.Oxygene.Sugar.SugarStackEmptyException("Stack is empty");
+    raise new SugarStackEmptyException("Stack is empty");
 
   result := mapped.lastObject;
   mapped.removeLastObject;
@@ -67,7 +70,7 @@ end;
 method Stack<T>.Peek: T;
 begin
   if mapped.count = 0 then
-    raise new RemObjects.Oxygene.Sugar.SugarStackEmptyException("Stack is empty");
+    raise new SugarStackEmptyException("Stack is empty");
 
   exit mapped.lastObject;
 end;
