@@ -49,12 +49,11 @@ type
 
     property FirstChild: XmlNode read GetFirstChild;
     property LastChild: XmlNode read GetLastChild;
-    property Item[&Index: Integer]: XmlNode read GetItem;
+    property Item[&Index: Integer]: XmlNode read GetItem; default;
     property ChildCount: Integer read GetChildCount;
     property ChildNodes: array of XmlNode read GetChildNodes;
 
-    method SelectNodes(XPath: String): array of XmlNode;
-    method SelectSingleNode(XPath: String): XmlNode;
+    method &Equals(obj: Object): Boolean; override;
     method ToString: System.String; override;
   end;
 {$ELSEIF COOPER}
@@ -281,28 +280,20 @@ begin
     result[i] := CreateCompatibleNode(descendants[i]);
 end;
 
-method XmlNode.SelectNodes(XPath: String): array of XmlNode;
-begin  
-  raise new SugarException("XPath not supported in Windows Store and Windows Phone applications");
-{  var elements := (Node as XNode):XPathSelectElements(XPath):ToArray;
-  if elements = nil then
-    exit nil;
-
-  result := new XmlNode[elements.Length];
-  for i: Integer := 0 to elements.Length-1 do
-    result[i] := CreateCompatibleNode(elements[i]);}
-end;
-
-method XmlNode.SelectSingleNode(XPath: String): XmlNode;
-begin
-  raise new SugarException("XPath not supported in Windows Store and Windows Phone applications");
-  {var element := (Node as XNode):XPathSelectElement(XPath);
-  exit CreateCompatibleNode(element);}
-end;
-
 method XmlNode.ToString: {$IF ECHOES}System.{$ENDIF}String;
 begin
   exit fNode.ToString;
+end;
+
+method XmlNode.&Equals(obj: Object): Boolean;
+begin
+  if obj = nil then
+    exit false;
+
+  if obj is not XmlNode then 
+    exit false;
+
+  exit fNode.Equals(XmlNode(obj).Node);
 end;
 {$ELSEIF COOPER}
 constructor XmlNode(aNode: Node);
