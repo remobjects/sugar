@@ -126,6 +126,8 @@
     <Compile Include="..\..\Tests\StringBuilder.pas" />
     <Compile Include="..\..\Tests\Url.pas" />
     <Compile Include="..\..\Tests\UserSettings.pas" />
+    <Compile Include="..\..\Tests\Math.pas" />
+    <Compile Include="..\..\Tests\Xml\Node.pas" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -176,6 +178,7 @@
     <Folder Include="Resources\" />
     <Folder Include="..\..\Printer\" />
     <Folder Include="..\..\Tests\" />
+    <Folder Include="..\..\Tests\Xml\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Sugar.TestFramework\RemObjects.Oxygene.Sugar.Echoes.WP8.TestFramework.oxygene">

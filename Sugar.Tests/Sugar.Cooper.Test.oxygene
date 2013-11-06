@@ -68,6 +68,7 @@
     <Compile Include="Tests\Guid.pas" />
     <Compile Include="Tests\HashSet.pas" />
     <Compile Include="Tests\List.pas" />
+    <Compile Include="Tests\Math.pas" />
     <Compile Include="Tests\Queue.pas" />
     <Compile Include="Tests\Random.pas" />
     <Compile Include="Tests\Stack.pas" />
@@ -75,12 +76,17 @@
     <Compile Include="Tests\StringBuilder.pas" />
     <Compile Include="Tests\Url.pas" />
     <Compile Include="Tests\UserSettings.pas" />
+    <Compile Include="Tests\Xml\CharacterData.pas" />
+    <Compile Include="Tests\Xml\Node.pas" />
+    <Compile Include="Tests\Xml\ProcessingInstruction.pas" />
+    <Compile Include="Tests\Xml\TestData.pas" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Main\" />
     <Folder Include="Main\Cooper\" />
     <Folder Include="Printer\" />
     <Folder Include="Tests" />
+    <Folder Include="Tests\Xml" />
     <Folder Include="Properties\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Cooper.targets" />

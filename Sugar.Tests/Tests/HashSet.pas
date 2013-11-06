@@ -92,7 +92,6 @@ begin
   Expected.Add("Two");
   Expected.Add("Three");
 
-  var Actual: List<String> := new List<String>;
   var lCount: Integer := 0;
   for Item: String in Data do begin
     inc(lCount);

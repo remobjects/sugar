@@ -51,6 +51,7 @@
     <Folder Include="res\layout\" />
     <Folder Include="Printer\" />
     <Folder Include="Tests" />
+    <Folder Include="Tests\Xml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\values\strings.android-xml">
@@ -101,6 +102,7 @@
     <Compile Include="Tests\Guid.pas" />
     <Compile Include="Tests\HashSet.pas" />
     <Compile Include="Tests\List.pas" />
+    <Compile Include="Tests\Math.pas" />
     <Compile Include="Tests\Queue.pas" />
     <Compile Include="Tests\Random.pas" />
     <Compile Include="Tests\Stack.pas" />
@@ -108,6 +110,7 @@
     <Compile Include="Tests\StringBuilder.pas" />
     <Compile Include="Tests\Url.pas" />
     <Compile Include="Tests\UserSettings.pas" />
+    <Compile Include="Tests\Xml\Node.pas" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Cooper.Android.targets" />
   <PropertyGroup>

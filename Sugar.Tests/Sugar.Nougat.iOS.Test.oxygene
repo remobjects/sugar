@@ -3,7 +3,7 @@
   <PropertyGroup>
     <RootNamespace>Sugar.Nougat.iOS.Test</RootNamespace>
     <ProjectGuid>{e8cdf7d0-43b8-48f4-a06d-37748b1fa463}</ProjectGuid>
-    <OutputType>executable</OutputType>
+    <OutputType>Executable</OutputType>
     <AssemblyName>SugarTest</AssemblyName>
     <AllowGlobals>False</AllowGlobals>
     <AllowLegacyWith>False</AllowLegacyWith>
@@ -14,8 +14,12 @@
     <SDK>iOS</SDK>
     <CreateAppBundle>True</CreateAppBundle>
     <InfoPListFile>Main\iOS\Resources\Info.plist</InfoPListFile>
-    <DeploymentTargetVersion>5.0</DeploymentTargetVersion>
+    <DeploymentTargetVersion>5.1</DeploymentTargetVersion>
     <Name>Sugar.Nougat.iOS.Test</Name>
+    <DefaultUses />
+    <StartupClass />
+    <CreateHeaderFile>False</CreateHeaderFile>
+    <BundleExtension />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <Optimize>false</Optimize>
@@ -26,6 +30,7 @@
     <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
     <CaptureConsoleOutput>False</CaptureConsoleOutput>
     <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
+    <SimulatorArchitectures>i386</SimulatorArchitectures>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <Optimize>true</Optimize>
@@ -59,6 +64,7 @@
     <Compile Include="Tests\Guid.pas" />
     <Compile Include="Tests\HashSet.pas" />
     <Compile Include="Tests\List.pas" />
+    <Compile Include="Tests\Math.pas" />
     <Compile Include="Tests\Queue.pas" />
     <Compile Include="Tests\Random.pas" />
     <Compile Include="Tests\Stack.pas" />
@@ -66,6 +72,7 @@
     <Compile Include="Tests\StringBuilder.pas" />
     <Compile Include="Tests\Url.pas" />
     <Compile Include="Tests\UserSettings.pas" />
+    <Compile Include="Tests\Xml\Node.pas" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Main\iOS\Resources\Info.plist" />
@@ -96,6 +103,7 @@
     <Folder Include="Main\iOS\Resources\Launch Images\" />
     <Folder Include="Printer\" />
     <Folder Include="Tests" />
+    <Folder Include="Tests\Xml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Sugar.TestFramework\RemObjects.Oxygene.Sugar.Nougat.iOS.TestFramework.oxygene">

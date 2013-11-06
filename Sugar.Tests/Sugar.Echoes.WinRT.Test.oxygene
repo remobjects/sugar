@@ -96,6 +96,7 @@
     <Folder Include="Properties\" />
     <Folder Include="Printer\" />
     <Folder Include="Tests" />
+    <Folder Include="Tests\Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.xaml.pas">
@@ -115,6 +116,7 @@
     <Compile Include="Tests\Guid.pas" />
     <Compile Include="Tests\HashSet.pas" />
     <Compile Include="Tests\List.pas" />
+    <Compile Include="Tests\Math.pas" />
     <Compile Include="Tests\Queue.pas" />
     <Compile Include="Tests\Random.pas" />
     <Compile Include="Tests\Stack.pas" />
@@ -122,6 +124,7 @@
     <Compile Include="Tests\StringBuilder.pas" />
     <Compile Include="Tests\Url.pas" />
     <Compile Include="Tests\UserSettings.pas" />
+    <Compile Include="Tests\Xml\Node.pas" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Main\WinRT\Package.appxmanifest">
