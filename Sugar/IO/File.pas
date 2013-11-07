@@ -487,9 +487,9 @@ end;
 method File.ReadBytes: array of Byte;
 begin
   var lError: Foundation.NSError := nil;
-  var lData := NSData.dataWithContentsOfFile(mapped) options(NSDataReadingOptions.NSDataReadingMappedIfSafe) error(var lError);
+  var lData: NSData := NSData.dataWithContentsOfFile(mapped) options(NSDataReadingOptions.NSDataReadingMappedIfSafe) error(var lError);
   if not assigned(lData) then 
-    raise SugarNSErrorException.exceptionWithError(lError); 
+    raise SugarNSErrorException.exceptionWithError(lError);
 
   result := new Byte[lData.length];
   lData.getBytes(result) length(lData.length);
