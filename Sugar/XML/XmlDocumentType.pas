@@ -17,12 +17,12 @@ uses
 type
   XmlDocumentType = public class (XmlNode)
   private
-    property DocumentType: {$IF COOPER}DocumentType{$ELSEIF ECHOES}XDocumentType{$ELSEIF NOUGAT}{$IF IOS}^libxml.__struct__xmlDtd{$ELSEIF OSX}NSXMLDTD{$ENDIF}{$ENDIF}
-                            read {$IF IOS}^libxml.__struct__xmlDtd(Node){$ELSE}Node as {$IF COOPER}DocumentType{$ELSEIF ECHOES}XDocumentType{$ELSEIF NOUGAT}NSXMLDTD{$ENDIF}{$ENDIF};
+    property DocumentType: {$IF COOPER}DocumentType{$ELSEIF ECHOES}XDocumentType{$ELSEIF NOUGAT}^libxml.__struct__xmlDtd{$ENDIF}
+                            read {$IF NOUGAT}^libxml.__struct__xmlDtd(Node){$ELSE}Node as {$IF COOPER}DocumentType{$ELSEIF ECHOES}XDocumentType{$ENDIF}{$ENDIF};
   public
-    property InternalSubset: String read {$IF NOUGAT}{$IF IOS}ToString{$ELSEIF OSX}DocumentType.description{$ENDIF}{$ELSE}DocumentType.InternalSubset{$ENDIF};
-    property PublicId: String read {$IF IOS}XmlChar.ToString(DocumentType^.ExternalID){$ELSE}DocumentType.PublicId{$ENDIF};
-    property SystemId: String read {$IF IOS}XmlChar.ToString(DocumentType^.SystemID){$ELSE}DocumentType.SystemId{$ENDIF};
+    property InternalSubset: String read {$IF NOUGAT}ToString{$ELSE}DocumentType.InternalSubset{$ENDIF};
+    property PublicId: String read {$IF NOUGAT}XmlChar.ToString(DocumentType^.ExternalID){$ELSE}DocumentType.PublicId{$ENDIF};
+    property SystemId: String read {$IF NOUGAT}XmlChar.ToString(DocumentType^.SystemID){$ELSE}DocumentType.SystemId{$ENDIF};
   end;
 implementation
 

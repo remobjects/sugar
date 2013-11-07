@@ -43,6 +43,12 @@ type
     method initWithError(aError: Foundation.NSError): id;
     class method exceptionWithError(aError: Foundation.NSError): id;
   end;
+
+  SugarLibXmlException = public class (SugarException)
+  public
+    constructor(Error: ^libxml.__struct__xmlError);
+    property Code: Integer read protected write;
+  end;
   {$ENDIF}
 
   ErrorMessage = public static class
@@ -67,6 +73,12 @@ end;
 class method SugarNSErrorException.exceptionWithError(aError: Foundation.NSError): id;
 begin
   result := inherited exceptionWithName('NSError') reason(aError.description) userInfo(aError.userInfo);
+end;
+
+constructor SugarLibXmlException(Error: ^libxml.__struct__xmlError);
+begin  
+  inherited constructor(new Foundation.NSString withUTF8String(^AnsiChar(Error^.message)));
+  Code := Error^.code;
 end;
 {$ENDIF}
 

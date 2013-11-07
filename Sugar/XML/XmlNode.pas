@@ -60,7 +60,7 @@ type
   XmlNode = public class
   private
     fNode: Node;
-    method GetName: String;
+    method GetName: String; virtual;
     method GetItem(&Index: Integer): XmlNode;
     method GetParent: XmlNode;
     method SetValue(aValue: String);
@@ -71,10 +71,10 @@ type
     property Node: Node read fNode;
     constructor(aNode: Node);
   public
-    property Name: String read GetName;
+    property Name: String read GetName; virtual;
     property URI: String read iif(Node.BaseUri = nil, "", Node.BaseURI);
     property Value: String read Node.TextContent write SetValue;
-    property LocalName: String read iif(Node.LocalName = nil, Node.NodeName, Node.LocalName);
+    property LocalName: String read iif(Node.LocalName = nil, Node.NodeName, Node.LocalName); virtual;
     
     property Document: XmlDocument read iif(Node.OwnerDocument = nil, nil, new XmlDocument(Node.OwnerDocument));
     property Parent: XmlNode read GetParent;
@@ -91,53 +91,17 @@ type
     method ToString: java.lang.String; override;
   end;  
 {$ELSEIF NOUGAT}
-{$IF OSX}
-  XmlNode = public class
-  private
-    fNode: NSXMLNode;
-
-    method SetName(aValue: String);
-    method GetFirstChild: XmlNode;
-    method GetLastChild: XmlNode;
-    method SetValue(aValue: String);
-    method GetChildNodes: array of XmlNode;
-  protected
-    method ConvertNodeList(List: NSArray): array of XmlNode;
-    class method CreateCompatibleNode(Node: NSXMLNode): XmlNode;
-  assembly or protected 
-    property Node: NSXMLNode read fNode;
-    method initWithNode(aNode: NSXMLNode): dynamic;
-  public
-    property Name: String read Node.name write SetName;
-    property URI: String read Node.URI;
-    property Value: String read Node.stringValue write SetValue;
-    property LocalName: String read Node.LocalName;
-
-    property Document: XmlDocument read iif(Node.rootDocument = nil, nil, new XmlDocument withNode(Node.rootDocument));
-    property Parent: XmlNode read CreateCompatibleNode(Node.parent);
-    property NextSibling: XmlNode read CreateCompatibleNode(Node.nextSibling);
-    property PreviousSibling: XmlNode read CreateCompatibleNode(Node.previousSibling);
-
-    property FirstChild: XmlNode read GetFirstChild;
-    property LastChild: XmlNode read GetLastChild;
-    property Item[&Index: Integer]: XmlNode read CreateCompatibleNode(Node.childAtIndex(&Index)); default;
-    property ChildCount: Integer read Node.childCount;
-    property ChildNodes: array of XmlNode read GetChildNodes;
-
-    method isEqual(obj: id): Boolean; override;
-    method description: NSString; override;
-  end;
-{$ELSEIF IOS}
   XmlNode = public class
   private
     fNode: ^libxml.__struct__xmlNode;
     fDocument: XmlDocument;
 
-    method GetName: String;
+    method GetName: String; virtual;
     method GetURI: String;
     method GetValue: String;
     method SetValue(aValue: String);
-    method GetLocalName: String;
+    method GetLocalName: String; virtual;
+    method GetParent: XmlNode;
 
     method GetItem(&Index: Integer): XmlNode;
     method GetChildCount: Integer;
@@ -154,8 +118,8 @@ type
     property Value: String read GetValue write SetValue; virtual;
     property LocalName: String read GetLocalName; virtual;
     
-    property Document: XmlDocument read fDocument;
-    property Parent: XmlNode read CreateCompatibleNode(^libxml.__struct__xmlNode(Node^.parent), Document);
+    property Document: XmlDocument read fDocument protected write fDocument;
+    property Parent: XmlNode read GetParent;
     property NextSibling: XmlNode read CreateCompatibleNode(^libxml.__struct__xmlNode(Node^.next), Document);
     property PreviousSibling: XmlNode read CreateCompatibleNode(^libxml.__struct__xmlNode(Node^.prev), Document);
 
@@ -165,6 +129,7 @@ type
     property ChildCount: Integer read GetChildCount;
     property ChildNodes: array of XmlNode read GetChildNodes;
     
+    method isEqual(obj: id): Boolean; override;
     method description: NSString; override;
   end;
 
@@ -197,7 +162,6 @@ type
     method ElementsByName(Name: String): array of XmlElement;
     method ElementsByName(LocalName: String; NamespaceUri: String): array of XmlElement;
   end;
-{$ENDIF}
 {$ENDIF}
 
 implementation
@@ -385,92 +349,6 @@ begin
   end;
 end;
 {$ELSEIF NOUGAT}
-{$IF OSX}
-method XmlNode.SetName(aValue: String);
-begin
-  Node.setName(Value);
-end;
-
-method XmlNode.initWithNode(aNode: NSXMLNode): dynamic;
-begin
-  fNode := aNode;
-  result := self;
-end;
-
-class method XmlNode.CreateCompatibleNode(Node: NSXMLNode): XmlNode;
-begin
-  if Node = nil then
-    exit nil;
-
-  case Node.kind of
-    NSXMLNodeKind.NSXMLInvalidKind: exit nil;
-    NSXMLNodeKind.NSXMLAttributeKind: exit new XmlAttribute(Node);
-    NSXMLNodeKind.NSXMLCommentKind: exit new XmlComment(Node);
-    NSXMLNodeKind.NSXMLDocumentKind: exit new XmlDocument(Node);
-    NSXMLNodeKind.NSXMLDTDKind: exit new XmlDocumentType(Node);
-    NSXMLNodeKind.NSXMLElementKind: exit new XmlElement(Node);
-    NSXMLNodeKind.NSXMLProcessingInstructionKind: exit new XmlProcessingInstruction(Node);
-    NSXMLNodeKind.NSXMLTextKind: exit new XmlText(Node);
-    else
-      exit new XmlNode(Node);
-  end;
-end;
-
-method XmlNode.GetChildNodes: array of XmlNode;
-begin
-  var lValue := fNode.children;
-  result := new XmlNode[lValue.count];
-  for i: Integer := 0 to lValue.count - 1 do
-    result[i] := CreateCompatibleNode(lValue.objectAtIndex(i));
-end;
-
-method XmlNode.GetLastChild: XmlNode;
-begin
-  if Node.childCount = 0 then
-    exit nil;
-
-  exit CreateCompatibleNode(Node.children.objectAtIndex(Node.childCount-1));
-end;
-
-method XmlNode.GetFirstChild: XmlNode;
-begin
-  if Node.childCount = 0 then
-    exit nil;
-
-  exit CreateCompatibleNode(Node.children.objectAtIndex(0));
-end;
-
-method XmlNode.SetValue(aValue: String);
-begin
-  Node.setStringValue(aValue);
-end;
-
-method XmlNode.ConvertNodeList(List: NSArray): array of XmlNode;
-begin
-  if List = nil then
-    exit nil;
-
-  result := new XmlNode[List.count];
-  for i: Integer := 0 to List.count-1 do
-    result[i] := CreateCompatibleNode(List.objectAtIndex(i));
-end;
-
-method XmlNode.isEqual(obj: id): Boolean;
-begin
-  if obj = nil then
-    exit false;
-
-  if obj is not XmlNode then
-    exit false;
-
-  exit fNode.isEqual(XmlNode(obj).Node);
-end;
-
-method XmlNode.description: NSString;
-begin
-  exit fNode.description;
-end;
-{$ELSEIF IOS}
 constructor XmlNode(aNode: ^libxml.__struct__xmlNode; aDocument: XmlDocument);
 begin
   fNode := aNode;
@@ -491,19 +369,34 @@ method XmlNode.GetValue: String;
 begin
   var content := libxml.xmlNodeGetContent(libxml.xmlNodePtr(fNode));
   if content = nil then
-    exit nil;
+    exit "";
 
   exit XmlChar.ToString(content, true);
 end;
 
 method XmlNode.SetValue(aValue: String);
 begin
+  SugarArgumentNullException.RaiseIfNil(aValue, "Value");
+
   libxml.xmlNodeSetContent(libxml.xmlNodePtr(fNode), XmlChar.FromString(aValue));
+
+  if String.IsNullOrEmpty(aValue) then begin
+    libxml.xmlFreeNodeList(fNode^.children);
+    fNode^.children := nil;
+  end;
 end;
 
 method XmlNode.GetLocalName: String;
 begin
   exit new XmlNamespace(fNode).LocalName;
+end;
+
+method XmlNode.GetParent: XmlNode;
+begin
+  result := CreateCompatibleNode(^libxml.__struct__xmlNode(Node^.parent), Document);
+  
+  if result.isEqual(Document) then
+    exit nil;
 end;
 
 class method XmlNode.CreateCompatibleNode(Node: ^libxml.__struct__xmlNode; Doc: XmlDocument): XmlNode;
@@ -539,9 +432,29 @@ begin
   end;
 end;
 
+method XmlNode.isEqual(obj: id): Boolean;
+begin
+  if obj = nil then
+    exit false;
+
+  if obj is not XmlNode then
+    exit false;
+
+  //there is no special node comparison method in libxml2, so we comparing nodes content
+  exit description.isEqual(XmlNode(obj).description);
+end;
+
 method XmlNode.GetItem(&Index: Integer): XmlNode;
 begin
-  exit GetChildNodes[&Index];
+  if &Index < 0 then
+    raise new SugarArgumentException(ErrorMessage.NEGATIVE_VALUE_ERROR, "Index");
+
+  var lNodes := GetChildNodes;
+
+  if &Index >= length(lNodes) then
+    raise new SugarArgumentOutOfRangeException(ErrorMessage.ARG_OUT_OF_RANGE_ERROR, "Index");
+
+  exit lNodes[&Index];
 end;
 
 method XmlNode.GetChildCount: Integer;
@@ -665,7 +578,6 @@ method XmlNode.XmlNodeList.ElementsByName(Name: String): array of XmlElement;
 begin
   exit ElementsByName(Name, nil);
 end;
-{$ENDIF}
 {$ENDIF}
 
 end.

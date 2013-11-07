@@ -31,36 +31,12 @@ type
   end;
 {$ELSEIF NOUGAT}
   XmlProcessingInstruction = public class (XmlNode)
-  {$IF OSX}
-  private
-    method GetData: String;
-    method SetData(aValue: String);
-  {$ENDIF}
   public
-    {$IF IOS}
     property Data: String read Value write Value;
     property Target: String read Name;
-    {$ELSEIF OSX}
-    property Data: String read GetData write SetData;
-    property Target: String read Node.Name;
-    {$ENDIF}
   end;
 {$ENDIF}
 implementation
-
-{$IF NOUGAT}
-{$IF OSX}
-method XmlProcessingInstruction.GetData: String;
-begin
-  exit Node.stringValue;
-end;
-
-method XmlProcessingInstruction.SetData(aValue: String);
-begin
-  Node.setStringValue(aValue);
-end;
-{$ENDIF}
-{$ENDIF}
 
 {$IF COOPER}
 method XmlProcessingInstruction.SetData(aValue: String);

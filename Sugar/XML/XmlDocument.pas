@@ -29,13 +29,9 @@ type
     {$ELSEIF ECHOES}
     property Doc: XDocument read Node as XDocument;
     {$ELSEIF NOUGAT}
-    {$IF IOS}
     property Doc: ^libxml.__struct__xmlDoc read ^libxml.__struct__xmlDoc(Node);
     method GetDocumentElement: XmlElement;
     method GetDocumentType: XmlDocumentType;
-    {$ELSEIF OSX}
-    property Doc: NSXMLDocument read Node as NSXMLDocument;
-    {$ENDIF}
     {$ENDIF}
     method GetElement(Name: String): XmlElement;
   public
@@ -46,13 +42,8 @@ type
     property DocumentElement: XmlElement read iif(Doc.DocumentElement = nil, nil, new XmlElement(Doc.DocumentElement));
     property DocumentType: XmlDocumentType read iif(Doc.Doctype = nil, nil, new XmlDocumentType(Doc.Doctype));
     {$ELSEIF NOUGAT}
-    {$IF IOS}
     property DocumentElement: XmlElement read GetDocumentElement;
     property DocumentType: XmlDocumentType read GetDocumentType;
-    {$ELSEIF OSX}
-    property DocumentElement: XmlElement read iif(Doc.rootElement = nil, nil, new XmlElement(Doc.rootElement));
-    property DocumentType: XmlDocumentType read iif(Doc.DTD = nil, nil, new XmlDocumentType(Doc.DTD));
-    {$ENDIF}
     {$ENDIF}
 
     property Element[Name: String]: XmlElement read GetElement; default;
@@ -82,7 +73,7 @@ type
     method Save(aFile: File);
     method Save(aFile: File; XmlDeclaration: XmlDocumentDeclaration);
     method Save(aFile: File; Version: String; Encoding: String; Standalone: Boolean);
-    {$IF IOS}finalizer;{$ENDIF}
+    {$IF NOUGAT}finalizer;{$ENDIF}
   end;
 
   XmlDocumentDeclaration = public class
@@ -275,6 +266,11 @@ end;
 
 method XmlDocument.CreateAttribute(QualifiedName: String; NamespaceUri: String): XmlAttribute;
 begin
+  var lIndex := QualifiedName.IndexOf(":");
+
+  if lIndex <> -1 then
+    QualifiedName := QualifiedName.Substring(lIndex+1, QualifiedName.Length - lIndex - 1);
+    
   var ns: XNamespace := System.String(NamespaceUri);
   var Attr := new XAttribute(ns + QualifiedName, "");
   exit new XmlAttribute(Attr);
@@ -424,7 +420,6 @@ begin
   {$ENDIF}
 end;
 {$ELSEIF NOUGAT}
-{$IF IOS}
 method XmlDocument.AddChild(Node: XmlNode);
 begin
   var NewNode := libxml.xmlAddChild(libxml.xmlNodePtr(Doc), libxml.xmlNodePtr(Node.Node));
@@ -482,7 +477,8 @@ begin
   if NewObj = nil then
     exit nil;
 
-  exit new XmlDocument(^libxml.__struct__xmlNode(NewObj), self);
+  result := new XmlDocument(^libxml.__struct__xmlNode(NewObj), nil);
+  result.Document := result;
 end;
 
 method XmlDocument.CreateElement(Name: String): XmlElement;
@@ -578,7 +574,8 @@ begin
   if NewObj = nil then
     exit nil;
 
-  exit new XmlDocument(^libxml.__struct__xmlNode(NewObj), nil);
+  result := new XmlDocument(^libxml.__struct__xmlNode(NewObj), nil);
+  result.Document := result;
 end;
 
 class method XmlDocument.FromBinary(aBinary: Binary): XmlDocument;
@@ -587,7 +584,8 @@ begin
   if NewObj = nil then
     exit nil;
 
-  exit new XmlDocument(^libxml.__struct__xmlNode(NewObj), nil);  
+  result := new XmlDocument(^libxml.__struct__xmlNode(NewObj), nil);
+  result.Document := result;
 end;
 
 class method XmlDocument.FromString(aString: String): XmlDocument;
@@ -652,168 +650,6 @@ begin
 
   inherited;
 end;
-{$ELSEIF OSX}
-method XmlDocument.AddChild(Node: XmlNode);
-begin
-  Doc.addChild(Node.Node);
-end;
-
-method XmlDocument.CreateAttribute(Name: String): XmlAttribute;
-begin
-  var lNode := NSXMLNode.attributeWithName(Name) stringValue(nil);
-  exit new XmlAttribute(lNode);
-end;
-
-method XmlDocument.CreateAttribute(QualifiedName: String; NamespaceUri: String): XmlAttribute;
-begin
-  var lNode := NSXMLNode.attributeWithName(QualifiedName) URI(NamespaceUri) stringValue(nil);
-  exit new XmlAttribute(lNode);
-end;
-
-method XmlDocument.CreateCDataSection(Data: String): XmlCDataSection;
-begin
-  var lNode := new NSXMLNode withKind(NSXMLNodeKind.NSXMLTextKind) options(NSXMLNodeIsCDATA);
-  lNode.setStringValue(Data);
-  exit new XmlCDataSection(lNode);
-end;
-
-method XmlDocument.CreateComment(Data: String): XmlComment;
-begin
-  var lNode := NSXMLNode.commentWithStringValue(Data);
-  exit new XmlComment(lNode);
-end;
-
-class method XmlDocument.CreateDocument: XmlDocument;
-begin
-  var lNode := new NSXMLDocument();
-  exit new XmlDocument(lNode);
-end;
-
-method XmlDocument.CreateElement(Name: String): XmlElement;
-begin
-  var lNode := NSXMLNode.elementWithName(Name);
-  exit new XmlElement(lNode);
-end;
-
-method XmlDocument.CreateElement(QualifiedName: String; NamespaceUri: String): XmlElement;
-begin
-  var lNode := NSXMLNode.elementWithName(QualifiedName) URI(NamespaceUri);
-  exit new XmlElement(lNode);
-end;
-
-method XmlDocument.CreateProcessingInstruction(Target: String; Data: String): XmlProcessingInstruction;
-begin
-  var lNode := NSXMLNode.processingInstructionWithName(Target) stringValue(Data);
-  exit new XmlProcessingInstruction(lNode);
-end;
-
-method XmlDocument.CreateTextNode(Data: String): XmlText;
-begin
-  var lNode := NSXMLNode.textWithStringValue(Data);
-  exit new XmlText(lNode);
-end;
-
-method XmlDocument.GetElement(Name: String): XmlElement;
-begin
-  var Item: NSXMLNode := Doc.children.objectAtIndex(0);
-
-  while (Item <> nil) do begin
-    if (Item.kind = NSXMLNodeKind.NSXMLElementKind) and (Item.name = Name) then
-      exit new XmlElement(Item);
-
-    Item := Item.nextSibling;
-  end;
-
-  exit nil;
-end;
-
-method XmlDocument.GetElementById(ElementId: String): XmlElement;
-begin
-  var Item := FirstChild;
-
-  if Item = nil then
-    exit nil;
-
-  while Item <> nil do begin
-    if Item.Node.kind = NSXMLNodeKind.NSXMLElementKind then begin
-      var Attr := XmlElement(Item).GetAttributeNode("id");
-      if (Attr <> nil) and (Attr.Value = ElementId) then
-        exit Item as XmlElement;
-    end;
-
-    Item := Item.NextSibling;
-  end;
-end;
-
-method XmlDocument.GetElementsByTagName(LocalName: String; NamespaceUri: String): array of XmlNode;
-begin
-  var Nodes := Doc.rootElement.elementsForLocalName(LocalName) URI(NamespaceUri);
-  exit ConvertNodeList(Nodes);
-end;
-
-method XmlDocument.GetElementsByTagName(Name: String): array of XmlNode;
-begin
-  var Nodes := Doc.rootElement.elementsForName(Name);
-  exit ConvertNodeList(Nodes);
-end;
-
-class method XmlDocument.FromFile(aFile: File): XmlDocument;
-begin
-  var Url := new NSURL fileURLWithPath(Foundation.NSString(aFile));
-  var lError: NSError;
-  var lNode := new NSXMLDocument withContentsOfURL(Url) options(NSXMLDocumentTidyXML) error(var lError);
-  if not assigned(lNode) then raise new SugarNSErrorException withError(lError);
-  result := new XmlDocument(lNode);
-end;
-
-class method XmlDocument.FromBinary(aBinary: Binary): XmlDocument;
-begin
-  var lError: NSError;
-  var lNode := new NSXMLDocument withData(aBinary) options(NSXMLDocumentTidyXML) error(var lError);
-  if not assigned(lNode) then raise new SugarNSErrorException withError(lError);
-  result := new XmlDocument(lNode);
-end;
-
-class method XmlDocument.FromString(aString: String): XmlDocument;
-begin
-  var lError: NSError;
-  var lNode := new NSXMLDocument withXMLString(aString) options(NSXMLDocumentTidyXML) error(var lError);
-  if not assigned(lNode) then raise new SugarNSErrorException withError(lError);
-  result := new XmlDocument(lNode);
-end;
-
-method XmlDocument.RemoveChild(Node: XmlNode);
-begin
-  Doc.removeChildAtIndex(Node.Node.index);
-end;
-
-method XmlDocument.ReplaceChild(Node: XmlNode; WithNode: XmlNode);
-begin
-  Doc.replaceChildAtIndex(Node.Node.index) withNode(WithNode.Node);
-end;
-
-method XmlDocument.Save(aFile: File);
-begin
-  Save(aFile, nil);  
-end;
-
-method XmlDocument.Save(aFile: File; Version: String; Encoding: String; Standalone: Boolean);
-begin
-  Save(aFile, new XmlDocumentDeclaration(Version := Version, Encoding := Encoding, Standalone := Standalone));
-end;
-
-method XmlDocument.Save(aFile: File; XmlDeclaration: XmlDocumentDeclaration);
-begin
-  if XmlDeclaration <> nil then begin
-    Doc.setCharacterEncoding(XmlDeclaration.Encoding);
-    Doc.setVersion(XmlDeclaration.Version);
-    Doc.setStandalone(XmlDeclaration.Standalone);
-  end;
-
-  var Data: NSData := Doc.XMLData;
-  Data.writeToFile(aFile) atomically(true);
-end;
-{$ENDIF}
 {$ENDIF}
 
 { XmlDocumentDeclaration }

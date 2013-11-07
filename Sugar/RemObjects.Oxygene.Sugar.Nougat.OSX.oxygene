@@ -56,6 +56,7 @@
       <HintPath>C:\Program Files (x86)\RemObjects Software\Oxygene\Nougat\SDKs\OS X 10.8\CoreServices.fx</HintPath>
     </Reference>
     <Reference Include="Foundation.fx" />
+    <Reference Include="libxml2.fx" />
     <Reference Include="rtl.fx" />
   </ItemGroup>
   <ItemGroup>

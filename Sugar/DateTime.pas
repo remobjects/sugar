@@ -85,9 +85,8 @@ type
     method InternalGetDate: DateTime;
     method GetComponent(Component: NSCalendarUnit): Integer;
     method FormatWithStyle(DateStyle, TimeStyle: NSDateFormatterStyle): String;
-    method initWithDate(aDate: NSDate): id;
+    constructor(aDate: NSDate);
   public
-    method init: id; override;
     constructor(aYear, aMonth, aDay: Integer);
     constructor(aYear, aMonth, aDay, anHour, aMinute: Integer);
     constructor(aYear, aMonth, aDay, anHour, aMinute, aSecond: Integer);
@@ -257,16 +256,9 @@ begin
   exit Formatter.format(fDate);
 end;
 {$ELSEIF NOUGAT}
-method DateTime.init: id;
-begin  
-  fDate := new NSDate();
-  result := inherited;
-end;
-
-method DateTime.initWithDate(aDate: NSDate): id;
+constructor DateTime(aDate: NSDate);
 begin
   fDate := aDate;
-  result := self;
 end;
 
 constructor DateTime(aYear: Integer; aMonth: Integer; aDay: Integer);
@@ -288,54 +280,54 @@ begin
   Components.setHour(anHour);
   Components.setMinute(aMinute);
   Components.setSecond(aSecond);
-  exit new DateTime withDate(fCalendar.dateFromComponents(Components));
+  exit new DateTime(fCalendar.dateFromComponents(Components));
 end;
 
 method DateTime.AddDays(Value: Integer): DateTime;
 begin
   var Component: NSDateComponents := new NSDateComponents();  
   Component.setDay(Value);
-  exit new DateTime withDate(fCalendar.dateByAddingComponents(Component) toDate(fDate) options(0));  
+  exit new DateTime(fCalendar.dateByAddingComponents(Component) toDate(fDate) options(0));  
 end;
 
 method DateTime.AddHours(Value: Integer): DateTime;
 begin
   var Component: NSDateComponents := new NSDateComponents();  
   Component.setHour(Value);
-  exit new DateTime withDate(fCalendar.dateByAddingComponents(Component) toDate(fDate) options(0));
+  exit new DateTime(fCalendar.dateByAddingComponents(Component) toDate(fDate) options(0));
 end;
 
 method DateTime.AddMilliseconds(Value: Integer): DateTime;
 begin
-  exit new DateTime withDate(fDate.dateByAddingTimeInterval(Value / 1000));
+  exit new DateTime(fDate.dateByAddingTimeInterval(Value / 1000));
 end;
 
 method DateTime.AddMinutes(Value: Integer): DateTime;
 begin
   var Component: NSDateComponents := new NSDateComponents();  
   Component.setMinute(Value);
-  exit new DateTime withDate(fCalendar.dateByAddingComponents(Component) toDate(fDate) options(0));
+  exit new DateTime(fCalendar.dateByAddingComponents(Component) toDate(fDate) options(0));
 end;
 
 method DateTime.AddMonths(Value: Integer): DateTime;
 begin
   var Component: NSDateComponents := new NSDateComponents();  
   Component.setMonth(Value);
-  exit new DateTime withDate(fCalendar.dateByAddingComponents(Component) toDate(fDate) options(0));
+  exit new DateTime(fCalendar.dateByAddingComponents(Component) toDate(fDate) options(0));
 end;
 
 method DateTime.AddSeconds(Value: Integer): DateTime;
 begin
   var Component: NSDateComponents := new NSDateComponents();  
   Component.setSecond(Value);
-  exit new DateTime withDate(fCalendar.dateByAddingComponents(Component) toDate(fDate) options(0));
+  exit new DateTime(fCalendar.dateByAddingComponents(Component) toDate(fDate) options(0));
 end;
 
 method DateTime.AddYears(Value: Integer): DateTime;
 begin
   var Component: NSDateComponents := new NSDateComponents();  
   Component.setYear(Value);
-  exit new DateTime withDate(fCalendar.dateByAddingComponents(Component) toDate(fDate) options(0));
+  exit new DateTime(fCalendar.dateByAddingComponents(Component) toDate(fDate) options(0));
 end;
 
 method DateTime.CompareTo(Value: DateTime): Integer;

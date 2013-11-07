@@ -18,12 +18,12 @@ uses
 type
   XmlElement = public class (XmlNode)
   private
-    {$IF NOT IOS}
-    property Element: {$IF COOPER}Element{$ELSEIF ECHOES}XElement{$ELSEIF NOUGAT}NSXMLElement{$ENDIF} 
-                      read Node as{$IF COOPER}Element{$ELSEIF ECHOES}XElement{$ELSEIF NOUGAT}NSXMLElement{$ENDIF};
+    {$IF NOT NOUGAT}
+    property Element: {$IF COOPER}Element{$ELSEIF ECHOES}XElement{$ENDIF} 
+                      read Node as{$IF COOPER}Element{$ELSEIF ECHOES}XElement{$ENDIF};
     {$ENDIF}
     method GetAttributes: array of XmlAttribute;
-    {$IF IOS}
+    {$IF NOUGAT}
     method CopyNS(aNode: XmlAttribute);
     {$ENDIF}
   public
@@ -71,6 +71,9 @@ end;
 
 method XmlElement.AddChild(aNode: XmlNode);
 begin
+  if aNode.Node.Parent <> nil then
+    RemoveChild(aNode);
+
   Element.Add(aNode.Node);
 end;
 
@@ -81,6 +84,9 @@ end;
 
 method XmlElement.ReplaceChild(aNode: XmlNode; WithNode: XmlNode);
 begin
+  if WithNode.Node.Parent <> nil then
+    RemoveChild(WithNode);
+
   (aNode.Node as XNode):ReplaceWith(WithNode.Node);
 end;
 
@@ -181,16 +187,19 @@ end;
 
 method XmlElement.GetAttribute(aName: String): String;
 begin
-  exit Element.GetAttribute(aName);
+  exit GetAttributeNode(aName):Value;
 end;
 
 method XmlElement.GetAttribute(aLocalName: String; NamespaceUri: String): String;
 begin
-  exit Element.getAttributeNS(NamespaceUri, aLocalName);
+  exit GetAttributeNode(aLocalName, NamespaceUri):Value;
 end;
 
 method XmlElement.GetAttributeNode(aName: String): XmlAttribute;
 begin
+  if aName = nil then
+    exit nil;
+
   var lResult := Element.GetAttributeNode(aName);
   if lResult <> nil then
     exit new XmlAttribute(lResult);
@@ -198,6 +207,9 @@ end;
 
 method XmlElement.GetAttributeNode(aLocalName: String; NamespaceUri: String): XmlAttribute;
 begin
+  SugarArgumentNullException.RaiseIfNil(aLocalName, "LocalName");
+  SugarArgumentNullException.RaiseIfNil(NamespaceUri, "NamespaceUri");
+
   var lResult := Element.getAttributeNodeNS(NamespaceUri, aLocalName);
   if lResult <> nil then
     exit new XmlAttribute(lResult);
@@ -205,11 +217,26 @@ end;
 
 method XmlElement.SetAttribute(aName: String; aValue: String);
 begin
+  SugarArgumentNullException.RaiseIfNil(aName, "Name");
+
+  if aValue = nil then begin
+    RemoveAttribute(aName);
+    exit;
+  end;
+
   Element.SetAttribute(aName, aValue);
 end;
 
 method XmlElement.SetAttribute(aLocalName: String; NamespaceUri: String; aValue: String);
 begin
+  SugarArgumentNullException.RaiseIfNil(aLocalName, "LocalName");
+  SugarArgumentNullException.RaiseIfNil(NamespaceUri, "NamespaceUri");
+
+  if aValue = nil then begin
+    RemoveAttribute(aLocalName, NamespaceUri);
+    exit;
+  end;
+
   Element.setAttributeNS(NamespaceUri, aLocalName, aValue); 
 end;
 
@@ -220,31 +247,47 @@ end;
 
 method XmlElement.RemoveAttribute(aName: String);
 begin
+  if aName = nil then
+    exit;
+
   Element.RemoveAttribute(aName);
 end;
 
 method XmlElement.RemoveAttribute(aLocalName: String; NamespaceUri: String);
 begin
+  SugarArgumentNullException.RaiseIfNil(aLocalName, "LocalName");
+  SugarArgumentNullException.RaiseIfNil(NamespaceUri, "NamespaceUri");
+
   Element.removeAttributeNS(NamespaceUri, aLocalName);
 end;
 
 method XmlElement.RemoveAttributeNode(Node: XmlAttribute): XmlAttribute;
 begin
-  exit new XmlAttribute(Element.removeAttributeNode(Node.Node as Attr));
+  SugarArgumentNullException.RaiseIfNil(Node, "Node");
+  try
+    exit new XmlAttribute(Element.removeAttributeNode(Node.Node as Attr));
+  except
+    exit nil;
+  end;  
 end;
 
 method XmlElement.HasAttribute(aName: String): Boolean;
 begin
+  if aName = nil then
+    exit false;
+
   exit Element.HasAttribute(aName);
 end;
 
 method XmlElement.HasAttribute(aLocalName: String; NamespaceUri: String): Boolean;
 begin
+  SugarArgumentNullException.RaiseIfNil(aLocalName, "LocalName");
+  SugarArgumentNullException.RaiseIfNil(NamespaceUri, "NamespaceUri");
+
   exit Element.hasAttributeNS(NamespaceUri, aLocalName);
 end;
 
 {$ELSEIF NOUGAT}
-{$IF IOS}
 method XmlElement.GetAttributes: array of XmlAttribute;
 begin
   var List := new RemObjects.Oxygene.Sugar.Collections.List<XmlAttribute>;
@@ -259,6 +302,9 @@ end;
 
 method XmlElement.AddChild(aNode: XmlNode);
 begin
+  if aNode.Node^.parent <> nil then
+    libxml.xmlUnlinkNode(libxml.xmlNodePtr(aNode.Node));
+
   var NewNode := libxml.xmlAddChild(libxml.xmlNodePtr(Node), libxml.xmlNodePtr(aNode.Node));
   aNode.Node := ^libxml.__struct__xmlNode(NewNode);
 end;
@@ -266,28 +312,46 @@ end;
 method XmlElement.RemoveChild(aNode: XmlNode);
 begin
   libxml.xmlUnlinkNode(libxml.xmlNodePtr(aNode.Node));
-  libxml.xmlFreeNode(libxml.xmlNodePtr(aNode.Node));
+  //libxml.xmlFreeNode(libxml.xmlNodePtr(aNode.Node));
 end;
 
 method XmlElement.ReplaceChild(aNode: XmlNode; WithNode: XmlNode);
 begin
+  if aNode.Node^.parent = nil then
+    raise new SugarInvalidOperationException("Unable to replace element without parent");
+
   libxml.xmlReplaceNode(libxml.xmlNodePtr(aNode.Node), libxml.xmlNodePtr(WithNode.Node));
 end;
 
 method XmlElement.GetAttribute(aName: String): String;
 begin
+  if aName = nil then
+    exit nil;
+
   var Value := libxml.xmlGetProp(libxml.xmlNodePtr(Node), XmlChar.FromString(aName));
+  if Value = nil then
+    exit nil;
+
   exit XmlChar.ToString(Value, true);
 end;
 
 method XmlElement.GetAttribute(aLocalName: String; NamespaceUri: String): String;
 begin
+  SugarArgumentNullException.RaiseIfNil(aLocalName, "LocalName");
+  SugarArgumentNullException.RaiseIfNil(NamespaceUri, "NamespaceUri");
+
   var Value := libxml.xmlGetNsProp(libxml.xmlNodePtr(Node), XmlChar.FromString(aLocalName), XmlChar.FromString(NamespaceUri));
+  if Value = nil then
+    exit nil;
+
   exit XmlChar.ToString(Value, true);
 end;
 
 method XmlElement.GetAttributeNode(aName: String): XmlAttribute;
 begin
+  if aName = nil then
+    exit nil;
+
   var Attr := libxml.xmlHasProp(libxml.xmlNodePtr(Node), XmlChar.FromString(aName));
   if Attr = nil then
     exit nil;
@@ -297,6 +361,9 @@ end;
 
 method XmlElement.GetAttributeNode(aLocalName: String; NamespaceUri: String): XmlAttribute;
 begin
+  SugarArgumentNullException.RaiseIfNil(aLocalName, "LocalName");
+  SugarArgumentNullException.RaiseIfNil(NamespaceUri, "NamespaceUri");
+
   var Attr := libxml.xmlHasNsProp(libxml.xmlNodePtr(Node), XmlChar.FromString(aLocalName), XmlChar.FromString(NamespaceUri));
   if Attr = nil then
     exit nil;
@@ -306,11 +373,24 @@ end;
 
 method XmlElement.SetAttribute(aName: String; aValue: String);
 begin
+  if aValue = nil then begin
+    RemoveAttribute(aName);
+    exit;
+  end;
+
   libxml.xmlSetProp(libxml.xmlNodePtr(Node), XmlChar.FromString(aName), XmlChar.FromString(aValue));
 end;
 
 method XmlElement.SetAttribute(aLocalName: String; NamespaceUri: String; aValue: String);
 begin
+  SugarArgumentNullException.RaiseIfNil(aLocalName, "LocalName");
+  SugarArgumentNullException.RaiseIfNil(NamespaceUri, "NamespaceUri");
+
+  if aValue = nil then begin
+    RemoveAttribute(aLocalName, NamespaceUri);
+    exit;
+  end;
+
   var ns := libxml.xmlSearchNsByHref(libxml.xmlDocPtr(Node^.doc), libxml.xmlNodePtr(Node), XmlChar.FromString(NamespaceUri));
 
   //no namespace with specified uri
@@ -339,11 +419,17 @@ end;
 
 method XmlElement.RemoveAttribute(aName: String);
 begin
+  if aName = nil then
+    exit;
+
   libxml.xmlUnsetProp(libxml.xmlNodePtr(Node), XmlChar.FromString(aName));
 end;
 
 method XmlElement.RemoveAttribute(aLocalName: String; NamespaceUri: String);
 begin
+  SugarArgumentNullException.RaiseIfNil(aLocalName, "LocalName");
+  SugarArgumentNullException.RaiseIfNil(NamespaceUri, "NamespaceUri");
+
   var Attr := libxml.xmlHasNsProp(libxml.xmlNodePtr(Node), XmlChar.FromString(aLocalName), XmlChar.FromString(NamespaceUri));
   if Attr = nil then
     exit;
@@ -404,105 +490,6 @@ begin
   //set new ns as a last element in the list
   prev^.next := curr;
 end;
-{$ELSEIF OSX}
-method XmlElement.AddChild(aNode: XmlNode);
-begin
-  Element.addChild(aNode.Node);
-end;
-
-method XmlElement.GetAttribute(aLocalName: String; NamespaceUri: String): String;
-begin
-  var Node := Element.attributeForLocalName(aLocalName) URI(NamespaceUri);
-  exit Node:stringValue;
-end;
-
-method XmlElement.GetAttribute(aName: String): String;
-begin
-  exit Element.attributeForName(aName):stringValue;
-end;
-
-method XmlElement.GetAttributeNode(aLocalName: String; NamespaceUri: String): XmlAttribute;
-begin
-  var Node := Element.attributeForLocalName(aLocalName) URI(NamespaceUri);
-  if Node <> nil then
-    exit new XmlAttribute withNode(Node);
-end;
-
-method XmlElement.GetAttributeNode(aName: String): XmlAttribute;
-begin
-  var Node := Element.attributeForName(aName);
-  if Node <> nil then
-    exit new XmlAttribute withNode(Node);
-end;
-
-method XmlElement.GetAttributes: array of XmlAttribute;
-begin
-  var lAttributes := Element.attributes;
-  if lAttributes = nil then
-    exit nil;
-
-  result := new XmlAttribute[lAttributes.count];
-  for i: Integer := 0 to lAttributes.count-1 do
-    result[i] := new XmlAttribute withNode(lAttributes.objectAtIndex(i));
-end;
-
-method XmlElement.HasAttribute(aLocalName: String; NamespaceUri: String): Boolean;
-begin
-  exit Element.attributeForLocalName(aLocalName) URI(NamespaceUri) <> nil;
-end;
-
-method XmlElement.HasAttribute(aName: String): Boolean;
-begin
-  exit Element.attributeForName(aName) <> nil;
-end;
-
-method XmlElement.RemoveAttribute(aLocalName: String; NamespaceUri: String);
-begin
-  var lAttribute := GetAttributeNode(aLocalName, NamespaceUri);
-  RemoveAttributeNode(lAttribute);
-end;
-
-method XmlElement.RemoveAttribute(aName: String);
-begin
-  Element.removeAttributeForName(aName);
-end;
-
-method XmlElement.RemoveAttributeNode(Node: XmlAttribute): XmlAttribute;
-begin
-  if not HasAttribute(Node.Name) then
-    exit nil;
-
-  Element.removeAttributeForName(Node.Name);
-  exit Node;
-end;
-
-method XmlElement.RemoveChild(aNode: XmlNode);
-begin
-  Element.removeChildAtIndex(aNode.Node.index);
-end;
-
-method XmlElement.ReplaceChild(aNode: XmlNode; WithNode: XmlNode);
-begin
-  Element.replaceChildAtIndex(aNode.Node.index) withNode(WithNode.Node);
-end;
-
-method XmlElement.SetAttribute(aLocalName: String; NamespaceUri: String; aValue: String);
-begin
-  var lNode := NSXMLNode.attributeWithName(aLocalName) URI(NamespaceUri) stringValue(aValue);
-  Element.addAttribute(lNode);
-end;
-
-method XmlElement.SetAttribute(aName: String; aValue: String);
-begin
-  var lNode := NSXMLNode.attributeWithName(Name) stringValue(aValue);
-  Element.addAttribute(lNode);
-end;
-
-method XmlElement.SetAttributeNode(Node: XmlAttribute): XmlAttribute;
-begin
-  Element.addAttribute(Node.Node);
-end;
-{$ENDIF}
 {$ENDIF}
 
 end.

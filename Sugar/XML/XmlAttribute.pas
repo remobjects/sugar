@@ -31,16 +31,10 @@ type
     {$IF ECHOES}
     property OwnerElement: XmlElement read iif(Attribute.Parent = nil, nil, new XmlElement(Attribute.Parent));
     {$ELSEIF NOUGAT}
-    {$IF IOS}
     property OwnerElement: XmlElement read iif(Node^.parent = nil, nil, new XmlElement(^libxml.__struct__xmlNode(Node^.parent), Document));
-    {$ELSEIF OSX}
-    property OwnerElement: XmlElement read iif(Node.parent = nil, nil, new XmlElement(Node.parent));
-    {$ENDIF}
     {$ELSEIF COOPER}
     property OwnerElement: XmlElement read iif(Attribute.OwnerElement = nil, nil, new XmlElement(Attribute.OwnerElement));
-    {$ENDIF}
-    
-    property Specified: Boolean read {$IF NOUGAT OR ECHOES}true{$ELSE}Attribute.Specified{$ENDIF};
+    {$ENDIF}    
   end;
 implementation
 

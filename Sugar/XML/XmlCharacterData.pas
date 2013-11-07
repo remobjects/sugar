@@ -47,10 +47,9 @@ type
   end;
 
   XmlCDataSection = public class (XmlCharacterData)
-  {$IF ECHOES}
   public
     property Name: String read "#CDATA"; override;
-  {$ENDIF}
+    {$IF NOUGAT}property LocalName: String read "#CDATA"; override;{$ENDIF}
   end;
 
   XmlComment = public class (XmlCharacterData)
@@ -60,46 +59,36 @@ type
   public    
     property Data: String read Comment.Value write Comment.Value; override;
     property Length: Integer read Comment.Value.Length; override;
-    property Value: String read Comment.Value write Comment.Value; override;
-    property Name: String read "#comment"; override;
+    property Value: String read Comment.Value write Comment.Value; override;    
   {$ENDIF}
+  public
+    property Name: String read "#comment"; override;
+    {$IF NOUGAT}property LocalName: String read "#comment"; override;{$ENDIF}
   end;
 
   XmlText = public class (XmlCharacterData)
-  {$IF ECHOES}
   public
     property Name: String read "#text"; override;
-  {$ENDIF}
+    {$IF NOUGAT}property LocalName: String read "#text"; override;{$ENDIF}
   end;
+
 implementation
 
 {$IF NOUGAT}
 method XmlCharacterData.GetData: String;
 begin
-  {$IF IOS}
   exit Value;
-  {$ELSEIF OSX}
-  exit Node.stringValue;
-  {$ENDIF}  
 end;
 
 method XmlCharacterData.SetData(aValue: String);
 begin
-  {$IF IOS}
+  SugarArgumentNullException.RaiseIfNil(aValue, "Value");
   Value := aValue;
-  {$ELSEIF OSX}
-  Node.setStringValue(aValue);
-  {$ENDIF}  
 end;
 
 method XmlCharacterData.GetLength: Integer;
 begin
-  {$IF IOS}
-  //Can not get type for nullable
   exit Value.Length;
-  {$ELSEIF OSX}
-  exit Node.stringValue.length;
-  {$ENDIF}  
 end;
 {$ENDIF}
 
@@ -113,6 +102,9 @@ end;
 
 method XmlCharacterData.AppendData(aValue: String);
 begin
+  if aValue = nil then
+    exit;
+
   {$IF ECHOES}
   Value := Value + aValue;
   {$ELSEIF COOPER} 
@@ -120,7 +112,7 @@ begin
   {$ELSEIF NOUGAT}
   var lData: NSMutableString := NSMutableString.stringWithString(Data);
   lData.appendString(aValue);
-  {$IF IOS}Value := lData;{$ELSEIF OSX}Node.setStringValue(lData);{$ENDIF}  
+  Value := lData;
   {$ENDIF}
 end;
 
@@ -136,7 +128,7 @@ begin
   {$ELSEIF NOUGAT}
   var lData: NSMutableString := NSMutableString.stringWithString(Data);
   lData.deleteCharactersInRange(NSMakeRange(Offset, Count));
-  {$IF IOS}Value := lData;{$ELSEIF OSX}Node.setStringValue(lData);{$ENDIF}  
+  Value := lData;
   {$ENDIF}
 end;
 
@@ -149,7 +141,7 @@ begin
   {$ELSEIF NOUGAT}
   var lData: NSMutableString := NSMutableString.stringWithString(Data);
   lData.insertString(aValue) atIndex(Offset);
-  {$IF IOS}Value := lData;{$ELSEIF OSX}Node.setStringValue(lData);{$ENDIF}
+  Value := lData;
   {$ENDIF}
 end;
 
@@ -166,7 +158,7 @@ begin
   {$ELSEIF NOUGAT}
   var lData: NSMutableString := NSMutableString.stringWithString(Data);
   lData.replaceCharactersInRange(NSMakeRange(Offset, Count)) withString(WithValue);
-  {$IF IOS}Value := lData;{$ELSEIF OSX}Node.setStringValue(lData);{$ENDIF}
+  Value := lData;
   {$ENDIF}
 end;
 
@@ -180,6 +172,12 @@ begin
 
   exit CharacterData.substringData(Offset, Count);
   {$ELSEIF NOUGAT}
+  if (Offset < 0) or (Count < 0) then
+    raise new SugarArgumentException(ErrorMessage.NEGATIVE_VALUE_ERROR, "Offset and Count");
+
+  if Offset + Count > self.Length then
+    raise new SugarArgumentOutOfRangeException(String.Format(ErrorMessage.OUT_OF_RANGE_ERROR, Offset, Count, self.Length));
+
   exit NSString(Data).substringWithRange(NSMakeRange(Offset, Count));
   {$ENDIF}
 end;
