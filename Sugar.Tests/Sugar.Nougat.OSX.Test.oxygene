@@ -41,6 +41,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Foundation.fx" />
+    <Reference Include="libxml2.fx" />
     <Reference Include="rtl.fx" />
   </ItemGroup>
   <ItemGroup>
@@ -65,6 +66,7 @@
     <Compile Include="Tests\Url.pas" />
     <Compile Include="Tests\UserSettings.pas" />
     <Compile Include="Tests\Xml\CharacterData.pas" />
+    <Compile Include="Tests\Xml\Element.pas" />
     <Compile Include="Tests\Xml\Node.pas" />
     <Compile Include="Tests\Xml\ProcessingInstruction.pas" />
     <Compile Include="Tests\Xml\TestData.pas" />

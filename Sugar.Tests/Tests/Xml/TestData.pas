@@ -58,11 +58,23 @@ begin
   "<?xml version=""1.0"" encoding=""UTF-8""?>
   <?xml-stylesheet type=""text/xsl"" href=""test""?>
   <?custom?>
-  <Users>
-    <User Name=""First"" Id=""1""/>
-    <User Name=""Second"" Id=""2""/>
-    <User Name=""Third"" Id=""3""/>
-  </Users>";
+  <Root>
+    <Readers>
+      <User Name=""First"" Id=""1"">      
+        <Config xmlns:cfg=""http://example.com/config/"">
+          <cfg:mail cfg:verified=""true"">first@example.com</cfg:mail>
+          <cfg:autologin>true</cfg:autologin>
+          <cfg:savepassword>true</cfg:savepassword>
+        </Config>
+      </User>
+      <User Name=""Second"" Id=""2""/>
+      <User Name=""Third"" Id=""3""/>
+    </Readers>
+    <Admins>
+      <User Name=""Admin"" Id=""0""/>
+    </Admins>
+  </Root>
+  ";
 end;
 
 class method XmlTestData.CharXml: String;

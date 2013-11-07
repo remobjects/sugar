@@ -16,7 +16,6 @@
     <GenerateDebugInfo>True</GenerateDebugInfo>
     <EnableAsserts>True</EnableAsserts>
     <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
-    <CaptureConsoleOutput>False</CaptureConsoleOutput>
     <StartMode>Project</StartMode>
     <RegisterForComInterop>False</RegisterForComInterop>
     <CpuType>anycpu</CpuType>
@@ -77,6 +76,7 @@
     <Compile Include="Tests\Url.pas" />
     <Compile Include="Tests\UserSettings.pas" />
     <Compile Include="Tests\Xml\CharacterData.pas" />
+    <Compile Include="Tests\Xml\Element.pas" />
     <Compile Include="Tests\Xml\Node.pas" />
     <Compile Include="Tests\Xml\ProcessingInstruction.pas" />
     <Compile Include="Tests\Xml\TestData.pas" />

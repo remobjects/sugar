@@ -47,7 +47,8 @@ begin
   Assert.IsNotNull(Node);
   Text := Node[0].FirstChild as XmlText;
   Assert.IsNotNull(Text);
-  CData := Node[1].FirstChild as XmlCDataSection;
+  var X := Node[1].FirstChild;
+  CData := X as XmlCDataSection;
   Assert.IsNotNull(CData);
   Comment := Node[2] as XmlComment;
   Assert.IsNotNull(Comment);

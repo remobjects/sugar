@@ -20,7 +20,7 @@ begin
   var output := new StringPrinter(results);
   NSLog("%@", output.Result);
   //giving time for output to catch our log
-  NSThread.sleepForTimeInterval(0.2);  
+  NSThread.sleepForTimeInterval(0.2);
 end;
 
 end.

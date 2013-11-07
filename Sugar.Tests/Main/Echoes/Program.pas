@@ -18,10 +18,7 @@ class method ConsoleApp.Main(args: array of System.String);
 begin
   var results := TestRunner.RunAll;
   var output := new StringPrinter(results);
-  Console.WriteLine(output.Result);
-
-  Console.WriteLine("Press any key to continue");
-  Console.ReadKey;  
+  System.Diagnostics.Debug.WriteLine(output.Result);
 end;
 
 end.
