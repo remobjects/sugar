@@ -574,11 +574,7 @@ begin
     result.Add(XmlElement(Element));
 
   result.AddRange(ListElementsByName(Element.FirstChild, LocalName, NamespaceUri));
-
-  while Element.NextSibling <> nil do begin
-    result.AddRange(ListElementsByName(Element.NextSibling, LocalName, NamespaceUri));
-    Element := Element.NextSibling;
-  end;
+  result.AddRange(ListElementsByName(Element.NextSibling, LocalName, NamespaceUri));
 end;
 
 method XmlNode.XmlNodeList.ElementsByName(LocalName: String; NamespaceUri: String): array of XmlElement;
