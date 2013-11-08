@@ -53,7 +53,7 @@ type
 
     method RemoveAttribute(aName: String);
     method RemoveAttribute(aLocalName, NamespaceUri: String);
-    method RemoveAttributeNode(Node: XmlAttribute): XmlAttribute;
+    method RemoveAttributeNode(Node: XmlAttribute);
 
     method HasAttribute(aName: String): Boolean;
     method HasAttribute(aLocalName, NamespaceUri: String): Boolean;
@@ -277,25 +277,22 @@ begin
   {$ENDIF}  
 end;
 
-method XmlElement.RemoveAttributeNode(Node: XmlAttribute): XmlAttribute;
+method XmlElement.RemoveAttributeNode(Node: XmlAttribute);
 begin
-  {$WARNING Rewrite RemoveAttributeNode method}
   SugarArgumentNullException.RaiseIfNil(Node, "Node");
   
+  if Node.OwnerElement = nil then
+    raise new SugarInvalidOperationException("Unable to remove attribute that has no parent element");
+
+  if not Node.OwnerElement.Equals(self) then
+    raise new SugarInvalidOperationException("Unable to remove attribute that does not belong to this element");
+  
   {$IF COOPER}  
-  try
-    exit new XmlAttribute(Element.removeAttributeNode(Node.Node as Attr));
-  except
-    exit nil;
-  end; 
+  Element.removeAttributeNode(Node.Node as Attr);
   {$ELSEIF ECHOES}
-  var existing := GetAttributeNode(Node.Name);
-  RemoveAttribute(Node.Name);
-  exit existing;
+  XAttribute(Node.Node).Remove;
   {$ELSEIF NOUGAT}
-  var Existing := GetAttributeNode(Node.Name);
   libxml.xmlRemoveProp(libxml.xmlAttrPtr(Node.Node));
-  exit Existing;
   {$ENDIF}
 end;
 
