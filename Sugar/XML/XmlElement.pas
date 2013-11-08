@@ -34,9 +34,13 @@ type
     {$ENDIF}
     property NodeType: XmlNodeType read XmlNodeType.Element; override;
 
+    { Childs }
+
     method AddChild(aNode: XmlNode);
     method RemoveChild(aNode: XmlNode);
     method ReplaceChild(aNode: XmlNode; WithNode: XmlNode);
+
+    { Attributes }
 
     method GetAttribute(aName: String): String;
     method GetAttribute(aLocalName, NamespaceUri: String): String;
@@ -55,6 +59,10 @@ type
     method HasAttribute(aLocalName, NamespaceUri: String): Boolean;
     
     property Attributes: array of XmlAttribute read GetAttributes;
+
+    { Elements }
+    method GetElementsByTagName(aName: String): array of XmlNode;
+    method GetElementsByTagName(aLocalName, NamespaceUri: String): array of XmlNode;
   end;
 implementation
 
@@ -161,6 +169,23 @@ end;
 method XmlElement.HasAttribute(aLocalName: String; NamespaceUri: String): Boolean;
 begin
   exit GetAttributeNode(aLocalName, NamespaceUri) <> nil;
+end;
+
+method XmlElement.GetElementsByTagName(aLocalName: String; NamespaceUri: String): array of XmlNode;
+begin
+  var ns: XNamespace := System.String(NamespaceUri);
+  var items := Element.Descendants(ns + aLocalName).ToArray;
+  result := new XmlNode[items.Length];
+  for I: Integer := 0 to items.Length - 1 do
+    result[I] := CreateCompatibleNode(items[I]);
+end;
+
+method XmlElement.GetElementsByTagName(aName: String): array of XmlNode;
+begin
+  var items := Element.Descendants(System.String(aName)).ToArray;
+  result := new XmlNode[items.Length];
+  for I: Integer := 0 to items.Length - 1 do
+    result[I] := CreateCompatibleNode(items[I]);
 end;
 {$ELSEIF COOPER}
 method XmlElement.AddChild(aNode: XmlNode);
@@ -290,6 +315,15 @@ begin
   exit Element.hasAttributeNS(NamespaceUri, aLocalName);
 end;
 
+method XmlElement.GetElementsByTagName(aLocalName: String; NamespaceUri: String): array of XmlNode;
+begin
+  exit ConvertNodeList(Element.GetElementsByTagNameNs(NamespaceUri, aLocalName));
+end;
+
+method XmlElement.GetElementsByTagName(aName: String): array of XmlNode;
+begin
+  exit ConvertNodeList(Element.GetElementsByTagName(aName));
+end;
 {$ELSEIF NOUGAT}
 method XmlElement.GetAttributes: array of XmlAttribute;
 begin
@@ -484,6 +518,16 @@ begin
 
   //set new ns as a last element in the list
   prev^.next := curr;
+end;
+
+method XmlElement.GetElementsByTagName(aLocalName: String; NamespaceUri: String): array of XmlNode;
+begin
+  exit new XmlNodeList(self).ElementsByName(aLocalName, NamespaceUri);
+end;
+
+method XmlElement.GetElementsByTagName(aName: String): array of XmlNode;
+begin
+  exit new XmlNodeList(self).ElementsByName(aName);
 end;
 {$ENDIF}
 

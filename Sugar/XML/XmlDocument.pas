@@ -16,10 +16,6 @@ uses
   RemObjects.Oxygene.Sugar,
   RemObjects.Oxygene.Sugar.IO;
 
-{$IF NOUGAT}
-  {$WARNING XmlDocument for Nougat should be re-written based on libxml2, for iOS support. }
-{$ENDIF}
-
 type
   XmlDocument = public class (XmlNode)
   private
@@ -62,7 +58,6 @@ type
     method CreateProcessingInstruction(Target, Data: String): XmlProcessingInstruction;
     method CreateTextNode(Data: String): XmlText;    
 
-    method GetElementById(ElementId: String): XmlElement;
     method GetElementsByTagName(Name: String): array of XmlNode;
     method GetElementsByTagName(LocalName, NamespaceUri: String): array of XmlNode;
 
@@ -143,15 +138,6 @@ end;
 method XmlDocument.CreateTextNode(Data: String): XmlText;
 begin
   exit new XmlText(Doc.CreateTextNode(Data));
-end;
-
-method XmlDocument.GetElementById(ElementId: String): XmlElement;
-begin
-  var lResult := Doc.GetElementById(ElementId);
-  if lResult <> nil then
-    exit new XmlElement(lResult)
-  else
-    exit nil;
 end;
 
 method XmlDocument.GetElementsByTagName(Name: String): array of XmlNode;
@@ -325,24 +311,6 @@ begin
   var el := Doc.Element(System.String(Name));
   if el <> nil then
     exit new XmlElement(el);
-end;
-
-method XmlDocument.GetElementById(ElementId: String): XmlElement;
-begin
-  var Item := FirstChild;
-
-  if Item = nil then
-    exit nil;
-
-  while Item <> nil do begin
-    if Item.Node.NodeType = System.Xml.XmlNodeType.Element then begin
-      var Attr := XmlElement(Item).GetAttributeNode("id");
-      if (Attr <> nil) and (Attr.Value = ElementId) then
-        exit Item as XmlElement;
-    end;
-
-    Item := Item.NextSibling;
-  end;
 end;
 
 method XmlDocument.GetElementsByTagName(LocalName: String; NamespaceUri: String): array of XmlNode;
@@ -539,24 +507,6 @@ begin
   end;
 
   exit nil;
-end;
-
-method XmlDocument.GetElementById(ElementId: String): XmlElement;
-begin
-  var Item := FirstChild;
-
-  if Item = nil then
-    exit nil;
-
-  while Item <> nil do begin
-    if Item.Node^.type = libxml.xmlElementType.XML_ELEMENT_NODE then begin
-      var Attr := XmlElement(Item).GetAttributeNode("id");
-      if (Attr <> nil) and (Attr.Value = ElementId) then
-        exit Item as XmlElement;
-    end;
-
-    Item := Item.NextSibling;
-  end;
 end;
 
 method XmlDocument.GetElementsByTagName(LocalName: String; NamespaceUri: String): array of XmlNode;
