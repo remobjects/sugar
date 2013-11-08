@@ -411,7 +411,7 @@ method XmlNode.GetParent: XmlNode;
 begin
   result := CreateCompatibleNode(^libxml.__struct__xmlNode(Node^.parent), Document);
   
-  if result.isEqual(Document) then
+  if assigned(result) and result.isEqual(Document) then
     exit nil;
 end;
 
