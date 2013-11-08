@@ -44,7 +44,7 @@ type
 
     method SetAttribute(aName, aValue: String);
     method SetAttribute(aLocalName, NamespaceUri, aValue: String);
-    method SetAttributeNode(Node: XmlAttribute): XmlAttribute;
+    method SetAttributeNode(Node: XmlAttribute);
 
     method RemoveAttribute(aName: String);
     method RemoveAttribute(aLocalName, NamespaceUri: String);
@@ -126,11 +126,13 @@ begin
   Element.SetAttributeValue(XNamespace(NamespaceUri) + aLocalName, aValue);
 end;
 
-method XmlElement.SetAttributeNode(Node: XmlAttribute): XmlAttribute;
+method XmlElement.SetAttributeNode(Node: XmlAttribute);
 begin
-  var existing := GetAttributeNode(Node.Name);
-  SetAttribute(Node.Name, Node.Value);
-  exit existing;
+  var Existing := Element.Attribute(XAttribute(Node.Node).Name);
+  if Existing <> nil then
+    Existing.Remove;
+
+  Element.Add(Node.Node);
 end;
 
 method XmlElement.RemoveAttribute(aName: String);
@@ -240,9 +242,9 @@ begin
   Element.setAttributeNS(NamespaceUri, aLocalName, aValue); 
 end;
 
-method XmlElement.SetAttributeNode(Node: XmlAttribute): XmlAttribute;
+method XmlElement.SetAttributeNode(Node: XmlAttribute);
 begin
-  exit new XmlAttribute(Element.setAttributeNode(Node.Node as Attr));
+ Element.setAttributeNode(Node.Node as Attr);
 end;
 
 method XmlElement.RemoveAttribute(aName: String);
@@ -400,21 +402,13 @@ begin
   libxml.xmlSetNsProp(libxml.xmlNodePtr(Node), ns, XmlChar.FromString(aLocalName), XmlChar.FromString(aValue));
 end;
 
-method XmlElement.SetAttributeNode(Node: XmlAttribute): XmlAttribute;
+method XmlElement.SetAttributeNode(Node: XmlAttribute);
 begin
   if Node.Node^.parent <> nil then
     raise new SugarException("Unable to insert attribute that is already owned by other element");
 
-  var Existing: XmlAttribute := nil;
-
-  if Node.Node^.ns <> nil then
-    Existing := GetAttributeNode(Node.Name)
-  else
-    Existing := GetAttributeNode(Node.LocalName, new XmlNamespace(Node.Node).Uri);
-
   AddChild(Node);
   CopyNS(Node);
-  exit if Existing = nil then Node else Existing;
 end;
 
 method XmlElement.RemoveAttribute(aName: String);
