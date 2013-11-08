@@ -292,7 +292,19 @@ end;
 
 method XmlNode.ToString: java.lang.String;
 begin
-  exit fNode.ToString;
+  var Writer := new java.io.StringWriter;
+  try
+    var Transformer := javax.xml.transform.TransformerFactory.newInstance.newTransformer;
+    if fNode.NodeType = org.w3c.dom.Node.DOCUMENT_NODE then
+      Transformer.setOutputProperty(javax.xml.transform.OutputKeys.OMIT_XML_DECLARATION, "no")
+    else
+      Transformer.setOutputProperty(javax.xml.transform.OutputKeys.OMIT_XML_DECLARATION, "yes");
+
+    Transformer.transform(new javax.xml.transform.dom.DOMSource(fNode), new javax.xml.transform.stream.StreamResult(Writer));
+    exit Writer.toString;
+  except
+    exit "<Invalid XML content>";
+  end;
 end;
 
 method XmlNode.&equals(arg1: Object): Boolean;
