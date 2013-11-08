@@ -16,6 +16,7 @@ uses
   RemObjects.Oxygene.Sugar;
 
 type
+  XmlNodeType = public enum(None, Attribute, CDATA, Comment, Document, DocumentType, Element, ProcessingInstruction, Text);
 
 {$IF ECHOES}
   XmlNode = public class
@@ -41,6 +42,7 @@ type
     property URI: String read Node.BaseUri; 
     property Value: String read nil write SetValue; virtual;
     property LocalName: String read Name; virtual;
+    property NodeType: XmlNodeType read XmlNodeType.None; virtual;
     
     property Document: XmlDocument read iif(Node.Document = nil, nil, new XmlDocument(Node.Document));
     property Parent: XmlNode read CreateCompatibleNode(Node.Parent);
@@ -75,6 +77,7 @@ type
     property URI: String read iif(Node.BaseUri = nil, "", Node.BaseURI);
     property Value: String read Node.TextContent write SetValue;
     property LocalName: String read iif(Node.LocalName = nil, Node.NodeName, Node.LocalName); virtual;
+    property NodeType: XmlNodeType read XmlNodeType.None; virtual;
     
     property Document: XmlDocument read iif(Node.OwnerDocument = nil, nil, new XmlDocument(Node.OwnerDocument));
     property Parent: XmlNode read GetParent;
@@ -117,6 +120,7 @@ type
     property URI: String read GetURI; virtual;
     property Value: String read GetValue write SetValue; virtual;
     property LocalName: String read GetLocalName; virtual;
+    property NodeType: XmlNodeType read XmlNodeType.None; virtual;
     
     property Document: XmlDocument read fDocument protected write fDocument;
     property Parent: XmlNode read GetParent;

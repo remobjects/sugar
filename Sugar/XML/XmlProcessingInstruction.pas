@@ -28,12 +28,14 @@ type
     {$ENDIF}
     property Data: String read ProcessingInstruction.Data write {$IF COOPER}SetData{$ELSE}ProcessingInstruction.Data{$ENDIF};
     property Target: String read ProcessingInstruction.Target;
+    property NodeType: XmlNodeType read XmlNodeType.ProcessingInstruction; override;
   end;
 {$ELSEIF NOUGAT}
   XmlProcessingInstruction = public class (XmlNode)
   public
     property Data: String read Value write Value;
     property Target: String read Name;
+    property NodeType: XmlNodeType read XmlNodeType.ProcessingInstruction; override;
   end;
 {$ENDIF}
 implementation

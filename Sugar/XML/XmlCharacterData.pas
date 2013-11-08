@@ -49,6 +49,7 @@ type
   XmlCDataSection = public class (XmlCharacterData)
   public
     property Name: String read "#CDATA"; override;
+    property NodeType: XmlNodeType read XmlNodeType.CDATA; override;
     {$IF NOUGAT}property LocalName: String read "#CDATA"; override;{$ENDIF}
   end;
 
@@ -63,12 +64,14 @@ type
   {$ENDIF}
   public
     property Name: String read "#comment"; override;
+    property NodeType: XmlNodeType read XmlNodeType.Comment; override;
     {$IF NOUGAT}property LocalName: String read "#comment"; override;{$ENDIF}
   end;
 
   XmlText = public class (XmlCharacterData)
   public
     property Name: String read "#text"; override;
+    property NodeType: XmlNodeType read XmlNodeType.Text; override;
     {$IF NOUGAT}property LocalName: String read "#text"; override;{$ENDIF}
   end;
 

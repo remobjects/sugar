@@ -45,6 +45,7 @@ type
     property DocumentElement: XmlElement read GetDocumentElement;
     property DocumentType: XmlDocumentType read GetDocumentType;
     {$ENDIF}
+    property NodeType: XmlNodeType read XmlNodeType.Document; override;
 
     property Element[Name: String]: XmlElement read GetElement; default;
 

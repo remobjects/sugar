@@ -23,6 +23,7 @@ type
     property InternalSubset: String read {$IF NOUGAT}ToString{$ELSE}DocumentType.InternalSubset{$ENDIF};
     property PublicId: String read {$IF NOUGAT}XmlChar.ToString(DocumentType^.ExternalID){$ELSE}DocumentType.PublicId{$ENDIF};
     property SystemId: String read {$IF NOUGAT}XmlChar.ToString(DocumentType^.SystemID){$ELSE}DocumentType.SystemId{$ENDIF};
+    property NodeType: XmlNodeType read XmlNodeType.DocumentType; override;
   end;
 implementation
 

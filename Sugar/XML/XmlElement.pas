@@ -32,6 +32,7 @@ type
     property LocalName: String read Element.Name.LocalName; override;
     property Value: String read Element.Value write Element.Value; override;
     {$ENDIF}
+    property NodeType: XmlNodeType read XmlNodeType.Element; override;
 
     method AddChild(aNode: XmlNode);
     method RemoveChild(aNode: XmlNode);

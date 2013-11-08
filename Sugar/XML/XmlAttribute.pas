@@ -22,6 +22,7 @@ type
                          read Node as {$IF COOPER}Attr{$ELSEIF ECHOES}XAttribute{$ENDIF};
   {$ENDIF}
   public
+    property NodeType: XmlNodeType read XmlNodeType.Attribute; override;
     {$IF ECHOES}
     property Name: String read Attribute.Name.ToString; override;
     property Value: String read Attribute.Value write Attribute.Value; override;
