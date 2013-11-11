@@ -61,6 +61,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Foundation.fx" />
+    <Reference Include="libxml2.fx" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MemIniFile.pas" />
