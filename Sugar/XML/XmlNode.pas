@@ -65,7 +65,7 @@ type
     method GetName: String; virtual;
     method GetItem(&Index: Integer): XmlNode;
     method GetParent: XmlNode;
-    method SetValue(aValue: String);
+    method SetValue(aValue: String); virtual;
   protected
     method ConvertNodeList(List: NodeList): array of XmlNode;
     class method CreateCompatibleNode(Node: Node): XmlNode;
@@ -75,7 +75,7 @@ type
   public
     property Name: String read GetName; virtual;
     property URI: String read iif(Node.BaseUri = nil, "", Node.BaseURI);
-    property Value: String read Node.TextContent write SetValue;
+    property Value: String read Node.TextContent write SetValue; virtual;
     property LocalName: String read iif(Node.LocalName = nil, Node.NodeName, Node.LocalName); virtual;
     property NodeType: XmlNodeType read XmlNodeType.None; virtual;
     
@@ -101,8 +101,8 @@ type
 
     method GetName: String; virtual;
     method GetURI: String;
-    method GetValue: String;
-    method SetValue(aValue: String);
+    method GetValue: String; virtual;
+    method SetValue(aValue: String); virtual;
     method GetLocalName: String; virtual;
     method GetParent: XmlNode;
 
@@ -127,11 +127,11 @@ type
     property NextSibling: XmlNode read CreateCompatibleNode(^libxml.__struct__xmlNode(Node^.next), Document);
     property PreviousSibling: XmlNode read CreateCompatibleNode(^libxml.__struct__xmlNode(Node^.prev), Document);
 
-    property FirstChild: XmlNode read CreateCompatibleNode(^libxml.__struct__xmlNode(Node^.children), Document);
-    property LastChild: XmlNode read CreateCompatibleNode(^libxml.__struct__xmlNode(Node^.last), Document);
-    property Item[&Index: Integer]: XmlNode read GetItem; default;
-    property ChildCount: Integer read GetChildCount;
-    property ChildNodes: array of XmlNode read GetChildNodes;
+    property FirstChild: XmlNode read CreateCompatibleNode(^libxml.__struct__xmlNode(Node^.children), Document); virtual;
+    property LastChild: XmlNode read CreateCompatibleNode(^libxml.__struct__xmlNode(Node^.last), Document); virtual;
+    property Item[&Index: Integer]: XmlNode read GetItem; default; virtual;
+    property ChildCount: Integer read GetChildCount; virtual;
+    property ChildNodes: array of XmlNode read GetChildNodes; virtual;
     
     method isEqual(obj: id): Boolean; override;
     method description: NSString; override;
@@ -426,7 +426,7 @@ begin
     libxml.xmlElementType.XML_COMMENT_NODE : exit new XmlComment(Node, Doc);
     libxml.xmlElementType.XML_DOCUMENT_NODE : exit new XmlNode(Node, Doc);
     libxml.xmlElementType.XML_DOCUMENT_TYPE_NODE : exit new XmlNode(Node, Doc);
-    libxml.xmlElementType.XML_DTD_NODE : exit new XmlNode(Node, Doc);
+    libxml.xmlElementType.XML_DTD_NODE : exit new XmlDocumentType(Node, Doc);
     libxml.xmlElementType.XML_ELEMENT_NODE : exit new XmlElement(Node, Doc);
     libxml.xmlElementType.XML_PI_NODE : exit new XmlProcessingInstruction(Node, Doc);
     libxml.xmlElementType.XML_TEXT_NODE : exit new XmlText(Node, Doc);
