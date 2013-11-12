@@ -32,6 +32,7 @@ type
     method Attributes;
     method NodeType;
     method GetElementsByTagName;
+    method Inserting;
   end;
 
 implementation
@@ -335,6 +336,44 @@ begin
   Assert.CheckInt(1, length(Actual));
   Assert.CheckBool(true, Actual[0].NodeType = XmlNodeType.Element);
   Assert.CheckString("first@example.com", Actual[0].Value);
+end;
+
+method ElementTest.Inserting;
+begin
+  var Root := Doc.CreateElement("Test");
+  Assert.IsNotNull(Root);
+  //Attribute
+  var Element: XmlNode := Doc.CreateAttribute("Id");
+  Assert.IsNotNull(Element);
+  Root.AddChild(Element);
+  Assert.CheckInt(0, Root.ChildCount);
+  Assert.CheckInt(1, length(Root.Attributes));
+  //Element
+  Element := Doc.CreateElement("SubNode");
+  Assert.IsNotNull(Element);
+  Root.AddChild(Element);
+  Assert.CheckInt(1, Root.ChildCount);
+  //cdata
+  XmlElement(Element).AddChild(Doc.CreateCDataSection("String"));
+  Assert.CheckInt(1, Element.ChildCount);
+  Assert.CheckBool(true, Element.ChildNodes[0].NodeType = XmlNodeType.CDATA);
+  //text
+  Element := Doc.CreateElement("SubNode");
+  Root.AddChild(Element);
+  Assert.CheckInt(2, Root.ChildCount);
+  XmlElement(Element).AddChild(Doc.CreateTextNode("String"));
+  Assert.CheckInt(1, Element.ChildCount);
+  Assert.CheckBool(true, Element.ChildNodes[0].NodeType = XmlNodeType.Text);
+  //comment
+  Element := Doc.CreateComment("Comment");
+  Assert.IsNotNull(Element);
+  Root.AddChild(Element);
+  Assert.CheckInt(3, Root.ChildCount);
+  //PI
+  Element := Doc.CreateProcessingInstruction("custom", "");
+  Assert.IsNotNull(Element);
+  Root.AddChild(Element);
+  Assert.CheckInt(4, Root.ChildCount);
 end;
 
 end.
