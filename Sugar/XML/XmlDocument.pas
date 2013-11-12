@@ -160,6 +160,8 @@ begin
   var Factory := javax.xml.parsers.DocumentBuilderFactory.newInstance;
   //handle namespaces
   Factory.NamespaceAware := true;
+  Factory.Validating := false;
+  Factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
 
   var Builder := Factory.newDocumentBuilder();    
   var Input := new org.xml.sax.InputSource(new java.io.StringReader(Content));
@@ -212,7 +214,7 @@ begin
   var Transformer := Factory.newTransformer();
   var Source: javax.xml.transform.dom.DOMSource := new javax.xml.transform.dom.DOMSource(Doc);
   
-  Transformer.setOutputProperty(javax.xml.transform.OutputKeys.INDENT, "no");
+  Transformer.setOutputProperty(javax.xml.transform.OutputKeys.INDENT, "yes");
   Transformer.setOutputProperty(javax.xml.transform.OutputKeys.METHOD, "xml");
 
   if XmlDeclaration <> nil then begin
