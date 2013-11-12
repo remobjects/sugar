@@ -19,80 +19,40 @@ type
   private
     property DocumentType: {$IF COOPER}DocumentType{$ELSEIF ECHOES}XDocumentType{$ELSEIF NOUGAT}^libxml.__struct__xmlDtd{$ENDIF}
                             read {$IF NOUGAT}^libxml.__struct__xmlDtd(Node){$ELSE}Node as {$IF COOPER}DocumentType{$ELSEIF ECHOES}XDocumentType{$ENDIF}{$ENDIF};
+    {$IF NOUGAT}method GetInternalSubset: String;{$ENDIF}
+    method SetValue(aValue: String); empty;
   public
-    property InternalSubset: String read {$IF NOUGAT}ToString{$ELSE}DocumentType.InternalSubset{$ENDIF};
-    property PublicId: String read {$IF NOUGAT}XmlChar.ToString(DocumentType^.ExternalID){$ELSE}DocumentType.PublicId{$ENDIF};
-    property SystemId: String read {$IF NOUGAT}XmlChar.ToString(DocumentType^.SystemID){$ELSE}DocumentType.SystemId{$ENDIF};
+    {$IF ECHOES}
+    property Name: String read DocumentType.Name.ToString; override;
+    property LocalName: String read DocumentType.Name; override;    
+    {$ENDIF}
+    property InternalSubset: String read {$IF NOUGAT}GetInternalSubset{$ELSE}iif(DocumentType.InternalSubset = nil, "", DocumentType.InternalSubset){$ENDIF};
+    property PublicId: String read {$IF NOUGAT}XmlChar.ToString(DocumentType^.ExternalID){$ELSE}iif(DocumentType.PublicId = nil, "", DocumentType.PublicId){$ENDIF};
+    property SystemId: String read {$IF NOUGAT}XmlChar.ToString(DocumentType^.SystemID){$ELSE}iif(DocumentType.SystemId = nil, "", DocumentType.SystemId){$ENDIF};
     property NodeType: XmlNodeType read XmlNodeType.DocumentType; override;
+
+    property Value: String read InternalSubset write SetValue; override;
+
+    {$IF NOUGAT}
+    property FirstChild: XmlNode read nil; override;
+    property LastChild: XmlNode read nil; override;    
+    property ChildCount: Integer read 0; override;
+    property ChildNodes: array of XmlNode read []; override;    
+    {$ENDIF}
   end;
 implementation
 
-(*
-{$IF ECHOES}
-method XmlDocumentType.GetEntities: array of XmlNode;
+{$IF NOUGAT}
+method XmlDocumentType.GetInternalSubset: String;
 begin
-  exit new XmlNode[0];
-end;
+  result := self.description;
+  
+  if result = nil then
+    exit "";
 
-method XmlDocumentType.GetNotations: array of XmlNode;
-begin
-  exit new XmlNode[0];
-end;
-{$ELSEIF COOPER}
-method XmlDocumentType.GetEntities: array of XmlNode;
-begin
-  var ItemsCount: Integer := DocumentType.Entities.length;
-  var lEntitites: array of XmlNode := new XmlNode[ItemsCount];
-  for i: Integer := 0 to ItemsCount-1 do
-    lEntitites[i] := CreateCompatibleNode(DocumentType.Entities.Item(i));
-
-  exit lEntitites;
-end;
-
-method XmlDocumentType.GetNotations: array of XmlNode;
-begin
-  var ItemsCount: Integer := DocumentType.Notations.length;
-  var lNotations: array of XmlNode := new XmlNode[ItemsCount];
-  for i: Integer := 0 to ItemsCount-1 do
-    lNotations[i] := CreateCompatibleNode(DocumentType.Notations.Item(i));
-
-  exit lNotations;
-end;
-{$ELSEIF NOUGAT}
-method XmlDocumentType.GetEntities: array of XmlNode;
-begin
-  {$IF IOS}
-  exit new XmlNode[0];
-  {$ELSEIF OSX}
-  var Items: NSMutableArray := new NSMutableArray();
-
-  for i: Integer := 0 to DocumentType.ChildCount-1 do begin
-    var Item := DocumentType.childAtIndex(i);
-    if Item.kind = NSXMLNodeKind.NSXMLEntityDeclarationKind then
-      Items.addObject(Item);
-  end;
-
-  exit ConvertNodeList(Items);
-  {$ENDIF}
-end;
-
-method XmlDocumentType.GetNotations: array of XmlNode;
-begin
-  {$IF IOS}
-  exit new XmlNode[0];
-  {$ELSEIF OSX}
-  var Items: NSMutableArray := new NSMutableArray();
-
-  for i: Integer := 0 to DocumentType.ChildCount-1 do begin
-    var Item := DocumentType.childAtIndex(i);
-    if Item.kind = NSXMLNodeKind.NSXMLNotationDeclarationKind then
-      Items.addObject(Item);
-  end;
-
-  exit ConvertNodeList(Items);
-  {$ENDIF}
+  var RegEx: NSRegularExpression := NSRegularExpression.regularExpressionWithPattern("<!DOCTYPE\s+[^\<]+|]>") options(NSRegularExpressionOptions.NSRegularExpressionCaseInsensitive) error(nil);
+  exit RegEx.stringByReplacingMatchesInString(result) options(0) range(NSMakeRange(0, result.Length)) withTemplate("");
 end;
 {$ENDIF}
-*)
 
 end.
