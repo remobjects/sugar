@@ -8,6 +8,7 @@ type
     method RssXml: String;
     method PIXml: String;
     method CharXml: String;
+    method DTDXml: String;
   end;
 
 implementation
@@ -81,11 +82,33 @@ class method XmlTestData.CharXml: String;
 begin
   exit 
   "<?xml version=""1.0"" encoding=""UTF-8""?>
+  <!DOCTYPE html PUBLIC
+  ""-//W3C//DTD XHTML 1.0 Transitional//EN""
+  ""http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"">  
    <Book>
     <Title>Text</Title>
     <Description><![CDATA[Description]]></Description>
     <!--Comment-->
    </Book>";
+end;
+
+class method XmlTestData.DTDXml: String;
+begin
+  exit
+  "<?xml version=""1.0""?>
+  <!DOCTYPE note [
+  <!ELEMENT note (to,from,heading,body)>
+  <!ELEMENT to (#PCDATA)>
+  <!ELEMENT from (#PCDATA)>
+  <!ELEMENT heading (#PCDATA)>
+  <!ELEMENT body (#PCDATA)>
+  ]>
+  <note>
+    <to>Tove</to>
+    <from>Jani</from>
+    <heading>Reminder</heading>
+    <body>Don't forget me this weekend</body>
+  </note>";
 end;
 
 end.
