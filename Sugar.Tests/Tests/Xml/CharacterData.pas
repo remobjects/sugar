@@ -35,6 +35,7 @@ type
     method InsertData;
     method ReplaceData;
     method Substring;
+    method NodeType;
   end;
 
 implementation
@@ -43,7 +44,7 @@ method CharacterDataTest.Setup;
 begin
   Doc := XmlDocument.FromString(XmlTestData.CharXml);
   Assert.IsNotNull(Doc);
-  var Node := Doc.FirstChild;
+  var Node := Doc["Book"];
   Assert.IsNotNull(Node);
   Text := Node[0].FirstChild as XmlText;
   Assert.IsNotNull(Text);
@@ -209,6 +210,13 @@ begin
   Node.Value := "Test";
   Assert.CheckString("Test", Node.Value);
   Assert.IsException(->begin Node.Value := nil; end);
+end;
+
+method CharacterDataTest.NodeType;
+begin
+  Assert.CheckBool(true, Text.NodeType = XmlNodeType.Text);
+  Assert.CheckBool(true, Comment.NodeType = XmlNodeType.Comment);
+  Assert.CheckBool(true, CData.NodeType = XmlNodeType.CDATA);
 end;
 
 end.

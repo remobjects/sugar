@@ -19,6 +19,7 @@ type
     method Value;
     method TestData;
     method Target;
+    method NodeType;
   end;
 
 implementation
@@ -62,6 +63,11 @@ begin
 
   Data := Doc.ChildNodes[1] as XmlProcessingInstruction;
   Assert.CheckString("", Data.Data);
+end;
+
+method ProcessingInstructionTest.NodeType;
+begin
+  Assert.CheckBool(true, Data.NodeType = XmlNodeType.ProcessingInstruction);
 end;
 
 end.

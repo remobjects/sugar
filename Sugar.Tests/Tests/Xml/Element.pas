@@ -30,6 +30,8 @@ type
     method RemoveAttributeNode;
     method HasAttribute;    
     method Attributes;
+    method NodeType;
+    method GetElementsByTagName;
   end;
 
 implementation
@@ -70,8 +72,8 @@ begin
   var lValue := Node.FirstChild;
   Node.RemoveChild(lValue);
   Assert.CheckInt(2, Node.ChildCount);
-  //Node.AddChild(lValue);
-  //Assert.CheckInt(3, Node.ChildCount);
+  Node.AddChild(lValue);
+  Assert.CheckInt(3, Node.ChildCount);
 
   Assert.IsException(->Node.RemoveChild(nil));
 end;
@@ -186,11 +188,6 @@ begin
 
   Assert.IsException(->Node.SetAttribute(nil, "http://example.com/config/", "true"));  
   Assert.IsException(->Node.SetAttribute("Logged", nil, "true"));
-
-  //Not existing namespace
-  {$WARNING Check in different implementations}
-  //.net - add a new namespace
-  //Node.SetAttribute("Logged", "http://example.com/cfg/","YES");
 end;
 
 method ElementTest.SetAttributeNode;
@@ -198,16 +195,14 @@ begin
   var Node := Data.FirstChild.FirstChild as XmlElement;
   var Attr := Doc.CreateAttribute("Logged");
   Attr.Value := "YES";
-  Assert.IsNotNull(Node);
+  Assert.IsNotNull(Attr);
 
   Assert.CheckInt(2, length(Node.Attributes));
   Node.SetAttributeNode(Attr);
   Assert.CheckInt(3, length(Node.Attributes));
   Assert.CheckString("YES", Node.GetAttribute("Logged"));
-  {$WARNING Check in different implementations}
-  //.net - doesn't change value in tree just in node
-  //Attr.Value := "TEST";
-  //Assert.CheckString("TEST", Node.GetAttribute("Logged"));
+  Attr.Value := "TEST"; // changing value
+  Assert.CheckString("TEST", Node.GetAttribute("Logged"));
 
   //replace existing
   Attr := Doc.CreateAttribute("Logged");
@@ -230,9 +225,8 @@ begin
   Node.SetAttributeNode(Attr);
   Assert.CheckInt(2, length(Node.Attributes));
   Assert.CheckString("YES", Node.GetAttribute("Logged", "http://example.com/config/"));
-  {$WARNING Check in different implementations}
-  //Attr.Value := "TEST";
-  //Assert.CheckString("TEST", Node.GetAttribute("Logged"));
+  Attr.Value := "TEST";
+  Assert.CheckString("TEST", Node.GetAttribute("Logged", "http://example.com/config/"));
 
   //replace existing
   Attr := Doc.CreateAttribute("cfg:Logged", "http://example.com/config/");
@@ -275,8 +269,7 @@ begin
   Assert.IsNull(Node.GetAttribute("Id"));
 
   Assert.IsException(->Node.RemoveAttributeNode(nil));
-  Node.RemoveAttributeNode(Doc.CreateAttribute("NotExists"));
-  Assert.CheckInt(1, length(Node.Attributes));
+  Assert.IsException(->Node.RemoveAttributeNode(Doc.CreateAttribute("NotExists")));
 
   Node := Node.FirstChild.FirstChild as XmlElement;
   Assert.CheckInt(1, length(Node.Attributes));
@@ -316,4 +309,33 @@ begin
   Assert.CheckInt(0, length(Node.Attributes));
 end;
 
+method ElementTest.NodeType;
+begin
+  Assert.CheckBool(true, Data.NodeType = XmlNodeType.Element);
+end;
+
+method ElementTest.GetElementsByTagName;
+begin
+  //Must retrieve elements with specified tag name from all descendants
+  var Actual := Data.GetElementsByTagName("User");
+  var Expected := new RemObjects.Oxygene.Sugar.Collections.List<String>;
+  Expected.Add("First");
+  Expected.Add("Second");
+  Expected.Add("Third");
+  Expected.Add("Admin");
+
+  Assert.CheckInt(4, length(Actual));
+  for i: Integer := 0 to length(Actual) - 1 do begin
+    Assert.CheckBool(true, Actual[i].NodeType = XmlNodeType.Element);
+    var Element := Actual[i] as XmlElement;
+    Assert.CheckBool(true, Expected.Contains(Element.GetAttribute("Name")));
+  end;
+
+  Actual := Data.GetElementsByTagName("mail", "http://example.com/config/");
+  Assert.CheckInt(1, length(Actual));
+  Assert.CheckBool(true, Actual[0].NodeType = XmlNodeType.Element);
+  Assert.CheckString("first@example.com", Actual[0].Value);
+end;
+
 end.
+
