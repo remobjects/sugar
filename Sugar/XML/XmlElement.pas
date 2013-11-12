@@ -97,8 +97,17 @@ end;
 
 method XmlElement.AddChild(aNode: XmlNode);
 begin
+  SugarArgumentNullException.RaiseIfNil(aNode, "Node");
+
+  if aNode.Document <> nil then
+    if not aNode.Document.Equals(self.Document) then
+      raise new SugarInvalidOperationException("Unable to insert node that is owned by other document");
+
   {$IF COOPER}
-  Element.appendChild(aNode.Node);
+  if aNode.NodeType = XmlNodeType.Attribute then
+    SetAttributeNode(XmlAttribute(aNode))
+  else
+    Element.appendChild(aNode.Node);
   {$ELSEIF ECHOES}
   if aNode.Node.Parent <> nil then
     RemoveChild(aNode);
