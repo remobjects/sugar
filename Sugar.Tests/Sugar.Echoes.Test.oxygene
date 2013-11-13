@@ -58,9 +58,7 @@
   <ItemGroup>
     <Reference Include="mscorlib" />
     <Reference Include="System" />
-    <Reference Include="System.Configuration">
-      <HintPath>C:\Program Files\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.configuration.dll</HintPath>
-    </Reference>
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
   </ItemGroup>
   <ItemGroup>
