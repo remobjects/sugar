@@ -22,7 +22,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <Optimize>False</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE;iOS</DefineConstants>
     <CaptureConsoleOutput>False</CaptureConsoleOutput>
     <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
@@ -31,7 +31,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <Optimize>true</Optimize>
-    <OutputPath>.\bin\Release</OutputPath>
+    <OutputPath>bin\</OutputPath>
     <GenerateDebugInfo>False</GenerateDebugInfo>
     <EnableAsserts>False</EnableAsserts>
     <TreatWarningsAsErrors>False</TreatWarningsAsErrors>

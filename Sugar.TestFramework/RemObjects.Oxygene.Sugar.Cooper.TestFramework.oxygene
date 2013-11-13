@@ -10,11 +10,11 @@
     <RootNamespace>RemObjects.Oxygene.Sugar.TestFramework</RootNamespace>
     <DefaultUses />
     <StartupClass />
-    <AssemblyName>RemObjects.Oxygene.Sugar.TestFramework</AssemblyName>
+    <AssemblyName>com.remobjects.oxygene.sugar.testframework</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <Optimize>false</Optimize>
-    <OutputPath>.\bin\Debug\Java</OutputPath>
+    <OutputPath>.\bin\Java</OutputPath>
     <DefineConstants>DEBUG;TRACE;</DefineConstants>
     <GenerateDebugInfo>True</GenerateDebugInfo>
     <EnableAsserts>True</EnableAsserts>
@@ -31,7 +31,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <Optimize>true</Optimize>
-    <OutputPath>.\bin\Release\Java</OutputPath>
+    <OutputPath>.\bin\Java</OutputPath>
     <GenerateDebugInfo>False</GenerateDebugInfo>
     <EnableAsserts>False</EnableAsserts>
     <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
