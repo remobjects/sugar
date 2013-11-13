@@ -10,7 +10,7 @@
         <OutputType>Library</OutputType>
         <AppDesignerFolder>Properties</AppDesignerFolder>
         <RootNamespace>RemObjects.Oxygene.Sugar.Echoes.WP8</RootNamespace>
-        <AssemblyName>RemObjects.Oxygene.Sugar</AssemblyName>
+        <AssemblyName>RemObjects.Oxygene.Sugar.WP8</AssemblyName>
         <TargetFrameworkIdentifier>WindowsPhone</TargetFrameworkIdentifier>
         <TargetFrameworkVersion>v8.0</TargetFrameworkVersion>
         <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
@@ -26,7 +26,7 @@
         <DebugSymbols>true</DebugSymbols>
         <DebugType>full</DebugType>
         <Optimize>false</Optimize>
-        <OutputPath>Bin\Debug\WP8</OutputPath>
+        <OutputPath>Bin\WP8</OutputPath>
         <DefineConstants>DEBUG;TRACE;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
         <NoStdLib>true</NoStdLib>
         <NoConfig>true</NoConfig>
@@ -36,7 +36,7 @@
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
         <DebugType>pdbonly</DebugType>
         <Optimize>true</Optimize>
-        <OutputPath>Bin\Release\WP8</OutputPath>
+        <OutputPath>Bin\WP8</OutputPath>
         <DefineConstants>TRACE;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
         <NoStdLib>true</NoStdLib>
         <NoConfig>true</NoConfig>
@@ -47,7 +47,7 @@
         <DebugSymbols>true</DebugSymbols>
         <DebugType>full</DebugType>
         <Optimize>False</Optimize>
-        <OutputPath>bin\Debug\WP8</OutputPath>
+        <OutputPath>bin\WP8</OutputPath>
         <DefineConstants>DEBUG;TRACE;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
         <NoStdLib>true</NoStdLib>
         <NoConfig>true</NoConfig>
@@ -62,7 +62,7 @@
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
         <DebugType>pdbonly</DebugType>
         <Optimize>true</Optimize>
-        <OutputPath>Bin\x86\Release\WP8</OutputPath>
+        <OutputPath>Bin\WP8</OutputPath>
         <DefineConstants>TRACE;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
         <NoStdLib>true</NoStdLib>
         <NoConfig>true</NoConfig>
@@ -73,7 +73,7 @@
         <DebugSymbols>true</DebugSymbols>
         <DebugType>full</DebugType>
         <Optimize>false</Optimize>
-        <OutputPath>Bin\ARM\Debug\WP8</OutputPath>
+        <OutputPath>Bin\WP8</OutputPath>
         <DefineConstants>DEBUG;TRACE;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
         <NoStdLib>true</NoStdLib>
         <NoConfig>true</NoConfig>
@@ -83,53 +83,54 @@
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|ARM' ">
         <DebugType>pdbonly</DebugType>
         <Optimize>true</Optimize>
-        <OutputPath>Bin\ARM\Release\WP8</OutputPath>
+        <OutputPath>Bin\WP8</OutputPath>
         <DefineConstants>TRACE;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
         <NoStdLib>true</NoStdLib>
         <NoConfig>true</NoConfig>
         <ErrorReport>prompt</ErrorReport>
         <WarningLevel>4</WarningLevel>
     </PropertyGroup>
-    <ItemGroup>
-        <Compile Include="Collections\Dictionary.pas"/>
-        <Compile Include="Collections\HashSet.pas"/>
-        <Compile Include="Collections\List.pas"/>
-        <Compile Include="Collections\Queue.pas"/>
-        <Compile Include="Collections\Stack.pas"/>
-        <Compile Include="IO\File.pas"/>
-        <Compile Include="IO\Folder.pas"/>
-        <Compile Include="IO\StandardFolders.pas"/>
-        <Compile Include="Threading\AutoResetEvent.pas"/>
-        <Compile Include="Threading\ManualResetEvent.pas"/>
-        <Compile Include="Threading\Semaphore.pas"/>
-        <Compile Include="Threading\Thread.pas"/>
-        <Compile Include="Threading\ThreadPool.pas"/>
-        <Compile Include="AutoreleasePool.pas"/>
-        <Compile Include="Binary.pas"/>
-        <Compile Include="Color.pas"/>
-        <Compile Include="Console.pas"/>
-        <Compile Include="DateTime.pas"/>
-        <Compile Include="DateFormatter.pas"/>
-        <Compile Include="Environment.pas"/>
-        <Compile Include="Exceptions.pas"/>
-        <Compile Include="Extensions.pas" />
-        <Compile Include="Guid.pas"/>
-        <Compile Include="Math.pas"/>
-        <Compile Include="Properties\AssemblyInfo.WP8.pas"/>
-        <Compile Include="Random.pas"/>
-        <Compile Include="String.pas"/>
-        <Compile Include="StringBuilder.pas"/>
-        <Compile Include="StringFormatter.pas"/>
-        <Compile Include="Url.pas"/>
-        <Compile Include="UserSettings.pas"/>
-        <Compile Include="XML\XmlAttribute.pas"/>
-        <Compile Include="XML\XmlCharacterData.pas"/>
-        <Compile Include="XML\XmlDocument.pas"/>
-        <Compile Include="XML\XmlDocumentType.pas"/>
-        <Compile Include="XML\XmlElement.pas"/>
-        <Compile Include="XML\XmlNode.pas"/>
-        <Compile Include="XML\XmlProcessingInstruction.pas"/>
-    </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AutoreleasePool.pas" />
+    <Compile Include="Binary.pas" />
+    <Compile Include="Collections\Dictionary.pas" />
+    <Compile Include="Collections\HashSet.pas" />
+    <Compile Include="Collections\List.pas" />
+    <Compile Include="Collections\Queue.pas" />
+    <Compile Include="Collections\Stack.pas" />
+    <Compile Include="Color.pas" />
+    <None Include="Crypto\Cipher.pas" />
+    <None Include="Crypto\Digest.pas" />
+    <Compile Include="DateTime.pas" />
+    <Compile Include="DateFormatter.pas" />
+    <None Include="HTTP.pas" />
+    <Compile Include="IO\File.pas" />
+    <Compile Include="IO\Folder.pas" />
+    <Compile Include="Random.pas" />
+    <Compile Include="Environment.pas" />
+    <Compile Include="Exceptions.pas" />
+    <Compile Include="Extensions.pas" />
+    <Compile Include="Guid.pas" />
+    <None Include="Threading\AutoResetEvent.pas" />
+    <None Include="Threading\ManualResetEvent.pas" />
+    <None Include="Threading\Semaphore.pas" />
+    <None Include="Threading\Thread.pas" />
+    <None Include="Threading\ThreadPool.pas" />
+    <Compile Include="UserSettings.pas" />
+    <Compile Include="Math.pas" />
+    <Compile Include="Properties\AssemblyInfo_WP8.pas" />
+    <Compile Include="String.pas" />
+    <Compile Include="StringBuilder.pas" />
+    <Compile Include="StringFormatter.pas" />
+    <Compile Include="Url.pas" />
+    <Compile Include="XML\XmlAttribute.pas" />
+    <Compile Include="XML\XmlCharacterData.pas" />
+    <Compile Include="XML\XmlDocument.pas" />
+    <Compile Include="XML\XmlDocumentType.pas" />
+    <Compile Include="XML\XmlElement.pas" />
+    <Compile Include="XML\XmlNode.pas" />
+    <Compile Include="XML\XmlProcessingInstruction.pas" />
+  </ItemGroup>
     <ProjectExtensions/>
     <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

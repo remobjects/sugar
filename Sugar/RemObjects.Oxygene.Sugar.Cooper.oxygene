@@ -8,13 +8,13 @@
     <Name>RemObjects.Oxygene.Sugar.Cooper</Name>
     <RootNamespace>RemObjects.Oxygene.Sugar</RootNamespace>
     <ProjectGuid>{d1ee6c41-515b-4175-873f-ee188ac43450}</ProjectGuid>
-    <AssemblyName>RemObjects.Oxygene.Sugar</AssemblyName>
+    <AssemblyName>com.remobjects.oxygene.sugar</AssemblyName>
     <DefaultUses />
     <StartupClass />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <Optimize>False</Optimize>
-    <OutputPath>bin\Debug\Java\</OutputPath>
+    <OutputPath>bin\Java\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <CaptureConsoleOutput>False</CaptureConsoleOutput>
     <StartMode>Project</StartMode>
@@ -29,7 +29,7 @@
     <FutureHelperClassName />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <OutputPath>bin\Release\Java\</OutputPath>
+    <OutputPath>bin\Java\</OutputPath>
     <GenerateDebugInfo>False</GenerateDebugInfo>
     <EnableAsserts>False</EnableAsserts>
     <CaptureConsoleOutput>False</CaptureConsoleOutput>
@@ -61,31 +61,27 @@
     <Compile Include="Collections\Queue.pas" />
     <Compile Include="Collections\Stack.pas" />
     <Compile Include="Color.pas" />
-    <Compile Include="Console.pas" />
     <Compile Include="Cooper\ArrayUtils.pas" />
     <Compile Include="Cooper\EnumerationSequence.pas" />
-    <None Include="Crypto\Cipher.pas">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Crypto\Digest.pas" />
     <Compile Include="Cooper\LocaleUtils.pas" />
+    <None Include="Crypto\Cipher.pas" />
+    <None Include="Crypto\Digest.pas" />
     <Compile Include="DateTime.pas" />
     <Compile Include="DateFormatter.pas" />
     <Compile Include="HTTP.pas" />
     <Compile Include="IO\File.pas" />
     <Compile Include="IO\Folder.pas" />
-    <Compile Include="IO\StandardFolders.pas" />
     <Compile Include="Random.pas" />
     <Compile Include="Environment.pas" />
     <Compile Include="Exceptions.pas" />
     <Compile Include="Extensions.pas" />
     <Compile Include="Guid.pas" />
     <Compile Include="StringFormatter.pas" />
-    <Compile Include="Threading\AutoResetEvent.pas" />
-    <Compile Include="Threading\ManualResetEvent.pas" />
-    <Compile Include="Threading\Semaphore.pas" />
-    <Compile Include="Threading\Thread.pas" />
-    <Compile Include="Threading\ThreadPool.pas" />
+    <None Include="Threading\AutoResetEvent.pas" />
+    <None Include="Threading\ManualResetEvent.pas" />
+    <None Include="Threading\Semaphore.pas" />
+    <None Include="Threading\Thread.pas" />
+    <None Include="Threading\ThreadPool.pas" />
     <Compile Include="UserSettings.pas" />
     <Compile Include="Math.pas" />
     <Compile Include="String.pas" />

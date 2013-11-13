@@ -19,7 +19,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <Optimize>False</Optimize>
-    <OutputPath>.\bin\Debug</OutputPath>
+    <OutputPath>.\bin</OutputPath>
     <DefineConstants>DEBUG;TRACE;OSX</DefineConstants>
     <GenerateDebugInfo>True</GenerateDebugInfo>
     <EnableAsserts>True</EnableAsserts>
@@ -35,7 +35,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <Optimize>True</Optimize>
-    <OutputPath>.\bin\Release</OutputPath>
+    <OutputPath>.\bin</OutputPath>
     <GenerateDebugInfo>False</GenerateDebugInfo>
     <EnableAsserts>False</EnableAsserts>
     <DefineConstants>OSX</DefineConstants>
@@ -49,12 +49,8 @@
     <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AppKit.fx">
-      <HintPath>C:\Program Files (x86)\RemObjects Software\Oxygene\Nougat\SDKs\OS X 10.8\AppKit.fx</HintPath>
-    </Reference>
-    <Reference Include="CoreServices.fx">
-      <HintPath>C:\Program Files (x86)\RemObjects Software\Oxygene\Nougat\SDKs\OS X 10.8\CoreServices.fx</HintPath>
-    </Reference>
+    <Reference Include="AppKit.fx" />
+    <Reference Include="CoreServices.fx" />
     <Reference Include="Foundation.fx" />
     <Reference Include="libxml2.fx" />
     <Reference Include="rtl.fx" />
@@ -67,25 +63,21 @@
     <Compile Include="Collections\Queue.pas" />
     <Compile Include="Collections\Stack.pas" />
     <Compile Include="Color.pas" />
-    <Compile Include="Console.pas" />
-    <None Include="Crypto\Cipher.pas">
-      <SubType>Code</SubType>
-    </None>
+    <None Include="Crypto\Cipher.pas" />
     <None Include="Crypto\Digest.pas" />
     <Compile Include="DateTime.pas" />
     <Compile Include="DateFormatter.pas" />
     <None Include="HTTP.pas" />
     <Compile Include="IO\File.pas" />
     <Compile Include="IO\Folder.pas" />
-    <Compile Include="IO\StandardFolders.pas" />
     <Compile Include="Random.pas" />
     <Compile Include="Environment.pas" />
     <Compile Include="UserSettings.pas" />
-    <Compile Include="Threading\AutoResetEvent.pas" />
-    <Compile Include="Threading\ManualResetEvent.pas" />
-    <Compile Include="Threading\Semaphore.pas" />
-    <Compile Include="Threading\Thread.pas" />
-    <Compile Include="Threading\ThreadPool.pas" />
+    <None Include="Threading\AutoResetEvent.pas" />
+    <None Include="Threading\ManualResetEvent.pas" />
+    <None Include="Threading\Semaphore.pas" />
+    <None Include="Threading\Thread.pas" />
+    <None Include="Threading\ThreadPool.pas" />
     <Compile Include="Exceptions.pas" />
     <Compile Include="Guid.pas" />
     <Compile Include="Math.pas" />

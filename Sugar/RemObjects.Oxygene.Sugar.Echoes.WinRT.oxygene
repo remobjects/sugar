@@ -7,7 +7,7 @@
         <OutputType>Library</OutputType>
         <AppDesignerFolder>Properties</AppDesignerFolder>
         <RootNamespace>RemObjects.Oxygene.Sugar.Echoes.WinRT</RootNamespace>
-        <AssemblyName>RemObjects.Oxygene.Sugar</AssemblyName>
+        <AssemblyName>RemObjects.Oxygene.Sugar.WinRT</AssemblyName>
         <DefaultLanguage>en-US</DefaultLanguage>
         <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{656346D9-4656-40DA-A068-22D5425D4639}</ProjectTypeGuids>
         <Name>RemObjects.Oxygene.Sugar.Echoes.WinRT</Name>
@@ -16,20 +16,20 @@
         <GeneratePDB>True</GeneratePDB>
         <GenerateMDB>False</GenerateMDB>
         <Optimize>false</Optimize>
-        <OutputPath>bin\Debug\</OutputPath>
+        <OutputPath>bin\WinRT\</OutputPath>
         <DefineConstants>DEBUG;TRACE;NETFX_CORE</DefineConstants>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
         <GeneratePDB>True</GeneratePDB>
         <GenerateMDB>False</GenerateMDB>
         <Optimize>true</Optimize>
-        <OutputPath>bin\Release\</OutputPath>
+        <OutputPath>bin\WinRT\</OutputPath>
         <DefineConstants>TRACE;NETFX_CORE</DefineConstants>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
         <GeneratePDB>True</GeneratePDB>
         <GenerateMDB>False</GenerateMDB>
-        <OutputPath>bin\ARM\Debug\WinRT\</OutputPath>
+        <OutputPath>bin\WinRT\</OutputPath>
         <DefineConstants>DEBUG;TRACE;NETFX_CORE</DefineConstants>
         <CpuType>ARM</CpuType>
         <Prefer32Bit>true</Prefer32Bit>
@@ -37,7 +37,7 @@
     <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM'">
         <GeneratePDB>True</GeneratePDB>
         <GenerateMDB>False</GenerateMDB>
-        <OutputPath>bin\ARM\Release\WinRT\</OutputPath>
+        <OutputPath>bin\WinRT\</OutputPath>
         <DefineConstants>TRACE;NETFX_CORE</DefineConstants>
         <Optimize>true</Optimize>
         <CpuType>ARM</CpuType>
@@ -46,7 +46,7 @@
     <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
         <GeneratePDB>True</GeneratePDB>
         <GenerateMDB>False</GenerateMDB>
-        <OutputPath>bin\x64\Debug\WinRT\</OutputPath>
+        <OutputPath>bin\WinRT\</OutputPath>
         <DefineConstants>DEBUG;TRACE;NETFX_CORE</DefineConstants>
         <CpuType>x64</CpuType>
         <Prefer32Bit>true</Prefer32Bit>
@@ -54,7 +54,7 @@
     <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
         <GeneratePDB>True</GeneratePDB>
         <GenerateMDB>False</GenerateMDB>
-        <OutputPath>bin\x64\Release\WinRT\</OutputPath>
+        <OutputPath>bin\WinRT\</OutputPath>
         <DefineConstants>TRACE;NETFX_CORE</DefineConstants>
         <Optimize>true</Optimize>
         <CpuType>x64</CpuType>
@@ -63,7 +63,7 @@
     <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
         <GeneratePDB>True</GeneratePDB>
         <DebugSymbols>true</DebugSymbols>
-        <OutputPath>bin\Debug\WinRT\</OutputPath>
+        <OutputPath>bin\WinRT\</OutputPath>
         <DefineConstants>DEBUG;TRACE;NETFX_CORE</DefineConstants>
         <CpuType>x86</CpuType>
         <Prefer32Bit>true</Prefer32Bit>
@@ -72,7 +72,7 @@
     <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
         <GeneratePDB>True</GeneratePDB>
         <GenerateMDB>False</GenerateMDB>
-        <OutputPath>bin\x86\Release\WinRT\</OutputPath>
+        <OutputPath>bin\WinRT\</OutputPath>
         <DefineConstants>TRACE;NETFX_CORE</DefineConstants>
         <Optimize>true</Optimize>
         <CpuType>x86</CpuType>
@@ -86,43 +86,47 @@
         <Folder Include="Threading\"/>
         <Folder Include="XML\"/>
     </ItemGroup>
-    <ItemGroup>
-        <Compile Include="Collections\Dictionary.pas"/>
-        <Compile Include="Collections\HashSet.pas"/>
-        <Compile Include="Collections\List.pas"/>
-        <Compile Include="Collections\Queue.pas"/>
-        <Compile Include="Collections\Stack.pas"/>
-        <Compile Include="IO\File.pas"/>
-        <Compile Include="IO\Folder.pas"/>
-        <Compile Include="IO\StandardFolders.pas"/>
-        <Compile Include="Threading\AutoResetEvent.pas"/>
-        <Compile Include="Threading\ManualResetEvent.pas"/>
-        <Compile Include="Threading\Semaphore.pas"/>
-        <Compile Include="AutoreleasePool.pas"/>
-        <Compile Include="Binary.pas"/>
-        <Compile Include="Color.pas"/>
-        <Compile Include="DateTime.pas"/>
-        <Compile Include="DateFormatter.pas"/>
-        <Compile Include="Environment.pas"/>
-        <Compile Include="Exceptions.pas"/>
-        <Compile Include="Extensions.pas" />
-        <Compile Include="Guid.pas"/>
-        <Compile Include="Properties\AssemblyInfo_WinRT.pas"/>
-        <Compile Include="Math.pas"/>
-        <Compile Include="Random.pas"/>
-        <Compile Include="String.pas"/>
-        <Compile Include="StringBuilder.pas"/>
-        <Compile Include="StringFormatter.pas"/>
-        <Compile Include="Url.pas"/>
-        <Compile Include="UserSettings.pas"/>
-        <Compile Include="XML\XmlAttribute.pas"/>
-        <Compile Include="XML\XmlCharacterData.pas"/>
-        <Compile Include="XML\XmlDocument.pas"/>
-        <Compile Include="XML\XmlDocumentType.pas"/>
-        <Compile Include="XML\XmlElement.pas"/>
-        <Compile Include="XML\XmlNode.pas"/>
-        <Compile Include="XML\XmlProcessingInstruction.pas"/>
-    </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AutoreleasePool.pas" />
+    <Compile Include="Binary.pas" />
+    <Compile Include="Collections\Dictionary.pas" />
+    <Compile Include="Collections\HashSet.pas" />
+    <Compile Include="Collections\List.pas" />
+    <Compile Include="Collections\Queue.pas" />
+    <Compile Include="Collections\Stack.pas" />
+    <Compile Include="Color.pas" />
+    <None Include="Crypto\Cipher.pas" />
+    <None Include="Crypto\Digest.pas" />
+    <Compile Include="DateTime.pas" />
+    <Compile Include="DateFormatter.pas" />
+    <None Include="HTTP.pas" />
+    <Compile Include="IO\File.pas" />
+    <Compile Include="IO\Folder.pas" />
+    <Compile Include="Random.pas" />
+    <Compile Include="Environment.pas" />
+    <Compile Include="Exceptions.pas" />
+    <Compile Include="Extensions.pas" />
+    <Compile Include="Guid.pas" />
+    <None Include="Threading\AutoResetEvent.pas" />
+    <None Include="Threading\ManualResetEvent.pas" />
+    <None Include="Threading\Semaphore.pas" />
+    <None Include="Threading\Thread.pas" />
+    <None Include="Threading\ThreadPool.pas" />
+    <Compile Include="UserSettings.pas" />
+    <Compile Include="Math.pas" />
+    <Compile Include="Properties\AssemblyInfo_WinRT.pas" />
+    <Compile Include="String.pas" />
+    <Compile Include="StringBuilder.pas" />
+    <Compile Include="StringFormatter.pas" />
+    <Compile Include="Url.pas" />
+    <Compile Include="XML\XmlAttribute.pas" />
+    <Compile Include="XML\XmlCharacterData.pas" />
+    <Compile Include="XML\XmlDocument.pas" />
+    <Compile Include="XML\XmlDocumentType.pas" />
+    <Compile Include="XML\XmlElement.pas" />
+    <Compile Include="XML\XmlNode.pas" />
+    <Compile Include="XML\XmlProcessingInstruction.pas" />
+  </ItemGroup>
     <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
         <VisualStudioVersion>11.0</VisualStudioVersion>
     </PropertyGroup>

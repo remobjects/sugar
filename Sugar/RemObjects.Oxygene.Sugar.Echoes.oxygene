@@ -25,7 +25,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <Optimize>False</Optimize>
-    <OutputPath>bin\Debug\.NET\</OutputPath>
+    <OutputPath>bin\.NET\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <GeneratePDB>True</GeneratePDB>
     <GenerateMDB>True</GenerateMDB>
@@ -41,7 +41,7 @@
     <FutureHelperClassName />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <OutputPath>bin\Release\.NET\</OutputPath>
+    <OutputPath>bin\.NET\</OutputPath>
     <EnableAsserts>False</EnableAsserts>
     <CaptureConsoleOutput>False</CaptureConsoleOutput>
     <StartMode>Project</StartMode>
@@ -61,9 +61,7 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Drawing">
-      <HintPath>C:\Windows\Microsoft.NET\Framework\v2.0.50727\System.Drawing.dll</HintPath>
-    </Reference>
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -84,30 +82,23 @@
     <Compile Include="Collections\Queue.pas" />
     <Compile Include="Collections\Stack.pas" />
     <Compile Include="Color.pas" />
-    <Compile Include="Console.pas" />
-    <None Include="Crypto\Cipher.pas">
-      <SubType>Code</SubType>
-    </None>
+    <None Include="Crypto\Cipher.pas" />
     <None Include="Crypto\Digest.pas" />
     <Compile Include="DateTime.pas" />
     <Compile Include="DateFormatter.pas" />
-    <Compile Include="Echoes\MonoHelpers\CoreFoundation.pas" />
-    <Compile Include="Echoes\MonoHelpers\MacFolders.pas" />
-    <Compile Include="Echoes\MonoHelpers\PlatformDetection.pas" />
     <Compile Include="HTTP.pas" />
     <Compile Include="IO\File.pas" />
     <Compile Include="IO\Folder.pas" />
-    <Compile Include="IO\StandardFolders.pas" />
     <Compile Include="Random.pas" />
     <Compile Include="Environment.pas" />
     <Compile Include="Exceptions.pas" />
     <Compile Include="Extensions.pas" />
     <Compile Include="Guid.pas" />
-    <Compile Include="Threading\AutoResetEvent.pas" />
-    <Compile Include="Threading\ManualResetEvent.pas" />
-    <Compile Include="Threading\Semaphore.pas" />
-    <Compile Include="Threading\Thread.pas" />
-    <Compile Include="Threading\ThreadPool.pas" />
+    <None Include="Threading\AutoResetEvent.pas" />
+    <None Include="Threading\ManualResetEvent.pas" />
+    <None Include="Threading\Semaphore.pas" />
+    <None Include="Threading\Thread.pas" />
+    <None Include="Threading\ThreadPool.pas" />
     <Compile Include="UserSettings.pas" />
     <Compile Include="Math.pas" />
     <Compile Include="Properties\AssemblyInfo.pas" />
@@ -125,8 +116,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Crypto" />
-    <Folder Include="Echoes" />
-    <Folder Include="Echoes\MonoHelpers" />
     <Folder Include="XML" />
     <Folder Include="Properties\" />
     <Folder Include="Collections" />

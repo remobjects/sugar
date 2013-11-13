@@ -20,7 +20,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <Optimize>False</Optimize>
-    <OutputPath>.\bin\Debug</OutputPath>
+    <OutputPath>.\bin</OutputPath>
     <DefineConstants>DEBUG;TRACE;IOS</DefineConstants>
     <GenerateDebugInfo>True</GenerateDebugInfo>
     <EnableAsserts>True</EnableAsserts>
@@ -37,7 +37,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <Optimize>True</Optimize>
-    <OutputPath>.\bin\Release</OutputPath>
+    <OutputPath>.\bin</OutputPath>
     <GenerateDebugInfo>False</GenerateDebugInfo>
     <EnableAsserts>False</EnableAsserts>
     <CaptureConsoleOutput>False</CaptureConsoleOutput>
@@ -64,12 +64,29 @@
     <Compile Include="Collections\Queue.pas" />
     <Compile Include="Collections\Stack.pas" />
     <Compile Include="Color.pas" />
-    <Compile Include="Console.pas" />
-    <Compile Include="Crypto\Cipher.pas" />
-    <Compile Include="Crypto\Digest.pas" />
+    <None Include="Crypto\Cipher.pas" />
+    <None Include="Crypto\Digest.pas" />
     <Compile Include="DateTime.pas" />
     <Compile Include="DateFormatter.pas" />
+    <None Include="HTTP.pas" />
+    <Compile Include="IO\File.pas" />
+    <Compile Include="IO\Folder.pas" />
+    <Compile Include="Random.pas" />
     <Compile Include="Environment.pas" />
+    <Compile Include="UserSettings.pas" />
+    <None Include="Threading\AutoResetEvent.pas" />
+    <None Include="Threading\ManualResetEvent.pas" />
+    <None Include="Threading\Semaphore.pas" />
+    <None Include="Threading\Thread.pas" />
+    <None Include="Threading\ThreadPool.pas" />
+    <Compile Include="Exceptions.pas" />
+    <Compile Include="Guid.pas" />
+    <Compile Include="Math.pas" />
+    <Compile Include="Extensions.pas" />
+    <Compile Include="String.pas" />
+    <Compile Include="StringBuilder.pas" />
+    <Compile Include="StringFormatter.pas" />
+    <Compile Include="Url.pas" />
     <Compile Include="XML\XmlAttribute.pas" />
     <Compile Include="XML\XmlCharacterData.pas" />
     <Compile Include="XML\XmlDocument.pas" />
@@ -77,25 +94,6 @@
     <Compile Include="XML\XmlElement.pas" />
     <Compile Include="XML\XmlNode.pas" />
     <Compile Include="XML\XmlProcessingInstruction.pas" />
-    <None Include="HTTP.pas" />
-    <Compile Include="Random.pas" />
-    <Compile Include="Exceptions.pas" />
-    <Compile Include="Guid.pas" />
-    <Compile Include="IO\File.pas" />
-    <Compile Include="IO\Folder.pas" />
-    <Compile Include="IO\StandardFolders.pas" />
-    <Compile Include="UserSettings.pas" />
-    <Compile Include="Threading\AutoResetEvent.pas" />
-    <Compile Include="Threading\ManualResetEvent.pas" />
-    <Compile Include="Threading\Semaphore.pas" />
-    <Compile Include="Threading\Thread.pas" />
-    <Compile Include="Threading\ThreadPool.pas" />
-    <Compile Include="Math.pas" />
-    <Compile Include="Extensions.pas" />
-    <Compile Include="String.pas" />
-    <Compile Include="StringBuilder.pas" />
-    <Compile Include="StringFormatter.pas" />
-    <Compile Include="Url.pas" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Crypto" />
