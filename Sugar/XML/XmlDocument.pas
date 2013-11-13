@@ -334,7 +334,11 @@ end;
 
 class method XmlDocument.FromFile(aFile: File): XmlDocument;
 begin
+  {$IF WINDOWS_PHONE OR NETFX_CORE}
+  var document := XDocument.Load(aFile.Path, LoadOptions.SetBaseUri);
+  {$ELSE}
   var document := XDocument.Load(System.String(aFile), LoadOptions.SetBaseUri);
+  {$ENDIF}  
   result := new XmlDocument(document);
 end;
 
