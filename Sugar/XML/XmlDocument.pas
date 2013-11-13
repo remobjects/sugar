@@ -160,13 +160,22 @@ begin
   var Factory := javax.xml.parsers.DocumentBuilderFactory.newInstance;
   //handle namespaces
   Factory.NamespaceAware := true;
-  Factory.Validating := false;
-  Factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+  Factory.Validating := false;  
 
   var Builder := Factory.newDocumentBuilder();    
   var Input := new org.xml.sax.InputSource(new java.io.StringReader(Content));
   if BaseUri <> nil then
     Input.SystemId := BaseUri;
+
+  Builder.setEntityResolver(new class org.xml.sax.EntityResolver(resolveEntity := method (publicId: java.lang.String; systemId: java.lang.String): org.xml.sax.InputSource
+  begin
+    if (publicId <> nil) or (systemId <> nil) then
+      exit new org.xml.sax.InputSource(new java.io.ByteArrayInputStream(new sbyte[0]))
+    else
+      exit nil;
+  end
+  )); 
+
   var Document := Builder.parse(Input);
 
   //Normalize text content

@@ -137,6 +137,7 @@ end;
 
 method XmlCharacterData.InsertData(Offset: Integer; aValue: String);
 begin
+  SugarArgumentNullException.RaiseIfNil(aValue, "Value");
   {$IF ECHOES}
   Value := System.String(Value).Insert(Offset, aValue);
   {$ELSEIF COOPER} 
