@@ -89,16 +89,11 @@ implementation
 {$IF COOPER}
 method XmlDocument.GetElement(Name: String): XmlElement;
 begin
-  var Item := Doc.FirstChild;
+  var Items := GetElementsByTagName(Name);
+  if length(Items) = 0 then
+    exit nil;
 
-  while (Item <> nil) do begin
-    if (Item.NodeType = org.w3c.dom.Node.ELEMENT_NODE) and (Item.NodeName = Name) then
-      exit new XmlElement(Item);
-
-    Item := Item.NextSibling;
-  end;
-
-  exit nil;
+  exit Items[0];
 end;
 
 method XmlDocument.CreateAttribute(Name: String): XmlAttribute;
@@ -141,14 +136,26 @@ begin
   exit new XmlText(Doc.CreateTextNode(Data));
 end;
 
-method XmlDocument.GetElementsByTagName(Name: String): array of XmlNode;
+method XmlDocument.GetElementsByTagName(Name: String): array of XmlElement;
 begin
-  exit ConvertNodeList(Doc.GetElementsByTagName(Name));
+  var items := Doc.GetElementsByTagName(Name);
+  if items = nil then
+    exit [];
+  
+  result := new XmlElement[items.length];
+  for i: Integer := 0 to items.length-1 do
+    result[i] := new XmlElement(items.Item(i));
 end;
 
-method XmlDocument.GetElementsByTagName(LocalName: String; NamespaceUri: String): array of XmlNode;
+method XmlDocument.GetElementsByTagName(LocalName: String; NamespaceUri: String): array of XmlElement;
 begin
-  exit ConvertNodeList(Doc.GetElementsByTagNameNs(NamespaceUri, LocalName));
+  var items := Doc.GetElementsByTagNameNs(NamespaceUri, LocalName);
+  if items = nil then
+    exit [];
+  
+  result := new XmlElement[items.length];
+  for i: Integer := 0 to items.length-1 do
+    result[i] := new XmlElement(items.Item(i));
 end;
 
 class method XmlDocument.ParseXml(Content: String; BaseUri: String): XmlDocument;
