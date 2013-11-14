@@ -59,8 +59,8 @@ type
     method CreateProcessingInstruction(Target, Data: String): XmlProcessingInstruction;
     method CreateTextNode(Data: String): XmlText;    
 
-    method GetElementsByTagName(Name: String): array of XmlNode;
-    method GetElementsByTagName(LocalName, NamespaceUri: String): array of XmlNode;
+    method GetElementsByTagName(Name: String): array of XmlElement;
+    method GetElementsByTagName(LocalName, NamespaceUri: String): array of XmlElement;
 
     class method FromFile(aFile: File): XmlDocument;
     class method FromBinary(aBinary: Binary): XmlDocument;
@@ -326,26 +326,27 @@ end;
 
 method XmlDocument.GetElement(Name: String): XmlElement;
 begin
-  var el := Doc.Element(System.String(Name));
-  if el <> nil then
-    exit new XmlElement(el);
+  var Items := GetElementsByTagName(Name);
+  if length(Items) = 0 then
+    exit nil;
+
+  exit Items[0];
 end;
 
-method XmlDocument.GetElementsByTagName(LocalName: String; NamespaceUri: String): array of XmlNode;
+method XmlDocument.GetElementsByTagName(LocalName: String; NamespaceUri: String): array of XmlElement;
 begin
-  var ns: XNamespace := System.String(NamespaceUri);
-  var items := Doc.Elements(ns + LocalName):ToArray;
-  result := new XmlNode[items.Length];
-  for I: Integer := 0 to items.Length - 1 do
-    result[I] := CreateCompatibleNode(items[I]);
+  if DocumentElement = nil then
+    exit [];
+
+  exit DocumentElement.GetElementsByTagName(LocalName, NamespaceUri);
 end;
 
-method XmlDocument.GetElementsByTagName(Name: String): array of XmlNode;
+method XmlDocument.GetElementsByTagName(Name: String): array of XmlElement;
 begin  
-  var items := Doc.Elements(System.String(Name)):ToArray;
-  result := new XmlNode[items.Length];
-  for I: Integer := 0 to items.Length - 1 do
-    result[I] := CreateCompatibleNode(items[I]);
+  if DocumentElement = nil then
+    exit [];
+
+  exit DocumentElement.GetElementsByTagName(Name);
 end;
 
 class method XmlDocument.FromFile(aFile: File): XmlDocument;
