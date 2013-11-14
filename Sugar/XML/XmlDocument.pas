@@ -148,6 +148,9 @@ end;
 
 method XmlDocument.GetElementsByTagName(Name: String): array of XmlElement;
 begin
+  if Name = nil then
+    exit [];
+
   var items := Doc.GetElementsByTagName(Name);
   if items = nil then
     exit [];
@@ -159,6 +162,9 @@ end;
 
 method XmlDocument.GetElementsByTagName(LocalName: String; NamespaceUri: String): array of XmlElement;
 begin
+  if Name = nil then
+    exit [];
+
   var items := Doc.GetElementsByTagNameNs(NamespaceUri, LocalName);
   if items = nil then
     exit [];
@@ -456,15 +462,24 @@ end;
 
 method XmlDocument.CreateAttribute(Name: String): XmlAttribute;
 begin
+  SugarArgumentNullException.RaiseIfNil(Name, "Name");
+
+  if libxml.xmlValidateName(XmlChar.FromString(Name), 0) <> 0 then
+    raise new SugarArgumentException("Invalid attribute name {0}", Name);
+
   var NewObj := libxml.xmlNewProp(nil, XmlChar.FromString(Name), XmlChar.FromString(""));
+  
   if NewObj = nil then
-    exit nil;
+    raise new SugarInvalidOperationException("Unable to create attribute {0}", Name);
 
   exit new XmlAttribute(^libxml.__struct__xmlNode(NewObj), self);
 end;
 
 method XmlDocument.CreateAttribute(QualifiedName: String; NamespaceUri: String): XmlAttribute;
 begin
+  SugarArgumentNullException.RaiseIfNil(QualifiedName, "QualifiedName");
+  SugarArgumentNullException.RaiseIfNil(NamespaceUri, "NamespaceUri");
+
   var prefix: ^libxml.xmlChar;
   var local := libxml.xmlSplitQName2(XmlChar.FromString(QualifiedName), var prefix);
 
@@ -483,6 +498,12 @@ end;
 
 method XmlDocument.CreateXmlNs(Prefix: String; NamespaceUri: String): XmlAttribute;
 begin
+  SugarArgumentNullException.RaiseIfNil(Prefix, "Prefix");
+  SugarArgumentNullException.RaiseIfNil(NamespaceUri, "NamespaceUri");
+
+  if Prefix.StartsWith("<") or Prefix.StartsWith("&") then
+    raise new SugarArgumentException("Invalid attribute prefix {0}", Prefix);
+
   var ns := libxml.xmlNewNs(nil, XmlChar.FromString("http://www.w3.org/2000/xmlns/"), XmlChar.FromString("xmlns"));
   var NewObj := libxml.xmlNewNsProp(nil, ns, XmlChar.FromString(prefix), XmlChar.FromString(NamespaceUri));
 
