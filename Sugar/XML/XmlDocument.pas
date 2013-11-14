@@ -469,6 +469,17 @@ begin
   exit new XmlAttribute(^libxml.__struct__xmlNode(NewObj), self);
 end;
 
+method XmlDocument.CreateXmlNs(Prefix: String; NamespaceUri: String): XmlAttribute;
+begin
+  var ns := libxml.xmlNewNs(nil, XmlChar.FromString("http://www.w3.org/2000/xmlns/"), XmlChar.FromString("xmlns"));
+  var NewObj := libxml.xmlNewNsProp(nil, ns, XmlChar.FromString(prefix), XmlChar.FromString(NamespaceUri));
+
+  if NewObj = nil then
+    exit nil;
+
+  exit new XmlAttribute(^libxml.__struct__xmlNode(NewObj), self);
+end;
+
 method XmlDocument.CreateCDataSection(Data: String): XmlCDataSection;
 begin
   var NewObj := libxml.xmlNewCDataBlock(libxml.xmlDocPtr(Doc), XmlChar.FromString(Data), Data.length);
@@ -556,12 +567,12 @@ begin
   exit nil;
 end;
 
-method XmlDocument.GetElementsByTagName(LocalName: String; NamespaceUri: String): array of XmlNode;
+method XmlDocument.GetElementsByTagName(LocalName: String; NamespaceUri: String): array of XmlElement;
 begin
   exit new XmlNodeList(self).ElementsByName(LocalName, NamespaceUri);
 end;
 
-method XmlDocument.GetElementsByTagName(Name: String): array of XmlNode;
+method XmlDocument.GetElementsByTagName(Name: String): array of XmlElement;
 begin
   exit new XmlNodeList(self).ElementsByName(Name);
 end;
@@ -594,12 +605,16 @@ end;
 
 method XmlDocument.RemoveChild(Node: XmlNode);
 begin
+  SugarArgumentNullException.RaiseIfNil(Node, "Node");
   libxml.xmlUnlinkNode(libxml.xmlNodePtr(Node.Node));
   libxml.xmlFreeNode(libxml.xmlNodePtr(Node.Node));
 end;
 
 method XmlDocument.ReplaceChild(Node: XmlNode; WithNode: XmlNode);
 begin
+  SugarArgumentNullException.RaiseIfNil(Node, "Node");
+  SugarArgumentNullException.RaiseIfNil(WithNode, "WithNode");
+
   libxml.xmlReplaceNode(libxml.xmlNodePtr(Node.Node), libxml.xmlNodePtr(WithNode.Node));
 end;
 
