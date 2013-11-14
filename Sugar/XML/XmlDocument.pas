@@ -51,6 +51,7 @@ type
 
     method CreateAttribute(Name: String): XmlAttribute;
     method CreateAttribute(QualifiedName: String; NamespaceUri: String): XmlAttribute;
+    method CreateXmlNs(Prefix: String; NamespaceUri: String): XmlAttribute;
     method CreateCDataSection(Data: String): XmlCDataSection;
     method CreateComment(Data: String): XmlComment;
     method CreateElement(Name: String): XmlElement;
@@ -271,6 +272,12 @@ begin
     
   var ns: XNamespace := System.String(NamespaceUri);
   var Attr := new XAttribute(ns + QualifiedName, "");
+  exit new XmlAttribute(Attr);
+end;
+
+method XmlDocument.CreateXmlNs(Prefix: String; NamespaceUri: String): XmlAttribute;
+begin
+  var Attr := new XAttribute(XNamespace.Xmlns + Prefix, NamespaceUri);
   exit new XmlAttribute(Attr);
 end;
 
