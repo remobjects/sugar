@@ -588,16 +588,11 @@ end;
 
 method XmlDocument.GetElement(Name: String): XmlElement;
 begin
-  var Item: XmlNode := DocumentElement;
+  var Items := GetElementsByTagName(Name);
+  if length(Items) = 0 then
+    exit nil;
 
-  while Item <> nil do begin
-    if (Item.Node^.type = libxml.xmlElementType.XML_ELEMENT_NODE) and (Item.Name = Name) then
-      exit XmlElement(Item);
-
-    Item := Item.NextSibling;
-  end;
-
-  exit nil;
+  exit Items[0];
 end;
 
 method XmlDocument.GetElementsByTagName(LocalName: String; NamespaceUri: String): array of XmlElement;
@@ -648,7 +643,14 @@ begin
   SugarArgumentNullException.RaiseIfNil(Node, "Node");
   SugarArgumentNullException.RaiseIfNil(WithNode, "WithNode");
 
-  libxml.xmlReplaceNode(libxml.xmlNodePtr(Node.Node), libxml.xmlNodePtr(WithNode.Node));
+  if (Node.NodeType = XmlNodeType.Element) and (WithNode.NodeType <> XmlNodeType.Element) then
+    raise new SugarInvalidOperationException("Unable to replace root node with non element node");
+
+  if not (WithNode.NodeType in [XmlNodeType.Comment, XmlNodeType.Element, XmlNodeType.ProcessingInstruction]) then
+    raise new SugarInvalidOperationException("Unable to replace node. Only elements, comments and processing instructions allowed.");
+
+  if libxml.xmlReplaceNode(libxml.xmlNodePtr(Node.Node), libxml.xmlNodePtr(WithNode.Node)) = nil then
+    raise new SugarInvalidOperationException("Unable to replace node {0} with node {1}", Node.Name, WithNode.Name);
 end;
 
 method XmlDocument.Save(aFile: File);
