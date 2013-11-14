@@ -106,6 +106,16 @@ begin
   exit new XmlAttribute(Doc.CreateAttributeNs(NamespaceUri, QualifiedName));
 end;
 
+method XmlDocument.CreateXmlNs(Prefix: String; NamespaceUri: String): XmlAttribute;
+begin
+  SugarArgumentNullException.RaiseIfNil(Prefix, "Prefix");
+  SugarArgumentNullException.RaiseIfNil(NamespaceUri, "NamesapceUri");
+
+  var Attr := Doc.createAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:"+Prefix);
+  Attr.TextContent := NamespaceUri;
+  exit new XmlAttribute(Attr);
+end;
+
 method XmlDocument.CreateCDataSection(Data: String): XmlCDataSection;
 begin
   exit new XmlCDataSection(Doc.CreateCDataSection(Data));
