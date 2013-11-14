@@ -438,7 +438,19 @@ end;
 {$ELSEIF NOUGAT}
 method XmlDocument.AddChild(Node: XmlNode);
 begin
+  SugarArgumentNullException.RaiseIfNil(Node, "Node");
+
+  if not (Node.NodeType in [XmlNodeType.Comment, XmlNodeType.Element, XmlNodeType.ProcessingInstruction]) then
+    raise new SugarInvalidOperationException("Unable to insert node. Only elements, comments and processing instructions allowed.");
+
+  if (DocumentElement <> nil) and (Node.NodeType = XmlNodeType.Element) then
+    raise new SugarInvalidOperationException("Unable to insert node. Root element already exists");
+
   var NewNode := libxml.xmlAddChild(libxml.xmlNodePtr(Doc), libxml.xmlNodePtr(Node.Node));
+
+  if NewNode = nil then
+    raise new SugarInvalidOperationException("Unable to insert node {0} to a document", Node.Name);
+
   Node.Node := ^libxml.__struct__xmlNode(NewNode);
 end;
 
