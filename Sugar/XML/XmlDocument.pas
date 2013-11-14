@@ -243,11 +243,18 @@ begin
   
   Transformer.setOutputProperty(javax.xml.transform.OutputKeys.INDENT, "yes");
   Transformer.setOutputProperty(javax.xml.transform.OutputKeys.METHOD, "xml");
+  Transformer.setOutputProperty(javax.xml.transform.OutputKeys.OMIT_XML_DECLARATION, "no");
+
+  if Doc.Doctype <> nil then begin
+    Transformer.setOutputProperty(javax.xml.transform.OutputKeys.DOCTYPE_PUBLIC, Doc.Doctype.PublicId);
+    Transformer.setOutputProperty(javax.xml.transform.OutputKeys.DOCTYPE_SYSTEM, Doc.Doctype.SystemId);
+  end;
 
   if XmlDeclaration <> nil then begin
     Transformer.setOutputProperty(javax.xml.transform.OutputKeys.ENCODING, XmlDeclaration.Encoding);
     Transformer.setOutputProperty(javax.xml.transform.OutputKeys.VERSION, XmlDeclaration.Version);
     Transformer.setOutputProperty(javax.xml.transform.OutputKeys.STANDALONE, XmlDeclaration.StandaloneString);
+    Doc.XmlStandalone := XmlDeclaration.Standalone;
   end;
 
   var Stream := new javax.xml.transform.stream.StreamResult(aFile);
