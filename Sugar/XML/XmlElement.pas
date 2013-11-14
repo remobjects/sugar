@@ -61,8 +61,8 @@ type
     property Attributes: array of XmlAttribute read GetAttributes;
 
     { Elements }
-    method GetElementsByTagName(aName: String): array of XmlNode;
-    method GetElementsByTagName(aLocalName, NamespaceUri: String): array of XmlNode;
+    method GetElementsByTagName(aName: String): array of XmlElement;
+    method GetElementsByTagName(aLocalName, NamespaceUri: String): array of XmlElement;
   end;
 implementation
 
@@ -318,30 +318,42 @@ begin
   exit GetAttributeNode(aLocalName, NamespaceUri) <> nil;
 end;
 
-method XmlElement.GetElementsByTagName(aLocalName: String; NamespaceUri: String): array of XmlNode;
+method XmlElement.GetElementsByTagName(aLocalName: String; NamespaceUri: String): array of XmlElement;
 begin
   {$IF COOPER}
-  exit ConvertNodeList(Element.GetElementsByTagNameNs(NamespaceUri, aLocalName));
+  var items := Element.GetElementsByTagNameNs(NamespaceUri, aLocalName);
+  if items = nil then
+    exit [];
+  
+  result := new XmlElement[items.length];
+  for i: Integer := 0 to items.length-1 do
+    result[i] := new XmlElement(items.Item(i));
   {$ELSEIF ECHOES}
   var ns: XNamespace := System.String(NamespaceUri);
-  var items := Element.Descendants(ns + aLocalName).ToArray;
-  result := new XmlNode[items.Length];
+  var items := Element.DescendantsAndSelf(ns + aLocalName).ToArray;
+  result := new XmlElement[items.Length];
   for I: Integer := 0 to items.Length - 1 do
-    result[I] := CreateCompatibleNode(items[I]);
+    result[I] := new XmlElement(items[I]);
   {$ELSEIF NOUGAT}
   exit new XmlNodeList(self).ElementsByName(aLocalName, NamespaceUri);
   {$ENDIF}
 end;
 
-method XmlElement.GetElementsByTagName(aName: String): array of XmlNode;
+method XmlElement.GetElementsByTagName(aName: String): array of XmlElement;
 begin
   {$IF COOPER}
-  exit ConvertNodeList(Element.GetElementsByTagName(aName));
+  var items := Element.GetElementsByTagName(aName);
+  if items = nil then
+    exit [];
+  
+  result := new XmlElement[items.length];
+  for i: Integer := 0 to items.length-1 do
+    result[i] := new XmlElement(items.Item(i));
   {$ELSEIF ECHOES}
-  var items := Element.Descendants(System.String(aName)).ToArray;
-  result := new XmlNode[items.Length];
+  var items := Element.DescendantsAndSelf(System.String(aName)).ToArray;
+  result := new XmlElement[items.Length];
   for I: Integer := 0 to items.Length - 1 do
-    result[I] := CreateCompatibleNode(items[I]);
+    result[I] := new XmlElement(items[I]);
   {$ELSEIF NOUGAT}
   exit new XmlNodeList(self).ElementsByName(aName);
   {$ENDIF}
