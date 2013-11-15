@@ -2,6 +2,9 @@
 
 interface
 
+uses
+  RemObjects.Oxygene.Sugar;
+
 type
   XmlTestData = public static class
   public
