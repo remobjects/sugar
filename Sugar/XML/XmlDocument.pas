@@ -84,6 +84,13 @@ type
     property Version: String read write;
   end;
 
+  {$IF WINDOWS_PHONE OR NETFX_CORE}
+  UTF8StringWriter = private class (System.IO.StringWriter)
+  public
+    property Encoding: System.Text.Encoding read System.Text.Encoding.UTF8; override;
+  end;
+  {$ENDIF}
+
 implementation
 
 {$IF COOPER}
@@ -382,10 +389,11 @@ end;
 class method XmlDocument.FromFile(aFile: File): XmlDocument;
 begin
   {$IF WINDOWS_PHONE OR NETFX_CORE}
-  var document := XDocument.Load(aFile.Path, LoadOptions.SetBaseUri);
+  var reader := new System.IO.StringReader(aFile.ReadText);
+  var document := XDocument.Load(reader, LoadOptions.SetBaseUri);
   {$ELSE}
-  var document := XDocument.Load(System.String(aFile), LoadOptions.SetBaseUri);
-  {$ENDIF}  
+  var document := XDocument.Load(System.String(aFile), LoadOptions.SetBaseUri);  
+  {$ENDIF}    
   result := new XmlDocument(document);
 end;
 
@@ -434,7 +442,7 @@ begin
 
   {$IF WINDOWS_PHONE OR NETFX_CORE}
   var sb := new StringBuilder;
-  var writer := new System.IO.StringWriter(sb);
+  var writer := new UTF8StringWriter(sb);
   Doc.Save(writer);
   aFile.WriteText(sb.ToString);
   {$ELSEIF ECHOES}
