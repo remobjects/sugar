@@ -128,6 +128,7 @@
     <Compile Include="..\..\Tests\UserSettings.pas" />
     <Compile Include="..\..\Tests\Math.pas" />
     <Compile Include="..\..\Tests\Xml\CharacterData.pas" />
+    <Compile Include="..\..\Tests\Xml\Document.pas" />
     <Compile Include="..\..\Tests\Xml\DocumentType.pas" />
     <Compile Include="..\..\Tests\Xml\Element.pas" />
     <Compile Include="..\..\Tests\Xml\Node.pas" />
@@ -210,7 +211,7 @@
     <VisualStudio>
       <FlavorProperties Guid="{c089c8c0-30e0-4e22-80c0-ce093f111a43}" User="">
         <SilverlightMobileCSProjectFlavor>
-          <FullDeploy>False</FullDeploy>
+          <FullDeploy>True</FullDeploy>
           <DebuggerType>Managed</DebuggerType>
           <DebuggerAgentType>Managed</DebuggerAgentType>
           <Tombstone>False</Tombstone>
