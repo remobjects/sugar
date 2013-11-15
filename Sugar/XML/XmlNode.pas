@@ -39,7 +39,6 @@ type
     constructor(aNode: XObject);
   public
     property Name: String read Node.GetType.Name; virtual;
-    property URI: String read Node.BaseUri; 
     property Value: String read nil write SetValue; virtual;
     property LocalName: String read Name; virtual;
     property NodeType: XmlNodeType read XmlNodeType.None; virtual;
@@ -74,7 +73,6 @@ type
     constructor(aNode: Node);
   public
     property Name: String read GetName; virtual;
-    property URI: String read iif(Node.BaseUri = nil, "", Node.BaseURI);
     property Value: String read Node.TextContent write SetValue; virtual;
     property LocalName: String read iif(Node.LocalName = nil, Node.NodeName, Node.LocalName); virtual;
     property NodeType: XmlNodeType read XmlNodeType.None; virtual;
@@ -117,7 +115,6 @@ type
     constructor(aNode: ^libxml.__struct__xmlNode; aDocument: XmlDocument);
   public
     property Name: String read GetName; virtual;
-    property URI: String read GetURI; virtual;
     property Value: String read GetValue write SetValue; virtual;
     property LocalName: String read GetLocalName; virtual;
     property NodeType: XmlNodeType read XmlNodeType.None; virtual;
