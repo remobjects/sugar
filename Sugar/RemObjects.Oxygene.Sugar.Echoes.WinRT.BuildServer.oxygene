@@ -99,7 +99,7 @@
     <None Include="Crypto\Digest.pas" />
     <Compile Include="DateTime.pas" />
     <Compile Include="DateFormatter.pas" />
-    <None Include="HTTP.pas" />
+    <Compile Include="HTTP.pas" />
     <Compile Include="IO\File.pas" />
     <Compile Include="IO\Folder.pas" />
     <Compile Include="Random.pas" />

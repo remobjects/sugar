@@ -49,6 +49,7 @@
     <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
     <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
     <DefineConstants>IOS</DefineConstants>
+    <SimulatorArchitectures>i386</SimulatorArchitectures>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Foundation.fx" />
