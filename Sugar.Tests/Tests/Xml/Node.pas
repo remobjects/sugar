@@ -18,7 +18,6 @@ type
     method Setup; override;
 
     method Name;
-    method URI;
     method Value;
     method LocalName;
     method Document;
@@ -52,20 +51,6 @@ begin
   lValue := lValue.NextSibling.FirstChild;
   Assert.IsNotNull(lValue);
   Assert.CheckString("#text", lValue.Name);
-end;
-
-method NodeTest.URI;
-begin
-  Assert.CheckString("", Data.URI); //no base uri when loading from string
-  var File := RemObjects.Oxygene.Sugar.IO.Folder.UserLocal.CreateFile("test.xml", true);
-  try
-    Doc.Save(File);
-    Doc := XmlDocument.FromFile(File);
-    Data := Doc.FirstChild;
-    Assert.CheckBool(false, String.IsNullOrEmpty(Data.URI));
-  finally
-    File.Delete;
-  end;
 end;
 
 method NodeTest.Value;
