@@ -20,6 +20,10 @@ type
 
     class operator Add(aStringA: String; aStringB: String): String;
     class operator Implicit(Value: Char): String;
+    class operator Greater(Value1, Value2: String): Boolean;
+    class operator Less(Value1, Value2: String): Boolean;
+    class operator GreaterOrEqual(Value1, Value2: String): Boolean;
+    class operator LessOrEqual(Value1, Value2: String): Boolean;
 
     class method Format(aFormat: String; params aParams: array of Object): String;
     class method CharacterIsWhiteSpace(aChar: Char): Boolean;
@@ -59,6 +63,10 @@ type
 
     class operator Add(aStringA: String; aStringB: String): String;
     class operator Implicit(Value: Char): String;
+    class operator Greater(Value1, Value2: String): Boolean;
+    class operator Less(Value1, Value2: String): Boolean;
+    class operator GreaterOrEqual(Value1, Value2: String): Boolean;
+    class operator LessOrEqual(Value1, Value2: String): Boolean;
 
     class method Format(aFormat: String; params aParams: array of Object): String;    
     class method CharacterIsWhiteSpace(aChar: Char): Boolean;
@@ -98,6 +106,10 @@ type
 
     class operator Add(aStringA: String; aStringB: String): String;
     class operator Implicit(Value: Char): String;
+    class operator Greater(Value1, Value2: String): Boolean;
+    class operator Less(Value1, Value2: String): Boolean;
+    class operator GreaterOrEqual(Value1, Value2: String): Boolean;
+    class operator LessOrEqual(Value1, Value2: String): Boolean;
 
     class method Format(aFormat: String; params aParams: array of Object): String;
     class method CharacterIsWhiteSpace(aChar: Char): Boolean;
@@ -149,6 +161,50 @@ begin
   result := System.String(aStringA)+System.String(aStringB);
   {$ELSEIF NOUGAT}
   result := Foundation.NSString(aStringA).stringByAppendingString(aStringB);
+  {$ENDIF}
+end;
+
+class operator String.Greater(Value1: String; Value2: String): Boolean;
+begin
+  {$IF COOPER}
+  result := java.lang.String(Value1).compareTo(java.lang.String(Value2)) > 0;
+  {$ELSEIF ECHOES}
+  result := System.String(Value1).CompareTo(System.String(Value2)) > 0;
+  {$ELSEIF NOUGAT}
+  result := Foundation.NSString(Value1).isGreaterThan(Value2);
+  {$ENDIF}
+end;
+
+class operator String.Less(Value1: String; Value2: String): Boolean;
+begin
+  {$IF COOPER}
+  result := java.lang.String(Value1).compareTo(java.lang.String(Value2)) < 0;
+  {$ELSEIF ECHOES}
+  result := System.String(Value1).CompareTo(System.String(Value2)) < 0;
+  {$ELSEIF NOUGAT}
+  result := Foundation.NSString(Value1).isLessThan(Value2);
+  {$ENDIF}
+end;
+
+class operator String.GreaterOrEqual(Value1: String; Value2: String): Boolean;
+begin
+  {$IF COOPER}
+  result := java.lang.String(Value1).compareTo(java.lang.String(Value2)) >= 0;
+  {$ELSEIF ECHOES}
+  result := System.String(Value1).CompareTo(System.String(Value2)) >= 0;
+  {$ELSEIF NOUGAT}
+  result := Foundation.NSString(Value1).isGreaterThanOrEqualTo(Value2);
+  {$ENDIF}
+end;
+
+class operator String.LessOrEqual(Value1: String; Value2: String): Boolean;
+begin
+  {$IF COOPER}
+  result := java.lang.String(Value1).compareTo(java.lang.String(Value2)) <= 0;
+  {$ELSEIF ECHOES}
+  result := System.String(Value1).CompareTo(System.String(Value2)) <= 0;
+  {$ELSEIF NOUGAT}
+  result := Foundation.NSString(Value1).isLessThanOrEqualTo(Value2);
   {$ENDIF}
 end;
 
