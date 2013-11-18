@@ -171,7 +171,7 @@ begin
   {$ELSEIF ECHOES}
   result := System.String(Value1).CompareTo(System.String(Value2)) > 0;
   {$ELSEIF NOUGAT}
-  result := Foundation.NSString(Value1).isGreaterThan(Value2);
+  result := Foundation.NSString(Value1).compare(Value2) > 0;
   {$ENDIF}
 end;
 
@@ -182,7 +182,7 @@ begin
   {$ELSEIF ECHOES}
   result := System.String(Value1).CompareTo(System.String(Value2)) < 0;
   {$ELSEIF NOUGAT}
-  result := Foundation.NSString(Value1).isLessThan(Value2);
+  result := Foundation.NSString(Value1).compare(Value2) < 0;
   {$ENDIF}
 end;
 
@@ -193,7 +193,7 @@ begin
   {$ELSEIF ECHOES}
   result := System.String(Value1).CompareTo(System.String(Value2)) >= 0;
   {$ELSEIF NOUGAT}
-  result := Foundation.NSString(Value1).isGreaterThanOrEqualTo(Value2);
+  result := Foundation.NSString(Value1).compare(Value2) >= 0;
   {$ENDIF}
 end;
 
@@ -204,7 +204,7 @@ begin
   {$ELSEIF ECHOES}
   result := System.String(Value1).CompareTo(System.String(Value2)) <= 0;
   {$ELSEIF NOUGAT}
-  result := Foundation.NSString(Value1).isLessThanOrEqualTo(Value2);
+  result := Foundation.NSString(Value1).compare(Value2) <= 0;
   {$ENDIF}
 end;
 
