@@ -113,7 +113,7 @@ end;
 
 method Binary.ReadBytes(aLength: Integer): array of Byte;
 begin
-  result := ReadRangeOfBytes(Range.MakeRange(0, Math.MinInt(aLength, fData.size)));
+  result := ReadRangeOfBytes(Range.MakeRange(0, Math.Min(aLength, fData.size)));
 end;
 
 method Binary.Subdata(Range: Range): Binary;
@@ -175,7 +175,7 @@ end;
 
 method Binary.ReadBytes(aLength: Integer): array of Byte;
 begin
-  result := ReadRangeOfBytes(Range.MakeRange(0, Math.MinInt(aLength, fData.Length)));
+  result := ReadRangeOfBytes(Range.MakeRange(0, Math.Min(aLength, fData.Length)));
 end;
 
 method Binary.Subdata(Range: Range): Binary;
@@ -225,7 +225,7 @@ end;
 
 method Binary.ReadBytes(aLength: Integer): array of Byte;
 begin
-  result := ReadRangeOfBytes(Range.MakeRange(0, Math.MinInt(aLength, mapped.Length)));
+  result := ReadRangeOfBytes(Range.MakeRange(0, Math.Min(aLength, mapped.Length)));
 end;
 
 method Binary.WriteBytes(aData: array of Byte; aLength: Integer);

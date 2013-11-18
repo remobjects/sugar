@@ -7,9 +7,9 @@ type
   {$IF COOPER}
   Math = public class mapped to java.lang.Math
   public
-    class method AbsDouble(d: Double): Double; mapped to abs(d);
-    class method AbsInt64(i: Int64): Int64;
-    class method AbsInt(i: Integer): Integer;
+    class method Abs(d: Double): Double; mapped to abs(d);
+    class method Abs(i: Int64): Int64;
+    class method Abs(i: Integer): Integer;
     class method Acos(d: Double): Double; mapped to acos(d);
     class method Asin(d: Double): Double; mapped to asin(d);
     class method Atan(d: Double): Double; mapped to atan(d);
@@ -22,12 +22,12 @@ type
     class method IEEERemainder(x, y: Double): Double; mapped to IEEEremainder(x, y); 
     class method Log(d: Double): Double; mapped to log(d);
     class method Log10(d: Double): Double; mapped to log10(d);
-    class method MaxDouble(a,b: Double): Double; mapped to max(a,b);   
-    class method MaxInt(a,b: Integer): Integer; mapped to max(a,b);   
-    class method MaxInt64(a,b: Int64): Int64; mapped to max(a,b);   
-    class method MinDouble(a,b: Double): Double; mapped to min(a,b);
-    class method MinInt(a,b: Integer): Integer; mapped to min(a,b);
-    class method MinInt64(a,b: Int64): Int64; mapped to min(a,b);
+    class method Max(a,b: Double): Double; mapped to max(a,b);   
+    class method Max(a,b: Integer): Integer; mapped to max(a,b);   
+    class method Max(a,b: Int64): Int64; mapped to max(a,b);   
+    class method Min(a,b: Double): Double; mapped to min(a,b);
+    class method Min(a,b: Integer): Integer; mapped to min(a,b);
+    class method Min(a,b: Int64): Int64; mapped to min(a,b);
     class method Pow(x, y: Double): Double; mapped to pow(x,y);
     class method Round(a: Double): Double;
     class method RoundToInt(a: Double): Integer;
@@ -42,9 +42,9 @@ type
   {$IF ECHOES}
   Math = public class mapped to System.Math
   public    
-    class method AbsDouble(d: Double): Double; mapped to Abs(d);
-    class method AbsInt64(i: Int64): Int64; mapped to Abs(i);
-    class method AbsInt(i: Integer): Integer; mapped to Abs(i);
+    class method Abs(d: Double): Double; mapped to Abs(d);
+    class method Abs(i: Int64): Int64; mapped to Abs(i);
+    class method Abs(i: Integer): Integer; mapped to Abs(i);
     class method Acos(d: Double): Double; mapped to Acos(d);
     class method Asin(d: Double): Double; mapped to Asin(d);
     class method Atan(d: Double): Double; mapped to Atan(d);
@@ -57,12 +57,12 @@ type
     class method IEEERemainder(x, y: Double): Double; mapped to IEEERemainder(x, y); 
     class method Log(d: Double): Double; mapped to Log(d);
     class method Log10(d: Double): Double; mapped to Log10(d);
-    class method MaxDouble(a,b: Double): Double; mapped to Max(a,b);   
-    class method MaxInt(a,b: Integer): Integer; mapped to Max(a,b);   
-    class method MaxInt64(a,b: Int64): Int64; mapped to Max(a,b);   
-    class method MinDouble(a,b: Double): Double; mapped to Min(a,b);
-    class method MinInt(a,b: Integer): Integer; mapped to Min(a,b);
-    class method MinInt64(a,b: Int64): Int64; mapped to Min(a,b);
+    class method Max(a,b: Double): Double; mapped to Max(a,b);   
+    class method Max(a,b: Integer): Integer; mapped to Max(a,b);   
+    class method Max(a,b: Int64): Int64; mapped to Max(a,b);   
+    class method Min(a,b: Double): Double; mapped to Min(a,b);
+    class method Min(a,b: Integer): Integer; mapped to Min(a,b);
+    class method Min(a,b: Int64): Int64; mapped to Min(a,b);
     class method Pow(x, y: Double): Double; mapped to Pow(x,y);
     class method Round(a: Double): Double; mapped to Round(a);
     class method RoundToInt(a: Double): Integer;
@@ -75,11 +75,11 @@ type
     class method Truncate(d: Double): Double; mapped to Truncate(d);
   {$ENDIF}
   {$IF NOUGAT}
-  Math = public class
+  Math = public class mapped to Object
   public    
-    class method AbsDouble(value: Double): Double;
-    class method AbsInt64(i: Int64): Int64; 
-    class method AbsInt(i: Integer): Integer; 
+    class method Abs(value: Double): Double;
+    class method Abs(i: Int64): Int64; 
+    class method Abs(i: Integer): Integer; 
     class method Acos(d: Double): Double;
     class method Asin(d: Double): Double;
     class method Atan(d: Double): Double;
@@ -92,12 +92,12 @@ type
     class method IEEERemainder(x, y: Double): Double; 
     class method Log(a: Double): Double;
     class method Log10(a: Double): Double;
-    class method MaxDouble(a,b: Double): Double;    
-    class method MaxInt(a,b: Integer): Integer;    
-    class method MaxInt64(a,b: Int64): Int64;  
-    class method MinDouble(a,b: Double): Double;
-    class method MinInt(a,b: Integer): Integer;
-    class method MinInt64(a,b: Int64): Int64; 
+    class method Max(a,b: Double): Double;    
+    class method Max(a,b: Integer): Integer;    
+    class method Max(a,b: Int64): Int64;  
+    class method Min(a,b: Double): Double;
+    class method Min(a,b: Integer): Integer;
+    class method Min(a,b: Int64): Int64; 
     class method Pow(x, y: Double): Double;
     class method Round(a: Double): Double;
     class method RoundToInt(a: Double): Integer;
@@ -186,7 +186,7 @@ begin
   exit iif(d < 0, mapped.ceil(d), mapped.floor(d));
 end;
 
-class method Math.AbsInt64(i: Int64): Int64;
+class method Math.Abs(i: Int64): Int64;
 begin
   if i = Consts.MinInt64 then
     raise new SugarArgumentException("Value can not equals minimum value of Int64");
@@ -194,7 +194,7 @@ begin
   exit mapped.abs(i);
 end;
 
-class method Math.AbsInt(i: Integer): Integer;
+class method Math.Abs(i: Integer): Integer;
 begin
   if i = Consts.MinInteger then
     raise new SugarArgumentException("Value can not equals minimum value of Int32");
@@ -282,7 +282,7 @@ begin
   exit rtl.atan2(x,y);   
 end;
 
-class method Math.AbsDouble(value: Double): Double;
+class method Math.Abs(value: Double): Double;
 begin
   exit rtl.fabs(value);   
 end;
@@ -312,12 +312,12 @@ begin
   exit rtl.log10(a);   
 end;
 
-class method Math.MaxInt64(a,b: Int64): Int64;
+class method Math.Max(a,b: Int64): Int64;
 begin
   exit iif(a > b, a, b);   
 end;
 
-class method Math.MinInt64(a,b: Int64): Int64;
+class method Math.Min(a,b: Int64): Int64;
 begin
   exit iif(a < b, a, b);   
 end;
@@ -362,7 +362,7 @@ begin
   exit rtl.trunc(d);  
 end;
 
-class method Math.AbsInt64(i: Int64): Int64;
+class method Math.Abs(i: Int64): Int64;
 begin
   if i = Consts.MinInt64 then
     raise new SugarArgumentException("Value can not equals minimum value of Int64");
@@ -370,7 +370,7 @@ begin
   exit rtl.labs(i);
 end;
 
-class method Math.AbsInt(i: Integer): Integer;
+class method Math.Abs(i: Integer): Integer;
 begin
   if i = Consts.MinInteger then
     raise new SugarArgumentException("Value can not equals minimum value of Int32");
@@ -378,7 +378,7 @@ begin
   exit rtl.abs(i);
 end;
 
-class method Math.MaxDouble(a: Double; b: Double): Double;
+class method Math.Max(a: Double; b: Double): Double;
 begin
   if Consts.IsNaN(a) or Consts.IsNaN(b) then
     exit Consts.NaN;
@@ -386,12 +386,12 @@ begin
   exit iif(a > b, a, b);
 end;
 
-class method Math.MaxInt(a: Integer; b: Integer): Integer;
+class method Math.Max(a: Integer; b: Integer): Integer;
 begin
   exit iif(a > b, a, b);
 end;
 
-class method Math.MinDouble(a: Double; b: Double): Double;
+class method Math.Min(a: Double; b: Double): Double;
 begin
   if Consts.IsNaN(a) or Consts.IsNaN(b) then
     exit Consts.NaN;
@@ -399,7 +399,7 @@ begin
   exit iif(a < b, a, b);
 end;
 
-class method Math.MinInt(a: Integer; b: Integer): Integer;
+class method Math.Min(a: Integer; b: Integer): Integer;
 begin
   exit iif(a < b, a, b);
 end;

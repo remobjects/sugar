@@ -51,33 +51,33 @@ implementation
 
 method MathTest.AbsDouble;
 begin
-  Assert.CheckDouble(1.1, Math.AbsDouble(1.1));
-  Assert.CheckDouble(1.1, Math.AbsDouble(-1.1));
-  Assert.CheckDouble(0, Math.AbsDouble(0));
-  Assert.CheckDouble(Consts.MaxDouble, Math.AbsDouble(Consts.MaxDouble));
-  Assert.CheckDouble(Consts.MaxDouble, Math.AbsDouble(Consts.MinDouble));
-  Assert.CheckBool(true, Consts.IsInfinity(Math.AbsDouble(Consts.PositiveInfinity)));
-  Assert.CheckBool(true, Consts.IsInfinity(Math.AbsDouble(Consts.NegativeInfinity)));
-  Assert.CheckBool(true, Consts.IsNaN(Math.AbsDouble(Consts.NaN)));
+  Assert.CheckDouble(1.1, Math.Abs(1.1));
+  Assert.CheckDouble(1.1, Math.Abs(-1.1));
+  Assert.CheckDouble(0, Math.Abs(0));
+  Assert.CheckDouble(Consts.MaxDouble, Math.Abs(Consts.MaxDouble));
+  Assert.CheckDouble(Consts.MaxDouble, Math.Abs(Consts.MinDouble));
+  Assert.CheckBool(true, Consts.IsInfinity(Math.Abs(Consts.PositiveInfinity)));
+  Assert.CheckBool(true, Consts.IsInfinity(Math.Abs(Consts.NegativeInfinity)));
+  Assert.CheckBool(true, Consts.IsNaN(Math.Abs(Consts.NaN)));
 end;
 
 method MathTest.AbsInt64;
 begin
   {$WARNING Disable due to iOS 7 bug}
-  //Assert.CheckInt64(42, Math.AbsInt64(42));
-  //Assert.CheckInt64(42, Math.AbsInt64(-42));
-  //Assert.CheckInt64(0, Math.AbsInt64(0));
-  //Assert.CheckInt64(Consts.MaxInt64, Math.AbsInt64(Consts.MaxInt64));
-  //Assert.IsException(->Math.AbsInt64(Consts.MinInt64));  
+  //Assert.CheckInt64(42, Math.Abs(42));
+  //Assert.CheckInt64(42, Math.Abs(-42));
+  //Assert.CheckInt64(0, Math.Abs(0));
+  //Assert.CheckInt64(Consts.MaxInt64, Math.Abs(Consts.MaxInt64));
+  //Assert.IsException(->Math.Abs(Consts.MinInt64));  
 end;
 
 method MathTest.AbsInt;
 begin
-  Assert.CheckInt(42, Math.AbsInt(42));
-  Assert.CheckInt(42, Math.AbsInt(-42));
-  Assert.CheckInt(0, Math.AbsInt(0));
-  Assert.CheckInt(Consts.MaxInteger, Math.AbsInt(Consts.MaxInteger));
-  Assert.IsException(->Math.AbsInt(Consts.MinInteger));
+  Assert.CheckInt(42, Math.Abs(42));
+  Assert.CheckInt(42, Math.Abs(-42));
+  Assert.CheckInt(0, Math.Abs(0));
+  Assert.CheckInt(Consts.MaxInteger, Math.Abs(Consts.MaxInteger));
+  Assert.IsException(->Math.Abs(Consts.MinInteger));
 end;
 
 method MathTest.Acos;
@@ -203,51 +203,51 @@ end;
 
 method MathTest.MaxDouble;
 begin
-  Assert.CheckDouble(1.19, Math.MaxDouble(1.11, 1.19));
-  Assert.CheckDouble(0, Math.MaxDouble(0, -1));
-  Assert.CheckDouble(-1.11, Math.MaxDouble(-1.11, -1.19));
-  Assert.CheckDouble(Consts.MaxDouble, Math.MaxDouble(Consts.MaxDouble, Consts.MinDouble));
-  Assert.CheckBool(true, Consts.IsPositiveInfinity(Math.MaxDouble(Consts.PositiveInfinity, Consts.NegativeInfinity)));
-  Assert.CheckBool(true, Consts.IsNaN(Math.MaxDouble(Consts.NaN, 1)));
-  Assert.CheckBool(true, Consts.IsNaN(Math.MaxDouble(1, Consts.NaN)));
+  Assert.CheckDouble(1.19, Math.Max(1.11, 1.19));
+  Assert.CheckDouble(0, Math.Max(0, -1));
+  Assert.CheckDouble(-1.11, Math.Max(-1.11, -1.19));
+  Assert.CheckDouble(Consts.MaxDouble, Math.Max(Consts.MaxDouble, Consts.MinDouble));
+  Assert.CheckBool(true, Consts.IsPositiveInfinity(Math.Max(Consts.PositiveInfinity, Consts.NegativeInfinity)));
+  Assert.CheckBool(true, Consts.IsNaN(Math.Max(Consts.NaN, 1)));
+  Assert.CheckBool(true, Consts.IsNaN(Math.Max(1, Consts.NaN)));
 end;
 
 method MathTest.MaxInt;
 begin
-  Assert.CheckInt(5, Math.MaxInt(5, 4));
-  Assert.CheckInt(-4, Math.MaxInt(-5, -4));
-  Assert.CheckInt(Consts.MaxInteger, Math.MaxInt(Consts.MaxInteger, Consts.MinInteger));
+  Assert.CheckInt(5, Math.Max(5, 4));
+  Assert.CheckInt(-4, Math.Max(-5, -4));
+  Assert.CheckInt(Consts.MaxInteger, Math.Max(Consts.MaxInteger, Consts.MinInteger));
 end;
 
 method MathTest.MaxInt64;
 begin
-  Assert.CheckInt64(5, Math.MaxInt64(5, 4));
-  Assert.CheckInt64(-4, Math.MaxInt64(-5, -4));
-  Assert.CheckInt64(Consts.MaxInt64, Math.MaxInt64(Consts.MaxInt64, Consts.MinInt64));
+  Assert.CheckInt64(5, Math.Max(5, 4));
+  Assert.CheckInt64(-4, Math.Max(-5, -4));
+  Assert.CheckInt64(Consts.MaxInt64, Math.Max(Consts.MaxInt64, Consts.MinInt64));
 end;
 
 method MathTest.MinDouble;
 begin
-  Assert.CheckDouble(1.1, Math.MinDouble(1.1, 1.11));
-  Assert.CheckDouble(-1.11, Math.MinDouble(-1.1, -1.11));
-  Assert.CheckDouble(Consts.MinDouble, Math.MinDouble(Consts.MinDouble, Consts.MaxDouble));
-  Assert.CheckBool(true, Consts.IsNegativeInfinity(Math.MinDouble(Consts.PositiveInfinity, Consts.NegativeInfinity)));
-  Assert.CheckBool(true, Consts.IsNaN(Math.MinDouble(Consts.NaN, 1)));
-  Assert.CheckBool(true, Consts.IsNaN(Math.MinDouble(1, Consts.NaN)));
+  Assert.CheckDouble(1.1, Math.Min(1.1, 1.11));
+  Assert.CheckDouble(-1.11, Math.Min(-1.1, -1.11));
+  Assert.CheckDouble(Consts.MinDouble, Math.Min(Consts.MinDouble, Consts.MaxDouble));
+  Assert.CheckBool(true, Consts.IsNegativeInfinity(Math.Min(Consts.PositiveInfinity, Consts.NegativeInfinity)));
+  Assert.CheckBool(true, Consts.IsNaN(Math.Min(Consts.NaN, 1)));
+  Assert.CheckBool(true, Consts.IsNaN(Math.Min(1, Consts.NaN)));
 end;
 
 method MathTest.MinInt;
 begin
-  Assert.CheckInt(5, Math.MinInt(5,6));
-  Assert.CheckInt(-6, Math.MinInt(-5, -6));
-  Assert.CheckInt(Consts.MinInteger, Math.MinInt(Consts.MinInteger, Consts.MaxInteger));
+  Assert.CheckInt(5, Math.Min(5,6));
+  Assert.CheckInt(-6, Math.Min(-5, -6));
+  Assert.CheckInt(Consts.MinInteger, Math.Min(Consts.MinInteger, Consts.MaxInteger));
 end;
 
 method MathTest.MinInt64;
 begin
-  Assert.CheckInt64(5, Math.MinInt64(5,6));
-  Assert.CheckInt64(-6, Math.MinInt64(-5, -6));
-  Assert.CheckInt64(Consts.MinInt64, Math.MinInt64(Consts.MinInt64, Consts.MaxInt64));
+  Assert.CheckInt64(5, Math.Min(5,6));
+  Assert.CheckInt64(-6, Math.Min(-5, -6));
+  Assert.CheckInt64(Consts.MinInt64, Math.Min(Consts.MinInt64, Consts.MaxInt64));
 end;
 
 method MathTest.Pow;
