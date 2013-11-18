@@ -42,6 +42,7 @@ type
     method StartsWith;
     method EndsWith;
     method ToByteArray;
+    method Operators;
   end;
 
 implementation
@@ -333,6 +334,38 @@ begin
   Assert.CheckInt(10, length(Actual));
   for i: Int32 := 0 to length(Expected) -1 do
     Assert.CheckInt(Expected[i], Actual[i]);
+end;
+
+method StringTest.Operators;
+begin
+  Data := "A";
+  var SugarString: String := "B";
+  var NativeString := "B";
+
+  Assert.CheckBool(true, Data < SugarString);
+  Assert.CheckBool(true, Data < NativeString);
+  Assert.CheckBool(true, SugarString > Data);
+  Assert.CheckBool(true, NativeString > Data);
+  
+  Assert.CheckBool(false, Data > SugarString);
+  Assert.CheckBool(false, Data > NativeString);
+  Assert.CheckBool(false, SugarString < Data);
+  Assert.CheckBool(false, NativeString < Data);
+
+  Assert.CheckBool(true, Data <= SugarString);
+  Assert.CheckBool(true, Data <= NativeString);
+  Assert.CheckBool(true, SugarString >= Data);
+  Assert.CheckBool(true, NativeString >= Data);
+  
+  Assert.CheckBool(false, Data >= SugarString);
+  Assert.CheckBool(false, Data >= NativeString);
+  Assert.CheckBool(false, SugarString <= Data);
+  Assert.CheckBool(false, NativeString <= Data);
+
+  Assert.CheckBool(false, Data = SugarString);
+  Assert.CheckBool(false, Data = NativeString);
+  Assert.CheckBool(false, SugarString = Data);
+  Assert.CheckBool(false, NativeString = Data);
 end;
 
 end.
