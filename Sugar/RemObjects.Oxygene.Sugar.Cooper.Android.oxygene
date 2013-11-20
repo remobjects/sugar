@@ -61,7 +61,6 @@
     <Compile Include="Collections\Queue.pas" />
     <Compile Include="Collections\Stack.pas" />
     <Compile Include="Color.pas" />
-    <Compile Include="Cooper\ArrayUtils.pas" />
     <Compile Include="Cooper\EnumerationSequence.pas" />
     <Compile Include="Cooper\LocaleUtils.pas" />
     <None Include="Crypto\Cipher.pas" />

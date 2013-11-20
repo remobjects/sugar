@@ -286,7 +286,7 @@ begin
 
   var Writer := new java.io.FileOutputStream(File, Append);
   try
-    Writer.write(ArrayUtils.ToSignedArray(Data));
+    Writer.write(Data);
   finally
     Writer.close;
   end;
@@ -317,7 +317,7 @@ begin
   try
     var Data := new SByte[Integer(File.length)];
     Reader.read(Data);
-    exit ArrayUtils.ToUnsignedArray(Data);
+    exit Data;
   finally
     Reader.close;
   end;
