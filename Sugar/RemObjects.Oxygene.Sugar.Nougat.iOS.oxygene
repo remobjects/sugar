@@ -53,6 +53,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Foundation.fx" />
+    <Reference Include="libNougat.fx" />
     <Reference Include="libxml2.fx" />
     <Reference Include="rtl.fx" />
     <Reference Include="UIKit.fx" />
@@ -69,7 +70,7 @@
     <None Include="Crypto\Digest.pas" />
     <Compile Include="DateTime.pas" />
     <Compile Include="DateFormatter.pas" />
-    <None Include="HTTP.pas" />
+    <Compile Include="HTTP.pas" />
     <Compile Include="IO\File.pas" />
     <Compile Include="IO\Folder.pas" />
     <Compile Include="Random.pas" />

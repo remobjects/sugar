@@ -52,6 +52,7 @@
     <Reference Include="AppKit.fx" />
     <Reference Include="CoreServices.fx" />
     <Reference Include="Foundation.fx" />
+    <Reference Include="libNougat.fx" />
     <Reference Include="libxml2.fx" />
     <Reference Include="rtl.fx" />
   </ItemGroup>
@@ -67,7 +68,7 @@
     <None Include="Crypto\Digest.pas" />
     <Compile Include="DateTime.pas" />
     <Compile Include="DateFormatter.pas" />
-    <None Include="HTTP.pas" />
+    <Compile Include="HTTP.pas" />
     <Compile Include="IO\File.pas" />
     <Compile Include="IO\Folder.pas" />
     <Compile Include="Random.pas" />
