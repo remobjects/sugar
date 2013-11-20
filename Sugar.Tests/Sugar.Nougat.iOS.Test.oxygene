@@ -45,9 +45,7 @@
   <ItemGroup>
     <Reference Include="CoreGraphics.fx" />
     <Reference Include="Foundation.fx" />
-    <Reference Include="libxml2.fx">
-      <HintPath>C:\Program Files\Embarcadero\Delphi Prism\Nougat\Libraries\libxml2\iOS\libxml2.fx</HintPath>
-    </Reference>
+    <Reference Include="libxml2.fx" />
     <Reference Include="UIKit.fx" />
     <Reference Include="rtl.fx" />
     <Reference Include="libNougat.fx" />
@@ -63,6 +61,7 @@
     <Compile Include="Tests\File.pas" />
     <Compile Include="Tests\Guid.pas" />
     <Compile Include="Tests\HashSet.pas" />
+    <Compile Include="Tests\HTTP.pas" />
     <Compile Include="Tests\List.pas" />
     <Compile Include="Tests\Math.pas" />
     <Compile Include="Tests\Queue.pas" />

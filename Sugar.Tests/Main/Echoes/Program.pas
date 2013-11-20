@@ -15,7 +15,7 @@ type
 implementation
 
 class method ConsoleApp.Main(args: array of System.String);
-begin
+begin  
   var results := TestRunner.RunAll;
   var output := new StringPrinter(results);
   System.Diagnostics.Debug.WriteLine(output.Result);

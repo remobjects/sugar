@@ -41,6 +41,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Foundation.fx" />
+    <Reference Include="libNougat.fx" />
     <Reference Include="libxml2.fx" />
     <Reference Include="rtl.fx" />
   </ItemGroup>
@@ -56,6 +57,7 @@
     <Compile Include="Tests\File.pas" />
     <Compile Include="Tests\Guid.pas" />
     <Compile Include="Tests\HashSet.pas" />
+    <Compile Include="Tests\HTTP.pas" />
     <Compile Include="Tests\List.pas" />
     <Compile Include="Tests\Math.pas" />
     <Compile Include="Tests\Queue.pas" />
