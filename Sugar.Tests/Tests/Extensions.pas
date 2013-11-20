@@ -43,7 +43,6 @@ end;
 
 method CodeClass.{$IF NOUGAT}isEqual(obj: id){$ELSE}&Equals(Obj: Object){$ENDIF}: Boolean;
 begin
-  //(obj is not CodeClass)
   if (obj = nil) or (not (obj is CodeClass)) then
     exit false;
   

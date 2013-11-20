@@ -26,10 +26,6 @@ type
     method TestToByteArray;
     method TestToString;
     method TestToStringFormat;
-    
-    //not implemented, need to check with Carlo about operators overloading on Nougat
-    method TestEqualOperator; empty;
-    method TestNotEqualOperator; empty;
   end;
 
 implementation
