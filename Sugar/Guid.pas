@@ -15,8 +15,6 @@ type
     class method NewGuid: Guid; mapped to randomUUID;
     class method Parse(Value: String): Guid;
     class method EmptyGuid: Guid;
-    class operator Equal(GuidA, GuidB: Guid): Boolean;
-    class operator NotEqual(GuidA, GuidB: Guid): Boolean;
     method ToByteArray: array of Byte;
     method ToString(Format: GuidFormat): String;
     method toString: java.lang.String; override;
@@ -32,8 +30,6 @@ type
     class method NewGuid: Guid; mapped to NewGuid;
     class method Parse(Value: String): Guid;
     class method EmptyGuid: Guid; mapped to Empty;
-    class operator Equal(GuidA, GuidB: Guid): Boolean;
-    class operator NotEqual(GuidA, GuidB: Guid): Boolean;
     method ToByteArray: array of Byte;
     method ToString(Format: GuidFormat): String;
     method ToString: System.String; override;
@@ -160,18 +156,6 @@ begin
   Exchange(Value, 6, 7);
 
   exit Value;
-end;
-{$ENDIF}
-
-{$IF COOPER OR ECHOES}
-class operator Guid.Equal(GuidA: Guid; GuidB: Guid): Boolean;
-begin
-  exit GuidA.Equals(GuidB);
-end;
-
-class operator Guid.NotEqual(GuidA, GuidB: Guid): Boolean;
-begin
-  exit not GuidA.Equals(GuidB);
 end;
 {$ENDIF}
 
