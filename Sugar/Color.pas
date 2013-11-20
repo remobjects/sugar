@@ -10,7 +10,7 @@ type
     class method colorWithRGBA256(aRed, aGreen, aBlue, aAlpha: Byte): {$IF WINDOWS_PHONE}System.Windows.Media.Color{$ELSEIF NETFX_CORE}Windows.UI.Color{$ELSE}System.Drawing.Color{$ENDIF}; 
   end;    
   {$ELSEIF COOPER}
-  Color = public class mapped to Int64
+  Color = public record mapped to Int64
   public
     class method colorWithRGBAPercentage(aRed, aGreen, aBlue, aAlpha: Single): Color;
     class method colorWithRGBA256(aRed, aGreen, aBlue, aAlpha: Byte): Color;
