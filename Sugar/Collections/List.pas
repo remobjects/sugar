@@ -264,10 +264,10 @@ begin
   if Match = nil then
     raise new SugarArgumentNullException("Match");
 
-  var lList := new List<T>();
+  result := new List<T>();
   for i: Integer := 0 to Count-1 do begin
     if Match(mapped[i]) then
-      lList.Add(mapped[i]);
+      result.Add(mapped[i]);
   end;
 end;
 
