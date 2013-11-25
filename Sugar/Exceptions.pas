@@ -40,8 +40,7 @@ type
   {$IF NOUGAT}
   SugarNSErrorException = public class(SugarException)
   public
-    method initWithError(aError: Foundation.NSError): id;
-    class method exceptionWithError(aError: Foundation.NSError): id;
+    constructor(Error: Foundation.NSError);
   end;
   {$ENDIF}
 
@@ -59,14 +58,9 @@ type
 implementation
 
 {$IF NOUGAT}
-method SugarNSErrorException.initWithError(aError: Foundation.NSError): id;
+constructor SugarNSErrorException(Error: Foundation.NSError);
 begin
-  result := inherited initWithName('NSError') reason(aError.description) userInfo(aError.userInfo);
-end;
-
-class method SugarNSErrorException.exceptionWithError(aError: Foundation.NSError): id;
-begin
-  result := inherited exceptionWithName('NSError') reason(aError.description) userInfo(aError.userInfo);
+  inherited constructor(Error.localizedDescription);
 end;
 {$ENDIF}
 
