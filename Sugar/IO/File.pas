@@ -435,7 +435,7 @@ begin
 
   var lError: Foundation.NSError := nil;
   if not Manager.copyItemAtPath(mapped) toPath(NewFile) error(var lError) then
-    raise SugarNSErrorException.exceptionWithError(lError); 
+    raise new SugarNSErrorException(lError);
 
   exit File(NewFile);
 end;
@@ -444,7 +444,7 @@ method File.Delete;
 begin
   var lError: NSError := nil;
   if not NSFileManager.defaultManager.removeItemAtPath(mapped) error(var lError) then
-    raise SugarNSErrorException.exceptionWithError(lError);
+    raise new SugarNSErrorException(lError);
 end;
 
 method File.Move(Destination: Folder): File;
@@ -462,7 +462,7 @@ begin
 
   var lError: Foundation.NSError := nil;
   if not Manager.moveItemAtPath(mapped) toPath(NewFile) error(var lError) then
-    raise SugarNSErrorException.exceptionWithError(lError); 
+    raise new SugarNSErrorException(lError);
 
   exit File(NewFile);
 end;
@@ -489,7 +489,7 @@ begin
   var lError: Foundation.NSError := nil;
   var lData: NSData := NSData.dataWithContentsOfFile(mapped) options(NSDataReadingOptions.NSDataReadingMappedIfSafe) error(var lError);
   if not assigned(lData) then 
-    raise SugarNSErrorException.exceptionWithError(lError);
+    raise new SugarNSErrorException(lError);
 
   result := new Byte[lData.length];
   lData.getBytes(result) length(lData.length);
@@ -500,7 +500,7 @@ begin
   var lError: Foundation.NSError := nil;
   result := Foundation.NSString.stringWithContentsOfFile(mapped) encoding(NSStringEncoding.NSUTF8StringEncoding) error(var lError);
   if not assigned(result) then 
-    raise SugarNSErrorException.exceptionWithError(lError); 
+    raise new SugarNSErrorException(lError);
 end;
 
 method File.WriteBytes(Data: array of Byte);
@@ -519,7 +519,7 @@ begin
 
   var lError: Foundation.NSError := nil;
   if not NSString(Content):writeToFile(mapped) atomically(true) encoding(NSStringEncoding.NSUTF8StringEncoding) error(var lError) then
-    raise SugarNSErrorException.exceptionWithError(lError); 
+    raise new SugarNSErrorException(lError);
 end;
 
 class method File.FromPath(Value: String): File;

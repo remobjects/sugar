@@ -425,7 +425,7 @@ method Folder.Delete;
 begin
   var lError: NSError := nil;
   if not NSFileManager.defaultManager.removeItemAtPath(mapped) error(var lError) then
-    raise SugarNSErrorException.exceptionWithError(lError);
+    raise new SugarNSErrorException(lError);
 end;
 
 method Folder.GetFile(FileName: String): File;
@@ -496,7 +496,7 @@ begin
 
   var lError: NSError := nil; 
   if not Manager.moveItemAtPath(mapped) toPath(NewFolderName) error(var lError) then
-    raise SugarNSErrorException.exceptionWithError(lError);
+    raise new SugarNSErrorException(lError);
 
   mapped := NewFolderName;
 end;
