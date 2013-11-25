@@ -11,46 +11,92 @@ uses
 type
   HTTPTest = public class (Testcase)
   public
-    method BeginDownloadAsString;
-    method BeginDownloadAsBinary;
-    method BeginDownloadAsXml;
+    method DownloadAsString;
+    method DownloadAsBinary;
+    method DownloadAsXml;
   end;
 
 implementation
 
-method HTTPTest.BeginDownloadAsString;
+method HTTPTest.DownloadAsString;
 begin
-  {$WARNING Disabled due to bug #65088}
-  {var U := Url.FromString("http://example.com");
-  var Data := HTTP.BeginDownloadAsString(U);
-  Assert.IsNotNull(Data);
-  Assert.CheckBool(true, Data.StartsWith("<!doctype html>"));
-  Assert.IsException(->assigned(HTTP.BeginDownloadAsString(nil)));
-  Assert.IsException(->assigned(HTTP.BeginDownloadAsString(Url.FromString("http://example.com/notexists"))));}
+  var Token: IAsyncToken := NewAsyncToken;
+  Http.DownloadStringAsync(Url.FromString("http://example.com"), Responce -> begin
+      try
+        Assert.IsNotNull(Responce);
+        Assert.CheckBool(false, Responce.IsFailed);
+        Assert.IsNull(Responce.Exception);
+        Assert.IsNotNull(Responce.Content);
+        Assert.CheckBool(true, Responce.Content.StartsWith("<!doctype html>"));
+        Token.Done;
+      except 
+        on E: Exception do
+          Token.Done(E);
+      end;
+    end);
+
+  Token.Wait;
+  Token := NewAsyncToken;
+
+  Http.DownloadStringAsync(Url.FromString("http://example.com/notexists"), Responce -> begin
+      try
+        Assert.IsNotNull(Responce);
+        Assert.CheckBool(true, Responce.IsFailed);
+        Assert.IsNotNull(Responce.Exception);
+        Assert.IsNull(Responce.Content);
+        Token.Done;
+      except 
+        on E: Exception do
+          Token.Done(E);
+      end;
+    end);
+
+  Token.Wait;
+  Assert.IsException(->Http.DownloadStringAsync(nil, x -> begin end));
+  Assert.IsException(->Http.DownloadStringAsync(Url.FromString("http://example.com"), nil));
 end;
 
-method HTTPTest.BeginDownloadAsBinary;
+method HTTPTest.DownloadAsBinary;
 begin
- { var U := Url.FromString("http://example.com");
-  var Data := HTTP.BeginDownloadAsBinary(U);
-  Assert.IsNotNull(Data);
-  var Line := String.FromByteArray(Data.Read(15));
-  Assert.CheckBool(true, Line.StartsWith("<!doctype html>"));
-  Assert.IsException(->assigned(HTTP.BeginDownloadAsBinary(nil)));
-  Assert.IsException(->assigned(HTTP.BeginDownloadAsBinary(Url.FromString("http://example.com/notexists"))));}
+  var Token: IAsyncToken := NewAsyncToken;
+  Http.DownloadBinaryAsync(Url.FromString("http://example.com"), Responce -> begin
+      try
+        Assert.IsNotNull(Responce);
+        Assert.CheckBool(false, Responce.IsFailed);
+        Assert.IsNull(Responce.Exception);
+        Assert.IsNotNull(Responce.Content);
+        var Line := String.FromByteArray(Responce.Content.Read(15));
+        Assert.CheckBool(true, Line.StartsWith("<!doctype html>"));
+        Token.Done;
+      except
+        on E: Exception do
+          Token.Done(E);
+      end;
+    end);
+
+  Token.Wait;
 end;
 
-method HTTPTest.BeginDownloadAsXml;
+method HTTPTest.DownloadAsXml;
 begin
- { var U := Url.FromString("http://blogs.remobjects.com/feed");
-  var Doc := HTTP.BeginDownloadAsXml(U);
-  Assert.IsNotNull(Doc);
-  var Root := Doc.Element["channel"];
-  Assert.IsNotNull(Root);
-  Assert.CheckString("RemObjects Blogs", Root.ChildNodes[0].Value);
-  
-  Assert.IsException(->assigned(HTTP.BeginDownloadAsXml(nil)));
-  Assert.IsException(->assigned(HTTP.BeginDownloadAsXml(Url.FromString("http://example.com/notexists"))));}
+  var Token: IAsyncToken := NewAsyncToken;
+  Http.DownloadXmlAsync(Url.FromString("http://images.apple.com/main/rss/hotnews/hotnews.rss"), Responce -> begin
+      try
+        Assert.IsNotNull(Responce);
+        Assert.CheckBool(false, Responce.IsFailed);
+        Assert.IsNull(Responce.Exception);
+        Assert.IsNotNull(Responce.Content);
+        var Root := Responce.Content.Element["channel"];
+        Assert.IsNotNull(Root);
+        Assert.CheckString("Apple Hot News", Root.ChildNodes[0].Value);
+        Token.Done;
+      except 
+        on E: Exception do
+          Token.Done(E);
+      end;
+    end);
+
+  Token.Wait;
 end;
 
 end.
