@@ -84,6 +84,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="AsyncToken.pas" />
     <Compile Include="Properties\AssemblyInfo.WP8.pas" />
     <Compile Include="Assert.pas" />
     <Compile Include="Exceptions.pas" />

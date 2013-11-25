@@ -62,6 +62,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AsyncToken.pas" />
     <Compile Include="Properties\AssemblyInfo.pas" />
     <Compile Include="Assert.pas" />
     <Compile Include="Exceptions.pas" />

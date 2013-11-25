@@ -49,6 +49,7 @@
     <Reference Include="rt.jar" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AsyncToken.pas" />
     <Compile Include="Assert.pas" />
     <Compile Include="Exceptions.pas" />
     <Compile Include="List.pas" />
