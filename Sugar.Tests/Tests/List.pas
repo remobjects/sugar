@@ -15,6 +15,7 @@ type
     Data: RemObjects.Oxygene.Sugar.Collections.List<String>;
   public
     method Setup; override;  
+    method Constructors;
     method &Add;
     method AddRange;
     method Clear;
@@ -47,6 +48,21 @@ begin
   Data.Add("One");
   Data.Add("Two");
   Data.Add("Three");
+end;
+
+method ListTest.Constructors;
+begin
+  var Actual := new RemObjects.Oxygene.Sugar.Collections.List<String>(Data);
+  Assert.IsNotNull(Actual);
+  Assert.CheckInt(3, Actual.Count);
+  Assert.CheckString("One", Actual[0]);
+
+  var Expected: array of String := ["A", "B", "C"];
+  Actual := new RemObjects.Oxygene.Sugar.Collections.List<String>(Expected);
+  Assert.IsNotNull(Actual);
+  Assert.CheckInt(3, Actual.Count);
+  for i: Integer := 0 to Actual.Count - 1 do
+    Assert.CheckString(Expected[i], Actual[i]);
 end;
 
 method ListTest.&Add;
