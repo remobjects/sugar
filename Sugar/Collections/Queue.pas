@@ -16,6 +16,8 @@ type
     method Dequeue: T; {$IF ECHOES}mapped to Dequeue;{$ENDIF}
     method ToArray: array of T; {$IF ECHOES}mapped to ToArray;{$ENDIF}
 
+    method ForEach(Action: Action<T>);
+
     property Count: Integer read {$IF ECHOES}mapped.Count{$ELSE}mapped.size{$ENDIF};
   end;
   {$ELSEIF NOUGAT}  
@@ -28,6 +30,7 @@ type
     method Enqueue(Item: T); mapped to addObject(Item);
     method Dequeue: T;
     method ToArray: array of T;
+    method ForEach(Action: Action<T>);
 
     property Count: Integer read mapped.count;
   end;
@@ -86,5 +89,15 @@ begin
     result[i] := mapped.objectAtIndex(i);
 end;
 {$ENDIF}
+
+method Queue<T>.ForEach(Action: Action<T>);
+begin
+  if Action = nil then
+    raise new RemObjects.Oxygene.Sugar.SugarArgumentNullException("Action");
+
+  var Items := ToArray;
+  for i: Integer := 0 to length(Items) - 1 do
+    Action(Items[i]);
+end;
 
 end.

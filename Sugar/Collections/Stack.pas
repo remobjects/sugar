@@ -17,6 +17,7 @@ type
     method Pop: T; mapped to Pop;
     method Push(Item: T);
     method ToArray: array of T; {$IF ECHOES}mapped to ToArray;{$ENDIF}
+    method ForEach(Action: Action<T>);
 
     property Count: Integer read {$IF ECHOES}mapped.Count{$ELSE}mapped.size{$ENDIF};
   end;
@@ -29,6 +30,7 @@ type
     method Pop: T;
     method Push(Item: T); mapped to addObject(Item);
     method ToArray: array of T;
+    method ForEach(Action: Action<T>);
 
     property Count: Integer read mapped.count;
   end;
@@ -82,5 +84,15 @@ begin
     result[mapped.count - i - 1] := mapped.objectAtIndex(i);
 end;
 {$ENDIF}
+
+method Stack<T>.ForEach(Action: Action<T>);
+begin
+  if Action = nil then
+    raise new SugarArgumentNullException("Action");
+
+  var Items := ToArray;
+  for i: Integer := 0 to length(Items) - 1 do
+    Action(Items[i]);
+end;
 
 end.

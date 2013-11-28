@@ -9,6 +9,32 @@ uses
   RemObjects.Oxygene.Sugar;
 
 type
+  KeyValue<T, U> = public class {$IF NOUGAT}mapped to KeyValue where T is class, T is INSCopying, U is class;{$ENDIF}
+  public
+    {$IF NOT NOUGAT}
+    constructor(aKey: T; aValue: U);
+    method &Equals(Obj: Object): Boolean; override;    
+    method {$IF COOPER}ToString: java.lang.String{$ELSEIF ECHOES}ToString: System.String{$ENDIF}; override;
+    method {$IF COOPER}hashCode: Integer{$ELSEIF ECHOES}GetHashCode: Integer{$ENDIF}; override;
+    {$ENDIF}
+
+    property Key: T {$IF NOUGAT}read mapped.Key;{$ELSE}read write; readonly;{$ENDIF}
+    property Value: U {$IF NOUGAT}read mapped.Value;{$ELSE}read write; readonly;{$ENDIF}
+  end;
+
+  {$IF NOUGAT}
+  KeyValue = public class
+  public
+    constructor(aKey: id; aValue: id);
+    method isEqual(obj: id): Boolean; override;
+    method description: Foundation.NSString; override;
+    method hash: Foundation.NSUInteger; override;
+
+    property Key: id read write; readonly;
+    property Value: id read write; readonly;
+  end;
+  {$ENDIF}
+
 {$IF ECHOES}
   Dictionary<T, U> = public class mapped to System.Collections.Generic.Dictionary<T,U>
   private
@@ -21,6 +47,8 @@ type
     method ContainsKey(Key: T): Boolean; mapped to ContainsKey(Key);
     method ContainsValue(Value: U): Boolean;
     method &Remove(Key: T): Boolean; mapped to &Remove(Key);
+
+    method ForEach(Action: Action<KeyValue<T,U>>);
 
     property Item[Key: T]: U read mapped[Key] write SetItem; default;
     property Keys: array of T read GetKeys;
@@ -46,6 +74,8 @@ type
     method ContainsValue(Value: U): Boolean;
     method &Remove(Key: T): Boolean;
 
+    method ForEach(Action: Action<KeyValue<T,U>>);
+
     property Item[Key: T]: U read GetItem write SetItem; default;
     property Keys: array of T read GetKeys;
     property Values: array of U read GetValues;
@@ -66,6 +96,8 @@ type
     method ContainsValue(Value: U): Boolean;
     method &Remove(Key: T): Boolean;
 
+    method ForEach(Action: Action<KeyValue<T,U>>);
+
     property Item[Key: T]: U read GetItem write SetItem; default;
     // 61584: Nougat: Support for "sequence of"
     property Keys: array of T read GetKeys;
@@ -75,6 +107,42 @@ type
 {$ENDIF}
 
 implementation
+
+{$IF NOT NOUGAT}
+constructor KeyValue<T,U>(aKey: T; aValue: U);
+begin
+  if aKey = nil then
+    raise new SugarArgumentNullException("Key");
+
+  if aValue = nil then
+    raise new SugarArgumentNullException("Value");
+
+  Key := aKey;
+  Value := aValue;  
+end;
+
+method KeyValue<T, U>.&Equals(Obj: Object): Boolean;
+begin
+  if Obj = nil then
+    exit false;
+
+  if not (Obj is KeyValue<T,U>) then
+    exit false;
+
+  var Item := KeyValue<T, U>(Obj);
+  exit Key.Equals(Item.Key) and Value.Equals(Item.Value);
+end;
+
+method KeyValue<T, U>.{$IF COOPER}hashCode: Integer{$ELSEIF ECHOES}GetHashCode: Integer{$ENDIF};
+begin
+  exit Key.GetHashCode + Value.GetHashCode;
+end;
+
+method KeyValue<T, U>.ToString: {$IF COOPER}java.lang.String{$ELSEIF ECHOES}System.String{$ENDIF};
+begin
+  exit String.Format("Key: {0} Value: {1}", Key, Value);
+end;
+{$ENDIF}
 
 {$IF COOPER}
 method Dictionary<T, U>.&Add(Key: T; Value: U);
@@ -189,6 +257,45 @@ begin
   exit Value.ToArray;
 end;
 {$ELSEIF NOUGAT}
+
+{ KeyValue }
+
+constructor KeyValue(aKey: id; aValue: id);
+begin
+  if aKey = nil then
+    raise new SugarArgumentNullException("Key");
+
+  if aValue = nil then
+    raise new SugarArgumentNullException("Value");
+
+  Key := aKey;
+  Value := aValue;
+end;
+
+method KeyValue.isEqual(obj: id): Boolean;
+begin
+  if Obj = nil then
+    exit false;
+
+  if not (Obj is KeyValue) then
+    exit false;
+
+  var Item := KeyValue(Obj);
+  exit Key.Equals(Item.Key) and Value.Equals(Item.Value);
+end;
+
+method KeyValue.description: Foundation.NSString;
+begin
+  exit String.Format("Key: {0} Value: {1}", Key.description, Value.description);
+end;
+
+method KeyValue.hash: Foundation.NSUInteger;
+begin
+  exit Key.hash + Value.hash;  
+end;
+
+{ Dictionary }
+
 method Dictionary<T, U>.ContainsKey(Key: T): Boolean;
 begin
   if Key = nil then
@@ -254,4 +361,15 @@ begin
     result[i] := mapped.allValues.objectAtIndex(i);
 end;
 {$ENDIF}
+
+method Dictionary<T, U>.ForEach(Action: Action<KeyValue<T, U>>);
+begin
+  if Action = nil then
+    raise new SugarArgumentNullException("Action");
+
+  var lKeys := self.Keys;
+  for i: Integer := 0 to length(lKeys) - 1 do
+    Action(new KeyValue<T,U>(lKeys[i], self.Item[lKeys[i]]));
+end;
+
 end.
