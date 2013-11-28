@@ -12,6 +12,10 @@ type
   private
     method SetItem(&Index: Integer; Value: T);
   public
+    constructor; mapped to constructor();
+    constructor(Items: List<T>);
+    constructor(anArray: array of T);
+
     method &Add(anItem: T);
     method AddRange(Items: List<T>);
     method Clear;
@@ -46,6 +50,33 @@ type
 
 
 implementation
+
+constructor List<T>(Items: List<T>);
+begin
+  if Items = nil then
+    raise new SugarArgumentNullException("Items");
+
+  {$IF COOPER}
+  result := new java.util.ArrayList<T>(Items);
+  {$ELSEIF ECHOES}
+  exit new System.Collections.Generic.List<T>(Items);
+  {$ELSEIF NOUGAT}
+  result := new Foundation.NSMutableArray withArray(Items);
+  {$ENDIF}
+end;
+
+constructor List<T>(anArray: array of T);
+begin
+  {$IF COOPER}
+  result := new java.util.ArrayList<T>(java.util.Arrays.asList(anArray));
+  {$ELSEIF ECHOES}
+  exit new System.Collections.Generic.List<T>(anArray);
+  {$ELSEIF NOUGAT}
+  result := new Foundation.NSMutableArray;
+  for i: Integer := 0 to length(anArray) - 1 do
+    result.Add(anArray[i]);
+  {$ENDIF}
+end;
 
 method List<T>.Add(anItem: T);
 begin
