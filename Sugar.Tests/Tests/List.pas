@@ -36,6 +36,7 @@ type
     method Count;
     method Item;
     method Enumerator;
+    method ForEach;
   end;
 
 implementation
@@ -284,6 +285,19 @@ begin
     Assert.CheckString(Expected[&Index], Item);
     inc(&Index);
   end;
+
+  Assert.CheckInt(3, &Index);
+end;
+
+method ListTest.ForEach;
+begin
+  var Expected: array of String := ["One", "Two", "Three"];
+  var &Index: Integer := 0;
+
+  Data.ForEach(x -> begin
+    Assert.CheckString(Expected[&Index], x);
+    &Index := &Index + 1;
+  end);
 
   Assert.CheckInt(3, &Index);
 end;

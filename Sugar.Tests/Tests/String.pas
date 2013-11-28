@@ -5,10 +5,6 @@ interface
 {$HIDE W0} //supress case-mismatch errors
 
 uses
-  {$IF NOUGAT}
-  {$WARNING Workaround for compiler bug #64218}
-  Foundation,
-  {$ENDIF}
   RemObjects.Oxygene.Sugar,
   RemObjects.Oxygene.Sugar.TestFramework;
 

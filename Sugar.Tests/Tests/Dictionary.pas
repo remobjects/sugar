@@ -24,6 +24,7 @@ type
     method Keys;
     method Values;
     method Count;
+    method ForEach;
   end;
 
 implementation
@@ -143,6 +144,27 @@ begin
   Assert.CheckInt(3, Data.Count);
   Data.Clear;
   Assert.CheckInt(0, Data.Count);
+end;
+
+method DictionaryTest.ForEach;
+begin
+  var Item1 := new KeyValue<String, String>("Key", "Value");
+  var Item2 := new KeyValue<String, String>("Key", "Value");
+  Assert.CheckBool(true, Item1.Equals(Item2));
+
+  var Expected := new RemObjects.Oxygene.Sugar.Collections.List<KeyValue<CodeClass, String>>;
+  Expected.Add(new KeyValue<CodeClass, String>(new CodeClass(1),"One"));
+  Expected.Add(new KeyValue<CodeClass, String>(new CodeClass(2),"Two"));
+  Expected.Add(new KeyValue<CodeClass, String>(new CodeClass(3),"Three"));
+
+  var &Index: Integer := 0;
+
+  Data.ForEach(x -> begin
+    Assert.CheckBool(true, Expected.Contains(x));
+    &Index := &Index + 1;
+  end);
+
+  Assert.CheckInt(3, &Index);
 end;
 
 end.

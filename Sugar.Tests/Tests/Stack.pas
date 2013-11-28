@@ -22,7 +22,7 @@ type
     method Pop;
     method Push;
     method ToArray;
-    method Enumerator;
+    method ForEach;
   end;
 
 implementation
@@ -99,19 +99,17 @@ begin
     Assert.CheckString(Expected[i], Values[i]);
 end;
 
-method StackTest.Enumerator;
+method StackTest.ForEach;
 begin
-  {$WARNING Disabled due to inability to create mapped iterators}
-
-  {var Expected: array of String := ["Three", "Two", "One"];
+  var Expected: array of String := ["Three", "Two", "One"];
   var &Index: Integer := 0;
 
-  for Item: String in Data do begin
-    Assert.CheckString(Expected[&Index], Item);
-    inc(&Index);
-  end;
+  Data.ForEach(x -> begin
+    Assert.CheckString(Expected[&Index], x);
+    &Index := &Index + 1;
+  end);
 
-  Assert.CheckInt(3, &Index);}
+  Assert.CheckInt(3, &Index);
 end;
 
 end.
