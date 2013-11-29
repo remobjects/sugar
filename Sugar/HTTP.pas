@@ -129,7 +129,7 @@ begin
     if Stream = nil then
       exit new HttpResponce<Binary>(new SugarException("Content is empty"));
 
-    var Content := Binary.Empty;
+    var Content := new Binary;
     var Buffer := new Byte[16 * 1024];
     var Readed: Integer := Stream.Read(Buffer, 0, Buffer.Length);
 
@@ -154,7 +154,7 @@ begin
       exit new HttpResponce<Binary>(new SugarException("Content is empty"));
 
 
-    exit new HttpResponce<Binary>(Binary.FromArray(Content));
+    exit new HttpResponce<Binary>(new Binary(Content));
   {$ELSEIF ECHOES}
   using lClient: System.Net.WebClient := new System.Net.WebClient() do begin
     var Content := lClient.DownloadData(anUrl);
@@ -165,7 +165,7 @@ begin
     if Content.Length = 0 then
       exit new HttpResponce<Binary>(new SugarException("Content is empty"));
 
-    exit new HttpResponce<Binary>(Binary.FromArray(Content));
+    exit new HttpResponce<Binary>(new Binary(Content));
   end;
   {$ELSEIF NOUGAT}
   var lError: NSError := nil;

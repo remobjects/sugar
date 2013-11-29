@@ -29,6 +29,10 @@ type
     property Data: System.IO.MemoryStream read fData;
   {$ENDIF}
   public
+    constructor; {$IF NOUGAT}mapped to constructor();{$ELSE}empty;{$ENDIF}
+    constructor(anArray: array of Byte);
+    constructor(Bin: Binary);    
+
     method Assign(aData: Binary);
     method Clear;
 
@@ -42,9 +46,6 @@ type
 
     method ToArray: array of Byte;
     property Length: Integer read {$IF COOPER}fData.size{$ELSEIF ECHOES}fData.Length{$ELSEIF NOUGAT}mapped.length{$ENDIF};
-
-    class method FromArray(aArray: array of Byte): Binary;
-    class method &Empty: Binary;
   end;
 
 implementation
@@ -57,6 +58,27 @@ begin
 end;
 
 { Binary }
+constructor Binary(anArray: array of Byte);
+begin
+  if anArray = nil then
+    raise new SugarArgumentNullException("Array");
+
+  {$IF COOPER OR ECHOES}
+  &Write(anArray, anArray.length);
+  {$ELSEIF NOUGAT}
+  exit NSMutableData.dataWithBytes(anArray) length(length(anArray)); 
+  {$ENDIF}  
+end;
+
+constructor Binary(Bin: Binary);
+begin
+  SugarArgumentNullException.RaiseIfNil(Bin, "Bin");
+  {$IF COOPER OR ECHOES}
+  Assign(Bin);
+  {$ELSEIF NOUGAT}
+  exit NSMutableData.dataWithData(Bin);
+  {$ENDIF} 
+end;
 
 method Binary.Assign(aData: Binary);
 begin
@@ -100,7 +122,7 @@ end;
 
 method Binary.Subdata(Range: Range): Binary;
 begin
-  exit Binary.FromArray(&Read(Range));
+  exit new Binary(&Read(Range));
 end;
 
 method Binary.Write(aData: array of Byte; aLength: Integer);
@@ -154,27 +176,6 @@ begin
   {$ELSEIF NOUGAT}
   mapped.setLength(0);
   {$ENDIF}  
-end;
-
-class method Binary.FromArray(aArray: array of Byte): Binary;
-begin
-  if aArray = nil then
-    raise new SugarArgumentNullException("Array");
-
-  {$IF COOPER}
-  result := new Binary;
-  result.Write(aArray, aArray.length);
-  {$ELSEIF ECHOES}
-  result := new Binary;
-  result.Write(aArray, aArray.Length);
-  {$ELSEIF NOUGAT}
-  exit NSMutableData.dataWithBytes(aArray) length(length(aArray)); 
-  {$ENDIF}  
-end;
-
-class method Binary.&Empty: Binary;
-begin
-  exit FromArray([]);
 end;
 
 end.
