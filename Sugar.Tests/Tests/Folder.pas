@@ -174,9 +174,9 @@ end;
 method FolderTest.FromPath;
 begin
   Assert.IsNotNull(Data.CreateFolder("Sample", true));
-  Assert.IsNotNull(Folder.FromPath(Data.Path +Folder.Separator+"Sample"));
-  Assert.IsException(->Folder.FromPath(Data.Path +Folder.Separator+"Unknown"));
-  Assert.IsException(->Folder.FromPath(nil));
+  Assert.IsNotNull(new Folder(Data.Path +Folder.Separator+"Sample"));
+  Assert.IsException(->new Folder(Data.Path +Folder.Separator+"Unknown"));
+  Assert.IsException(->new Folder(nil));
 end;
 
 method FolderTest.UserLocal;
@@ -188,7 +188,7 @@ method FolderTest.Path;
 begin
   Assert.CheckBool(false, String.IsNullOrEmpty(Data.Path));
   Assert.IsNotNull(Data.CreateFolder("Sample", true));
-  var Value := Folder.FromPath(Data.Path +Folder.Separator+"Sample");
+  var Value := new Folder(Data.Path +Folder.Separator+"Sample");
   Assert.IsNotNull(Value);
   Assert.CheckBool(false, String.IsNullOrEmpty(Value.Path));
 end;
@@ -197,7 +197,7 @@ method FolderTest.Name;
 begin
   Assert.CheckBool(false, String.IsNullOrEmpty(Data.Name));
   Assert.IsNotNull(Data.CreateFolder("Sample", true));
-  var Value := Folder.FromPath(Data.Path +Folder.Separator+"Sample");
+  var Value := new Folder(Data.Path +Folder.Separator+"Sample");
   Assert.IsNotNull(Value);
   Assert.CheckBool(false, String.IsNullOrEmpty(Value.Name));
   Assert.CheckString("Sample", Value.Name);

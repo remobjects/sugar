@@ -24,6 +24,8 @@ type
     method Combine(BasePath: String; SubPath: String): String;
   {$ENDIF}
   public
+    constructor(aPath: String);
+
     method CreateFile(FileName: String; FailIfExists: Boolean): File;
     method CreateFolder(FolderName: String; FailIfExists: Boolean): Folder;
     method Delete;
@@ -33,7 +35,6 @@ type
     method GetFolders: array of Folder;
     method Rename(NewName: String);
 
-    class method FromPath(Value: String): Folder;
     class method UserLocal: Folder;
 
     {$IF WINDOWS_PHONE OR NETFX_CORE}
@@ -73,6 +74,31 @@ type
   {$ENDIF}
 
 implementation
+
+constructor Folder(aPath: String);
+begin
+  SugarArgumentNullException.RaiseIfNil(aPath, "Path");
+  {$IF COOPER}  
+  var lFile := new java.io.File(aPath);
+
+  if not lFile.exists then
+    raise new SugarIOException(String.Format("Folder {0} not found", aPath));
+
+  exit Folder(lFile);
+  {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
+  exit Windows.Storage.StorageFolder.GetFolderFromPathAsync(aPath).Await;
+  {$ELSEIF ECHOES}
+  if not System.IO.Directory.Exists(aPath) then
+    raise new SugarIOException(String.Format("Folder {0} not found", aPath));
+ 
+  exit Folder(aPath);
+  {$ELSEIF NOUGAT} 
+  if not NSFileManager.defaultManager.fileExistsAtPath(aPath) then
+    raise new SugarIOException(String.Format("Folder {0} not found", aPath));
+ 
+  exit Folder(aPath);
+  {$ENDIF}
+end;
 
 {$IF WINDOWS_PHONE OR NETFX_CORE}
 class method FolderHelper.GetFile(Folder: Windows.Storage.StorageFolder; FileName: String): Windows.Storage.StorageFile;
@@ -156,11 +182,6 @@ end;
 method Folder.Rename(NewName: String);
 begin
   mapped.RenameAsync(NewName, Windows.Storage.NameCollisionOption.FailIfExists).AsTask.Wait;
-end;
-
-class method Folder.FromPath(Value: String): Folder;
-begin
-  exit Windows.Storage.StorageFolder.GetFolderFromPathAsync(Value).Await;
 end;
 
 extension method Windows.Foundation.IAsyncOperation<TResult>.&Await<TResult>: TResult;
@@ -256,14 +277,6 @@ begin
 
   System.IO.Directory.Move(mapped, FolderName);
   mapped := FolderName;
-end;
-
-class method Folder.FromPath(Value: String): Folder;
-begin
-  if not System.IO.Directory.Exists(Value) then
-    raise new SugarIOException(String.Format("Folder {0} not found", Value));
- 
-  exit Folder(Value);
 end;
 {$ELSEIF COOPER}
 method Folder.CreateFile(FileName: String; FailIfExists: Boolean): File;
@@ -371,14 +384,6 @@ begin
     raise new SugarIOException("Unable to rename folder '{0}' to '{1}'", mapped.Name, NewName);
 
   mapped := NewFolder;
-end;
-
-class method Folder.FromPath(Value: String): Folder;
-begin
-  var lFile := new java.io.File(Value);
-  if not lFile.exists then
-    raise new SugarIOException(String.Format("Folder {0} not found", Value));
-  exit Folder(lFile);
 end;
 {$ELSEIF NOUGAT}
 method Folder.CreateFile(FileName: String; FailIfExists: Boolean): File;
@@ -504,14 +509,6 @@ end;
 method Folder.Combine(BasePath: String; SubPath: String): String;
 begin
   result := NSString(BasePath):stringByAppendingPathComponent(SubPath);
-end;
-
-class method Folder.FromPath(Value: String): Folder;
-begin
-  if not NSFileManager.defaultManager.fileExistsAtPath(Value) then
-    raise new SugarIOException(String.Format("Folder {0} not found", Value));
- 
-  exit Folder(Value);
 end;
 {$ENDIF}
 
