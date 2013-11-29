@@ -212,7 +212,7 @@ end;
 
 method DocumentTest.FromBinary;
 begin
-  var Bin := Binary.FromArray(XmlTestData.PIXml.ToByteArray);
+  var Bin := new Binary(XmlTestData.PIXml.ToByteArray);
   Data := XmlDocument.FromBinary(Bin);
   Assert.IsNotNull(Data);
   Assert.CheckInt(3, Data.ChildCount);

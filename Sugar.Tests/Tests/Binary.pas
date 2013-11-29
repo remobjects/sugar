@@ -26,6 +26,7 @@ type
     method TestToByteArray;
     method TestLength;
     method TestFromArray;
+    method TestFromBinary;
     method &Empty;
   end;
 
@@ -33,7 +34,7 @@ implementation
 
 method BinaryTest.Setup;
 begin
-  Data := Binary.FromArray(DataBytes);
+  Data := new Binary(DataBytes);
 end;
 
 method BinaryTest.AreEquals(Expected: array of Byte; Actual: array of Byte);
@@ -108,42 +109,50 @@ end;
 
 method BinaryTest.TestWriteData;
 begin  
-  var Expected: Binary := Binary.FromArray([1,2,3]);
+  var Expected: Binary := new Binary([1,2,3]);
   Data.Write(Expected);
   Assert.CheckInt(8, Data.Length);
   AreEquals(Expected.ToArray, Data.Read(Range.MakeRange(5, 3)));
 
   Assert.IsException(->Data.Write(nil));
-  Data.Write(Binary.FromArray([]));
+  Data.Write(new Binary([]));
   Assert.CheckInt(8, Data.Length);
 end;
 
 method BinaryTest.TestToByteArray;
 begin
   AreEquals(DataBytes, Data.ToArray);
-  AreEquals([], Binary.FromArray([]).ToArray);
+  AreEquals([], new Binary([]).ToArray);
 end;
 
 method BinaryTest.TestLength;
 begin
   Assert.CheckInt(5, Data.Length);
-  Assert.CheckInt(0, Binary.FromArray([]).Length);
+  Assert.CheckInt(0, new Binary([]).Length);
 end;
 
 method BinaryTest.TestFromArray;
 begin
-  var Value := Binary.FromArray(DataBytes);
+  var Value := new Binary(DataBytes);
   Assert.IsNotNull(Value);
   Assert.CheckInt(5, Value.Length);
   AreEquals(DataBytes, Value.ToArray);
 
-  Assert.IsException(->Binary.FromArray(nil));
-  Assert.CheckInt(0, Binary.FromArray([]).Length);
+  //Assert.IsException(->new Binary(nil));
+  Assert.CheckInt(0, new Binary([]).Length);
+end;
+
+method BinaryTest.TestFromBinary;
+begin
+  var Value := new Binary(Data);
+  Assert.IsNotNull(Value);
+  Assert.CheckInt(5, Value.Length);
+  AreEquals(DataBytes, Value.ToArray);
 end;
 
 method BinaryTest.&Empty;
 begin
-  var Value := Binary.Empty;
+  var Value := new Binary;
   Assert.IsNotNull(Value);
   Assert.CheckInt(0, Value.Length);  
 end;
