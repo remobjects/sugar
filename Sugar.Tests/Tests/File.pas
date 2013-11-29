@@ -168,16 +168,16 @@ end;
 method FileTest.FromPath;
 begin
   Assert.IsNotNull(Dir.CreateFile("1.txt", true));
-  Assert.IsNotNull(File.FromPath(Dir.Path + Folder.Separator + "1.txt"));
-  Assert.IsException(->File.FromPath(Dir.Path + Folder.Separator + "2.txt"));
-  Assert.IsException(->File.FromPath(nil));
+  Assert.IsNotNull(new File(Dir.Path + Folder.Separator + "1.txt"));
+  Assert.IsException(->new File(Dir.Path + Folder.Separator + "2.txt"));
+  Assert.IsException(->new File(nil));
 end;
 
 method FileTest.Path;
 begin
   Assert.CheckBool(false, String.IsNullOrEmpty(Data.Path));
   Assert.IsNotNull(Dir.CreateFile("1.txt", true));
-  var Value := File.FromPath(Dir.Path +Folder.Separator+"1.txt");
+  var Value := new File(Dir.Path +Folder.Separator+"1.txt");
   Assert.IsNotNull(Value);
   Assert.CheckBool(false, String.IsNullOrEmpty(Value.Path));
 end;
@@ -186,7 +186,7 @@ method FileTest.Name;
 begin
   Assert.CheckBool(false, String.IsNullOrEmpty(Data.Name));
   Assert.IsNotNull(Dir.CreateFile("1.txt", true));
-  var Value := File.FromPath(Dir.Path +Folder.Separator+"1.txt");
+  var Value := new File(Dir.Path +Folder.Separator+"1.txt");
   Assert.IsNotNull(Value);
   Assert.CheckBool(false, String.IsNullOrEmpty(Value.Name));
   Assert.CheckString("1.txt", Value.Name);

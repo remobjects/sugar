@@ -22,8 +22,10 @@ type
       {$ENDIF}
     {$ELSEIF NOUGAT}
     method Combine(BasePath: String; SubPath: String): String;
-    {$ENDIF}
+    {$ENDIF}    
   public
+    constructor(aPath: String);
+
     method &Copy(Destination: Folder): File;
     method &Copy(Destination: Folder; NewName: String): File;
     method Delete;
@@ -36,9 +38,6 @@ type
     method ReadText: String;
     method WriteBytes(Data: array of Byte);
     method WriteText(Content: String);
-
-    class method FromPath(Value: String): File;
-
     {$IF WINDOWS_PHONE OR NETFX_CORE}
     property Path: String read mapped.Path;
     property Name: String read mapped.Name;
@@ -74,6 +73,31 @@ type
   {$ENDIF}
 
 implementation
+
+constructor File(aPath: String);
+begin
+  SugarArgumentNullException.RaiseIfNil(aPath, "Path");
+  {$IF COOPER}  
+  var lFile := new java.io.File(aPath);
+  
+  if not lFile.exists then
+    raise new SugarIOException(String.Format("File {0} not found", aPath));
+
+  exit lFile;
+  {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
+  exit Windows.Storage.StorageFile.GetFileFromPathAsync(aPath).Await;
+  {$ELSEIF ECHOES}
+  if not System.IO.File.Exists(aPath) then
+    raise new SugarIOException(String.Format("File {0} not found", aPath));
+ 
+  exit File(aPath);
+  {$ELSEIF NOUGAT} 
+  if not NSFileManager.defaultManager.fileExistsAtPath(aPath) then
+    raise new SugarIOException(String.Format("File {0} not found", aPath));
+ 
+  exit File(aPath);
+  {$ENDIF}
+end;
 
 {$IF WINDOWS_PHONE OR NETFX_CORE}
 class method FileUtils.ReadBytes(File: Windows.Storage.StorageFile): array of Byte;
@@ -152,7 +176,7 @@ end;
 method File.Rename(NewName: String): File;
 begin
   var BaseDir := System.IO.Path.GetDirectoryName(mapped.Path);
-  var Dir := Folder.FromPath(BaseDir);
+  var Dir := new Folder(BaseDir);
   mapped.RenameAsync(NewName, Windows.Storage.NameCollisionOption.FailIfExists).AsTask.Wait;
   exit Dir.GetFile(NewName);
 end;
@@ -180,11 +204,6 @@ end;
 method File.WriteText(Content: String);
 begin
   FileUtils.WriteString(mapped, Content, false);
-end;
-
-class method File.FromPath(Value: String): File;
-begin
-  exit Windows.Storage.StorageFile.GetFileFromPathAsync(Value).Await;
 end;
 {$ELSEIF ECHOES}
 method File.GetName: String;
@@ -261,14 +280,6 @@ method File.WriteText(Content: String);
 begin
   SugarArgumentNullException.RaiseIfNil(Content, "Content");
   System.IO.File.WriteAllText(mapped, Content);
-end;
-
-class method File.FromPath(Value: String): File;
-begin
-  if not System.IO.File.Exists(Value) then
-    raise new SugarIOException(String.Format("File {0} not found", Value));
- 
-  exit File(Value);
 end;
 {$ELSEIF COOPER}
 class method FileUtils.WriteString(File: java.io.File; Content: String; Append: Boolean);
@@ -404,16 +415,6 @@ method File.WriteText(Content: String);
 begin
   FileUtils.WriteString(mapped, Content, false);
 end;
-
-class method File.FromPath(Value: String): File;
-begin
-  var lFile := new java.io.File(Value);
-  
-  if not lFile.exists then
-    raise new SugarIOException(String.Format("File {0} not found", Value));
-
-  exit File(lFile);
-end;
 {$ELSEIF NOUGAT}
 method File.Combine(BasePath: String; SubPath: String): String;
 begin
@@ -520,14 +521,6 @@ begin
   var lError: Foundation.NSError := nil;
   if not NSString(Content):writeToFile(mapped) atomically(true) encoding(NSStringEncoding.NSUTF8StringEncoding) error(var lError) then
     raise new SugarNSErrorException(lError);
-end;
-
-class method File.FromPath(Value: String): File;
-begin
-  if not NSFileManager.defaultManager.fileExistsAtPath(Value) then
-    raise new SugarIOException(String.Format("File {0} not found", Value));
- 
-  exit File(Value);
 end;
 {$ENDIF}
 
