@@ -11,6 +11,8 @@ type
   {$IF ECHOES OR COOPER}
   Stack<T> = public class mapped to {$IF ECHOES}System.Collections.Generic.Stack<T>{$ELSE}java.util.Stack<T>{$ENDIF}
   public
+    constructor; mapped to constructor();
+
     method Contains(Item: T): Boolean; mapped to Contains(Item);
     method Clear; mapped to Clear;
     method Peek: T; mapped to Peek;
@@ -24,6 +26,8 @@ type
   {$ELSEIF NOUGAT}
   Stack<T> = public class mapped to Foundation.NSMutableArray
   public
+    constructor; mapped to constructor();
+
     method Contains(Item: T): Boolean; mapped to containsObject(Item);
     method Clear; mapped to removeAllObjects;
     method Peek: T; 

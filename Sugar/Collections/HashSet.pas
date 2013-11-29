@@ -7,6 +7,8 @@ interface
 type
   HashSet<T> = public class mapped to {$IFDEF ECHOES}System.Collections.Generic.HashSet<T>{$ENDIF}{$IFDEF COOPER}java.util.HashSet<T>{$ENDIF}{$IFDEF NOUGAT}Foundation.NSMutableSet{$ENDIF}
   public
+    constructor; mapped to constructor();
+
     method &Add(Item: T): Boolean;
     method Clear; mapped to {$IFNDEF NOUGAT}Clear{$ELSE}removeAllObjects{$ENDIF};
     method Contains(Item: T): Boolean; mapped to {$IFNDEF NOUGAT}Contains(Item){$ELSE}containsObject(Item){$ENDIF};

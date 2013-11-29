@@ -8,6 +8,8 @@ type
   {$IF ECHOES OR COOPER}
   Queue<T> = public class mapped to {$IF ECHOES}System.Collections.Generic.Queue<T>{$ELSE}java.util.LinkedList<T>{$ENDIF}
   public
+    constructor; mapped to constructor();
+
     method Contains(Item: T): Boolean; mapped to Contains(Item);
     method Clear; mapped to Clear;
 
@@ -23,6 +25,8 @@ type
   {$ELSEIF NOUGAT}  
   Queue<T> = public class mapped to Foundation.NSMutableArray
   public
+    constructor; mapped to constructor();
+
     method Contains(Item: T): Boolean; mapped to containsObject(Item);
     method Clear; mapped to removeAllObjects;
 

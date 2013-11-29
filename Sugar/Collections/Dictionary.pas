@@ -42,6 +42,7 @@ type
     method GetValues: array of U;
     method SetItem(Key: T; Value: U);
   public
+    constructor; mapped to constructor();
     method &Add(Key: T; Value: U);
     method Clear; mapped to Clear;
     method ContainsKey(Key: T): Boolean; mapped to ContainsKey(Key);
@@ -68,6 +69,7 @@ type
     method GetItem(Key: T): U;
     method SetItem(Key: T; Value: U);
   public
+    constructor; mapped to constructor();
     method &Add(Key: T; Value: U);
     method Clear; mapped to clear;
     method ContainsKey(Key: T): Boolean;
@@ -90,6 +92,7 @@ type
     method GetKeys: array of T;
     method GetValues: array of U;
   public
+    constructor; mapped to constructor();
     method &Add(Key: T; Value: U);
     method Clear; mapped to removeAllObjects;
     method ContainsKey(Key: T): Boolean;

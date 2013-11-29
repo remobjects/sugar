@@ -67,6 +67,9 @@ end;
 
 constructor List<T>(anArray: array of T);
 begin
+  if anArray = nil then
+    raise new SugarArgumentNullException("anArray");
+
   {$IF COOPER}
   result := new java.util.ArrayList<T>(java.util.Arrays.asList(anArray));
   {$ELSEIF ECHOES}
