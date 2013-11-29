@@ -103,7 +103,7 @@
     <None Include="Crypto\Digest.pas" />
     <Compile Include="DateTime.pas" />
     <Compile Include="DateFormatter.pas" />
-    <None Include="HTTP.pas" />
+    <Compile Include="HTTP.pas" />
     <Compile Include="IO\File.pas" />
     <Compile Include="IO\Folder.pas" />
     <Compile Include="Random.pas" />
@@ -145,6 +145,9 @@
     </Reference>
     <Reference Include="System" >
         <HintPath>Build\WP8\System.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net" >
+        <HintPath>Build\WP8\System.Net.dll</HintPath>
     </Reference>
     <Reference Include="Windows" >
         <HintPath>Build\WP8\Windows.winmd</HintPath>

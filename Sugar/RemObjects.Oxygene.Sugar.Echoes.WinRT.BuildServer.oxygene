@@ -134,6 +134,9 @@
     <Reference Include="Windows" >
        <HintPath>Build\WinRT\Windows.winmd</HintPath>
     </Reference>
+    <Reference Include="System.Net.Http" >
+        <HintPath>Build\WP8\System.Net.Http.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" >
        <HintPath>Build\WinRT\System.Xml.dll</HintPath>
     </Reference>
