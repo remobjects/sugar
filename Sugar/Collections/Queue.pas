@@ -4,104 +4,108 @@
 
 interface
 
+uses
+  RemObjects.Oxygene.Sugar;
+
 type
-  {$IF ECHOES OR COOPER}
-  Queue<T> = public class mapped to {$IF ECHOES}System.Collections.Generic.Queue<T>{$ELSE}java.util.LinkedList<T>{$ENDIF}
+  Queue<T> = public class mapped to {$IF COOPER}java.util.LinkedList<T>{$ELSEIF ECHOES}System.Collections.Generic.Queue<T>{$ELSEIF NOUGAT}Foundation.NSMutableArray{$ENDIF}
   public
     constructor; mapped to constructor();
 
-    method Contains(Item: T): Boolean; mapped to Contains(Item);
-    method Clear; mapped to Clear;
+    method Contains(Item: T): Boolean;
+    method Clear;
 
-    method Peek: T; {$IF ECHOES}mapped to Peek;{$ENDIF}    
+    method Peek: T;
     method Enqueue(Item: T);
-    method Dequeue: T; {$IF ECHOES}mapped to Dequeue;{$ENDIF}
-    method ToArray: array of T; {$IF ECHOES}mapped to ToArray;{$ENDIF}
-
-    method ForEach(Action: Action<T>);
-
-    property Count: Integer read {$IF ECHOES}mapped.Count{$ELSE}mapped.size{$ENDIF};
-  end;
-  {$ELSEIF NOUGAT}  
-  Queue<T> = public class mapped to Foundation.NSMutableArray
-  public
-    constructor; mapped to constructor();
-
-    method Contains(Item: T): Boolean; mapped to containsObject(Item);
-    method Clear; mapped to removeAllObjects;
-
-    method Peek: T; mapped to objectAtIndex(0);
-    method Enqueue(Item: T); mapped to addObject(Item);
     method Dequeue: T;
     method ToArray: array of T;
-    method ForEach(Action: Action<T>);
 
-    property Count: Integer read mapped.count;
+    method ForEach(Action: Action<T>);
+    property Count: Integer read {$IF COOPER}mapped.size{$ELSEIF ECHOES OR NOUGAT}mapped.Count{$ENDIF};
   end;
-  {$ENDIF}
 
 implementation
 
-{$IF COOPER}
-method Queue<T>.ToArray: array of T;
+method Queue<T>.Contains(Item: T): Boolean;
 begin
-  exit mapped.toArray(new T[0]);
+  {$IF COOPER OR ECHOES}
+  exit mapped.Contains(Item);
+  {$ELSEIF NOUGAT}
+  exit mapped.containsObject(Item);
+  {$ENDIF}
 end;
 
-method Queue<T>.Enqueue(Item: T);
+method Queue<T>.Clear;
 begin
-  if Item = nil then
-    raise new RemObjects.Oxygene.Sugar.SugarArgumentNullException("Item");
-
-  mapped.add(Item);
+  {$IF COOPER OR ECHOES}
+  mapped.Clear;
+  {$ELSEIF NOUGAT}
+  mapped.removeAllObjects;
+  {$ENDIF}
 end;
 
 method Queue<T>.Dequeue: T;
 begin
-  if mapped.size = 0 then
-    raise new RemObjects.Oxygene.Sugar.SugarInvalidOperationException("Queue is empty");
+  if self.Count = 0 then
+    raise new SugarInvalidOperationException("Queue is empty");
 
+  {$IF COOPER}
   exit mapped.poll;
-end;
-
-method Queue<T>.Peek: T;
-begin
-  if mapped.size = 0 then
-    raise new RemObjects.Oxygene.Sugar.SugarInvalidOperationException("Queue is empty");
-
-  exit mapped.peek;
-end;
-{$ELSEIF ECHOES}
-method Queue<T>.Enqueue(Item: T);
-begin
-  if Item = nil then
-    raise new RemObjects.Oxygene.Sugar.SugarArgumentNullException("Item");
-
-  mapped.Enqueue(Item);
-end;
-{$ELSEIF NOUGAT}
-method Queue<T>.Dequeue: T;
-begin
+  {$ELSEIF ECHOES}
+  exit mapped.Dequeue;
+  {$ELSEIF NOUGAT}
   result := mapped.objectAtIndex(0);
   mapped.removeObjectAtIndex(0);
+  {$ENDIF}
 end;
 
-method Queue<T>.ToArray: array of T;
+method Queue<T>.Enqueue(Item: T);
 begin
-  result := new T[mapped.count];
-  for i: Integer := 0 to mapped.count - 1 do
-    result[i] := mapped.objectAtIndex(i);
+  if Item = nil then
+    raise new SugarArgumentNullException("Item");
+
+  {$IF COOPER}
+  mapped.add(Item);
+  {$ELSEIF ECHOES}
+  mapped.Enqueue(Item);
+  {$ELSEIF NOUGAT}
+  mapped.addObject(Item);
+  {$ENDIF}
 end;
-{$ENDIF}
 
 method Queue<T>.ForEach(Action: Action<T>);
 begin
   if Action = nil then
-    raise new RemObjects.Oxygene.Sugar.SugarArgumentNullException("Action");
+    raise new SugarArgumentNullException("Action");
 
   var Items := ToArray;
   for i: Integer := 0 to length(Items) - 1 do
     Action(Items[i]);
+end;
+
+method Queue<T>.Peek: T;
+begin
+  if self.Count = 0 then
+    raise new SugarInvalidOperationException("Queue is empty");
+
+  {$IF COOPER OR ECHOES}
+  exit mapped.Peek;
+  {$ELSEIF NOUGAT}
+  exit mapped.objectAtIndex(0);
+  {$ENDIF}
+end;
+
+method Queue<T>.ToArray: array of T;
+begin
+  {$IF COOPER}
+  exit mapped.toArray(new T[0]);
+  {$ELSEIF ECHOES}
+  exit mapped.ToArray;
+  {$ELSEIF NOUGAT}
+  result := new T[mapped.count];
+  for i: Integer := 0 to mapped.count - 1 do
+    result[i] := mapped.objectAtIndex(i);
+  {$ENDIF}
 end;
 
 end.
