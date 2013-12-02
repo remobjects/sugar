@@ -10,6 +10,10 @@ type
     method set_Chars(&Index: Integer; Value: Char);
     method set_Length(Value: Integer);  
   public
+    constructor; mapped to constructor();
+    constructor(Capacity: Integer); mapped to constructor(Capacity);
+    constructor(Data: String); mapped to constructor(Data);
+
     method Append(Value: String): StringBuilder;
     method Append(Value: String; StartIndex, Count: Integer): StringBuilder; 
     method Append(Value: Char; RepeatCount: Integer): StringBuilder;
@@ -28,6 +32,10 @@ type
   {$ELSEIF ECHOES}
   StringBuilder = public class mapped to System.Text.StringBuilder
   public
+    constructor; mapped to constructor();
+    constructor(Capacity: Integer); mapped to constructor(Capacity);
+    constructor(Data: String); mapped to constructor(Data);
+
     method Append(Value: String): StringBuilder;
     method Append(Value: String; StartIndex, Count: Integer): StringBuilder; mapped to Append(Value, StartIndex, Count);
     method Append(Value: Char; RepeatCount: Integer): StringBuilder; mapped to Append(Value, RepeatCount);
@@ -50,6 +58,10 @@ type
     method set_Chars(&Index : Integer; Value: Char);
     method set_Length(Value: Integer);  
   public
+    constructor; mapped to constructor();
+    constructor(Capacity: Integer); mapped to initWithCapacity(Capacity);
+    constructor(Data: String); mapped to stringWithString(Data);
+
     method Append(Value: String): StringBuilder;
     method Append(Value: String; StartIndex, Count: Integer): StringBuilder;
     method Append(Value: Char; RepeatCount: Integer): StringBuilder;
