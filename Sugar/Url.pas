@@ -6,6 +6,8 @@ type
   {$IF COOPER}
   Url = public class mapped to java.net.URL
   public
+    constructor(UriString: String);
+
     property Scheme: String read mapped.Protocol;
     property Host: String read mapped.Host;
     property Port: Int32 read mapped.Port;
@@ -13,8 +15,6 @@ type
     property QueryString: String read mapped.Query;
     property Fragment: String read mapped.toURI.Fragment;    
     property UserInfo: String read mapped.UserInfo;
-
-    class method FromString(UriString: String): Url;
   end;
   {$ELSEIF ECHOES}
   Url = public class mapped to System.Uri
@@ -24,6 +24,8 @@ type
     method GetUserInfo: String;
     method GetQueryString: String;
   public
+    constructor(UriString: String);
+
     property Scheme: String read mapped.Scheme;
     property Host: String read mapped.Host;
     property Port: Int32 read GetPort;
@@ -31,8 +33,6 @@ type
     property QueryString: String read GetQueryString;
     property Fragment: String read GetFragment;
     property UserInfo: String read GetUserInfo;
-
-    class method FromString(UriString: String): Url;
   end;
   {$ELSEIF NOUGAT}
   Url = public class mapped to Foundation.NSURL
@@ -40,6 +40,8 @@ type
     method GetUserInfo: String;
     method GetPort: Integer;
   public
+    constructor(UriString: String);
+
     property Scheme: String read mapped.scheme;
     property Host: String read mapped.host;
     property Port: Int32 read GetPort;
@@ -49,7 +51,6 @@ type
     property UserInfo: String read GetUserInfo;
     
     method description: NSString; override;
-    class method FromString(UriString: String): Url;
   end;
   {$ENDIF}
 
@@ -118,7 +119,7 @@ begin
 end;
 {$ENDIF}
 
-class method Url.FromString(UriString: String): Url;
+constructor Url(UriString: String);
 begin
   if String.IsNullOrEmpty(UriString) then
     raise new SugarArgumentNullException("UriString");
