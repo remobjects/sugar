@@ -21,7 +21,7 @@ implementation
 method HTTPTest.DownloadAsString;
 begin
   var Token: IAsyncToken := NewAsyncToken;
-  Http.DownloadStringAsync(Url.FromString("http://example.com"), Responce -> begin
+  Http.DownloadStringAsync(new Url("http://example.com"), Responce -> begin
       try
         Assert.IsNotNull(Responce);
         Assert.CheckBool(false, Responce.IsFailed);
@@ -38,7 +38,7 @@ begin
   Token.Wait;
   Token := NewAsyncToken;
 
-  Http.DownloadStringAsync(Url.FromString("http://example.com/notexists"), Responce -> begin
+  Http.DownloadStringAsync(new Url("http://example.com/notexists"), Responce -> begin
       try
         Assert.IsNotNull(Responce);
         Assert.CheckBool(true, Responce.IsFailed);
@@ -53,13 +53,13 @@ begin
 
   Token.Wait;
   Assert.IsException(->Http.DownloadStringAsync(nil, x -> begin end));
-  Assert.IsException(->Http.DownloadStringAsync(Url.FromString("http://example.com"), nil));
+  Assert.IsException(->Http.DownloadStringAsync(new Url("http://example.com"), nil));
 end;
 
 method HTTPTest.DownloadAsBinary;
 begin
   var Token: IAsyncToken := NewAsyncToken;
-  Http.DownloadBinaryAsync(Url.FromString("http://example.com"), Responce -> begin
+  Http.DownloadBinaryAsync(new Url("http://example.com"), Responce -> begin
       try
         Assert.IsNotNull(Responce);
         Assert.CheckBool(false, Responce.IsFailed);
@@ -80,7 +80,7 @@ end;
 method HTTPTest.DownloadAsXml;
 begin
   var Token: IAsyncToken := NewAsyncToken;
-  Http.DownloadXmlAsync(Url.FromString("http://images.apple.com/main/rss/hotnews/hotnews.rss"), Responce -> begin
+  Http.DownloadXmlAsync(new Url("http://images.apple.com/main/rss/hotnews/hotnews.rss"), Responce -> begin
       try
         Assert.IsNotNull(Responce);
         Assert.CheckBool(false, Responce.IsFailed);

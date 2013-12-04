@@ -26,6 +26,7 @@ type
     method Insert;
     method Length;
     method Chars;
+    method Constructors;
   end;
 
 implementation
@@ -220,6 +221,13 @@ begin
   Assert.CheckString(#0, Builder.Chars[6]);
   Assert.IsException(->Builder.Chars[-1]);
   Assert.IsException(->Builder.Chars[50]);
+end;
+
+method StringBuilderTest.Constructors;
+begin
+  Builder := new StringBuilder("Hello");
+  Assert.CheckInt(5, Builder.Length);
+  Assert.CheckString("Hello", Builder.ToString);
 end;
 
 end.
