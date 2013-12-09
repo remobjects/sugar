@@ -93,6 +93,7 @@
   <ItemGroup>
     <Compile Include="Main\Android\MainActivity.pas" />
     <Compile Include="Printer\Printer.pas" />
+    <Compile Include="Tests\AutoreleasePool.pas" />
     <Compile Include="Tests\Binary.pas" />
     <Compile Include="Tests\DateTime.pas" />
     <Compile Include="Tests\Dictionary.pas" />
