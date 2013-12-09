@@ -10,7 +10,7 @@ type
     method set_Length(Value: Integer);
   public
     constructor; mapped to constructor();
-    constructor(Capacity: Integer); mapped to {$IF COOPER OR ECHOES}constructor(Capacity){$ELSEIF NOUGAT}initWithCapacity(Capacity){$ENDIF};
+    constructor(Capacity: Integer); mapped to {$IF COOPER OR ECHOES}constructor(Capacity){$ELSEIF NOUGAT}stringWithCapacity(Capacity){$ENDIF};
     constructor(Data: String); mapped to {$IF COOPER OR ECHOES}constructor(Data){$ELSEIF NOUGAT}stringWithString(Data){$ENDIF};
 
     method Append(Value: String): StringBuilder;
