@@ -228,6 +228,11 @@ begin
   Builder := new StringBuilder("Hello");
   Assert.CheckInt(5, Builder.Length);
   Assert.CheckString("Hello", Builder.ToString);
+  Builder := new StringBuilder(3);
+  Assert.CheckInt(0, Builder.Length);
+  Builder.Append("Hello");
+  Assert.CheckInt(5, Builder.Length);
+  Assert.CheckString("Hello", Builder.ToString);
 end;
 
 end.
