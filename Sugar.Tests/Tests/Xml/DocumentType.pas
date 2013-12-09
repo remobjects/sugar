@@ -18,7 +18,6 @@ type
     method Setup; override;
     method Name;
     method LocalName;
-    method InternalSubset;
     method PublicId;
     method SystemId;
     method NodeType;
@@ -35,25 +34,6 @@ begin
   Assert.IsNotNull(Doc);
   Data := Doc.FirstChild as XmlDocumentType;
   Assert.IsNotNull(Data);
-end;
-
-method DocumentTypeTest.InternalSubset;
-begin
-  {$IF NOT ANDROID}
-  Assert.IsNotNull(Data.InternalSubset);
-  Assert.CheckBool(true, Data.InternalSubset.Contains("<!ELEMENT to (#PCDATA)>"));
-  Assert.CheckBool(true, Data.InternalSubset.Contains("<!ELEMENT from (#PCDATA)>"));
-  Assert.CheckBool(true, Data.InternalSubset.Contains("<!ELEMENT heading (#PCDATA)>"));
-  Assert.CheckBool(true, Data.InternalSubset.Contains("<!ELEMENT body (#PCDATA)>"));
-
-  Doc := XmlDocument.FromString(XmlTestData.CharXml);
-  Assert.IsNotNull(Doc);
-  Assert.IsNotNull(Doc.DocumentType);
-  Assert.IsNotNull(Doc.DocumentType.InternalSubset);
-  Assert.CheckString("", Doc.DocumentType.InternalSubset);
-  {$ELSE}
-  {$WARNING Android parser does not process internal subset}
-  {$ENDIF}
 end;
 
 method DocumentTypeTest.PublicId;
@@ -115,12 +95,7 @@ end;
 
 method DocumentTypeTest.Value;
 begin
-  {$IF NOT ANDROID}
-  Assert.IsNotNull(Data.Value);
-  Assert.CheckBool(true, Data.Value.Contains("<!ELEMENT to (#PCDATA)>"));
-  Data.Value := "UNKNOWN";
-  Assert.CheckBool(true, Data.Value.Contains("<!ELEMENT to (#PCDATA)>"));
-  {$ENDIF}
+  Assert.IsNull(Data.Value);
 end;
 
 end.
