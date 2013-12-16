@@ -12,7 +12,7 @@
     <AssemblyName>Sugar</AssemblyName>
     <DefaultUses>Foundation</DefaultUses>
     <StartupClass />
-    <DeploymentTargetVersion>5.1</DeploymentTargetVersion>
+    <DeploymentTargetVersion>6.0</DeploymentTargetVersion>
     <BundleIdentifier>org.me.RemObjects.Oxygene.Sugar</BundleIdentifier>
     <AllowLegacyOutParams>False</AllowLegacyOutParams>
     <CreateHeaderFile>True</CreateHeaderFile>
@@ -33,7 +33,7 @@
     <XmlDocWarningLevel>WarningOnPublicMembers</XmlDocWarningLevel>
     <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
     <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
-    <SimulatorArchitectures>i386</SimulatorArchitectures>
+    <SimulatorArchitectures>i386;x86_64</SimulatorArchitectures>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <Optimize>True</Optimize>
@@ -49,7 +49,7 @@
     <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
     <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
     <DefineConstants>IOS</DefineConstants>
-    <SimulatorArchitectures>i386</SimulatorArchitectures>
+    <SimulatorArchitectures>i386;x86_64</SimulatorArchitectures>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Foundation.fx" />
