@@ -6,5 +6,5 @@ saveVersionNumberToSharedIni("Sugar", sugarVersion);
 
 msbuild["rebuild"]("RemObjects.Sugar.BuildServer.sln", {configuration: "Release", destinationFolder: "./Bin",  extraArgs: "/p:CrossBox=Onyx;CrossBoxDeviceID=Mac;CrossBoxDevice=Mac"});
 
-zip.compress("$(CIReleaseFolder)/Sugar - $(sugarVersion)", "./Bin", "*Sugar*.*", true);
-
+zip.compress("$(CIReleaseFolder)/Sugar - $(sugarVersion).zip", "./Bin", "*Sugar*.*", true);
+file.copy("./Bin", "*Sugar*.*", "$(CISharedFolder)/Bin/", true);
