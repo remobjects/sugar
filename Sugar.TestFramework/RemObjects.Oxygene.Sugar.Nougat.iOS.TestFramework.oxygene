@@ -12,7 +12,7 @@
     <AllowUnsafeCode>False</AllowUnsafeCode>
     <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
     <SDK>iOS</SDK>
-    <DeploymentTargetVersion>5.1</DeploymentTargetVersion>
+    <DeploymentTargetVersion>6.0</DeploymentTargetVersion>
     <CreateHeaderFile>True</CreateHeaderFile>
     <Name>RemObjects.Oxygene.Sugar.Nougat.iOS.TestFramework</Name>
     <DefaultUses />

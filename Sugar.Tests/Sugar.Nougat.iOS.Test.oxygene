@@ -14,7 +14,7 @@
     <SDK>iOS</SDK>
     <CreateAppBundle>True</CreateAppBundle>
     <InfoPListFile>Main\iOS\Resources\Info.plist</InfoPListFile>
-    <DeploymentTargetVersion>5.1</DeploymentTargetVersion>
+    <DeploymentTargetVersion>6.0</DeploymentTargetVersion>
     <Name>Sugar.Nougat.iOS.Test</Name>
     <DefaultUses />
     <StartupClass />
