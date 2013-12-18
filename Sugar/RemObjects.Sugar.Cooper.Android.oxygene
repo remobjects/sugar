@@ -7,8 +7,8 @@
     <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
     <AllowLegacyCreate>False</AllowLegacyCreate>
     <Name>RemObjects.Sugar.Cooper.Android</Name>
-    <RootNamespace>RemObjects.Sugar</RootNamespace>
-    <AssemblyName>com.RemObjects.Sugar.android</AssemblyName>
+    <RootNamespace>remobjects.sugar</RootNamespace>
+    <AssemblyName>com.remobjects.sugar.android</AssemblyName>
     <DefaultUses />
     <StartupClass />
   </PropertyGroup>

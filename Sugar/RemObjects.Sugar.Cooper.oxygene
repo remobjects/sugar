@@ -6,9 +6,9 @@
     <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
     <AllowLegacyCreate>False</AllowLegacyCreate>
     <Name>RemObjects.Sugar.Cooper</Name>
-    <RootNamespace>RemObjects.Sugar</RootNamespace>
+    <RootNamespace>remobjects.sugar</RootNamespace>
     <ProjectGuid>{d1ee6c41-515b-4175-873f-ee188ac43450}</ProjectGuid>
-    <AssemblyName>com.RemObjects.Sugar</AssemblyName>
+    <AssemblyName>com.remobjects.sugar</AssemblyName>
     <DefaultUses />
     <StartupClass />
   </PropertyGroup>
