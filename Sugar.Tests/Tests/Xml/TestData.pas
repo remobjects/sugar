@@ -5,7 +5,7 @@ interface
 {$HIDE W0} //supress case-mismatch errors
 
 uses
-  RemObjects.Sugar;
+  Sugar;
 
 type
   XmlTestData = public static class

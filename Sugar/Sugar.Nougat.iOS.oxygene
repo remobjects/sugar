@@ -5,15 +5,15 @@
     <OutputType>StaticLibrary</OutputType>
     <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
     <AllowLegacyCreate>False</AllowLegacyCreate>
-    <Name>RemObjects.Sugar.Nougat.iOS</Name>
-    <RootNamespace>RemObjects.Sugar</RootNamespace>
+    <Name>Sugar.Nougat.iOS</Name>
+    <RootNamespace>Sugar</RootNamespace>
     <SDK>iOS</SDK>
     <ProjectGuid>{91B301FC-331E-48A7-803B-4CBE3FFF6ED7}</ProjectGuid>
     <AssemblyName>Sugar</AssemblyName>
     <DefaultUses>Foundation</DefaultUses>
     <StartupClass />
     <DeploymentTargetVersion>6.0</DeploymentTargetVersion>
-    <BundleIdentifier>org.me.RemObjects.Sugar</BundleIdentifier>
+    <BundleIdentifier>org.me.Sugar</BundleIdentifier>
     <AllowLegacyOutParams>False</AllowLegacyOutParams>
     <CreateHeaderFile>True</CreateHeaderFile>
     <BundleExtension />

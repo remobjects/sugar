@@ -1,4 +1,4 @@
-namespace RemObjects.Sugar.IO;
+namespace Sugar.IO;
 
 interface
 
@@ -6,12 +6,12 @@ uses
   {$IF WINDOWS_PHONE OR NETFX_CORE}  
   System.IO,
   {$ELSEIF COOPER}
-  RemObjects.Sugar.Cooper,
+  Sugar.Cooper,
   {$ELSEIF ECHOES}
   {$ELSEIF NOUGAT}
   {$ENDIF}
-  RemObjects.Sugar,
-  RemObjects.Sugar.Collections;
+  Sugar,
+  Sugar.Collections;
 
 type
   File = public class mapped to {$IF WINDOWS_PHONE OR NETFX_CORE}Windows.Storage.StorageFile{$ELSEIF ECHOES}System.String{$ELSEIF COOPER}java.io.File{$ELSEIF NOUGAT}NSString{$ENDIF}

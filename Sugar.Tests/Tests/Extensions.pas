@@ -5,8 +5,8 @@ interface
 {$HIDE W0} //supress case-mismatch errors
 
 uses
-  RemObjects.Sugar,
-  RemObjects.Sugar.TestFramework;
+  Sugar,
+  Sugar.TestFramework;
 
 type
   ExtensionsTest = public class (Testcase)

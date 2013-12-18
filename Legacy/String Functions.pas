@@ -1,10 +1,10 @@
-﻿namespace RemObjects.Oxygene.Legacy;
+﻿namespace Sugar.Legacy;
 
 {$HIDE W0} //supress case-mismatch errors
 
 interface
 
-uses RemObjects.Sugar;
+uses Sugar;
 
 // all methods in this module are one-based, as they are for Delphi compatibility.
 

@@ -1,11 +1,11 @@
-﻿namespace RemObjects.Sugar.Collections;
+﻿namespace Sugar.Collections;
 
 {$HIDE W0} //supress case-mismatch errors
 
 interface
 
 uses
-  RemObjects.Sugar;
+  Sugar;
 
 type
   Queue<T> = public class mapped to {$IF COOPER}java.util.LinkedList<T>{$ELSEIF ECHOES}System.Collections.Generic.Queue<T>{$ELSEIF NOUGAT}Foundation.NSMutableArray{$ENDIF}

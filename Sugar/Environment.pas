@@ -1,4 +1,4 @@
-﻿namespace RemObjects.Sugar;
+﻿namespace Sugar;
 
 interface
 
@@ -39,7 +39,7 @@ type
     class method SysCtl(aLevel: Int32; aValue: Int32): String;
     {$ENDREGION}
 
-    class property NewLine: String read RemObjects.Sugar.String(#10);
+    class property NewLine: String read Sugar.String(#10);
     class property UserName: String read Foundation.NSUserName();
     class property OperatingSystemName: String read getOperatingSystemName;
     class property OperatingSystemVersion: String read getOperatingSystemVersion; //todo

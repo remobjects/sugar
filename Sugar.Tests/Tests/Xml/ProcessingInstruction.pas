@@ -5,9 +5,9 @@ interface
 {$HIDE W0} //supress case-mismatch errors
 
 uses
-  RemObjects.Sugar,
-  RemObjects.Sugar.Xml,
-  RemObjects.Sugar.TestFramework;
+  Sugar,
+  Sugar.Xml,
+  Sugar.TestFramework;
 
 type
   ProcessingInstructionTest = public class (Testcase)

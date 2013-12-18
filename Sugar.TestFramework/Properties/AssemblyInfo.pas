@@ -1,4 +1,4 @@
-﻿namespace RemObjects.Sugar.TestFramework;
+﻿namespace Sugar.TestFramework;
 
 interface
 

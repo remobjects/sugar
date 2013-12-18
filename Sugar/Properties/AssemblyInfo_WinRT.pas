@@ -9,11 +9,11 @@ uses System.Reflection,
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle('RemObjects.Sugar.Echoes.WinRT')]
+[assembly: AssemblyTitle('Sugar.Echoes.WinRT')]
 [assembly: AssemblyDescription('')]
 [assembly: AssemblyConfiguration('')]
 [assembly: AssemblyCompany('')]
-[assembly: AssemblyProduct('RemObjects.Sugar.Echoes.WinRT')]
+[assembly: AssemblyProduct('Sugar.Echoes.WinRT')]
 [assembly: AssemblyCopyright('Copyright ©  2013')]
 [assembly: AssemblyTrademark('')]
 [assembly: AssemblyCulture('')]

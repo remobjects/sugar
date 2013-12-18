@@ -2,21 +2,32 @@
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <ProductVersion>3.5</ProductVersion>
-    <ProjectGuid>{dba17ca8-59bc-4544-a0f5-c632737d5aa0}</ProjectGuid>
+    <RootNamespace>Sugar.Legacy</RootNamespace>
+    <ProjectGuid>dcb8bc3b-f911-470f-a125-988d5ef46466</ProjectGuid>
     <OutputType>Library</OutputType>
-    <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
+    <AssemblyName>Sugar.Legacy</AssemblyName>
+    <AllowGlobals>
+    </AllowGlobals>
+    <AllowLegacyWith>
+    </AllowLegacyWith>
+    <AllowLegacyOutParams>False</AllowLegacyOutParams>
     <AllowLegacyCreate>False</AllowLegacyCreate>
-    <Name>RemObjects.Sugar.Cooper.TestFramework</Name>
-    <RootNamespace>RemObjects.Sugar.TestFramework</RootNamespace>
+    <AllowUnsafeCode>True</AllowUnsafeCode>
+    <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <Name>Sugar.Legacy.Cooper</Name>
     <DefaultUses />
     <StartupClass />
-    <AssemblyName>com.RemObjects.Sugar.testframework</AssemblyName>
+    <InternalAssemblyName />
+    <ApplicationIcon />
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <Optimize>false</Optimize>
-    <OutputPath>.\bin\Java</OutputPath>
+    <OutputPath>.\bin\Debug</OutputPath>
     <DefineConstants>DEBUG;TRACE;</DefineConstants>
-    <GenerateDebugInfo>True</GenerateDebugInfo>
+    <GeneratePDB>True</GeneratePDB>
+    <GenerateMDB>True</GenerateMDB>
     <EnableAsserts>True</EnableAsserts>
     <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
     <CaptureConsoleOutput>False</CaptureConsoleOutput>
@@ -26,13 +37,14 @@
     <RuntimeVersion>v25</RuntimeVersion>
     <XmlDoc>False</XmlDoc>
     <XmlDocWarningLevel>WarningOnPublicMembers</XmlDocWarningLevel>
-    <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
     <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
+    <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <Optimize>true</Optimize>
-    <OutputPath>.\bin\Java</OutputPath>
-    <GenerateDebugInfo>False</GenerateDebugInfo>
+    <OutputPath>.\bin\Release</OutputPath>
+    <GeneratePDB>False</GeneratePDB>
+    <GenerateMDB>False</GenerateMDB>
     <EnableAsserts>False</EnableAsserts>
     <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
     <CaptureConsoleOutput>False</CaptureConsoleOutput>
@@ -42,23 +54,27 @@
     <RuntimeVersion>v25</RuntimeVersion>
     <XmlDoc>False</XmlDoc>
     <XmlDocWarningLevel>WarningOnPublicMembers</XmlDocWarningLevel>
-    <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
     <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
+    <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="rt.jar" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AsyncToken.pas" />
-    <Compile Include="Assert.pas" />
-    <Compile Include="Exceptions.pas" />
-    <Compile Include="List.pas" />
-    <Compile Include="Runner.pas" />
-    <Compile Include="Testcase.pas" />
-    <Compile Include="TestResult.pas" />
+    <Compile Include="MemIniFile.pas" />
+    <Compile Include="OneBasedString.pas" />
+    <Compile Include="String Functions.pas" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Sugar\Sugar.Cooper.oxygene">
+      <Name>Sugar.Cooper</Name>
+      <Project>{d1ee6c41-515b-4175-873f-ee188ac43450}</Project>
+      <Private>True</Private>
+      <HintPath>..\Sugar\bin\Debug\Java\Sugar.jar</HintPath>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Cooper.targets" />
   <PropertyGroup>

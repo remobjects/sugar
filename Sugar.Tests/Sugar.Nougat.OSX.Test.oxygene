@@ -85,14 +85,14 @@
     <Folder Include="Tests\Xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Sugar.TestFramework\RemObjects.Sugar.Nougat.OSX.TestFramework.oxygene">
-      <Name>RemObjects.Sugar.Nougat.OSX.TestFramework</Name>
+    <ProjectReference Include="..\Sugar.TestFramework\Sugar.Nougat.OSX.TestFramework.oxygene">
+      <Name>Sugar.Nougat.OSX.TestFramework</Name>
       <Project>{1d894b7c-0117-4154-a1f2-fd22691f0f13}</Project>
       <Private>True</Private>
       <HintPath>..\Sugar.TestFramework\bin\Debug\OS X\libSugarTestFramework.fx</HintPath>
     </ProjectReference>
-    <ProjectReference Include="..\Sugar\RemObjects.Sugar.Nougat.OSX.oxygene">
-      <Name>RemObjects.Sugar.Nougat.OSX</Name>
+    <ProjectReference Include="..\Sugar\Sugar.Nougat.OSX.oxygene">
+      <Name>Sugar.Nougat.OSX</Name>
       <Project>{ab7ab88b-2370-43bf-844b-54d015da9e57}</Project>
       <Private>True</Private>
       <HintPath>..\Sugar\bin\Debug\OS X\libSugar.fx</HintPath>

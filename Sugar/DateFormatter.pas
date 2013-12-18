@@ -1,11 +1,11 @@
-﻿namespace RemObjects.Sugar;
+﻿namespace Sugar;
 
 {$HIDE W0} //supress case-mismatch errors
 
 interface
 
 uses
-  RemObjects.Sugar.Collections;
+  Sugar.Collections;
 
 type
   DateFormater = public class

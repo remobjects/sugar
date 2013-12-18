@@ -17,7 +17,7 @@ uses
   Windows.UI.Xaml.Data,
   Windows.UI.Xaml.Input,
   Windows.UI.Xaml.Media,
-  RemObjects.Sugar.TestFramework,
+  Sugar.TestFramework,
   Windows.UI.Xaml.Navigation;
 
 // The Blank Application template is documented at http://go.microsoft.com/fwlink/?LinkId=234227

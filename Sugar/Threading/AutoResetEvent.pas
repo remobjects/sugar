@@ -1,4 +1,4 @@
-﻿namespace RemObjects.Sugar.Threading;
+﻿namespace Sugar.Threading;
 {$HIDE W0} //supress case-mismatch errors
 interface
 

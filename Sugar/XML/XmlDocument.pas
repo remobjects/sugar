@@ -1,4 +1,4 @@
-﻿namespace RemObjects.Sugar.Xml;
+﻿namespace Sugar.Xml;
 
 {$HIDE W0} //supress case-mismatch errors
 
@@ -13,8 +13,8 @@ uses
   {$ELSEIF NOUGAT}
   Foundation,
   {$ENDIF}
-  RemObjects.Sugar,
-  RemObjects.Sugar.IO;
+  Sugar,
+  Sugar.IO;
 
 type
   XmlDocument = public class (XmlNode)

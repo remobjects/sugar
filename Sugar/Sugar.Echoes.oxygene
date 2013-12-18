@@ -2,61 +2,79 @@
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <ProductVersion>3.5</ProductVersion>
-    <OutputType>StaticLibrary</OutputType>
-    <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
-    <AllowLegacyCreate>False</AllowLegacyCreate>
-    <Name>RemObjects.Sugar.Nougat.OSX</Name>
-    <RootNamespace>RemObjects.Sugar</RootNamespace>
-    <SDK>OS X</SDK>
-    <ProjectGuid>{ab7ab88b-2370-43bf-844b-54d015da9e57}</ProjectGuid>
-    <AssemblyName>Sugar</AssemblyName>
-    <DefaultUses>Foundation</DefaultUses>
+    <RootNamespace>Sugar</RootNamespace>
     <StartupClass />
-    <DeploymentTargetVersion>10.6</DeploymentTargetVersion>
-    <BundleIdentifier>org.me.RemObjects.Sugar</BundleIdentifier>
+    <OutputType>Library</OutputType>
+    <AssemblyName>Sugar</AssemblyName>
+    <AllowGlobals>
+    </AllowGlobals>
+    <AllowLegacyWith>
+    </AllowLegacyWith>
     <AllowLegacyOutParams>False</AllowLegacyOutParams>
-    <CreateHeaderFile>True</CreateHeaderFile>
+    <AllowLegacyCreate>False</AllowLegacyCreate>
+    <AllowUnsafeCode>
+    </AllowUnsafeCode>
+    <ApplicationIcon />
+    <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <Name>Sugar.Echoes</Name>
+    <ProjectGuid>{79301a0c-1f95-4fb0-9605-207e288c6171}</ProjectGuid>
+    <DefaultUses />
+    <InternalAssemblyName />
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <Optimize>False</Optimize>
-    <OutputPath>.\bin</OutputPath>
-    <DefineConstants>DEBUG;TRACE;OSX</DefineConstants>
-    <GenerateDebugInfo>True</GenerateDebugInfo>
-    <EnableAsserts>True</EnableAsserts>
-    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <OutputPath>bin\.NET\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <GeneratePDB>True</GeneratePDB>
+    <GenerateMDB>True</GenerateMDB>
     <CaptureConsoleOutput>False</CaptureConsoleOutput>
     <StartMode>Project</StartMode>
     <CpuType>anycpu</CpuType>
     <RuntimeVersion>v25</RuntimeVersion>
     <XmlDoc>False</XmlDoc>
     <XmlDocWarningLevel>WarningOnPublicMembers</XmlDocWarningLevel>
-    <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
     <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
+    <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
+    <SuppressWarnings />
+    <FutureHelperClassName />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <Optimize>True</Optimize>
-    <OutputPath>.\bin</OutputPath>
-    <GenerateDebugInfo>False</GenerateDebugInfo>
+    <OutputPath>bin\.NET\</OutputPath>
     <EnableAsserts>False</EnableAsserts>
-    <DefineConstants>OSX</DefineConstants>
     <CaptureConsoleOutput>False</CaptureConsoleOutput>
     <StartMode>Project</StartMode>
     <CpuType>anycpu</CpuType>
     <RuntimeVersion>v25</RuntimeVersion>
     <XmlDoc>False</XmlDoc>
     <XmlDocWarningLevel>WarningOnPublicMembers</XmlDocWarningLevel>
-    <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
     <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
+    <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
+    <DefineConstants>
+    </DefineConstants>
+    <SuppressWarnings />
+    <FutureHelperClassName />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AppKit.fx" />
-    <Reference Include="CoreServices.fx" />
-    <Reference Include="Foundation.fx" />
-    <Reference Include="libNougat.fx" />
-    <Reference Include="libxml2.fx" />
-    <Reference Include="rtl.fx" />
+    <Reference Include="mscorlib" />
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AutoreleasePool.pas" />
     <Compile Include="Binary.pas" />
     <Compile Include="Collections\Dictionary.pas" />
     <Compile Include="Collections\HashSet.pas" />
@@ -74,16 +92,17 @@
     <Compile Include="IO\Folder.pas" />
     <Compile Include="Random.pas" />
     <Compile Include="Environment.pas" />
-    <Compile Include="UserSettings.pas" />
+    <Compile Include="Exceptions.pas" />
+    <Compile Include="Extensions.pas" />
+    <Compile Include="Guid.pas" />
     <None Include="Threading\AutoResetEvent.pas" />
     <None Include="Threading\ManualResetEvent.pas" />
     <None Include="Threading\Semaphore.pas" />
     <None Include="Threading\Thread.pas" />
     <None Include="Threading\ThreadPool.pas" />
-    <Compile Include="Exceptions.pas" />
-    <Compile Include="Guid.pas" />
+    <Compile Include="UserSettings.pas" />
     <Compile Include="Math.pas" />
-    <Compile Include="Extensions.pas" />
+    <Compile Include="Properties\AssemblyInfo.pas" />
     <Compile Include="String.pas" />
     <Compile Include="StringBuilder.pas" />
     <Compile Include="StringFormatter.pas" />
@@ -98,13 +117,13 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Crypto" />
+    <Folder Include="XML" />
     <Folder Include="Properties\" />
     <Folder Include="Collections" />
     <Folder Include="Threading" />
     <Folder Include="IO" />
-    <Folder Include="XML\" />
   </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Nougat.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Echoes.targets" />
   <PropertyGroup>
     <PreBuildEvent />
   </PropertyGroup>

@@ -3,7 +3,7 @@
 interface
 
 uses
-  RemObjects.Sugar.TestFramework,
+  Sugar.TestFramework,
   UIKit;
 
 type

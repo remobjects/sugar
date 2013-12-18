@@ -175,17 +175,17 @@
     <Reference Include="mscorlib" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Sugar.TestFramework\RemObjects.Sugar.Echoes.TestFramework.oxygene">
-      <Name>RemObjects.Sugar.Echoes.TestFramework</Name>
+    <ProjectReference Include="..\Sugar.TestFramework\Sugar.Echoes.TestFramework.oxygene">
+      <Name>Sugar.Echoes.TestFramework</Name>
       <Project>{532c6e08-1256-4168-8973-08c9d3d7b239}</Project>
       <Private>True</Private>
-      <HintPath>..\Sugar.TestFramework\bin\Debug\.NET\RemObjects.Sugar.TestFramework.dll</HintPath>
+      <HintPath>..\Sugar.TestFramework\bin\Debug\.NET\Sugar.TestFramework.dll</HintPath>
     </ProjectReference>
-    <ProjectReference Include="..\Sugar\RemObjects.Sugar.Echoes.WinRT.oxygene">
-      <Name>RemObjects.Sugar.Echoes.WinRT</Name>
+    <ProjectReference Include="..\Sugar\Sugar.Echoes.WinRT.oxygene">
+      <Name>Sugar.Echoes.WinRT</Name>
       <Project>{3ab69816-9882-4fa6-abe5-c146199f5279}</Project>
       <Private>True</Private>
-      <HintPath>..\Sugar\bin\Debug\WinRT\RemObjects.Sugar.dll</HintPath>
+      <HintPath>..\Sugar\bin\Debug\WinRT\Sugar.dll</HintPath>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />

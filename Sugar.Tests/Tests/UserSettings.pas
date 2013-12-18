@@ -5,8 +5,8 @@ interface
 {$HIDE W0} //supress case-mismatch errors
 
 uses
-  RemObjects.Sugar,
-  RemObjects.Sugar.TestFramework;
+  Sugar,
+  Sugar.TestFramework;
 
 type
   UserSettingsTest = public class (Testcase)
@@ -159,7 +159,7 @@ end;
 
 method UserSettingsTest.Keys;
 begin
-  var Expected := new RemObjects.Sugar.Collections.List<String>;
+  var Expected := new Sugar.Collections.List<String>;
   Expected.Add("String");
   Expected.Add("Integer");
   Expected.Add("Double");

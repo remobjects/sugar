@@ -1,4 +1,4 @@
-﻿namespace RemObjects.Oxygene.Legacy.Echoes;
+﻿namespace Sugar.Legacy.Echoes;
 
 interface
 

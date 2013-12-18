@@ -5,9 +5,9 @@ interface
 {$HIDE W0} //supress case-mismatch errors
 
 uses
-  RemObjects.Sugar,
-  RemObjects.Sugar.Collections,
-  RemObjects.Sugar.TestFramework;
+  Sugar,
+  Sugar.Collections,
+  Sugar.TestFramework;
 
 type
   DictionaryTest = public class (Testcase)
@@ -110,7 +110,7 @@ end;
 
 method DictionaryTest.Keys;
 begin
-  var Expected := new RemObjects.Sugar.Collections.List<CodeClass>;
+  var Expected := new Sugar.Collections.List<CodeClass>;
   Expected.Add(new CodeClass(1));
   Expected.Add(new CodeClass(2));
   Expected.Add(new CodeClass(3));
@@ -124,7 +124,7 @@ end;
 
 method DictionaryTest.Values;
 begin
-  var Expected := new RemObjects.Sugar.Collections.List<String>;
+  var Expected := new Sugar.Collections.List<String>;
   Expected.Add("One");
   Expected.Add("Two");
   Expected.Add("Three");
@@ -152,7 +152,7 @@ begin
   var Item2 := new KeyValue<String, String>("Key", "Value");
   Assert.CheckBool(true, Item1.Equals(Item2));
 
-  var Expected := new RemObjects.Sugar.Collections.List<KeyValue<CodeClass, String>>;
+  var Expected := new Sugar.Collections.List<KeyValue<CodeClass, String>>;
   Expected.Add(new KeyValue<CodeClass, String>(new CodeClass(1),"One"));
   Expected.Add(new KeyValue<CodeClass, String>(new CodeClass(2),"Two"));
   Expected.Add(new KeyValue<CodeClass, String>(new CodeClass(3),"Three"));

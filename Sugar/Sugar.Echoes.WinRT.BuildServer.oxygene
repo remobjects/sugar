@@ -6,11 +6,11 @@
     <ProjectGuid>3ab69816-9882-4fa6-abe5-c146199f5279</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>RemObjects.Sugar.Echoes.WinRT</RootNamespace>
-    <AssemblyName>RemObjects.Sugar.WinRT</AssemblyName>
+    <RootNamespace>Sugar.Echoes.WinRT</RootNamespace>
+    <AssemblyName>Sugar.WinRT</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{656346D9-4656-40DA-A068-22D5425D4639}</ProjectTypeGuids>
-    <Name>RemObjects.Sugar.Echoes.WinRT</Name>
+    <Name>Sugar.Echoes.WinRT</Name>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <GeneratePDB>True</GeneratePDB>
@@ -141,9 +141,26 @@
   -->
   <ItemGroup>
     <Reference Include="mscorlib" />
+    <Reference Include="Windows" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Xml.ReaderWriter" />
+    <Reference Include="System.Reflection" />
+    <Reference Include="System.Runtime" />
+    <Reference Include="System.Runtime.InteropServices" />
+    <Reference Include="System.Globalization" />
+    <Reference Include="System.Runtime.WindowsRuntime" />
+    <Reference Include="System.Threading" />
+    <Reference Include="System.Threading.Tasks" />
+    <Reference Include="System.IO" />
+    <Reference Include="System.Linq" />
+    <Reference Include="System.Collections" />
+    <Reference Include="System.Text.Encoding" />
+    <Reference Include="System.Diagnostics.Debug" />
+    <Reference Include="System.Runtime.Extensions" />
   </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Echoes.WinRT.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Sugar\Microsoft.Windows.UI.Xaml.Oxygene.targets" />
   <PropertyGroup>
     <PreBuildEvent />
   </PropertyGroup>

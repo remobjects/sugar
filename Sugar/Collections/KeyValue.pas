@@ -1,11 +1,11 @@
-﻿namespace RemObjects.Sugar.Collections;
+﻿namespace Sugar.Collections;
 
 {$HIDE W0} //supress case-mismatch errors
 
 interface
 
 uses
-  RemObjects.Sugar;
+  Sugar;
 
 type
   {$IF COOPER OR ECHOES}

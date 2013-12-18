@@ -2,10 +2,10 @@
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <ProductVersion>3.5</ProductVersion>
-    <RootNamespace>RemObjects.Oxygene.Legacy</RootNamespace>
-    <ProjectGuid>{5566157c-55c7-4334-b57e-faf1e154d225}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AssemblyName>RemObjects.Oxygene.Legacy</AssemblyName>
+    <RootNamespace>Sugar.Legacy</RootNamespace>
+    <ProjectGuid>{731210B4-23B2-4D29-9098-0AC41A551241}</ProjectGuid>
+    <OutputType>StaticLibrary</OutputType>
+    <AssemblyName>SugarLegacy</AssemblyName>
     <AllowGlobals>
     </AllowGlobals>
     <AllowLegacyWith>
@@ -14,13 +14,15 @@
     <AllowLegacyCreate>False</AllowLegacyCreate>
     <AllowUnsafeCode>True</AllowUnsafeCode>
     <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <Name>RemObjects.Oxygene.Legacy.Echoes</Name>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <Name>Sugar.Legacy.Nougat.iOS</Name>
     <DefaultUses />
     <StartupClass />
     <InternalAssemblyName />
     <ApplicationIcon />
     <TargetFrameworkProfile />
+    <CreateHeaderFile>True</CreateHeaderFile>
+    <SDK>iOS</SDK>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <Optimize>false</Optimize>
@@ -39,6 +41,7 @@
     <XmlDocWarningLevel>WarningOnPublicMembers</XmlDocWarningLevel>
     <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
     <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
+    <SimulatorArchitectures>i386</SimulatorArchitectures>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <Optimize>true</Optimize>
@@ -58,38 +61,26 @@
     <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="mscorlib" />
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Xml.Linq">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Data.DataSetExtensions">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
+    <Reference Include="Foundation.fx" />
+    <Reference Include="libxml2.fx" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MemIniFile.pas" />
     <Compile Include="OneBasedString.pas" />
-    <Compile Include="Properties\AssemblyInfo.pas" />
     <Compile Include="String Functions.pas" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Sugar\RemObjects.Sugar.Echoes.oxygene">
-      <Name>RemObjects.Sugar.Echoes</Name>
-      <Project>{79301a0c-1f95-4fb0-9605-207e288c6171}</Project>
+    <ProjectReference Include="..\Sugar\Sugar.Nougat.iOS.oxygene">
+      <Name>Sugar.Nougat.iOS</Name>
+      <Project>{91b301fc-331e-48a7-803b-4cbe3fff6ed7}</Project>
       <Private>True</Private>
-      <HintPath>..\Sugar\bin\Debug\RemObjects.Sugar.dll</HintPath>
+      <HintPath>..\Sugar\bin\Debug\Sugar.exe</HintPath>
     </ProjectReference>
   </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Echoes.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Nougat.targets" />
   <PropertyGroup>
     <PreBuildEvent />
   </PropertyGroup>

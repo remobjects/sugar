@@ -1,4 +1,4 @@
-﻿namespace RemObjects.Sugar.Xml;
+﻿namespace Sugar.Xml;
 
 {$HIDE W0} //supress case-mismatch errors
 
@@ -13,7 +13,7 @@ uses
   {$ELSEIF NOUGAT}
   Foundation,
   {$ENDIF}
-  RemObjects.Sugar;
+  Sugar;
 
 type
   XmlNodeType = public enum(None, Attribute, CDATA, Comment, Document, DocumentType, Element, ProcessingInstruction, Text);
@@ -157,7 +157,7 @@ type
   private
     Root: XmlNode;
     method Match(Element: XmlNode; LocalName: String; NamespaceUri: String): Boolean;
-    method ListElementsByName(Element: XmlNode; LocalName: String; NamespaceUri: String): RemObjects.Sugar.Collections.List<XmlElement>;
+    method ListElementsByName(Element: XmlNode; LocalName: String; NamespaceUri: String): Sugar.Collections.List<XmlElement>;
   public
     constructor(RootElement: XmlNode); 
     method ElementsByName(Name: String): array of XmlElement;
@@ -482,7 +482,7 @@ end;
 
 method XmlNode.GetChildNodes: array of XmlNode;
 begin
-  var List := new RemObjects.Sugar.Collections.List<XmlNode>;
+  var List := new Sugar.Collections.List<XmlNode>;
   var ChildPtr := fNode^.children;
   while ChildPtr <> nil do begin
     List.Add(CreateCompatibleNode( ^libxml.__struct__xmlNode(ChildPtr), Document));
@@ -560,9 +560,9 @@ begin
     exit (LocalName = Ns.LocalName) and (NamespaceUri = Ns.Uri);
 end;
 
-method XmlNode.XmlNodeList.ListElementsByName(Element: XmlNode; LocalName: String; NamespaceUri: String): RemObjects.Sugar.Collections.List<XmlElement>;
+method XmlNode.XmlNodeList.ListElementsByName(Element: XmlNode; LocalName: String; NamespaceUri: String): Sugar.Collections.List<XmlElement>;
 begin
-  result := new RemObjects.Sugar.Collections.List<XmlElement>;
+  result := new Sugar.Collections.List<XmlElement>;
 
   if Element = nil then
     exit;

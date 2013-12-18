@@ -2,20 +2,23 @@
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <ProductVersion>3.5</ProductVersion>
+    <ProjectGuid>{8dac177a-64eb-4175-ac9c-e6b121b6f34b}</ProjectGuid>
     <OutputType>Library</OutputType>
     <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
     <AllowLegacyCreate>False</AllowLegacyCreate>
-    <Name>RemObjects.Sugar.Cooper</Name>
-    <RootNamespace>remobjects.sugar</RootNamespace>
-    <ProjectGuid>{d1ee6c41-515b-4175-873f-ee188ac43450}</ProjectGuid>
-    <AssemblyName>com.remobjects.sugar</AssemblyName>
+    <Name>Sugar.Cooper.Android</Name>
+    <RootNamespace>Sugar</RootNamespace>
+    <AssemblyName>com.Sugar.android</AssemblyName>
     <DefaultUses />
     <StartupClass />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <Optimize>False</Optimize>
-    <OutputPath>bin\Java\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Android\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;Android;</DefineConstants>
+    <GenerateDebugInfo>True</GenerateDebugInfo>
+    <EnableAsserts>True</EnableAsserts>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
     <CaptureConsoleOutput>False</CaptureConsoleOutput>
     <StartMode>Project</StartMode>
     <RegisterForComInterop>False</RegisterForComInterop>
@@ -25,13 +28,14 @@
     <XmlDocWarningLevel>WarningOnPublicMembers</XmlDocWarningLevel>
     <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
     <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
-    <SuppressWarnings />
-    <FutureHelperClassName />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <OutputPath>bin\Java\</OutputPath>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Android\</OutputPath>
     <GenerateDebugInfo>False</GenerateDebugInfo>
+    <DefineConstants>Android;</DefineConstants>
     <EnableAsserts>False</EnableAsserts>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
     <CaptureConsoleOutput>False</CaptureConsoleOutput>
     <StartMode>Project</StartMode>
     <RegisterForComInterop>False</RegisterForComInterop>
@@ -41,16 +45,12 @@
     <XmlDocWarningLevel>WarningOnPublicMembers</XmlDocWarningLevel>
     <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
     <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
-    <DefineConstants>
-    </DefineConstants>
-    <SuppressWarnings />
-    <FutureHelperClassName />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="android.jar" />
     <Reference Include="com.remobjects.oxygene.rtl.jar">
       <Private>True</Private>
     </Reference>
-    <Reference Include="rt.jar" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutoreleasePool.pas" />
@@ -104,7 +104,7 @@
     <Folder Include="Properties\" />
     <Folder Include="XML\" />
   </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Cooper.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Cooper.Android.targets" />
   <PropertyGroup>
     <PreBuildEvent />
   </PropertyGroup>

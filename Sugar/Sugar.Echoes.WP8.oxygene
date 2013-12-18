@@ -9,8 +9,8 @@
     <ProjectTypeGuids>{89896941-7261-4476-8385-4DA3CE9FDB83};{C089C8C0-30E0-4E22-80C0-CE093F111A43};{656346D9-4656-40DA-A068-22D5425D4639}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>RemObjects.Sugar.Echoes.WP8</RootNamespace>
-    <AssemblyName>RemObjects.Sugar.WP8</AssemblyName>
+    <RootNamespace>Sugar.Echoes.WP8</RootNamespace>
+    <AssemblyName>Sugar.WP8</AssemblyName>
     <TargetFrameworkIdentifier>WindowsPhone</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v8.0</TargetFrameworkVersion>
     <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
@@ -18,7 +18,7 @@
     <ValidateXaml>true</ValidateXaml>
     <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
     <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
-    <Name>RemObjects.Sugar.Echoes.WP8</Name>
+    <Name>Sugar.Echoes.WP8</Name>
     <AllowLegacyCreate>False</AllowLegacyCreate>
     <AllowLegacyOutParams>False</AllowLegacyOutParams>
   </PropertyGroup>
@@ -142,14 +142,6 @@
   -->
   <ItemGroup>
     <Reference Include="mscorlib" />
-    <Reference Include="System" />
-    <Reference Include="System.Net" />
-    <Reference Include="Windows" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Windows" />
-    <Reference Include="System.Runtime.WindowsRuntime" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Collections\" />
@@ -159,7 +151,8 @@
     <Folder Include="Threading\" />
     <Folder Include="XML\" />
   </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Echoes.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\RemObjects.Oxygene.Echoes.$(TargetFrameworkIdentifier).targets" />
   <PropertyGroup>
     <PreBuildEvent />
   </PropertyGroup>

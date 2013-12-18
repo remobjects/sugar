@@ -1,4 +1,4 @@
-﻿namespace RemObjects.Sugar.Echoes;
+﻿namespace Sugar.Echoes;
 
 interface
 

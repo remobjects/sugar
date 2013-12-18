@@ -1,13 +1,13 @@
 
 Microsoft Visual Studio Solution File, Format Version 12.00
 # RemObjects Fire
-Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "RemObjects.Sugar.Cooper.TestFramework", "Sugar.TestFramework\RemObjects.Sugar.Cooper.TestFramework.oxygene", "{DBA17CA8-59BC-4544-A0F5-C632737D5AA0}"
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Cooper.TestFramework", "Sugar.TestFramework\Sugar.Cooper.TestFramework.oxygene", "{DBA17CA8-59BC-4544-A0F5-C632737D5AA0}"
 EndProject
-Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "RemObjects.Sugar.Echoes.TestFramework", "Sugar.TestFramework\RemObjects.Sugar.Echoes.TestFramework.oxygene", "{532C6E08-1256-4168-8973-08C9D3D7B239}"
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Echoes.TestFramework", "Sugar.TestFramework\Sugar.Echoes.TestFramework.oxygene", "{532C6E08-1256-4168-8973-08C9D3D7B239}"
 EndProject
-Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "RemObjects.Sugar.Nougat.OSX.TestFramework", "Sugar.TestFramework\RemObjects.Sugar.Nougat.OSX.TestFramework.oxygene", "{1D894B7C-0117-4154-A1F2-FD22691F0F13}"
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Nougat.OSX.TestFramework", "Sugar.TestFramework\Sugar.Nougat.OSX.TestFramework.oxygene", "{1D894B7C-0117-4154-A1F2-FD22691F0F13}"
 EndProject
-Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "RemObjects.Sugar.Nougat.iOS.TestFramework", "Sugar.TestFramework\RemObjects.Sugar.Nougat.iOS.TestFramework.oxygene", "{E132A412-2431-41C6-9D98-63F942A32B8E}"
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Nougat.iOS.TestFramework", "Sugar.TestFramework\Sugar.Nougat.iOS.TestFramework.oxygene", "{E132A412-2431-41C6-9D98-63F942A32B8E}"
 EndProject
 Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Echoes.Test", "Sugar.Tests\Sugar.Echoes.Test.oxygene", "{9F930A22-BE43-4D5A-83F6-4AFC91282E23}"
 EndProject

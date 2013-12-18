@@ -1,4 +1,4 @@
-﻿namespace RemObjects.Sugar.Crypto;
+﻿namespace Sugar.Crypto;
 
 interface
 

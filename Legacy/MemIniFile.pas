@@ -1,12 +1,12 @@
-﻿namespace RemObjects.Oxygene.Legacy;
+﻿namespace Sugar.Legacy;
 
 interface
 {$HIDE W0} //supress case-mismatch errors
 
 uses
-  RemObjects.Sugar,
-  RemObjects.Sugar.IO,
-  RemObjects.Sugar.Collections;   
+  Sugar,
+  Sugar.IO,
+  Sugar.Collections;   
 
 type
   MemIniFile = public class

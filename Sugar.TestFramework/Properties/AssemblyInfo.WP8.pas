@@ -1,4 +1,4 @@
-﻿namespace RemObjects.Sugar.TestFramework;
+﻿namespace Sugar.TestFramework;
 
 interface
 
@@ -10,11 +10,11 @@ uses System.Reflection,
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("RemObjects.Sugar.Echoes.WP8.TestFramework")]
+[assembly: AssemblyTitle("Sugar.Echoes.WP8.TestFramework")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("RemObjects.Sugar.Echoes.WP8.TestFramework")]
+[assembly: AssemblyProduct("Sugar.Echoes.WP8.TestFramework")]
 [assembly: AssemblyCopyright("Copyright ©  2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

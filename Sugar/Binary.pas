@@ -1,4 +1,4 @@
-﻿namespace RemObjects.Sugar;
+﻿namespace Sugar;
 
 {$HIDE W0} //supress case-mismatch errors
 
@@ -6,7 +6,7 @@ interface
 
 {$IF COOPER}
 uses
-  RemObjects.Sugar.Cooper;
+  Sugar.Cooper;
 {$ENDIF}
 
 type

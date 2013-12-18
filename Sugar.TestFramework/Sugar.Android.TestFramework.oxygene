@@ -6,11 +6,11 @@
     <OutputType>Library</OutputType>
     <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
     <AllowLegacyCreate>False</AllowLegacyCreate>
-    <Name>RemObjects.Sugar.Android.TestFramework</Name>
-    <RootNamespace>RemObjects.Sugar.TestFramework</RootNamespace>
+    <Name>Sugar.Android.TestFramework</Name>
+    <RootNamespace>Sugar.TestFramework</RootNamespace>
     <DefaultUses />
     <StartupClass />
-    <AssemblyName>com.RemObjects.Sugar.testframework.android</AssemblyName>
+    <AssemblyName>com.Sugar.testframework.android</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <Optimize>false</Optimize>

@@ -1,11 +1,11 @@
-﻿namespace RemObjects.Sugar.Collections;
+﻿namespace Sugar.Collections;
 
 {$HIDE W0} //supress case-mismatch errors
 
 interface
 
 uses
-  RemObjects.Sugar;
+  Sugar;
 
 type
   Stack<T> = public class mapped to {$IF COOPER}java.util.Stack<T>{$ELSEIF ECHOES}System.Collections.Generic.Stack<T>{$ELSEIF NOUGAT}Foundation.NSMutableArray{$ENDIF}

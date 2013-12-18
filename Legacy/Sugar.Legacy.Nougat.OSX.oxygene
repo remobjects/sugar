@@ -2,7 +2,7 @@
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <ProductVersion>3.5</ProductVersion>
-    <RootNamespace>RemObjects.Oxygene.Legacy</RootNamespace>
+    <RootNamespace>Sugar.Legacy</RootNamespace>
     <ProjectGuid>{4d7fe7a5-2a35-4915-b16b-3f2e84b64216}</ProjectGuid>
     <OutputType>StaticLibrary</OutputType>
     <AssemblyName>SugarLegacy</AssemblyName>
@@ -15,7 +15,7 @@
     <AllowUnsafeCode>True</AllowUnsafeCode>
     <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <Name>RemObjects.Oxygene.Legacy.Nougat.OSX</Name>
+    <Name>Sugar.Legacy.Nougat.OSX</Name>
     <DefaultUses />
     <StartupClass />
     <InternalAssemblyName />
@@ -72,8 +72,8 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Sugar\RemObjects.Sugar.Nougat.OSX.oxygene">
-      <Name>RemObjects.Sugar.Nougat.OSX</Name>
+    <ProjectReference Include="..\Sugar\Sugar.Nougat.OSX.oxygene">
+      <Name>Sugar.Nougat.OSX</Name>
       <Project>{ab7ab88b-2370-43bf-844b-54d015da9e57}</Project>
       <Private>True</Private>
       <HintPath>..\Sugar\bin\Debug\Sugar.exe</HintPath>

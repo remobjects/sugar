@@ -5,8 +5,8 @@ interface
 {$HIDE W0} //supress case-mismatch errors
 
 uses
-  RemObjects.Sugar,
-  RemObjects.Sugar.TestFramework;
+  Sugar,
+  Sugar.TestFramework;
 
 type
   StringTest = public class (Testcase)
@@ -71,7 +71,7 @@ begin
   Assert.CheckInt(11, NativeString.Length);
   Assert.CheckString("Hello World", NativeString);
   //Sugar string
-  var SugarString: RemObjects.Sugar.String := Data + " World";
+  var SugarString: Sugar.String := Data + " World";
   Assert.CheckInt(11, SugarString.Length);
   Assert.CheckString("Hello World", SugarString);
 end;
@@ -79,7 +79,7 @@ end;
 method StringTest.ImplicistCast;
 begin
   var C: Char := 'x';
-  var SugarString: RemObjects.Sugar.String := C;
+  var SugarString: Sugar.String := C;
   Assert.CheckString("x", SugarString);
 end;
 

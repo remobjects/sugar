@@ -5,14 +5,14 @@ interface
 {$HIDE W0} //supress case-mismatch errors
 
 uses
-  RemObjects.Sugar,
-  RemObjects.Sugar.Collections,
-  RemObjects.Sugar.TestFramework;
+  Sugar,
+  Sugar.Collections,
+  Sugar.TestFramework;
 
 type
   ListTest = public class (Testcase)
   private
-    Data: RemObjects.Sugar.Collections.List<String>;
+    Data: Sugar.Collections.List<String>;
   public
     method Setup; override;  
     method Constructors;
@@ -44,7 +44,7 @@ implementation
 
 method ListTest.Setup;
 begin
-  Data := new RemObjects.Sugar.Collections.List<String>;
+  Data := new Sugar.Collections.List<String>;
   Data.Add("One");
   Data.Add("Two");
   Data.Add("Three");
@@ -52,13 +52,13 @@ end;
 
 method ListTest.Constructors;
 begin
-  var Actual := new RemObjects.Sugar.Collections.List<String>(Data);
+  var Actual := new Sugar.Collections.List<String>(Data);
   Assert.IsNotNull(Actual);
   Assert.CheckInt(3, Actual.Count);
   Assert.CheckString("One", Actual[0]);
 
   var Expected: array of String := ["A", "B", "C"];
-  Actual := new RemObjects.Sugar.Collections.List<String>(Expected);
+  Actual := new Sugar.Collections.List<String>(Expected);
   Assert.IsNotNull(Actual);
   Assert.CheckInt(3, Actual.Count);
   for i: Integer := 0 to Actual.Count - 1 do
@@ -80,7 +80,7 @@ end;
 
 method ListTest.AddRange;
 begin
-  var Value := new RemObjects.Sugar.Collections.List<String>;
+  var Value := new Sugar.Collections.List<String>;
   Value.Add("Item1");
   Value.Add("Item2");
 
@@ -89,7 +89,7 @@ begin
   Assert.CheckBool(true, Data.Contains("Item1"));
   Assert.CheckBool(true, Data.Contains("Item2"));
 
-  Data.AddRange(new RemObjects.Sugar.Collections.List<String>);
+  Data.AddRange(new Sugar.Collections.List<String>);
   Assert.CheckInt(5, Data.Count);
 
   Assert.IsException(->Data.AddRange(nil));

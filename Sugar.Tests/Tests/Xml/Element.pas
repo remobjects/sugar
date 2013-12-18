@@ -5,9 +5,9 @@ interface
 {$HIDE W0} //supress case-mismatch errors
 
 uses
-  RemObjects.Sugar,
-  RemObjects.Sugar.Xml,
-  RemObjects.Sugar.TestFramework;
+  Sugar,
+  Sugar.Xml,
+  Sugar.TestFramework;
 
 type
   ElementTest = public class (Testcase)
@@ -298,7 +298,7 @@ end;
 method ElementTest.Attributes;
 begin
   var Node := Data.FirstChild.FirstChild as XmlElement;
-  var Expected := new RemObjects.Sugar.Collections.List<String>;
+  var Expected := new Sugar.Collections.List<String>;
   Expected.Add("Name");
   Expected.Add("Id");
   
@@ -319,7 +319,7 @@ method ElementTest.GetElementsByTagName;
 begin
   //Must retrieve elements with specified tag name from all descendants
   var Actual := Data.GetElementsByTagName("User");
-  var Expected := new RemObjects.Sugar.Collections.List<String>;
+  var Expected := new Sugar.Collections.List<String>;
   Expected.Add("First");
   Expected.Add("Second");
   Expected.Add("Third");

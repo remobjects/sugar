@@ -9,7 +9,7 @@ uses
   android.os,
   android.util,
   android.view,
-  RemObjects.Sugar.testframework,
+  Sugar.testframework,
   Sugar.Test,
   android.widget;
 
@@ -24,7 +24,7 @@ implementation
 method MainActivity.onCreate(savedInstanceState: Bundle);
 begin
   inherited;
-  RemObjects.Sugar.Environment.AppContext := self.ApplicationContext;
+  Sugar.Environment.AppContext := self.ApplicationContext;
   ContentView := R.layout.main;
 
   var results := TestRunner.RunAll(self);
