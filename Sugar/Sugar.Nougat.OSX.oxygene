@@ -14,7 +14,7 @@
     <StartupClass />
     <DeploymentTargetVersion>10.6</DeploymentTargetVersion>
     <AllowLegacyOutParams>False</AllowLegacyOutParams>
-    <CreateHeaderFile>True</CreateHeaderFile>
+    <CreateHeaderFile>False</CreateHeaderFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <Optimize>False</Optimize>

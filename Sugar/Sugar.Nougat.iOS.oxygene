@@ -14,7 +14,7 @@
     <StartupClass />
     <DeploymentTargetVersion>6.0</DeploymentTargetVersion>
     <AllowLegacyOutParams>False</AllowLegacyOutParams>
-    <CreateHeaderFile>True</CreateHeaderFile>
+    <CreateHeaderFile>False</CreateHeaderFile>
     <BundleExtension />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
