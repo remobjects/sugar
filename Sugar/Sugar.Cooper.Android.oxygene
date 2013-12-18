@@ -7,8 +7,8 @@
     <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
     <AllowLegacyCreate>False</AllowLegacyCreate>
     <Name>Sugar.Cooper.Android</Name>
-    <RootNamespace>Sugar</RootNamespace>
-    <AssemblyName>com.Sugar.android</AssemblyName>
+    <RootNamespace>sugar</RootNamespace>
+    <AssemblyName>com.sugar.android</AssemblyName>
     <DefaultUses />
     <StartupClass />
   </PropertyGroup>

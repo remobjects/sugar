@@ -6,9 +6,9 @@
     <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
     <AllowLegacyCreate>False</AllowLegacyCreate>
     <Name>Sugar.Cooper</Name>
-    <RootNamespace>Sugar</RootNamespace>
+    <RootNamespace>sugar</RootNamespace>
     <ProjectGuid>{d1ee6c41-515b-4175-873f-ee188ac43450}</ProjectGuid>
-    <AssemblyName>com.Sugar</AssemblyName>
+    <AssemblyName>com.sugar</AssemblyName>
     <DefaultUses />
     <StartupClass />
   </PropertyGroup>

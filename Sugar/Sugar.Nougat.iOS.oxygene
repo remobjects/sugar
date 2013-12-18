@@ -13,7 +13,6 @@
     <DefaultUses>Foundation</DefaultUses>
     <StartupClass />
     <DeploymentTargetVersion>6.0</DeploymentTargetVersion>
-    <BundleIdentifier>org.me.Sugar</BundleIdentifier>
     <AllowLegacyOutParams>False</AllowLegacyOutParams>
     <CreateHeaderFile>True</CreateHeaderFile>
     <BundleExtension />
@@ -27,8 +26,6 @@
     <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
     <CaptureConsoleOutput>False</CaptureConsoleOutput>
     <StartMode>Project</StartMode>
-    <CpuType>anycpu</CpuType>
-    <RuntimeVersion>v25</RuntimeVersion>
     <XmlDoc>False</XmlDoc>
     <XmlDocWarningLevel>WarningOnPublicMembers</XmlDocWarningLevel>
     <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
@@ -42,8 +39,6 @@
     <EnableAsserts>False</EnableAsserts>
     <CaptureConsoleOutput>False</CaptureConsoleOutput>
     <StartMode>Project</StartMode>
-    <CpuType>anycpu</CpuType>
-    <RuntimeVersion>v25</RuntimeVersion>
     <XmlDoc>False</XmlDoc>
     <XmlDocWarningLevel>WarningOnPublicMembers</XmlDocWarningLevel>
     <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
