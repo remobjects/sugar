@@ -13,10 +13,9 @@ msbuild["rebuild"]("Sugar/RemObjects.Oxygene.Sugar.Echoes.oxygene", 		{configura
 msbuild["rebuild"]("Sugar/RemObjects.Oxygene.Sugar.Echoes.WinRT.BuildServer.oxygene", 	{configuration: "Release", destinationFolder: "./Bin" });
 msbuild["rebuild"]("Sugar/RemObjects.Oxygene.Sugar.Echoes.WP8.BuildServer.oxygene", 	{configuration: "Release", destinationFolder: "./Bin" });
 
-msbuild["rebuild"]("Sugar/RemObjects.Oxygene.Sugar.Nougat.OSX.oxygene", 	{configuration: "Release", destinationFolder: "./Bin", extraArgs: "/p:CrossBox=Onyx;CrossBoxDeviceID=Mac"});
-msbuild["rebuild"]("Sugar/RemObjects.Oxygene.Sugar.Nougat.iOS.oxygene", 	{configuration: "Release", destinationFolder: "./Bin", extraArgs: "/p:CrossBox=Onyx;CrossBoxDeviceID=iOS Simulator (iPhone)"});
-msbuild["rebuild"]("Sugar/RemObjects.Oxygene.Sugar.Nougat.iOS.oxygene", 	{configuration: "Release", destinationFolder: "./Bin", extraArgs: "/p:CrossBox=Onyx;CrossBoxDeviceID=Generic iOS Device"});
-
+msbuild["rebuild"]("Sugar/RemObjects.Oxygene.Sugar.Nougat.OSX.oxygene", 	{configuration: "Release", destinationFolder: "./Bin", extraArgs: '"/p:CrossBox=Onyx;CrossBoxDeviceID=Mac"'});
+msbuild["rebuild"]("Sugar/RemObjects.Oxygene.Sugar.Nougat.iOS.oxygene", 	{configuration: "Release", destinationFolder: "./Bin", extraArgs: '"/p:CrossBox=Onyx;CrossBoxDeviceID=iOS Simulator (iPhone)"'});
+msbuild["rebuild"]("Sugar/RemObjects.Oxygene.Sugar.Nougat.iOS.oxygene", 	{configuration: "Release", destinationFolder: "./Bin", extraArgs: '"/p:CrossBox=Onyx;CrossBoxDeviceID=Generic iOS Device"'});
 
 zip.compress("$(CIReleaseFolder)/Sugar - $(sugarVersion).zip", "./Bin", "*Sugar*.*", true);
 file.copy("./Bin/*Sugar*.*", "$(CISharedFolder)/Bin/", true);
