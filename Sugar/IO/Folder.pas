@@ -1,4 +1,4 @@
-﻿namespace RemObjects.Oxygene.Sugar.IO;
+﻿namespace RemObjects.Sugar.IO;
 
 interface
 
@@ -11,8 +11,8 @@ uses
   {$ELSEIF ECHOES}
   {$ELSEIF NOUGAT}
   {$ENDIF}
-  RemObjects.Oxygene.Sugar,
-  RemObjects.Oxygene.Sugar.Collections;
+  RemObjects.Sugar,
+  RemObjects.Sugar.Collections;
 
 type
   Folder = public class mapped to {$IF WINDOWS_PHONE OR NETFX_CORE}Windows.Storage.StorageFolder{$ELSEIF ECHOES}System.String{$ELSEIF COOPER}java.io.File{$ELSEIF NOUGAT}Foundation.NSString{$ENDIF}

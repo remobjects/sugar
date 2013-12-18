@@ -82,11 +82,11 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Sugar\RemObjects.Oxygene.Sugar.Echoes.oxygene">
-      <Name>RemObjects.Oxygene.Sugar.Echoes</Name>
+    <ProjectReference Include="..\Sugar\RemObjects.Sugar.Echoes.oxygene">
+      <Name>RemObjects.Sugar.Echoes</Name>
       <Project>{79301a0c-1f95-4fb0-9605-207e288c6171}</Project>
       <Private>True</Private>
-      <HintPath>..\Sugar\bin\Debug\RemObjects.Oxygene.Sugar.dll</HintPath>
+      <HintPath>..\Sugar\bin\Debug\RemObjects.Sugar.dll</HintPath>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Echoes.targets" />

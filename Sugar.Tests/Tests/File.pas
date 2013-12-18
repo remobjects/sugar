@@ -5,9 +5,9 @@ interface
 {$HIDE W0} //supress case-mismatch errors
 
 uses
-  RemObjects.Oxygene.Sugar,
-  RemObjects.Oxygene.Sugar.IO,
-  RemObjects.Oxygene.Sugar.TestFramework;
+  RemObjects.Sugar,
+  RemObjects.Sugar.IO,
+  RemObjects.Sugar.TestFramework;
 
 type
   FileTest = public class (Testcase)

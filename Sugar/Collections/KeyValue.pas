@@ -1,11 +1,11 @@
-﻿namespace RemObjects.Oxygene.Sugar.Collections;
+﻿namespace RemObjects.Sugar.Collections;
 
 {$HIDE W0} //supress case-mismatch errors
 
 interface
 
 uses
-  RemObjects.Oxygene.Sugar;
+  RemObjects.Sugar;
 
 type
   {$IF COOPER OR ECHOES}

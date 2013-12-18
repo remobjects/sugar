@@ -81,12 +81,12 @@
     <Reference Include="com.remobjects.oxygene.rtl.jar">
       <Private>True</Private>
     </Reference>
-    <Reference Include="com.remobjects.oxygene.sugar.android.jar">
-      <HintPath>..\Sugar\bin\Android\com.remobjects.oxygene.sugar.android.jar</HintPath>
+    <Reference Include="com.RemObjects.Sugar.android.jar">
+      <HintPath>..\Sugar\bin\Android\com.RemObjects.Sugar.android.jar</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="com.remobjects.oxygene.sugar.testframework.android.jar">
-      <HintPath>..\Sugar.TestFramework\bin\Android\com.remobjects.oxygene.sugar.testframework.android.jar</HintPath>
+    <Reference Include="com.RemObjects.Sugar.testframework.android.jar">
+      <HintPath>..\Sugar.TestFramework\bin\Android\com.RemObjects.Sugar.testframework.android.jar</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>

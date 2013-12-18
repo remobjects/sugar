@@ -5,8 +5,8 @@ interface
 {$HIDE W0} //supress case-mismatch errors
 
 uses
-  RemObjects.Oxygene.Sugar,
-  RemObjects.Oxygene.Sugar.TestFramework;
+  RemObjects.Sugar,
+  RemObjects.Sugar.TestFramework;
 
 type
   GuidTest = public class (Testcase)

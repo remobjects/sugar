@@ -2,63 +2,58 @@
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <ProductVersion>3.5</ProductVersion>
-    <OutputType>StaticLibrary</OutputType>
+    <ProjectGuid>{8dac177a-64eb-4175-ac9c-e6b121b6f34b}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
     <AllowLegacyCreate>False</AllowLegacyCreate>
-    <Name>RemObjects.Oxygene.Sugar.Nougat.iOS</Name>
-    <RootNamespace>RemObjects.Oxygene.Sugar</RootNamespace>
-    <SDK>iOS</SDK>
-    <ProjectGuid>{91B301FC-331E-48A7-803B-4CBE3FFF6ED7}</ProjectGuid>
-    <AssemblyName>Sugar</AssemblyName>
-    <DefaultUses>Foundation</DefaultUses>
+    <Name>RemObjects.Sugar.Cooper.Android</Name>
+    <RootNamespace>RemObjects.Sugar</RootNamespace>
+    <AssemblyName>com.RemObjects.Sugar.android</AssemblyName>
+    <DefaultUses />
     <StartupClass />
-    <DeploymentTargetVersion>6.0</DeploymentTargetVersion>
-    <BundleIdentifier>org.me.RemObjects.Oxygene.Sugar</BundleIdentifier>
-    <AllowLegacyOutParams>False</AllowLegacyOutParams>
-    <CreateHeaderFile>True</CreateHeaderFile>
-    <BundleExtension />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <Optimize>False</Optimize>
-    <OutputPath>.\bin</OutputPath>
-    <DefineConstants>DEBUG;TRACE;IOS</DefineConstants>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Android\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;Android;</DefineConstants>
     <GenerateDebugInfo>True</GenerateDebugInfo>
     <EnableAsserts>True</EnableAsserts>
     <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
     <CaptureConsoleOutput>False</CaptureConsoleOutput>
     <StartMode>Project</StartMode>
+    <RegisterForComInterop>False</RegisterForComInterop>
     <CpuType>anycpu</CpuType>
     <RuntimeVersion>v25</RuntimeVersion>
     <XmlDoc>False</XmlDoc>
     <XmlDocWarningLevel>WarningOnPublicMembers</XmlDocWarningLevel>
     <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
     <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
-    <SimulatorArchitectures>i386;x86_64</SimulatorArchitectures>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <Optimize>True</Optimize>
-    <OutputPath>.\bin</OutputPath>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Android\</OutputPath>
     <GenerateDebugInfo>False</GenerateDebugInfo>
+    <DefineConstants>Android;</DefineConstants>
     <EnableAsserts>False</EnableAsserts>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
     <CaptureConsoleOutput>False</CaptureConsoleOutput>
     <StartMode>Project</StartMode>
+    <RegisterForComInterop>False</RegisterForComInterop>
     <CpuType>anycpu</CpuType>
     <RuntimeVersion>v25</RuntimeVersion>
     <XmlDoc>False</XmlDoc>
     <XmlDocWarningLevel>WarningOnPublicMembers</XmlDocWarningLevel>
     <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
     <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
-    <DefineConstants>IOS</DefineConstants>
-    <SimulatorArchitectures>i386;x86_64</SimulatorArchitectures>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Foundation.fx" />
-    <Reference Include="libNougat.fx" />
-    <Reference Include="libxml2.fx" />
-    <Reference Include="rtl.fx" />
-    <Reference Include="UIKit.fx" />
+    <Reference Include="android.jar" />
+    <Reference Include="com.remobjects.oxygene.rtl.jar">
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AutoreleasePool.pas" />
     <Compile Include="Binary.pas" />
     <Compile Include="Collections\Dictionary.pas" />
     <Compile Include="Collections\HashSet.pas" />
@@ -67,6 +62,8 @@
     <Compile Include="Collections\Queue.pas" />
     <Compile Include="Collections\Stack.pas" />
     <Compile Include="Color.pas" />
+    <Compile Include="Cooper\EnumerationSequence.pas" />
+    <Compile Include="Cooper\LocaleUtils.pas" />
     <None Include="Crypto\Cipher.pas" />
     <None Include="Crypto\Digest.pas" />
     <Compile Include="DateTime.pas" />
@@ -76,19 +73,19 @@
     <Compile Include="IO\Folder.pas" />
     <Compile Include="Random.pas" />
     <Compile Include="Environment.pas" />
-    <Compile Include="UserSettings.pas" />
+    <Compile Include="Exceptions.pas" />
+    <Compile Include="Extensions.pas" />
+    <Compile Include="Guid.pas" />
+    <Compile Include="StringFormatter.pas" />
     <None Include="Threading\AutoResetEvent.pas" />
     <None Include="Threading\ManualResetEvent.pas" />
     <None Include="Threading\Semaphore.pas" />
     <None Include="Threading\Thread.pas" />
     <None Include="Threading\ThreadPool.pas" />
-    <Compile Include="Exceptions.pas" />
-    <Compile Include="Guid.pas" />
+    <Compile Include="UserSettings.pas" />
     <Compile Include="Math.pas" />
-    <Compile Include="Extensions.pas" />
     <Compile Include="String.pas" />
     <Compile Include="StringBuilder.pas" />
-    <Compile Include="StringFormatter.pas" />
     <Compile Include="Url.pas" />
     <Compile Include="XML\XmlAttribute.pas" />
     <Compile Include="XML\XmlCharacterData.pas" />
@@ -99,14 +96,15 @@
     <Compile Include="XML\XmlProcessingInstruction.pas" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Crypto" />
-    <Folder Include="Properties\" />
+    <Folder Include="Cooper" />
     <Folder Include="Collections" />
-    <Folder Include="Threading" />
     <Folder Include="IO" />
-    <Folder Include="XML" />
+    <Folder Include="Crypto" />
+    <Folder Include="Threading" />
+    <Folder Include="Properties\" />
+    <Folder Include="XML\" />
   </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Nougat.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Cooper.Android.targets" />
   <PropertyGroup>
     <PreBuildEvent />
   </PropertyGroup>

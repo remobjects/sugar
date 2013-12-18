@@ -45,12 +45,12 @@
     <Reference Include="com.remobjects.oxygene.rtl.jar">
       <Private>True</Private>
     </Reference>
-    <Reference Include="com.remobjects.oxygene.sugar.jar">
-      <HintPath>..\Sugar\bin\Java\com.remobjects.oxygene.sugar.jar</HintPath>
+    <Reference Include="com.RemObjects.Sugar.jar">
+      <HintPath>..\Sugar\bin\Java\com.RemObjects.Sugar.jar</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="com.remobjects.oxygene.sugar.testframework.jar">
-      <HintPath>..\Sugar.TestFramework\bin\Java\com.remobjects.oxygene.sugar.testframework.jar</HintPath>
+    <Reference Include="com.RemObjects.Sugar.testframework.jar">
+      <HintPath>..\Sugar.TestFramework\bin\Java\com.RemObjects.Sugar.testframework.jar</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="rt.jar" />

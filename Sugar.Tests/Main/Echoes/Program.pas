@@ -3,7 +3,7 @@
 interface
 
 uses
-  RemObjects.Oxygene.Sugar.TestFramework,
+  RemObjects.Sugar.TestFramework,
   System;
 
 type

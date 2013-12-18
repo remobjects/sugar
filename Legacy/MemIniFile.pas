@@ -4,9 +4,9 @@ interface
 {$HIDE W0} //supress case-mismatch errors
 
 uses
-  RemObjects.Oxygene.Sugar,
-  RemObjects.Oxygene.Sugar.IO,
-  RemObjects.Oxygene.Sugar.Collections;   
+  RemObjects.Sugar,
+  RemObjects.Sugar.IO,
+  RemObjects.Sugar.Collections;   
 
 type
   MemIniFile = public class

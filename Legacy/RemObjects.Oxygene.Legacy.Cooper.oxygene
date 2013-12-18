@@ -69,11 +69,11 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Sugar\RemObjects.Oxygene.Sugar.Cooper.oxygene">
-      <Name>RemObjects.Oxygene.Sugar.Cooper</Name>
+    <ProjectReference Include="..\Sugar\RemObjects.Sugar.Cooper.oxygene">
+      <Name>RemObjects.Sugar.Cooper</Name>
       <Project>{d1ee6c41-515b-4175-873f-ee188ac43450}</Project>
       <Private>True</Private>
-      <HintPath>..\Sugar\bin\Debug\Java\RemObjects.Oxygene.Sugar.jar</HintPath>
+      <HintPath>..\Sugar\bin\Debug\Java\RemObjects.Sugar.jar</HintPath>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Cooper.targets" />

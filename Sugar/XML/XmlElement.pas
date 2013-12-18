@@ -1,4 +1,4 @@
-﻿namespace RemObjects.Oxygene.Sugar.Xml;
+﻿namespace RemObjects.Sugar.Xml;
 
 {$HIDE W0} //supress case-mismatch errors
 
@@ -13,7 +13,7 @@ uses
   {$ELSEIF NOUGAT}
   Foundation,
   {$ENDIF}
-  RemObjects.Oxygene.Sugar;
+  RemObjects.Sugar;
 
 type
   XmlElement = public class (XmlNode)
@@ -84,7 +84,7 @@ begin
   for i: Integer := 0 to items.Length-1 do
     result[i] := new XmlAttribute(items[i]);
   {$ELSEIF NOUGAT}
-  var List := new RemObjects.Oxygene.Sugar.Collections.List<XmlAttribute>;
+  var List := new RemObjects.Sugar.Collections.List<XmlAttribute>;
   var ChildPtr := Node^.properties;
   while ChildPtr <> nil do begin
     List.Add(new XmlAttribute(^libxml.__struct__xmlNode(ChildPtr), Document));    

@@ -1,4 +1,4 @@
-﻿namespace RemObjects.Oxygene.Sugar;
+﻿namespace RemObjects.Sugar;
 {$HIDE W0} //supress case-mismatch errors
 interface
 
@@ -251,7 +251,7 @@ begin
   if String.IsNullOrEmpty(Culture) then
     Formatter := new java.text.SimpleDateFormat(DateFormater.Format(Format))
   else    
-    Formatter := new java.text.SimpleDateFormat(DateFormater.Format(Format), RemObjects.Oxygene.Sugar.Cooper.LocaleUtils.ForLanguageTag(Culture));
+    Formatter := new java.text.SimpleDateFormat(DateFormater.Format(Format), RemObjects.Sugar.Cooper.LocaleUtils.ForLanguageTag(Culture));
     
   exit Formatter.format(fDate);
 end;

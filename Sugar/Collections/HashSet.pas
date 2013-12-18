@@ -1,4 +1,4 @@
-﻿namespace RemObjects.Oxygene.Sugar.Collections;
+﻿namespace RemObjects.Sugar.Collections;
 
 {$HIDE W0} //supress case-mismatch errors
 
@@ -23,7 +23,7 @@ implementation
 method HashSet<T>.Add(Item: T): Boolean;
 begin
   if Item = nil then
-    raise new RemObjects.Oxygene.Sugar.SugarArgumentNullException("Item");
+    raise new RemObjects.Sugar.SugarArgumentNullException("Item");
 
   exit mapped.Add(Item);
 end;

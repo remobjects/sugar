@@ -9,8 +9,8 @@
     <ProjectTypeGuids>{89896941-7261-4476-8385-4DA3CE9FDB83};{C089C8C0-30E0-4E22-80C0-CE093F111A43};{656346D9-4656-40DA-A068-22D5425D4639}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>RemObjects.Oxygene.Sugar.TestFramework</RootNamespace>
-    <AssemblyName>RemObjects.Oxygene.Sugar.TestFramework.WP8</AssemblyName>
+    <RootNamespace>RemObjects.Sugar.TestFramework</RootNamespace>
+    <AssemblyName>RemObjects.Sugar.TestFramework.WP8</AssemblyName>
     <TargetFrameworkIdentifier>WindowsPhone</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v8.0</TargetFrameworkVersion>
     <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
@@ -18,7 +18,7 @@
     <ValidateXaml>true</ValidateXaml>
     <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
     <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
-    <Name>RemObjects.Oxygene.Sugar.Echoes.WP8.TestFramework</Name>
+    <Name>RemObjects.Sugar.Echoes.WP8.TestFramework</Name>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

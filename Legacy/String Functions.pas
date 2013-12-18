@@ -4,7 +4,7 @@
 
 interface
 
-uses RemObjects.Oxygene.Sugar;
+uses RemObjects.Sugar;
 
 // all methods in this module are one-based, as they are for Delphi compatibility.
 

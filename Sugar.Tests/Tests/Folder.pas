@@ -5,9 +5,9 @@ interface
 {$HIDE W0} //supress case-mismatch errors
 
 uses
-  RemObjects.Oxygene.Sugar,
-  RemObjects.Oxygene.Sugar.IO,
-  RemObjects.Oxygene.Sugar.TestFramework;
+  RemObjects.Sugar,
+  RemObjects.Sugar.IO,
+  RemObjects.Sugar.TestFramework;
 
 type
   FolderTest = public class (Testcase)
@@ -110,7 +110,7 @@ begin
   Assert.CheckInt(2, length(Data.GetFolders));
   Assert.CheckInt(3, length(Data.GetFiles));
 
-  var Expected := new RemObjects.Oxygene.Sugar.Collections.List<String>;
+  var Expected := new RemObjects.Sugar.Collections.List<String>;
   Expected.Add("1");
   Expected.Add("2");
   Expected.Add("3");
@@ -142,7 +142,7 @@ begin
   Assert.CheckInt(2, length(Data.GetFolders));
   Assert.CheckInt(3, length(Data.GetFiles));
 
-  var Expected := new RemObjects.Oxygene.Sugar.Collections.List<String>;
+  var Expected := new RemObjects.Sugar.Collections.List<String>;
   Expected.Add("Temp1");
   Expected.Add("Temp2");
   var Value := Data.GetFolders;

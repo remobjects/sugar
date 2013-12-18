@@ -5,9 +5,9 @@ interface
 {$HIDE W0} //supress case-mismatch errors
 
 uses
-  RemObjects.Oxygene.Sugar,
-  RemObjects.Oxygene.Sugar.Xml,
-  RemObjects.Oxygene.Sugar.TestFramework;
+  RemObjects.Sugar,
+  RemObjects.Sugar.Xml,
+  RemObjects.Sugar.TestFramework;
 
 type
   DocumentTest = public class (Testcase)
@@ -222,7 +222,7 @@ end;
 
 method DocumentTest.FromFile;
 begin
-  var File := RemObjects.Oxygene.Sugar.IO.Folder.UserLocal.CreateFile("sugartest.xml", false);
+  var File := RemObjects.Sugar.IO.Folder.UserLocal.CreateFile("sugartest.xml", false);
   try
     File.WriteText(XmlTestData.PIXml);
     Data := XmlDocument.FromFile(File);
@@ -249,7 +249,7 @@ begin
   Data := XmlDocument.FromString(XmlTestData.PIXml);
 
   var Actual := Data.GetElementsByTagName("User");
-  var Expected := new RemObjects.Oxygene.Sugar.Collections.List<String>;
+  var Expected := new RemObjects.Sugar.Collections.List<String>;
   Expected.Add("First");
   Expected.Add("Second");
   Expected.Add("Third");
@@ -304,7 +304,7 @@ end;
 
 method DocumentTest.Save;
 begin
-  var File := RemObjects.Oxygene.Sugar.IO.Folder.UserLocal.CreateFile("sugartest.xml", false);
+  var File := RemObjects.Sugar.IO.Folder.UserLocal.CreateFile("sugartest.xml", false);
   try
     Data := XmlDocument.FromString(XmlTestData.CharXml);
     Assert.IsNotNull(Data);

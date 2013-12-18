@@ -1,4 +1,4 @@
-﻿namespace RemObjects.Oxygene.Sugar.Xml;
+﻿namespace RemObjects.Sugar.Xml;
 
 {$HIDE W0} //supress case-mismatch errors
 
@@ -12,7 +12,7 @@ uses
   {$ELSEIF NOUGAT}
   Foundation,
   {$ENDIF}
-  RemObjects.Oxygene.Sugar;
+  RemObjects.Sugar;
 
 type
   XmlAttribute = public class (XmlNode)

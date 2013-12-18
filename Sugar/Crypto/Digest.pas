@@ -1,4 +1,4 @@
-﻿namespace RemObjects.Oxygene.Sugar;
+﻿namespace RemObjects.Sugar;
 
 interface
 
@@ -21,7 +21,7 @@ uses
   System.Security.Cryptography;
 {$ENDIF}
 {$IFDEF COOPER}
-  RemObjects.Oxygene.Sugar.Cooper,
+  RemObjects.Sugar.Cooper,
   java.security;
 {$ENDIF}
 {$IFDEF NOUGAT}

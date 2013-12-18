@@ -189,17 +189,17 @@
     <Folder Include="..\..\Tests\Xml\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Sugar.TestFramework\RemObjects.Oxygene.Sugar.Echoes.WP8.TestFramework.oxygene">
-      <Name>RemObjects.Oxygene.Sugar.Echoes.WP8.TestFramework</Name>
+    <ProjectReference Include="..\..\..\Sugar.TestFramework\RemObjects.Sugar.Echoes.WP8.TestFramework.oxygene">
+      <Name>RemObjects.Sugar.Echoes.WP8.TestFramework</Name>
       <Project>{23f34f6e-c862-4f52-8c06-a63caff070a7}</Project>
       <Private>True</Private>
-      <HintPath>..\..\..\Sugar.TestFramework\Bin\x86\Debug\WP8\RemObjects.Oxygene.Sugar.TestFramework.dll</HintPath>
+      <HintPath>..\..\..\Sugar.TestFramework\Bin\x86\Debug\WP8\RemObjects.Sugar.TestFramework.dll</HintPath>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\Sugar\RemObjects.Oxygene.Sugar.Echoes.WP8.oxygene">
-      <Name>RemObjects.Oxygene.Sugar.Echoes.WP8</Name>
+    <ProjectReference Include="..\..\..\Sugar\RemObjects.Sugar.Echoes.WP8.oxygene">
+      <Name>RemObjects.Sugar.Echoes.WP8</Name>
       <Project>{bd5d51e2-b11a-4356-9450-64566f8cdc38}</Project>
       <Private>True</Private>
-      <HintPath>..\..\..\Sugar\bin\Debug\WP8\RemObjects.Oxygene.Sugar.dll</HintPath>
+      <HintPath>..\..\..\Sugar\bin\Debug\WP8\RemObjects.Sugar.dll</HintPath>
     </ProjectReference>
   </ItemGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

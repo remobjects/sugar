@@ -1,4 +1,4 @@
-﻿namespace RemObjects.Oxygene.Sugar.TestFramework;
+﻿namespace RemObjects.Sugar.TestFramework;
 
 interface
 

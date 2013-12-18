@@ -1,4 +1,4 @@
-﻿namespace RemObjects.Oxygene.Sugar.Threading;
+﻿namespace RemObjects.Sugar.Threading;
 {$HIDE W0} //supress case-mismatch errors
 interface
 

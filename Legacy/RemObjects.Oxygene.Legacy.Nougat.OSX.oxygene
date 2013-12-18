@@ -72,8 +72,8 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Sugar\RemObjects.Oxygene.Sugar.Nougat.OSX.oxygene">
-      <Name>RemObjects.Oxygene.Sugar.Nougat.OSX</Name>
+    <ProjectReference Include="..\Sugar\RemObjects.Sugar.Nougat.OSX.oxygene">
+      <Name>RemObjects.Sugar.Nougat.OSX</Name>
       <Project>{ab7ab88b-2370-43bf-844b-54d015da9e57}</Project>
       <Private>True</Private>
       <HintPath>..\Sugar\bin\Debug\Sugar.exe</HintPath>

@@ -101,17 +101,17 @@
     <Folder Include="Tests\Xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Sugar.TestFramework\RemObjects.Oxygene.Sugar.Echoes.TestFramework.oxygene">
-      <Name>RemObjects.Oxygene.Sugar.Echoes.TestFramework</Name>
+    <ProjectReference Include="..\Sugar.TestFramework\RemObjects.Sugar.Echoes.TestFramework.oxygene">
+      <Name>RemObjects.Sugar.Echoes.TestFramework</Name>
       <Project>{532c6e08-1256-4168-8973-08c9d3d7b239}</Project>
       <Private>True</Private>
-      <HintPath>..\Sugar.TestFramework\bin\Debug\RemObjects.Oxygene.Sugar.TestFramework.dll</HintPath>
+      <HintPath>..\Sugar.TestFramework\bin\Debug\RemObjects.Sugar.TestFramework.dll</HintPath>
     </ProjectReference>
-    <ProjectReference Include="..\Sugar\RemObjects.Oxygene.Sugar.Echoes.oxygene">
-      <Name>RemObjects.Oxygene.Sugar.Echoes</Name>
+    <ProjectReference Include="..\Sugar\RemObjects.Sugar.Echoes.oxygene">
+      <Name>RemObjects.Sugar.Echoes</Name>
       <Project>{79301a0c-1f95-4fb0-9605-207e288c6171}</Project>
       <Private>True</Private>
-      <HintPath>..\Sugar\bin\Debug\.NET\RemObjects.Oxygene.Sugar.dll</HintPath>
+      <HintPath>..\Sugar\bin\Debug\.NET\RemObjects.Sugar.dll</HintPath>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Echoes.targets" />

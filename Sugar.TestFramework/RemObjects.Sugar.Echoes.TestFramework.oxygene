@@ -2,10 +2,10 @@
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <ProductVersion>3.5</ProductVersion>
-    <RootNamespace>RemObjects.Oxygene.Sugar.TestFramework</RootNamespace>
+    <RootNamespace>RemObjects.Sugar.TestFramework</RootNamespace>
     <ProjectGuid>{532c6e08-1256-4168-8973-08c9d3d7b239}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <AssemblyName>RemObjects.Oxygene.Sugar.TestFramework</AssemblyName>
+    <AssemblyName>RemObjects.Sugar.TestFramework</AssemblyName>
     <AllowGlobals>False</AllowGlobals>
     <AllowLegacyWith>False</AllowLegacyWith>
     <AllowLegacyOutParams>False</AllowLegacyOutParams>
@@ -13,7 +13,7 @@
     <AllowUnsafeCode>False</AllowUnsafeCode>
     <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <Name>RemObjects.Oxygene.Sugar.Echoes.TestFramework</Name>
+    <Name>RemObjects.Sugar.Echoes.TestFramework</Name>
     <DefaultUses />
     <StartupClass />
     <InternalAssemblyName />

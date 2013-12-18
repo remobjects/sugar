@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
-    <RootNamespace>RemObjects.Oxygene.Sugar.TestFramework</RootNamespace>
+    <RootNamespace>RemObjects.Sugar.TestFramework</RootNamespace>
     <ProjectGuid>{1d894b7c-0117-4154-a1f2-fd22691f0f13}</ProjectGuid>
     <OutputType>StaticLibrary</OutputType>
     <AssemblyName>SugarTestFramework</AssemblyName>
@@ -14,10 +14,10 @@
     <SDK>OS X</SDK>
     <DeploymentTargetVersion>10.6</DeploymentTargetVersion>
     <CreateHeaderFile>True</CreateHeaderFile>
-    <Name>RemObjects.Oxygene.Sugar.Nougat.OSX.TestFramework</Name>
+    <Name>RemObjects.Sugar.Nougat.OSX.TestFramework</Name>
     <DefaultUses>Foundation</DefaultUses>
     <StartupClass />
-    <BundleIdentifier>org.me.RemObjects.Oxygene.Sugar.TestFramework</BundleIdentifier>
+    <BundleIdentifier>org.me.RemObjects.Sugar.TestFramework</BundleIdentifier>
     <BundleExtension />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">

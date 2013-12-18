@@ -3,7 +3,7 @@
 interface
 
 uses
-  remobjects.oxygene.sugar.testframework,
+  RemObjects.Sugar.testframework,
   java.util;
 
 type

@@ -5,9 +5,9 @@ interface
 {$HIDE W0} //supress case-mismatch errors
 
 uses
-  RemObjects.Oxygene.Sugar,
-  RemObjects.Oxygene.Sugar.Collections,
-  RemObjects.Oxygene.Sugar.TestFramework;
+  RemObjects.Sugar,
+  RemObjects.Sugar.Collections,
+  RemObjects.Sugar.TestFramework;
 
 type
   QueueTest = public class (Testcase)

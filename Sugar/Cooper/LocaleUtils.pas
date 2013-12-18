@@ -1,9 +1,9 @@
-﻿namespace RemObjects.Oxygene.Sugar.Cooper;
+﻿namespace RemObjects.Sugar.Cooper;
 
 interface
 
 uses
-  RemObjects.Oxygene.Sugar,
+  RemObjects.Sugar,
   java.util;
 
 {$IFNDEF COOPER}

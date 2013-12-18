@@ -5,8 +5,8 @@ interface
 {$HIDE W0} //supress case-mismatch errors
 
 uses
-  RemObjects.Oxygene.Sugar,
-  RemObjects.Oxygene.Sugar.TestFramework;
+  RemObjects.Sugar,
+  RemObjects.Sugar.TestFramework;
 
 type
   StringBuilderTest = public class (Testcase)
@@ -84,7 +84,7 @@ end;
 
 method StringBuilderTest.AppendLine;
 begin
-  var NL := RemObjects.Oxygene.Sugar.Environment.NewLine;
+  var NL := RemObjects.Sugar.Environment.NewLine;
   Assert.IsNotNull(Builder.AppendLine("Hello"));
   Assert.CheckString("Hello"+NL, Builder.ToString);
 

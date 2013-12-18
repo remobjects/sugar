@@ -3,8 +3,8 @@
 interface
 
 uses
-  RemObjects.Oxygene.Sugar,
-  RemObjects.Oxygene.Sugar.TestFramework;
+  RemObjects.Sugar,
+  RemObjects.Sugar.TestFramework;
 
 type
   BasePrinter = public abstract class

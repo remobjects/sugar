@@ -1,10 +1,10 @@
-﻿namespace RemObjects.Oxygene.Sugar;
+﻿namespace RemObjects.Sugar;
 
 interface
 
 uses
-  RemObjects.Oxygene.Sugar.IO,
-  RemObjects.Oxygene.Sugar.Xml;
+  RemObjects.Sugar.IO,
+  RemObjects.Sugar.Xml;
 
 type
   {$IF NOUGAT}

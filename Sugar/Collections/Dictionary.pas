@@ -1,4 +1,4 @@
-﻿namespace RemObjects.Oxygene.Sugar.Collections;
+﻿namespace RemObjects.Sugar.Collections;
 
 {$HIDE W0} //supress case-mismatch errors
 
@@ -6,7 +6,7 @@ interface
 
 uses
   {$IF ECHOES}System.Linq,{$ENDIF}
-  RemObjects.Oxygene.Sugar;
+  RemObjects.Sugar;
 
 type
   Dictionary<T, U> = public class mapped to {$IF COOPER}java.util.HashMap<T,U>{$ELSEIF ECHOES}System.Collections.Generic.Dictionary<T,U>{$ELSEIF NOUGAT}Foundation.NSMutableDictionary where T is class, T is INSCopying, U is class;{$ENDIF}

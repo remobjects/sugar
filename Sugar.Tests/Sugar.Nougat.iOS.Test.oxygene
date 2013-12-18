@@ -112,14 +112,14 @@
     <Folder Include="Tests\Xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Sugar.TestFramework\RemObjects.Oxygene.Sugar.Nougat.iOS.TestFramework.oxygene">
-      <Name>RemObjects.Oxygene.Sugar.Nougat.iOS.TestFramework</Name>
+    <ProjectReference Include="..\Sugar.TestFramework\RemObjects.Sugar.Nougat.iOS.TestFramework.oxygene">
+      <Name>RemObjects.Sugar.Nougat.iOS.TestFramework</Name>
       <Project>{e132a412-2431-41c6-9d98-63f942a32b8e}</Project>
       <Private>True</Private>
       <HintPath>..\Sugar.TestFramework\bin\Debug\iOS Simulator\libSugarTestFramework.fx</HintPath>
     </ProjectReference>
-    <ProjectReference Include="..\Sugar\RemObjects.Oxygene.Sugar.Nougat.iOS.oxygene">
-      <Name>RemObjects.Oxygene.Sugar.Nougat.iOS</Name>
+    <ProjectReference Include="..\Sugar\RemObjects.Sugar.Nougat.iOS.oxygene">
+      <Name>RemObjects.Sugar.Nougat.iOS</Name>
       <Project>{91b301fc-331e-48a7-803b-4cbe3fff6ed7}</Project>
       <Private>True</Private>
       <HintPath>..\Sugar\bin\Debug\iOS Simulator\libSugar.fx</HintPath>
