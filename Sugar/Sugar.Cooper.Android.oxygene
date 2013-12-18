@@ -32,7 +32,7 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <Optimize>true</Optimize>
     <OutputPath>bin\Android\</OutputPath>
-    <GenerateDebugInfo>False</GenerateDebugInfo>
+    <GenerateDebugInfo>True</GenerateDebugInfo>
     <DefineConstants>Android;</DefineConstants>
     <EnableAsserts>False</EnableAsserts>
     <TreatWarningsAsErrors>False</TreatWarningsAsErrors>

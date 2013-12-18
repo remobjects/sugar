@@ -35,7 +35,7 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <Optimize>True</Optimize>
     <OutputPath>.\bin</OutputPath>
-    <GenerateDebugInfo>False</GenerateDebugInfo>
+    <GenerateDebugInfo>True</GenerateDebugInfo>
     <EnableAsserts>False</EnableAsserts>
     <CaptureConsoleOutput>False</CaptureConsoleOutput>
     <StartMode>Project</StartMode>
