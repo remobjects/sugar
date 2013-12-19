@@ -28,7 +28,7 @@ type
     class method Min(a,b: Double): Double; mapped to min(a,b);
     class method Min(a,b: Integer): Integer; mapped to min(a,b);
     class method Min(a,b: Int64): Int64; mapped to min(a,b);
-    class method Pow(x, y: Double): Double; mapped to pow(x,y);
+    class method Pow(x, y: Double): Double;
     class method Round(a: Double): Double;
     class method RoundToInt(a: Double): Integer;
     class method Sign(d: Double): Integer;
@@ -213,6 +213,18 @@ end;
 class method Math.Round(a: Double): Double;
 begin
   exit java.lang.Math.floor(a + 0.4);
+end;
+
+class method Math.Pow(x: Double; y: Double): Double;
+begin
+  {$IF ANDROID}
+  if (x = -1) and Consts.IsInfinity(y) then
+    exit Consts.NaN;
+
+  exit mapped.pow(x, y);
+  {$ELSE}
+  exit mapped.pow(x, y);
+  {$ENDIF}
 end;
 {$ENDIF}
 
