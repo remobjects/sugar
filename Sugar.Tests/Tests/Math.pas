@@ -63,12 +63,11 @@ end;
 
 method MathTest.AbsInt64;
 begin
-  {$WARNING Disable due to iOS 7 bug}
-  //Assert.CheckInt64(42, Math.Abs(42));
-  //Assert.CheckInt64(42, Math.Abs(-42));
-  //Assert.CheckInt64(0, Math.Abs(0));
-  //Assert.CheckInt64(Consts.MaxInt64, Math.Abs(Consts.MaxInt64));
-  //Assert.IsException(->Math.Abs(Consts.MinInt64));  
+  Assert.CheckInt64(42, Math.Abs(42));
+  Assert.CheckInt64(42, Math.Abs(-42));
+  Assert.CheckInt64(0, Math.Abs(0));
+  Assert.CheckInt64(Consts.MaxInt64, Math.Abs(Consts.MaxInt64));
+  Assert.IsException(->Math.Abs(Consts.MinInt64));  
 end;
 
 method MathTest.AbsInt;
