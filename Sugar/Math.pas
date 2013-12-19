@@ -367,7 +367,7 @@ begin
   if i = Consts.MinInt64 then
     raise new SugarArgumentException("Value can not equals minimum value of Int64");
 
-  exit rtl.labs(i);
+  exit rtl.llabs(i);
 end;
 
 class method Math.Abs(i: Integer): Integer;
