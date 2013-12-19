@@ -54,12 +54,12 @@
     <Folder Include="Tests\Xml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="res\values\strings.android-xml">
+    <AndroidResource Include="res\values\strings.android-xml">
       <SubType>Content</SubType>
-    </None>
-    <None Include="res\layout\main.layout-xml">
+    </AndroidResource>
+    <AndroidResource Include="res\layout\main.layout-xml">
       <SubType>Content</SubType>
-    </None>
+    </AndroidResource>
     <None Include="res\drawable-hdpi\icon.png">
       <SubType>Content</SubType>
     </None>

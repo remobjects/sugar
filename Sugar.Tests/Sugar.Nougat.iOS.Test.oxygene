@@ -45,6 +45,12 @@
   <ItemGroup>
     <Reference Include="CoreGraphics.fx" />
     <Reference Include="Foundation.fx" />
+    <Reference Include="libSugar.fx">
+      <HintPath>..\Sugar\bin\iOS Simulator\libSugar.fx</HintPath>
+    </Reference>
+    <Reference Include="libSugarTestFramework.fx">
+      <HintPath>..\Sugar.TestFramework\bin\iOS Simulator\libSugarTestFramework.fx</HintPath>
+    </Reference>
     <Reference Include="libxml2.fx" />
     <Reference Include="UIKit.fx" />
     <Reference Include="rtl.fx" />
@@ -110,20 +116,6 @@
     <Folder Include="Printer\" />
     <Folder Include="Tests" />
     <Folder Include="Tests\Xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Sugar.TestFramework\Sugar.Nougat.iOS.TestFramework.oxygene">
-      <Name>Sugar.Nougat.iOS.TestFramework</Name>
-      <Project>{e132a412-2431-41c6-9d98-63f942a32b8e}</Project>
-      <Private>True</Private>
-      <HintPath>..\Sugar.TestFramework\bin\Debug\iOS Simulator\libSugarTestFramework.fx</HintPath>
-    </ProjectReference>
-    <ProjectReference Include="..\Sugar\Sugar.Nougat.iOS.oxygene">
-      <Name>Sugar.Nougat.iOS</Name>
-      <Project>{91b301fc-331e-48a7-803b-4cbe3fff6ed7}</Project>
-      <Private>True</Private>
-      <HintPath>..\Sugar\bin\Debug\iOS Simulator\libSugar.fx</HintPath>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Nougat.targets" />
   <PropertyGroup>

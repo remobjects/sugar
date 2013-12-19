@@ -3,7 +3,7 @@
 interface
 
 uses
-  Sugar.testframework,
+  sugar.testframework,
   java.util;
 
 type

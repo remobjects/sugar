@@ -9,7 +9,7 @@ uses
   android.os,
   android.util,
   android.view,
-  Sugar.testframework,
+  sugar.testframework,
   Sugar.Test,
   android.widget;
 

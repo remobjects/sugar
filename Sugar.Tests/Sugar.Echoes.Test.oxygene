@@ -57,6 +57,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
+    <Reference Include="Sugar">
+      <HintPath>..\Sugar\bin\.NET\Sugar.dll</HintPath>
+    </Reference>
+    <Reference Include="Sugar.TestFramework">
+      <HintPath>..\Sugar.TestFramework\bin\.NET\Sugar.TestFramework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
@@ -99,20 +105,6 @@
     <Folder Include="Tests" />
     <Folder Include="Properties\" />
     <Folder Include="Tests\Xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Sugar.TestFramework\Sugar.Echoes.TestFramework.oxygene">
-      <Name>Sugar.Echoes.TestFramework</Name>
-      <Project>{532c6e08-1256-4168-8973-08c9d3d7b239}</Project>
-      <Private>True</Private>
-      <HintPath>..\Sugar.TestFramework\bin\Debug\Sugar.TestFramework.dll</HintPath>
-    </ProjectReference>
-    <ProjectReference Include="..\Sugar\Sugar.Echoes.oxygene">
-      <Name>Sugar.Echoes</Name>
-      <Project>{79301a0c-1f95-4fb0-9605-207e288c6171}</Project>
-      <Private>True</Private>
-      <HintPath>..\Sugar\bin\Debug\.NET\Sugar.dll</HintPath>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Echoes.targets" />
   <PropertyGroup>
