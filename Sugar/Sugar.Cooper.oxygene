@@ -67,6 +67,7 @@
     <Compile Include="Cooper\LocaleUtils.pas" />
     <None Include="Crypto\Cipher.pas" />
     <None Include="Crypto\Digest.pas" />
+    <Compile Include="Convert.pas" />
     <Compile Include="DateTime.pas" />
     <Compile Include="DateFormatter.pas" />
     <Compile Include="HTTP.pas" />
