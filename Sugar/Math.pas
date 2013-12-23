@@ -29,8 +29,7 @@ type
     class method Min(a,b: Integer): Integer; mapped to min(a,b);
     class method Min(a,b: Int64): Int64; mapped to min(a,b);
     class method Pow(x, y: Double): Double;
-    class method Round(a: Double): Double;
-    class method RoundToInt(a: Double): Integer;
+    class method Round(a: Double): Int64;
     class method Sign(d: Double): Integer;
     class method Sin(d: Double): Double; mapped to sin(d);
     class method Sinh(d: Double): Double; mapped to sinh(d);
@@ -64,8 +63,7 @@ type
     class method Min(a,b: Integer): Integer; mapped to Min(a,b);
     class method Min(a,b: Int64): Int64; mapped to Min(a,b);
     class method Pow(x, y: Double): Double; mapped to Pow(x,y);
-    class method Round(a: Double): Double; mapped to Round(a);
-    class method RoundToInt(a: Double): Integer;
+    class method Round(a: Double): Int64;
     class method Sign(d: Double): Integer; mapped to Sign(d);
     class method Sin(d: Double): Double; mapped to Sin(d);
     class method Sinh(d: Double): Double; mapped to Sinh(d);
@@ -99,8 +97,7 @@ type
     class method Min(a,b: Integer): Integer;
     class method Min(a,b: Int64): Int64; 
     class method Pow(x, y: Double): Double;
-    class method Round(a: Double): Double;
-    class method RoundToInt(a: Double): Integer;
+    class method Round(a: Double): Int64;
     class method Sign(d: Double): Integer;
     class method Sin(x: Double): Double;
     class method Sinh(x: Double): Double;
@@ -210,11 +207,6 @@ begin
   exit mapped.atan2(x,y);
 end;
 
-class method Math.Round(a: Double): Double;
-begin
-  exit java.lang.Math.floor(a + 0.4);
-end;
-
 class method Math.Pow(x: Double; y: Double): Double;
 begin
   {$IF ANDROID}
@@ -228,12 +220,13 @@ begin
 end;
 {$ENDIF}
 
-{$IF COOPER or ECHOES}
-class method Math.RoundToInt(a: Double): Integer;
+class method Math.Round(a: Double): Int64;
 begin
-  exit Integer(Round(a));
+  if Consts.IsNaN(a) or Consts.IsInfinity(a) then
+    raise new SugarArgumentException("Value can not be rounded to Int64");
+
+  exit Int64(Floor(a + 0.4));
 end;
-{$ENDIF}
 
 {$IF COOPER or NOUGAT}
 class method Math.Sign(d: Double): Integer;
@@ -332,16 +325,6 @@ end;
 class method Math.Min(a,b: Int64): Int64;
 begin
   exit iif(a < b, a, b);   
-end;
-
-class method Math.Round(a: Double): Double;
-begin
-  exit rtl.floor(a + 0.4);   
-end;
-
-class method Math.RoundToInt(a: Double): Integer;
-begin
-  exit Integer(Round(a));   
 end;
 
 class method Math.Sin(x: Double): Double;
