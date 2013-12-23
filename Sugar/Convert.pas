@@ -5,7 +5,7 @@
 interface
 
 type
-  Convert = public class {$IF COOPER}{$ELSEIF ECHOES}mapped to System.Convert{$ELSEIF NOUGAT}{$ENDIF}
+  Convert = public class {$IF COOPER}{$ELSEIF ECHOES}mapped to System.Convert{$ELSEIF NOUGAT}mapped to Object{$ENDIF}
   public
     class method ToString(Value: Byte): String;
     class method ToString(Value: Int32): String;
