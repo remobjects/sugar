@@ -37,7 +37,6 @@ type
     method MinInt64;
     method Pow;
     method Round;
-    method RoundToInt;
     method Sign;
     method Sin;
     method Sinh;
@@ -106,7 +105,7 @@ end;
 method MathTest.Atan;
 begin
   var Tan30 := Math.Tan(Rad);
-  Assert.CheckInt(Deg, Math.RoundToInt(Math.Atan(Tan30) * (180 / Consts.PI)));
+  Assert.CheckInt(Deg, Math.Round(Math.Atan(Tan30) * (180 / Consts.PI)));
   Assert.CheckBool(true, Consts.IsNaN(Math.Atan(Consts.NaN)));
   Assert.CheckDouble(Consts.PI / 2, Math.Atan(Consts.PositiveInfinity));
   Assert.CheckDouble(-(Consts.PI / 2), Math.Atan(Consts.NegativeInfinity));
@@ -291,16 +290,20 @@ begin
   Assert.CheckDouble(11, Math.Round(10.8));
   Assert.CheckDouble(11, Math.Round(10.9));
 
-  Assert.CheckBool(true, Consts.IsNaN(Math.Round(Consts.NaN)));
-  Assert.CheckBool(true, Consts.IsNegativeInfinity(Math.Round(Consts.NegativeInfinity)));
-  Assert.CheckBool(true, Consts.IsPositiveInfinity(Math.Round(Consts.PositiveInfinity)));
-end;
+  Assert.CheckDouble(11, Math.Round(11.0));
+  Assert.CheckDouble(11, Math.Round(11.1));
+  Assert.CheckDouble(11, Math.Round(11.2));
+  Assert.CheckDouble(11, Math.Round(11.3));
+  Assert.CheckDouble(11, Math.Round(11.4));
+  Assert.CheckDouble(11, Math.Round(11.5));
+  Assert.CheckDouble(12, Math.Round(11.6));
+  Assert.CheckDouble(12, Math.Round(11.7));
+  Assert.CheckDouble(12, Math.Round(11.8));
+  Assert.CheckDouble(12, Math.Round(11.9));  
 
-method MathTest.RoundToInt;
-begin
-  Assert.CheckInt(3, Math.RoundToInt(Consts.PI));
-  Assert.CheckInt(10, Math.RoundToInt(10.5));
-  Assert.CheckInt(11, Math.RoundToInt(10.6));  
+  Assert.IsException(->Math.Round(Consts.NaN));
+  Assert.IsException(->Math.Round(Consts.PositiveInfinity));
+  Assert.IsException(->Math.Round(Consts.NegativeInfinity));
 end;
 
 method MathTest.Sign;
