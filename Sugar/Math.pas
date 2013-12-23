@@ -117,12 +117,17 @@ type
     property MinInteger: Integer read {$IF COOPER}Int32.MIN_VALUE{$ELSEIF ECHOES}Int32.MinValue{$ELSEIF NOUGAT}rtl.INT32_MIN{$ENDIF};
     property MaxInt64: Int64 read {$IF COOPER}Int64.MAX_VALUE{$ELSEIF ECHOES}Int64.MaxValue{$ELSEIF NOUGAT}rtl.INT64_MAX{$ENDIF};
     property MinInt64: Int64 read {$IF COOPER}Int64.MIN_VALUE{$ELSEIF ECHOES}Int64.MinValue{$ELSEIF NOUGAT}rtl.INT64_MIN{$ENDIF};
+    property MaxChar: Integer read $FFFF;
+    property MinChar: Integer read 0;
 
     property MaxDouble: Double read {$IF COOPER}Double.MAX_VALUE{$ELSEIF ECHOES}Double.MaxValue{$ELSEIF NOUGAT}1.7976931348623157E+308{$ENDIF};
     property MinDouble: Double read {$IF COOPER}-Double.MAX_VALUE{$ELSEIF ECHOES}Double.MinValue{$ELSEIF NOUGAT}-1.7976931348623157E+308{$ENDIF};
     property PositiveInfinity: Double read {$IF COOPER}Double.POSITIVE_INFINITY{$ELSEIF ECHOES}Double.PositiveInfinity{$ELSEIF NOUGAT}INFINITY{$ENDIF};
     property NegativeInfinity: Double read {$IF COOPER}Double.NEGATIVE_INFINITY{$ELSEIF ECHOES}Double.NegativeInfinity{$ELSEIF NOUGAT}-INFINITY{$ENDIF};
     property NaN: Double read {$IF COOPER}Double.NaN{$ELSEIF ECHOES}Double.NaN{$ELSEIF NOUGAT}rtl.nan{$ENDIF};
+
+    property TrueString: String read "True";
+    property FalseString: String read "False";
 
     method IsNaN(Value: Double): Boolean;
     method IsInfinity(Value: Double): Boolean;
