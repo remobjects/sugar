@@ -49,6 +49,16 @@ type
     class method ToBoolean(Value: String): Boolean;
   end;
 
+  {$IF NOUGAT}
+  ConvertHelper = public class
+  public
+    class method ParseNumber(Value: String): NSNumber;
+    class method ParseInt32(Value: String): Int32;  
+    class method ParseInt64(Value: String): Int64; 
+    class method ParseDouble(Value: String): Double;
+  end;
+  {$ENDIF}
+
 implementation
 
 class method Convert.ToString(Value: Byte): String;
@@ -58,6 +68,7 @@ begin
   {$ELSEIF ECHOES}
   exit mapped.ToString(Value);
   {$ELSEIF NOUGAT}
+  exit Value.ToString;
   {$ENDIF}
 end;
 
@@ -68,6 +79,7 @@ begin
   {$ELSEIF ECHOES}
   exit mapped.ToString(Value);
   {$ELSEIF NOUGAT}
+  exit Value.ToString;
   {$ENDIF}
 end;
 
@@ -78,6 +90,7 @@ begin
   {$ELSEIF ECHOES}
   exit mapped.ToString(Value);
   {$ELSEIF NOUGAT}
+  exit Value.ToString;
   {$ENDIF}
 end;
 
@@ -111,6 +124,7 @@ begin
   {$ELSEIF ECHOES}
   exit mapped.ToString(Value, System.Globalization.CultureInfo.InvariantCulture);
   {$ELSEIF NOUGAT}
+  exit Value.ToString.ToUpper;
   {$ENDIF}
 end;
 
@@ -121,6 +135,7 @@ begin
   {$ELSEIF ECHOES}
   exit mapped.ToString(Value);
   {$ELSEIF NOUGAT}
+  exit Value;
   {$ENDIF}
 end;
 
@@ -131,6 +146,7 @@ begin
   {$ELSEIF ECHOES}
   exit mapped.ToString(Value);
   {$ELSEIF NOUGAT}
+  exit Value.ToString;
   {$ENDIF}
 end;
 
@@ -141,6 +157,7 @@ begin
   {$ELSEIF ECHOES}
   exit mapped.ToInt32(Value);
   {$ELSEIF NOUGAT}
+  exit Int32(Value);
   {$ENDIF}
 end;
 
@@ -154,6 +171,7 @@ begin
   {$ELSEIF ECHOES}
   exit mapped.ToInt32(Value);
   {$ELSEIF NOUGAT}
+  exit Integer(Value);
   {$ENDIF}
 end;
 
@@ -174,6 +192,7 @@ begin
   {$ELSEIF ECHOES}
   exit mapped.ToInt32(Value);
   {$ELSEIF NOUGAT}
+  exit ord(Value);
   {$ENDIF}
 end;
 
@@ -187,6 +206,7 @@ begin
   {$ELSEIF ECHOES}
   exit mapped.ToInt32(Value);
   {$ELSEIF NOUGAT}
+  exit ConvertHelper.ParseInt32(Value);
   {$ENDIF}
 end;
 
@@ -197,6 +217,7 @@ begin
   {$ELSEIF ECHOES}
   exit mapped.ToInt64(Value);
   {$ELSEIF NOUGAT}
+  exit Int64(Value);
   {$ENDIF}
 end;
 
@@ -207,6 +228,7 @@ begin
   {$ELSEIF ECHOES}
   exit mapped.ToInt64(Value);
   {$ELSEIF NOUGAT}
+  exit Int64(Value);
   {$ENDIF}
 end;
 
@@ -225,6 +247,7 @@ begin
   {$ELSEIF ECHOES}
   exit mapped.ToInt64(Value);
   {$ELSEIF NOUGAT}
+  exit ord(Value);
   {$ENDIF}
 end;
 
@@ -238,6 +261,7 @@ begin
   {$ELSEIF ECHOES}
   exit mapped.ToInt64(Value);
   {$ELSEIF NOUGAT}
+  exit ConvertHelper.ParseInt64(Value);
   {$ENDIF}
 end;
 
@@ -248,6 +272,7 @@ begin
   {$ELSEIF ECHOES}
   exit mapped.ToDouble(Value);
   {$ELSEIF NOUGAT}
+  exit Double(Value);
   {$ENDIF}
 end;
 
@@ -258,6 +283,7 @@ begin
   {$ELSEIF ECHOES}
   exit mapped.ToDouble(Value);
   {$ELSEIF NOUGAT}
+  exit Double(Value);
   {$ENDIF}
 end;
 
@@ -268,6 +294,7 @@ begin
   {$ELSEIF ECHOES}
   exit mapped.ToDouble(Value);
   {$ELSEIF NOUGAT}
+  exit Double(Value);
   {$ENDIF}
 end;
 
@@ -297,6 +324,7 @@ begin
   {$ELSEIF ECHOES}
   exit mapped.ToDouble(Value, System.Globalization.CultureInfo.InvariantCulture);
   {$ELSEIF NOUGAT}
+  exit ConvertHelper.ParseDouble(Value);
   {$ENDIF}
 end;
 
@@ -312,6 +340,7 @@ begin
   {$ELSEIF ECHOES}
   exit mapped.ToByte(Number);
   {$ELSEIF NOUGAT}
+  exit Byte(Number);
   {$ENDIF}
 end;
 
@@ -325,6 +354,7 @@ begin
   {$ELSEIF ECHOES}
   exit mapped.ToByte(Value);
   {$ELSEIF NOUGAT}
+  exit Byte(Value);
   {$ENDIF}
 end;
 
@@ -338,6 +368,7 @@ begin
   {$ELSEIF ECHOES}
   exit mapped.ToByte(Value);
   {$ELSEIF NOUGAT}
+  exit Byte(Value);
   {$ENDIF}
 end;
 
@@ -352,6 +383,7 @@ begin
   {$ELSEIF ECHOES}
   exit mapped.ToByte(Value);
   {$ELSEIF NOUGAT}
+  exit ord(Value);
   {$ENDIF}
 end;
 
@@ -362,6 +394,12 @@ begin
   {$ELSEIF ECHOES}
   exit mapped.ToByte(Value);
   {$ELSEIF NOUGAT}
+  var Number: Int32 := ConvertHelper.ParseInt32(Value);
+
+  if (Number > 255) or (Number < 0) then
+    raise new SugarArgumentOutOfRangeException("Specified value exceeds range of byte");
+
+  exit Byte(Number);
   {$ENDIF}
 end;
 
@@ -375,6 +413,7 @@ begin
   {$ELSEIF ECHOES}
   exit mapped.ToChar(Value);
   {$ELSEIF NOUGAT}
+  exit chr(Value);
   {$ENDIF}
 end;
 
@@ -388,6 +427,7 @@ begin
   {$ELSEIF ECHOES}
   exit mapped.ToChar(Value);
   {$ELSEIF NOUGAT}
+  exit chr(Value);
   {$ENDIF}
 end;
 
@@ -398,6 +438,7 @@ begin
   {$ELSEIF ECHOES}
   exit mapped.ToChar(Value);
   {$ELSEIF NOUGAT}
+  exit chr(Value);
   {$ENDIF}
 end;
 
@@ -413,6 +454,7 @@ begin
   {$ELSEIF ECHOES}
   exit mapped.ToChar(Value);
   {$ELSEIF NOUGAT}
+  exit Value[0];
   {$ENDIF}
 end;
 
@@ -423,6 +465,7 @@ begin
   {$ELSEIF ECHOES}
   exit mapped.ToBoolean(Value);
   {$ELSEIF NOUGAT}
+  exit if Value = 0 then false else true;
   {$ENDIF}
 end;
 
@@ -433,6 +476,7 @@ begin
   {$ELSEIF ECHOES}
   exit mapped.ToBoolean(Value);
   {$ELSEIF NOUGAT}
+  exit if Value = 0 then false else true;
   {$ENDIF}
 end;
 
@@ -443,6 +487,7 @@ begin
   {$ELSEIF ECHOES}
   exit mapped.ToBoolean(Value);
   {$ELSEIF NOUGAT}
+  exit if Value = 0 then false else true;
   {$ENDIF}
 end;
 
@@ -453,6 +498,7 @@ begin
   {$ELSEIF ECHOES}
   exit mapped.ToBoolean(Value);
   {$ELSEIF NOUGAT}
+  exit if Value = 0 then false else true;
   {$ENDIF}
 end;
 
@@ -466,7 +512,79 @@ begin
   {$ELSEIF ECHOES}
   exit mapped.ToBoolean(Value);
   {$ELSEIF NOUGAT}
+  if (Value = nil) or (Value.EqualsIngoreCase(Consts.FalseString)) then exit false;
+  if Value.EqualsIngoreCase(Consts.TrueString) then exit true;  
+  
+  raise new SugarFormatException("Unable to convert string '{0}' to boolean.", Value);
   {$ENDIF}
 end;
+
+{$IF NOUGAT}
+class method ConvertHelper.ParseNumber(Value: String): NSNumber;
+begin
+  if String.IsNullOrEmpty(Value) then
+    exit nil;
+
+  var Formatter := new NSNumberFormatter;
+  Formatter.numberStyle := NSNumberFormatterStyle.NSNumberFormatterDecimalStyle;
+  Formatter.decimalSeparator := ".";
+  Formatter.exponentSymbol := "E";
+  Formatter.usesGroupingSeparator := false;
+
+  //clear grouping
+  if Value.Length > 1 then begin
+    var DecimalIndex := Value.IndexOf(".");
+    if DecimalIndex = -1 then
+      DecimalIndex := Value.Length;
+
+    Value := NSString(Value).stringByReplacingOccurrencesOfString(",") withString("") options(0) range(NSMakeRange(1, DecimalIndex - 1));   
+  end;
+
+  exit Formatter.numberFromString(Value);
+end;
+
+class method ConvertHelper.ParseInt32(Value: String): Int32;
+begin
+  var Number := ParseInt64(Value);
+
+  if (Number > Consts.MaxInteger) or (Number < Consts.MinInteger) then
+    raise new SugarFormatException("Unable to convert string '{0}'.", Value);
+
+  exit Int32(Number);
+end;
+
+class method ConvertHelper.ParseInt64(Value: String): Int64;
+begin
+  if Value = nil then
+    exit 0;
+
+  var Number := ParseNumber(Value);
+
+  if Number = nil then
+    raise new SugarFormatException("Unable to convert string '{0}'.", Value);
+
+  var obj: id := Number;
+  var NumberType := CFNumberGetType(CFNumberRef(obj));
+
+  if NumberType in [CFNumberType.kCFNumberIntType, CFNumberType.kCFNumberNSIntegerType, CFNumberType.kCFNumberSInt8Type, CFNumberType.kCFNumberSInt32Type,
+                    CFNumberType.kCFNumberSInt16Type, CFNumberType.kCFNumberShortType, CFNumberType.kCFNumberSInt64Type, CFNumberType.kCFNumberCharType] then
+    exit Number.longLongValue;
+
+  raise new SugarFormatException("Unable to convert string '{0}'.", Value);
+end;
+
+class method ConvertHelper.ParseDouble(Value: String): Double;
+begin
+  if Value = nil then
+    exit 0.0;
+
+  var Number := ParseNumber(Value);
+
+  if Number = nil then
+    raise new SugarFormatException("Unable to convert string '{0}'.", Value);
+
+  exit Number.doubleValue;
+end;
+{$ENDIF}
 
 end.
