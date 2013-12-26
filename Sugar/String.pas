@@ -215,6 +215,9 @@ begin
   {$ELSEIF ECHOES}
   exit new System.String(Value, 1);
   {$ELSEIF NOUGAT}
+  if Value = #0 then
+    exit NSString.stringWithFormat(#0);
+
   exit NSString.stringWithFormat("%c", Value);
   {$ENDIF}
 end;
