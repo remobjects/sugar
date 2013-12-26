@@ -168,7 +168,7 @@ begin
   {$ELSEIF ECHOES}
   exit Double.IsNegativeInfinity(Value);
   {$ELSEIF NOUGAT}
-  exit Value = NegativeInfinity;
+  exit (Value = NegativeInfinity) and (not Consts.IsNaN(Value));
   {$ENDIF}
 end;
 
@@ -179,7 +179,7 @@ begin
   {$ELSEIF ECHOES}
   exit Double.IsPositiveInfinity(Value);
   {$ELSEIF NOUGAT}
-  exit Value = PositiveInfinity;
+  exit (Value = PositiveInfinity) and (not Consts.IsNaN(Value));
   {$ENDIF}
 end;
 {$IF COOPER}
