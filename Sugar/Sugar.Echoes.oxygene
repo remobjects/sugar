@@ -87,6 +87,7 @@
     <Compile Include="Color.pas" />
     <None Include="Crypto\Cipher.pas" />
     <None Include="Crypto\Digest.pas" />
+    <Compile Include="Consts.pas" />
     <Compile Include="Convert.pas" />
     <Compile Include="DateTime.pas" />
     <Compile Include="DateFormatter.pas" />
