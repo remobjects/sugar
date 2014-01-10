@@ -17,7 +17,7 @@ implementation
 method Program.Main(aArguments: array of String): Int32;
 begin
   var results := TestRunner.RunAll;
-  var output := new StringPrinter(results);
+  var output := new StringPrinter(results);  
   NSLog("%@", output.Result);
   //giving time for output to catch our log
   NSThread.sleepForTimeInterval(0.2);

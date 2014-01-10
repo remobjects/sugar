@@ -238,7 +238,7 @@ end;
 method ConvertTest.ToDoubleInt64;
 begin
   Assert.CheckDouble(9223372036854775807.0, Convert.ToDouble(Consts.MaxInt64));
-  Assert.CheckDouble(-9223372036854775808.0, Convert.ToDouble(Consts.MinInt64));
+  Assert.CheckDouble(Double(-9223372036854775808.0), Convert.ToDouble(Consts.MinInt64));
 end;
 
 method ConvertTest.ToDoubleString;

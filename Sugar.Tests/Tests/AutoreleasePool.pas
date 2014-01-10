@@ -18,7 +18,7 @@ implementation
 
 method AutoreleasepoolTest.Test;
 begin
-  using autoreleasepool do begin
+  using {$IF NOUGAT}autoreleasepool{$ELSE}&autoreleasepool{$ENDIF} do begin
     Assert.CheckBool(true, true);
   end;
 end;
