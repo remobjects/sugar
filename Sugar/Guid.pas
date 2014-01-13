@@ -15,11 +15,10 @@ type
     {$ELSEIF NOUGAT}
     fData: array of Byte;
     method AppendRange(Data: NSMutableString; Range: NSRange);
-    method InternalParse(Data: String): array of Byte;
+    class method InternalParse(Data: String): array of Byte;
     {$ENDIF}
   public
     constructor;
-    constructor(Value: String);
     constructor(Value: array of Byte);
 
     method CompareTo(Value: Guid): Integer;
@@ -51,15 +50,8 @@ begin
   {$ELSEIF ECHOES}
   exit mapped.Empty;
   {$ELSEIF NOUGAT}
-  {$ENDIF}
-end;
-
-constructor Guid(Value: String);
-begin
-  {$IF COOPER}
-  {$ELSEIF ECHOES}
-  exit mapped.Parse(Value);
-  {$ELSEIF NOUGAT}
+  fData := new Byte[16];
+  memset(fData, 0, 16); 
   {$ENDIF}
 end;
 
@@ -71,26 +63,26 @@ begin
   {$ELSEIF ECHOES}
   exit new System.Guid(Value);
   {$ELSEIF NOUGAT}
+  fData := new Byte[16];
+  memcpy(fData, Value, 16); 
   {$ENDIF}
 end;
 
 method Guid.CompareTo(Value: Guid): Integer;
 begin
-  {$IF COOPER}
-  exit mapped.compareTo(Value);
-  {$ELSEIF ECHOES}
+  {$IF COOPER OR ECHOES}
   exit mapped.CompareTo(Value);
   {$ELSEIF NOUGAT}
+  exit memcmp(fData, Value.fData, 16);
   {$ENDIF}
 end;
 
 method Guid.Equals(Value: Guid): Boolean;
 begin
-  {$IF COOPER}
-  exit mapped.equals(Value);
-  {$ELSEIF ECHOES}
+  {$IF COOPER OR ECHOES}
   exit mapped.Equals(Value);
   {$ELSEIF NOUGAT}
+  exit CompareTo(Value) = 0;
   {$ENDIF}
 end;
 
@@ -101,15 +93,22 @@ begin
   {$ELSEIF ECHOES}
   exit mapped.NewGuid;
   {$ELSEIF NOUGAT}
+  var UUID: CFUUIDRef := CFUUIDCreate(kCFAllocatorDefault);
+  var RefBytes: CFUUIDBytes := CFUUIDGetUUIDBytes(UUID);
+  CFRelease(UUID);
+
+  var Data := new Byte[16];
+  memcpy(Data, @RefBytes, 16);
+  exit new Guid(Data);
   {$ENDIF}
 end;
 
 class method Guid.Parse(Value: String): Guid;
 begin
-  {$IF COOPER}
   if (Value.Length <> 38) and (Value.Length <> 36) then
     raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);
 
+  {$IF COOPER}
   if Value.Chars[0] = '{' then begin
     if Value.Chars[37] <> '}' then
       raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);
@@ -119,16 +118,13 @@ begin
       raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);
   end;
 
-  //remove {} or () symbols
-  //Value := java.lang.String(Value.ToUpper).replaceAll("[^A-F0-9-]", "");
   Value := java.lang.String(Value.ToUpper).replaceAll("[{}()]", "");
   exit mapped.fromString(Value);
   {$ELSEIF ECHOES}
-  if (Value.Length <> 38) and (Value.Length <> 36) then
-    raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);
-
-  exit new Guid(Value);
+  exit new System.Guid(Value);
   {$ELSEIF NOUGAT}
+  var Data := InternalParse(Value);
+  exit new Guid(Data);
   {$ENDIF}
 end;
 
@@ -139,6 +135,7 @@ begin
   {$ELSEIF ECHOES}
   exit mapped.Empty;
   {$ELSEIF NOUGAT}
+  exit new Guid;
   {$ENDIF}
 end;
 
@@ -159,6 +156,8 @@ begin
 
   exit Value;
   {$ELSEIF NOUGAT}
+  result := new Byte[16];
+  memcpy(result, fData, 16);
   {$ENDIF}
 end;
 
@@ -185,6 +184,25 @@ begin
 
   exit result.ToUpper;
   {$ELSEIF NOUGAT}
+  var GuidString := new NSMutableString();
+
+  AppendRange(GuidString, NSMakeRange(0, 3));
+  GuidString.appendString("-");
+  AppendRange(GuidString, NSMakeRange(4, 5));
+  GuidString.appendString("-");
+  AppendRange(GuidString, NSMakeRange(6, 7));
+  GuidString.appendString("-");
+  AppendRange(GuidString, NSMakeRange(8, 9));
+  GuidString.appendString("-");
+  AppendRange(GuidString, NSMakeRange(10, 15));
+
+  case Format of
+    Format.Default: exit GuidString;
+    Format.Braces: exit "{"+GuidString+"}";
+    Format.Parentheses: exit "("+GuidString+")";
+    else
+      exit GuidString;
+  end;
   {$ENDIF}
 end;
 
@@ -206,6 +224,65 @@ begin
   Value[Index2] := Temp;
 end;
 {$ELSEIF NOUGAT}
+method Guid.AppendRange(Data: NSMutableString; Range: NSRange);
+begin
+  for i: Integer := Range.location to Range.length do
+    Data.appendFormat("%02hhX", fData[i]);
+end;
+
+method Guid.description: NSString;
+begin
+  exit ToString(GuidFormat.Default);
+end;
+
+class method Guid.InternalParse(Data: String): array of Byte;
+begin
+  var Offset: Int32;
+
+  if (Data.Length <> 38) and (Data.Length <> 36) then
+    raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);
+
+  if Data.Chars[0] = '{' then begin
+    if Data.Chars[37] <> '}' then
+      raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);
+
+    Offset := 1;
+  end
+  else if Data.Chars[0] = '(' then begin
+    if Data.Chars[37] <> ')' then
+      raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);
+
+    Offset := 1;
+  end;
+
+  if (Data.Chars[8+Offset] <> '-') or (Data.Chars[13+Offset] <> '-') or
+     (Data.Chars[18+Offset] <> '-') or (Data.Chars[23+Offset] <> '-') then
+    raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);
+
+  //Clear string from "{}()-" symbols
+  var Regex := NSRegularExpression.regularExpressionWithPattern("[^A-F0-9]") options(NSRegularExpressionOptions.NSRegularExpressionCaseInsensitive) error(nil);
+  var HexString := new NSMutableString withString(Regex.stringByReplacingMatchesInString(Data) options(NSMatchingOptions(0)) range(NSMakeRange(0, Data.length)) withTemplate(""));
+
+  // We should get 32 chars
+  if HexString.length <> 32 then
+    raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);
+
+  Result := new Byte[16];
+  var Idx: UInt32 := 0;
+  var Idx2: UInt32 := 0;
+
+  //Convert hex to byte
+  while Idx < HexString.length do begin
+    var Range := NSMakeRange(Idx, 2);
+    var Buffer := HexString.substringWithRange(Range);
+    var ByteScanner := NSScanner.scannerWithString(Buffer);
+    var IntValue: uint32;
+    ByteScanner.scanHexInt(var IntValue);
+    Result[Idx2] := Byte(IntValue);
+    inc(Idx, 2);
+    inc(Idx2);
+  end;
+end;
 {$ENDIF}
 
 end.
