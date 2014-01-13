@@ -47,6 +47,7 @@ implementation
 constructor Guid;
 begin
   {$IF COOPER}
+  exit new java.util.UUID(0, 0);
   {$ELSEIF ECHOES}
   exit mapped.Empty;
   {$ELSEIF NOUGAT}
@@ -65,6 +66,8 @@ end;
 constructor Guid(Value: array of Byte);
 begin
   {$IF COOPER}
+  var bb := java.nio.ByteBuffer.wrap(Value);
+  exit new java.util.UUID(bb.getLong, bb.getLong);
   {$ELSEIF ECHOES}
   exit new System.Guid(Value);
   {$ELSEIF NOUGAT}
@@ -74,6 +77,7 @@ end;
 method Guid.CompareTo(Value: Guid): Integer;
 begin
   {$IF COOPER}
+  exit mapped.compareTo(Value);
   {$ELSEIF ECHOES}
   exit mapped.CompareTo(Value);
   {$ELSEIF NOUGAT}
@@ -83,6 +87,7 @@ end;
 method Guid.Equals(Value: Guid): Boolean;
 begin
   {$IF COOPER}
+  exit mapped.equals(Value);
   {$ELSEIF ECHOES}
   exit mapped.Equals(Value);
   {$ELSEIF NOUGAT}
@@ -92,6 +97,7 @@ end;
 class method Guid.NewGuid: Guid;
 begin
   {$IF COOPER}
+  exit mapped.randomUUID;
   {$ELSEIF ECHOES}
   exit mapped.NewGuid;
   {$ELSEIF NOUGAT}
@@ -101,6 +107,22 @@ end;
 class method Guid.Parse(Value: String): Guid;
 begin
   {$IF COOPER}
+  if (Value.Length <> 38) and (Value.Length <> 36) then
+    raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);
+
+  if Value.Chars[0] = '{' then begin
+    if Value.Chars[37] <> '}' then
+      raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);
+  end
+  else if Value.Chars[0] = '(' then begin
+    if Value.Chars[37] <> ')' then
+      raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);
+  end;
+
+  //remove {} or () symbols
+  //Value := java.lang.String(Value.ToUpper).replaceAll("[^A-F0-9-]", "");
+  Value := java.lang.String(Value.ToUpper).replaceAll("[{}()]", "");
+  exit mapped.fromString(Value);
   {$ELSEIF ECHOES}
   if (Value.Length <> 38) and (Value.Length <> 36) then
     raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);
@@ -113,6 +135,7 @@ end;
 class method Guid.EmptyGuid: Guid;
 begin
   {$IF COOPER}
+  exit new java.util.UUID(0, 0);
   {$ELSEIF ECHOES}
   exit mapped.Empty;
   {$ELSEIF NOUGAT}
@@ -122,6 +145,10 @@ end;
 method Guid.ToByteArray: array of Byte;
 begin
   {$IF COOPER}
+  var buffer := java.nio.ByteBuffer.wrap(new SByte[16]);
+  buffer.putLong(mapped.MostSignificantBits);
+  buffer.putLong(mapped.LeastSignificantBits);
+  exit buffer.array;
   {$ELSEIF ECHOES}
   var Value := mapped.ToByteArray;
   //reverse byte order to normal (.NET reverse first 4 bytes and next two 2 bytes groups)
@@ -138,6 +165,15 @@ end;
 method Guid.ToString(Format: GuidFormat): String;
 begin
   {$IF COOPER}
+  case Format of
+    Format.Default: result := mapped.toString;
+    Format.Braces: result := "{"+mapped.toString+"}";
+    Format.Parentheses: result := "("+mapped.toString+")";
+    else
+      result := mapped.toString;
+  end;
+
+  exit result.ToUpper;
   {$ELSEIF ECHOES}
   case Format of
     Format.Default: result := mapped.ToString("D");
@@ -153,6 +189,10 @@ begin
 end;
 
 {$IF COOPER}
+method Guid.ToString: java.lang.String;
+begin
+  exit ToString(GuidFormat.Default);
+end;
 {$ELSEIF ECHOES}
 method Guid.ToString: System.String;
 begin
