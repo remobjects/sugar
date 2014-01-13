@@ -11,7 +11,7 @@ type
   Guid = public {$IF COOPER}class mapped to java.util.UUID{$ELSEIF ECHOES}record mapped to System.Guid{$ELSEIF NOUGAT}class{$ENDIF}
   private
     {$IF ECHOES}
-    method Exchange(Value: array of Byte; Index1, Index2: Integer);
+    class method Exchange(Value: array of Byte; Index1, Index2: Integer);
     {$ELSEIF NOUGAT}
     fData: array of Byte;
     method AppendRange(Data: NSMutableString; Range: NSRange);
@@ -61,6 +61,10 @@ begin
   var bb := java.nio.ByteBuffer.wrap(Value);
   exit new java.util.UUID(bb.getLong, bb.getLong);
   {$ELSEIF ECHOES}
+  Exchange(Value, 0, 3);
+  Exchange(Value, 1, 2);
+  Exchange(Value, 4, 5);
+  Exchange(Value, 6, 7);
   exit new System.Guid(Value);
   {$ELSEIF NOUGAT}
   fData := new Byte[16];
@@ -217,7 +221,7 @@ begin
   exit ToString(GuidFormat.Default);
 end;
 
-method Guid.Exchange(Value: array of Byte; Index1: Integer; Index2: Integer);
+class method Guid.Exchange(Value: array of Byte; Index1: Integer; Index2: Integer);
 begin
   var Temp := Value[Index1];
   Value[Index1] := Value[Index2];
