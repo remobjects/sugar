@@ -17,15 +17,16 @@ type
     method AreNotEqual(Expected, Actual: Guid);
   public
     method Setup; override;
-    method TestCompareTo;
+    method CompareTo;
     method TestEquals;
-    method TestNewGuid;
-    method TestParse;
-    method TestParseExceptions;
-    method TestEmptyGuid;
-    method TestToByteArray;
+    method NewGuid;
+    method Parse;
+    method ParseExceptions;
+    method EmptyGuid;
+    method ToByteArray;
     method TestToString;
-    method TestToStringFormat;
+    method ToStringFormat;
+    method Constructors;
   end;
 
 implementation
@@ -45,7 +46,7 @@ begin
   Assert.CheckBool(false, Expected.Equals(Actual));
 end;
 
-method GuidTest.TestCompareTo;
+method GuidTest.CompareTo;
 begin
   Assert.CheckInt(0, Data.CompareTo(Data));
   var Value := Guid.Parse(GuidString);
@@ -67,13 +68,13 @@ begin
   Assert.CheckBool(true, Guid.EmptyGuid.Equals(Guid.EmptyGuid));
 end;
 
-method GuidTest.TestNewGuid;
+method GuidTest.NewGuid;
 begin
   var Value := Guid.NewGuid;
   Assert.CheckBool(false, Value.Equals(Guid.EmptyGuid));
 end;
 
-method GuidTest.TestParse;
+method GuidTest.Parse;
 begin
   AreEqual(Guid.EmptyGuid, Guid.Parse("00000000-0000-0000-0000-000000000000"));
   AreEqual(Guid.EmptyGuid, Guid.Parse("{00000000-0000-0000-0000-000000000000}"));
@@ -85,7 +86,7 @@ begin
   AreEqual(Data, Guid.Parse("(5EB4BEC4-5509-4434-9D33-2A9C74CC54EE)"));
 end;
 
-method GuidTest.TestParseExceptions;
+method GuidTest.ParseExceptions;
 begin
   Assert.IsException(->Guid.Parse(""));
   Assert.IsException(->Guid.Parse(nil));
@@ -106,7 +107,7 @@ begin
   Assert.IsException(->Guid.Parse("0"));
 end;
 
-method GuidTest.TestEmptyGuid;
+method GuidTest.EmptyGuid;
 begin
   AreEqual(Guid.Parse("{00000000-0000-0000-0000-000000000000}"), Guid.EmptyGuid);
   var Value := Guid.EmptyGuid.ToByteArray;
@@ -114,7 +115,7 @@ begin
     Assert.CheckInt(0, Value[i]);
 end;
 
-method GuidTest.TestToByteArray;
+method GuidTest.ToByteArray;
 begin
   var Expected: array of Byte := [94, 180, 190, 196, 85, 9, 68, 52, 157, 51, 42, 156, 116, 204, 84, 238];
   var Actual := Data.ToByteArray;
@@ -135,11 +136,23 @@ begin
   Assert.CheckString(Data.ToString(GuidFormat.Default), Data.ToString);
 end;
 
-method GuidTest.TestToStringFormat;
+method GuidTest.ToStringFormat;
 begin
   Assert.CheckString(GuidString, Data.ToString(GuidFormat.Braces));
   Assert.CheckString("(5EB4BEC4-5509-4434-9D33-2A9C74CC54EE)", Data.ToString(GuidFormat.Parentheses));
   Assert.CheckString("5EB4BEC4-5509-4434-9D33-2A9C74CC54EE", Data.ToString(GuidFormat.Default));
+end;
+
+method GuidTest.Constructors;
+begin
+  var Value := new Guid().ToByteArray;
+  for i: Int32 := 0 to length(Value)-1 do 
+    Assert.CheckInt(0, Value[i]);
+
+  var Expected: array of Byte := [94, 180, 190, 196, 85, 9, 68, 52, 157, 51, 42, 156, 116, 204, 84, 238];
+  var Actual := new Guid(Expected);
+  Assert.IsNotNull(Actual);
+  Assert.CheckBool(true, Data.Equals(Actual));
 end;
 
 end.
