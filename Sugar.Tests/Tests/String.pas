@@ -37,6 +37,7 @@ type
     method EndsWith;
     method ToByteArray;
     method Operators;
+    method FromCharArray;
   end;
 
 implementation
@@ -144,11 +145,13 @@ method StringTest.FromByteArray;
 begin
   var Encoded: array of Byte := [103, 114, 195, 182, 195, 159, 101, 114, 101, 110];
   var Expected: String := "größeren";
-  var Actual: String := String.FromByteArray(Encoded);
+  var Actual: String := new String(Encoded);
   Assert.CheckInt(8, Actual.Length);
   Assert.CheckString(Expected, Actual);
-  Assert.CheckString("", String.FromByteArray([]));
-  Assert.IsException(->String.FromByteArray(nil));
+  Encoded := [];
+  Assert.CheckString("", new String(Encoded));
+  Encoded := nil;
+  Assert.IsException(-> new String(Encoded));
 end;
 
 method StringTest.CompareTo;
@@ -360,6 +363,19 @@ begin
   Assert.CheckBool(false, Data = NativeString);
   Assert.CheckBool(false, SugarString = Data);
   Assert.CheckBool(false, NativeString = Data);
+end;
+
+method StringTest.FromCharArray;
+begin
+  var Encoded: array of Char := ['H', 'e', 'l', 'l', 'o'];
+  var Expected: String := "Hello";
+  var Actual: String := new String(Encoded);
+  Assert.CheckInt(5, Actual.Length);
+  Assert.CheckString(Expected, Actual);
+  Encoded := [];
+  Assert.CheckString("", new String(Encoded));
+  Encoded := nil;
+  Assert.IsException(-> new String(Encoded));
 end;
 
 end.

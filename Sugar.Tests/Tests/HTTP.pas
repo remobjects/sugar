@@ -63,7 +63,7 @@ begin
         Assert.CheckBool(false, Responce.IsFailed);
         Assert.IsNull(Responce.Exception);
         Assert.IsNotNull(Responce.Content);
-        var Line := String.FromByteArray(Responce.Content.Read(15));
+        var Line := new String(Responce.Content.Read(15));
         Assert.CheckBool(true, Line.StartsWith("<!doctype html>"));
         Token.Done;
       except
