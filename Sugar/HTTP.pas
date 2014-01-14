@@ -201,7 +201,7 @@ begin
     if Data.IsFailed then
       ResponceCallback(new HttpResponce<String>(Data.Exception))
     else
-      ResponceCallback(new HttpResponce<String>(String.FromByteArray(Data.Content.ToArray)));
+      ResponceCallback(new HttpResponce<String>(new String(Data.Content.ToArray)));
   end;
 end;
 

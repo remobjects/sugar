@@ -7,6 +7,9 @@ type
   private
     method get_Chars(aIndex: Int32): Char;
   public
+    constructor(Value: array of Byte);
+    constructor(Value: array of Char);
+
     class operator Add(Value1: String; Value2: String): String;
     class operator Implicit(Value: Char): String;
     class operator Greater(Value1, Value2: String): Boolean;
@@ -18,7 +21,6 @@ type
     class method CharacterIsWhiteSpace(Value: Char): Boolean;
     class method IsNullOrEmpty(Value: String): Boolean;
     class method IsNullOrWhiteSpace(Value: String): Boolean;
-    class method FromByteArray(Value: array of Byte): String;
 
     method CompareTo(Value: String): Integer;
     method CompareToIgnoreCase(Value: String): Integer;
@@ -43,6 +45,34 @@ type
   end;
 
 implementation
+
+constructor String(Value: array of Byte);
+begin
+  if Value = nil then
+    raise new SugarArgumentNullException("Value");
+
+  {$IF COOPER}
+  exit new java.lang.String(Value, "UTF-8");
+  {$ELSEIF ECHOES}
+  exit System.Text.Encoding.UTF8.GetString(Value, 0, Value.Length);
+  {$ELSEIF NOUGAT}
+  exit new NSString withBytes(Value) length(length(Value)) encoding(NSStringEncoding.NSUTF8StringEncoding);
+  {$ENDIF}
+end;
+
+constructor String(Value: array of Char);
+begin
+  if Value = nil then
+    raise new SugarArgumentNullException("Value");
+
+  {$IF COOPER}
+  exit new java.lang.String(Value);
+  {$ELSEIF ECHOES}
+  exit new System.String(Value);
+  {$ELSEIF NOUGAT}
+  exit new Foundation.NSString withCharacters(Value) length(length(Value));
+  {$ENDIF}
+end;
 
 method String.get_Chars(aIndex: Int32): Char;
 begin
@@ -158,20 +188,6 @@ begin
       exit false;
 
   exit true;
-end;
-
-class method String.FromByteArray(Value: array of Byte): String;
-begin  
-  if Value = nil then
-    raise new SugarArgumentNullException("Value");
-
-  {$IF COOPER}
-  exit new java.lang.String(Value, "UTF-8");
-  {$ELSEIF ECHOES}
-  exit System.Text.Encoding.UTF8.GetString(Value, 0, Value.Length);
-  {$ELSEIF NOUGAT}
-  exit new NSString withBytes(Value) length(length(Value)) encoding(NSStringEncoding.NSUTF8StringEncoding);
-  {$ENDIF}
 end;
 
 method String.CompareTo(Value: String): Integer;

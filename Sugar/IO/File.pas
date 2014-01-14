@@ -310,7 +310,7 @@ begin
   if Data = nil then
     raise new SugarIOException("Unable to read string from file {0}", File.Name);
 
-  exit String.FromByteArray(Data);
+  exit new String(Data);
 end;
 
 class method FileUtils.ReadBytes(File: java.io.File): array of Byte;

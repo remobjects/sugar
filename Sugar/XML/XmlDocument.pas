@@ -220,7 +220,7 @@ end;
 
 class method XmlDocument.FromBinary(aBinary: Binary): XmlDocument;
 begin
-  exit ParseXml(String.FromByteArray(aBinary.ToArray), nil);
+  exit ParseXml(new String(aBinary.ToArray), nil);
 end;
 
 class method XmlDocument.FromString(aString: String): XmlDocument;

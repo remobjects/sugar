@@ -514,7 +514,7 @@ begin
   if (not XmlNode.IsNode(fNode)) or (fNode^.ns = nil) then
     exit LocalName;
 
-  exit new String withFormat("{%@}%@", Uri, LocalName);
+  exit new NSString withFormat("{%@}%@", Uri, LocalName);
 end;
 
 method XmlNode.XmlNamespace.GetUri: String;
@@ -536,7 +536,7 @@ begin
   if Value = nil then
     exit "";
 
-  result := new String withUTF8String(^AnsiChar(Value));
+  result := new NSString withUTF8String(^AnsiChar(Value));
   if FreeWhenDone then
     libxml.xmlFree(Value);
 end;
