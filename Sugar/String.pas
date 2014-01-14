@@ -1,67 +1,13 @@
 ﻿namespace Sugar;
 
-{$HIDE W0} //supress case-mismatch errors
-
 interface
 
-{$IF COOPER}
-uses
-  Sugar.Cooper;
-{$ENDIF}
-
 type
-  {$IF COOPER}
-  String = public class mapped to java.lang.String
+  String = public class mapped to {$IF COOPER}java.lang.String{$ELSEIF ECHOES}System.String{$ELSEIF NOUGAT}Foundation.NSString{$ENDIF}
   private
     method get_Chars(aIndex: Int32): Char;
   public
-    property Length: Int32 read mapped.length;
-    property Chars[aIndex: Int32]: Char read get_Chars; default;
-
-    class operator Add(aStringA: String; aStringB: String): String;
-    class operator Implicit(Value: Char): String;
-    class operator Greater(Value1, Value2: String): Boolean;
-    class operator Less(Value1, Value2: String): Boolean;
-    class operator GreaterOrEqual(Value1, Value2: String): Boolean;
-    class operator LessOrEqual(Value1, Value2: String): Boolean;
-
-    class method Format(aFormat: String; params aParams: array of Object): String;
-    class method CharacterIsWhiteSpace(aChar: Char): Boolean;
-    class method IsNullOrEmpty(Value: String): Boolean;
-    class method IsNullOrWhiteSpace(Value: String): Boolean;
-    class method FromByteArray(Value: array of Byte): String;
-
-    method CompareTo(Value: String): Integer;
-    method CompareToIgnoreCase(Value: String): Integer; mapped to compareToIgnoreCase(Value);
-    method &Equals(Value: String): Boolean; mapped to &equals(Value);
-    method EqualsIngoreCase(Value: String): Boolean; mapped to equalsIgnoreCase(Value);
-    method Contains(Value: String): Boolean; mapped to contains(Value);
-
-    method IndexOf(aString: String): Int32; mapped to indexOf(aString);
-    method LastIndexOf(aString: String): Int32;
-
-    method Substring(aStartIndex: Int32): String; mapped to substring(aStartIndex);
-    method Substring(aStartIndex: Int32; aLength: Int32): String; mapped to substring(aStartIndex, aStartIndex+aLength);
-    method Split(Separator: String): array of String;
-    method Replace(OldValue, NewValue: String): String;
-
-    method ToLower: String; mapped to toLowerCase;
-    method ToUpper: String; mapped to toUpperCase;
-    method Trim: String; mapped to trim;    
-    method StartsWith(Value: String): Boolean; mapped to startsWith(Value);
-    method EndsWith(Value: String): Boolean; mapped to endsWith(Value);
-
-    method ToByteArray: array of Byte;
-  end;
-  {$ELSEIF ECHOES}
-  String = public class mapped to System.String
-  private
-    method get_Chars(aIndex: Int32): Char;
-  public
-    property Length: Int32 read mapped.Length;
-    property Chars[aIndex: Int32]: Char read get_Chars; default;
-
-    class operator Add(aStringA: String; aStringB: String): String;
+    class operator Add(Value1: String; Value2: String): String;
     class operator Implicit(Value: Char): String;
     class operator Greater(Value1, Value2: String): Boolean;
     class operator Less(Value1, Value2: String): Boolean;
@@ -69,98 +15,71 @@ type
     class operator LessOrEqual(Value1, Value2: String): Boolean;
 
     class method Format(aFormat: String; params aParams: array of Object): String;    
-    class method CharacterIsWhiteSpace(aChar: Char): Boolean;
-    class method IsNullOrEmpty(Value: String): Boolean; mapped to IsNullOrEmpty(Value);
-    class method IsNullOrWhiteSpace(Value: String): Boolean;
-    class method FromByteArray(Value: array of Byte): String;
-
-    method CompareTo(Value: String): Integer; mapped to Compare(mapped, Value, StringComparison.Ordinal);
-    method CompareToIgnoreCase(Value: String): Integer; mapped to Compare(mapped, Value, StringComparison.OrdinalIgnoreCase);
-    method &Equals(Value: String): Boolean; mapped to &Equals(Value);
-    method EqualsIngoreCase(Value: String): Boolean; mapped to &Equals(Value, StringComparison.OrdinalIgnoreCase);
-    method Contains(Value: String): Boolean; mapped to Contains(Value);
-
-    method IndexOf(aString: String): Int32; mapped to IndexOf(aString);
-    method LastIndexOf(aString: String): Int32; mapped to LastIndexOf(aString);    
-
-    method Substring(aStartIndex: Int32): String; mapped to Substring(aStartIndex);
-    method Substring(aStartIndex: Int32; aLength: Int32): String; mapped to Substring(aStartIndex, aLength);
-    method Split(Separator: String): array of String;
-    method Replace(OldValue, NewValue: String): String; mapped to Replace(OldValue, NewValue);
-
-    method ToLower: String; mapped to ToLower;
-    method ToUpper: String; mapped to ToUpper;
-    method Trim: String; mapped to Trim;
-    method StartsWith(Value: String): Boolean; mapped to StartsWith(Value);
-    method EndsWith(Value: String): Boolean; mapped to EndsWith(Value);
-
-    method ToByteArray: array of Byte;
-  end;
-  {$ELSEIF NOUGAT}
-  String = public class mapped to Foundation.NSString
-  private
-    method get_Chars(aIndex: Int32): Char;
-  public
-    property Length: Int32 read mapped.length;
-    property Chars[aIndex: Int32]: Char read get_Chars; default;
-
-    class operator Add(aStringA: String; aStringB: String): String;
-    class operator Implicit(Value: Char): String;
-    class operator Greater(Value1, Value2: String): Boolean;
-    class operator Less(Value1, Value2: String): Boolean;
-    class operator GreaterOrEqual(Value1, Value2: String): Boolean;
-    class operator LessOrEqual(Value1, Value2: String): Boolean;
-
-    class method Format(aFormat: String; params aParams: array of Object): String;
-    class method CharacterIsWhiteSpace(aChar: Char): Boolean;
+    class method CharacterIsWhiteSpace(Value: Char): Boolean;
     class method IsNullOrEmpty(Value: String): Boolean;
     class method IsNullOrWhiteSpace(Value: String): Boolean;
     class method FromByteArray(Value: array of Byte): String;
 
-    method CompareTo(Value: String): Integer; mapped to compare(Value);
-    method CompareToIgnoreCase(Value: String): Integer; mapped to caseInsensitiveCompare(Value);
-    method &Equals(Value: String): Boolean; 
+    method CompareTo(Value: String): Integer;
+    method CompareToIgnoreCase(Value: String): Integer;
+    method &Equals(Value: String): Boolean;
     method EqualsIngoreCase(Value: String): Boolean;
     method Contains(Value: String): Boolean;
-
-    method IndexOf(aString: String): Int32;
-    method LastIndexOf(aString: String): Int32;
-
-    method Substring(aStartIndex: Int32): String; mapped to substringFromIndex(aStartIndex);
-    method Substring(aStartIndex: Int32; aLength: Int32): String; 
+    method IndexOf(Value: String): Int32;
+    method LastIndexOf(Value: String): Int32;
+    method Substring(StartIndex: Int32): String;
+    method Substring(StartIndex: Int32; aLength: Int32): String;
     method Split(Separator: String): array of String;
     method Replace(OldValue, NewValue: String): String;
-
-    method ToLower: String; mapped to lowercaseString;
-    method ToUpper: String; mapped to uppercaseString;
-    method Trim: String;    
+    method ToLower: String;
+    method ToUpper: String;
+    method Trim: String;
     method StartsWith(Value: String): Boolean;
     method EndsWith(Value: String): Boolean;
-
     method ToByteArray: array of Byte;
+
+    property Length: Int32 read mapped.Length;
+    property Chars[aIndex: Int32]: Char read get_Chars; default;
   end;
-  {$ENDIF}
 
 implementation
 
-{$IF NOUGAT}
-uses
-  Foundation;
-{$ENDIF}
-
-class method String.Format(aFormat: String; params aParams: array of Object): String;
+method String.get_Chars(aIndex: Int32): Char;
 begin
-  exit StringFormatter.FormatString(aFormat, aParams);
+  if aIndex < 0 then
+    raise new SugarArgumentOutOfRangeException(ErrorMessage.NEGATIVE_VALUE_ERROR, "Index");
+
+  {$IF COOPER}
+  result := mapped.charAt(aIndex);
+  {$ELSEIF ECHOES}
+  result := mapped[aIndex];
+  {$ELSEIF NOUGAT}
+  result := mapped.characterAtIndex(aIndex);
+  {$ENDIF}
 end;
 
-class operator String.Add(aStringA: String; aStringB: String): String;
+class operator String.Add(Value1: String; Value2: String): String;
 begin
   {$IF COOPER}
-  result := java.lang.String(aStringA)+java.lang.String(aStringB);
+  result := java.lang.String(Value1)+java.lang.String(Value2);
   {$ELSEIF ECHOES}
-  result := System.String(aStringA)+System.String(aStringB);
+  result := System.String(Value1)+System.String(Value2);
   {$ELSEIF NOUGAT}
-  result := Foundation.NSString(aStringA).stringByAppendingString(aStringB);
+  result := Foundation.NSString(Value1).stringByAppendingString(Value2);
+  {$ENDIF}
+end;
+
+class operator String.Implicit(Value: Char): String;
+begin
+  {$IF COOPER}
+  exit new java.lang.String(Value);
+  {$ELSEIF ECHOES}
+  exit new System.String(Value, 1);
+  {$ELSEIF NOUGAT}
+  if Value = #0 then
+    exit NSString.stringWithFormat(#0);
+
+  exit NSString.stringWithFormat("%c", Value);
   {$ENDIF}
 end;
 
@@ -208,37 +127,32 @@ begin
   {$ENDIF}
 end;
 
-class operator String.Implicit(Value: Char): String;
+class method String.Format(aFormat: String; params aParams: array of Object): String;
+begin
+  exit StringFormatter.FormatString(aFormat, aParams);
+end;
+
+class method String.CharacterIsWhiteSpace(Value: Char): Boolean;
 begin
   {$IF COOPER}
-  exit new java.lang.String(Value);
+  result := java.lang.Character.isWhitespace(Value);
   {$ELSEIF ECHOES}
-  exit new System.String(Value, 1);
+  result := Char.IsWhiteSpace(Value);
   {$ELSEIF NOUGAT}
-  if Value = #0 then
-    exit NSString.stringWithFormat(#0);
-
-  exit NSString.stringWithFormat("%c", Value);
+  result := Foundation.NSCharacterSet.whitespaceAndNewlineCharacterSet.characterIsMember(Value);
   {$ENDIF}
 end;
 
-class method String.CharacterIsWhiteSpace(aChar: Char): Boolean;
-begin
-  {$IF COOPER}
-  result := java.lang.Character.isWhitespace(aChar);
-  {$ELSEIF ECHOES}
-  result := Char.IsWhiteSpace(aChar);
-  {$ELSEIF NOUGAT}
-  result := Foundation.NSCharacterSet.whitespaceAndNewlineCharacterSet.characterIsMember(aChar);
-  {$ENDIF}
-end;
-
-{$IF COOPER OR NOUGAT}
 class method String.IsNullOrEmpty(Value: String): Boolean;
 begin
+  {$IF COOPER}
   exit (Value = nil) or (Value.Length = 0);
+  {$ELSEIF ECHOES}
+  exit mapped.IsNullOrEmpty(Value);
+  {$ELSEIF NOUGAT}
+  exit (Value = nil) or (Value.Length = 0);
+  {$ENDIF}
 end;
-{$ENDIF}
 
 class method String.IsNullOrWhiteSpace(Value: String): Boolean;
 begin
@@ -250,115 +164,6 @@ begin
       exit false;
 
   exit true;
-end;
-
-{$IF NOUGAT}
-method String.IndexOf(aString: String): Int32;
-begin
-  if aString = nil then
-    raise new SugarArgumentNullException("aString");
-
-  if aString.Length = 0 then
-    exit 0;
-
-  var r := mapped.rangeOfString(aString);
-  exit if (r.location = NSNotFound) and (r.length = 0) then -1 else r.location;
-end;
-
-method String.LastIndexOf(aString: String): Int32;
-begin
-  if aString = nil then
-    raise new SugarArgumentNullException("aString");
-
-  if aString.Length = 0 then
-    exit mapped.length - 1;
-
-  var r := mapped.rangeOfString(aString) options(NSStringCompareOptions.NSBackwardsSearch);
-  exit if (r.location = NSNotFound) and (r.length = 0) then -1 else r.location;
-end;
-
-method String.Substring(aStartIndex: Int32; aLength: Int32): String; 
-begin
-  if (aStartIndex < 0) or (aLength < 0) then
-    raise new SugarArgumentOutOfRangeException(ErrorMessage.NEGATIVE_VALUE_ERROR, "Start index and length");
-
-  result := mapped.substringWithRange(Foundation.NSMakeRange(aStartIndex, aLength));
-end;
-
-method String.Trim: String;
-begin
-  exit mapped.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet);
-end;
-
-method String.Equals(Value: String): Boolean;
-begin
-  exit mapped.compare(Value) = 0;
-end;
-
-method String.EqualsIngoreCase(Value: String): Boolean;
-begin
-  exit mapped.caseInsensitiveCompare(Value) = 0;
-end;
-
-method String.Contains(Value: String): Boolean;
-begin
-  if Value.Length = 0 then
-    exit true;
-
-  exit mapped.rangeOfString(Value).location <> NSNotFound;
-end;
-
-method String.Replace(OldValue: String; NewValue: String): String;
-begin
-  if IsNullOrEmpty(OldValue) then
-    raise new SugarArgumentNullException("OldValue");
-
-  if NewValue = nil then
-    NewValue := "";
-
-  exit mapped.stringByReplacingOccurrencesOfString(OldValue) withString(NewValue);
-end;
-
-method String.StartsWith(Value: String): Boolean;
-begin
-  if Value.Length = 0 then
-    exit true;
-
-  exit mapped.hasPrefix(Value);
-end;
-
-method String.EndsWith(Value: String): Boolean;
-begin
-  if Value.Length = 0 then
-    exit true;
-
-  exit mapped.hasSuffix(Value);
-end;
-{$ENDIF}
-
-method String.get_Chars(aIndex: Int32): Char;
-begin
-  {$IF COOPER}
-  result := mapped.charAt(aIndex);
-  {$ELSEIF ECHOES}
-  result := mapped[aIndex];
-  {$ELSEIF NOUGAT}
-  if aIndex < 0 then
-    raise new SugarArgumentOutOfRangeException(ErrorMessage.NEGATIVE_VALUE_ERROR, "Index");
-  result := mapped.characterAtIndex(aIndex);
-  {$ENDIF}
-end;
-
-method String.ToByteArray: array of Byte;
-begin
-  {$IF COOPER}
-  exit mapped.getBytes("UTF-8");
-  {$ELSEIF ECHOES}
-  exit System.Text.Encoding.UTF8.GetBytes(mapped);
-  {$ELSEIF NOUGAT}
-  var Data := Binary(mapped.dataUsingEncoding(NSStringEncoding.NSUTF8StringEncoding));
-  exit Data.ToArray;
-  {$ENDIF}
 end;
 
 class method String.FromByteArray(Value: array of Byte): String;
@@ -375,10 +180,107 @@ begin
   {$ENDIF}
 end;
 
+method String.CompareTo(Value: String): Integer;
+begin
+  {$IF COOPER}
+  if Value = nil then
+    exit 1;
+
+  exit mapped.compareTo(Value);
+  {$ELSEIF ECHOES}
+  exit mapped.Compare(mapped, Value, StringComparison.Ordinal);
+  {$ELSEIF NOUGAT}
+  {$ENDIF}
+end;
+
+method String.CompareToIgnoreCase(Value: String): Integer;
+begin
+  {$IF COOPER}
+  exit mapped.compareToIgnoreCase(Value);
+  {$ELSEIF ECHOES}
+  exit mapped.Compare(mapped, Value, StringComparison.OrdinalIgnoreCase);
+  {$ELSEIF NOUGAT}
+  {$ENDIF}
+end;
+
+method String.Equals(Value: String): Boolean;
+begin
+  {$IF COOPER}
+  exit mapped.equals(Value);
+  {$ELSEIF ECHOES}
+  exit mapped.Equals(Value, StringComparison.Ordinal);
+  {$ELSEIF NOUGAT}
+  {$ENDIF}
+end;
+
+method String.EqualsIngoreCase(Value: String): Boolean;
+begin
+  {$IF COOPER}
+  exit mapped.equalsIgnoreCase(Value);
+  {$ELSEIF ECHOES}
+  exit mapped.Equals(Value, StringComparison.OrdinalIgnoreCase);
+  {$ELSEIF NOUGAT}
+  {$ENDIF}
+end;
+
+method String.Contains(Value: String): Boolean;
+begin
+  {$IF COOPER}
+  exit mapped.contains(Value);
+  {$ELSEIF ECHOES}
+  exit mapped.Contains(Value);
+  {$ELSEIF NOUGAT}
+  {$ENDIF}
+end;
+
+method String.IndexOf(Value: String): Int32;
+begin
+  {$IF COOPER}
+  exit mapped.indexOf(Value);
+  {$ELSEIF ECHOES}
+  exit mapped.IndexOf(Value);
+  {$ELSEIF NOUGAT}
+  {$ENDIF}
+end;
+
+method String.LastIndexOf(Value: String): Int32;
+begin
+  {$IF COOPER}
+  if Value = '' then
+    exit mapped.length - 1;
+
+  exit mapped.lastIndexOf(Value);
+  {$ELSEIF ECHOES}
+  exit mapped.LastIndexOf(Value);
+  {$ELSEIF NOUGAT}
+  {$ENDIF}
+end;
+
+method String.Substring(StartIndex: Int32): String;
+begin
+  {$IF COOPER}
+  exit mapped.substring(StartIndex);
+  {$ELSEIF ECHOES}
+  exit mapped.Substring(StartIndex);
+  {$ELSEIF NOUGAT}
+  {$ENDIF}
+end;
+
+method String.Substring(StartIndex: Int32; aLength: Int32): String;
+begin
+  {$IF COOPER}
+  exit mapped.substring(StartIndex, aLength);
+  {$ELSEIF ECHOES}
+  exit mapped.Substring(StartIndex, aLength);
+  {$ELSEIF NOUGAT}
+  {$ENDIF}
+end;
+
 method String.Split(Separator: String): array of String;
 begin
   if IsNullOrEmpty(Separator) then
     exit [mapped];
+
   {$IF COOPER}  
   exit mapped.split(java.util.regex.Pattern.quote(Separator));
   {$ELSEIF ECHOES}
@@ -391,9 +293,9 @@ begin
   {$ENDIF}
 end;
 
-{$IF COOPER}
 method String.Replace(OldValue: String; NewValue: String): String;
 begin
+  {$IF COOPER}
   if IsNullOrEmpty(OldValue) then
     raise new SugarArgumentNullException("OldValue");
 
@@ -401,23 +303,72 @@ begin
     NewValue := "";
 
   exit mapped.replace(OldValue, NewValue);
+  {$ELSEIF ECHOES}
+  exit mapped.Replace(OldValue, NewValue);
+  {$ELSEIF NOUGAT}
+  {$ENDIF}
 end;
 
-method String.CompareTo(Value: String): Integer;
+method String.ToLower: String;
 begin
-  if Value = nil then
-    exit 1;
-
-  exit mapped.compareTo(Value);
+  {$IF COOPER}
+  exit mapped.toLowerCase;
+  {$ELSEIF ECHOES}
+  exit mapped.ToLower;
+  {$ELSEIF NOUGAT}
+  {$ENDIF}
 end;
 
-method String.LastIndexOf(aString: String): Int32;
+method String.ToUpper: String;
 begin
-  if aString = '' then
-    exit mapped.length - 1;
-
-  exit mapped.lastIndexOf(aString);
+  {$IF COOPER}
+  exit mapped.toUpperCase;
+  {$ELSEIF ECHOES}
+  exit mapped.ToUpper;
+  {$ELSEIF NOUGAT}
+  {$ENDIF}
 end;
-{$ENDIF}
+
+method String.Trim: String;
+begin
+  {$IF COOPER}
+  exit mapped.trim;
+  {$ELSEIF ECHOES}
+  exit mapped.Trim;
+  {$ELSEIF NOUGAT}
+  {$ENDIF}
+end;
+
+method String.StartsWith(Value: String): Boolean;
+begin
+  {$IF COOPER}
+  exit mapped.startsWith(Value);
+  {$ELSEIF ECHOES}
+  exit mapped.StartsWith(Value);
+  {$ELSEIF NOUGAT}
+  {$ENDIF}
+end;
+
+method String.EndsWith(Value: String): Boolean;
+begin
+  {$IF COOPER}
+  exit mapped.endsWith(Value);
+  {$ELSEIF ECHOES}
+  exit mapped.EndsWith(Value);
+  {$ELSEIF NOUGAT}
+  {$ENDIF}
+end;
+
+method String.ToByteArray: array of Byte;
+begin
+  {$IF COOPER}
+  exit mapped.getBytes("UTF-8");
+  {$ELSEIF ECHOES}
+  exit System.Text.Encoding.UTF8.GetBytes(mapped);
+  {$ELSEIF NOUGAT}
+  var Data := Binary(mapped.dataUsingEncoding(NSStringEncoding.NSUTF8StringEncoding));
+  exit Data.ToArray;
+  {$ENDIF}
+end;
 
 end.
