@@ -1,7 +1,5 @@
 ﻿namespace Sugar.Xml;
 
-{$HIDE W0} //supress case-mismatch errors
-
 interface
 
 uses

@@ -1,5 +1,5 @@
 ﻿namespace Sugar.TestFramework;
-{$HIDE W0}
+
 interface
 
 type

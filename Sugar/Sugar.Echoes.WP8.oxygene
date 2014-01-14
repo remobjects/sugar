@@ -59,7 +59,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <XmlDocWarningLevel>WarningOnPublicMembers</XmlDocWarningLevel>
-    <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
     <CpuType>anycpu</CpuType>
     <GeneratePDB>True</GeneratePDB>
     <GenerateMDB>True</GenerateMDB>

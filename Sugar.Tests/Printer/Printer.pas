@@ -1,5 +1,5 @@
 ﻿namespace Sugar.Test;
-{$HIDE W0} //supress case-mismatch errors
+
 interface
 
 uses

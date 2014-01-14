@@ -2,8 +2,6 @@
 
 interface
 
-{$HIDE W0} //supress case-mismatch errors
-
 uses
   {$IF WINDOWS_PHONE OR NETFX_CORE}  
   System.IO,

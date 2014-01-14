@@ -110,8 +110,6 @@ type
 
 implementation
 
-{$HIDE W0} //supress case-mismatch errors
-
 {$IF COOPER}
 class method Math.Truncate(d: Double): Double;
 begin

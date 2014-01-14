@@ -1,7 +1,5 @@
 ﻿namespace Sugar.Collections;
 
-{$HIDE W0} //supress case-mismatch errors
-
 interface
 
 type

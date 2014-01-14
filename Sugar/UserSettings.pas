@@ -1,5 +1,5 @@
 ﻿namespace Sugar;
-{$HIDE W0} //supress case-mismatch errors
+
 interface
 
 {$IF NETFX_CORE}

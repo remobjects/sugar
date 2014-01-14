@@ -1,5 +1,5 @@
 ﻿namespace Sugar.Threading;
-{$HIDE W0} //supress case-mismatch errors
+
 interface
 
 {$IF COOPER}

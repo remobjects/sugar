@@ -25,7 +25,6 @@
     <OutputPath>bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE;iOS</DefineConstants>
     <CaptureConsoleOutput>False</CaptureConsoleOutput>
-    <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
     <XmlDocWarningLevel>WarningOnPublicMembers</XmlDocWarningLevel>
     <SimulatorArchitectures>i386</SimulatorArchitectures>
   </PropertyGroup>
@@ -36,7 +35,6 @@
     <EnableAsserts>False</EnableAsserts>
     <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
     <CaptureConsoleOutput>False</CaptureConsoleOutput>
-    <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Foundation.fx" />

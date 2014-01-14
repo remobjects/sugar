@@ -2,8 +2,6 @@
 
 interface
 
-{$HIDE W0} //supress case-mismatch errors
-
 type
   AssertAction = public block;
 
