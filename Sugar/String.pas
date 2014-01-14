@@ -145,13 +145,7 @@ end;
 
 class method String.IsNullOrEmpty(Value: String): Boolean;
 begin
-  {$IF COOPER}
   exit (Value = nil) or (Value.Length = 0);
-  {$ELSEIF ECHOES}
-  exit mapped.IsNullOrEmpty(Value);
-  {$ELSEIF NOUGAT}
-  exit (Value = nil) or (Value.Length = 0);
-  {$ENDIF}
 end;
 
 class method String.IsNullOrWhiteSpace(Value: String): Boolean;
@@ -167,29 +161,30 @@ begin
 end;
 
 class method String.FromByteArray(Value: array of Byte): String;
-begin
+begin  
+  if Value = nil then
+    raise new SugarArgumentNullException("Value");
+
   {$IF COOPER}
   exit new java.lang.String(Value, "UTF-8");
   {$ELSEIF ECHOES}
   exit System.Text.Encoding.UTF8.GetString(Value, 0, Value.Length);
   {$ELSEIF NOUGAT}
-  if Value = nil then
-    raise new SugarArgumentNullException("Value");
-
   exit new NSString withBytes(Value) length(length(Value)) encoding(NSStringEncoding.NSUTF8StringEncoding);
   {$ENDIF}
 end;
 
 method String.CompareTo(Value: String): Integer;
 begin
-  {$IF COOPER}
   if Value = nil then
     exit 1;
 
+  {$IF COOPER}
   exit mapped.compareTo(Value);
   {$ELSEIF ECHOES}
   exit mapped.Compare(mapped, Value, StringComparison.Ordinal);
   {$ELSEIF NOUGAT}
+  exit mapped.compare(Value);
   {$ENDIF}
 end;
 
@@ -200,6 +195,7 @@ begin
   {$ELSEIF ECHOES}
   exit mapped.Compare(mapped, Value, StringComparison.OrdinalIgnoreCase);
   {$ELSEIF NOUGAT}
+  exit mapped.caseInsensitiveCompare(Value);
   {$ENDIF}
 end;
 
@@ -210,6 +206,7 @@ begin
   {$ELSEIF ECHOES}
   exit mapped.Equals(Value, StringComparison.Ordinal);
   {$ELSEIF NOUGAT}
+  exit mapped.compare(Value) = 0;
   {$ENDIF}
 end;
 
@@ -220,59 +217,74 @@ begin
   {$ELSEIF ECHOES}
   exit mapped.Equals(Value, StringComparison.OrdinalIgnoreCase);
   {$ELSEIF NOUGAT}
+  exit mapped.caseInsensitiveCompare(Value) = 0;
   {$ENDIF}
 end;
 
 method String.Contains(Value: String): Boolean;
 begin
-  {$IF COOPER}
-  exit mapped.contains(Value);
-  {$ELSEIF ECHOES}
+  if Value.Length = 0 then
+    exit true;
+
+  {$IF COOPER OR ECHOES}
   exit mapped.Contains(Value);
   {$ELSEIF NOUGAT}
+  exit mapped.rangeOfString(Value).location <> NSNotFound;
   {$ENDIF}
 end;
 
 method String.IndexOf(Value: String): Int32;
 begin
-  {$IF COOPER}
-  exit mapped.indexOf(Value);
-  {$ELSEIF ECHOES}
+  if Value = nil then
+    raise new SugarArgumentNullException("Value");
+
+  if Value.Length = 0 then
+    exit 0;
+
+  {$IF COOPER OR ECHOES}
   exit mapped.IndexOf(Value);
   {$ELSEIF NOUGAT}
+  var r := mapped.rangeOfString(Value);
+  exit if (r.location = NSNotFound) and (r.length = 0) then -1 else r.location;
   {$ENDIF}
 end;
 
 method String.LastIndexOf(Value: String): Int32;
 begin
-  {$IF COOPER}
-  if Value = '' then
+  if Value = nil then
+    raise new SugarArgumentNullException("Value");
+
+  if Value.Length = 0 then
     exit mapped.length - 1;
 
-  exit mapped.lastIndexOf(Value);
-  {$ELSEIF ECHOES}
+  {$IF COOPER OR ECHOES}
   exit mapped.LastIndexOf(Value);
   {$ELSEIF NOUGAT}
+  var r := mapped.rangeOfString(Value) options(NSStringCompareOptions.NSBackwardsSearch);
+  exit if (r.location = NSNotFound) and (r.length = 0) then -1 else r.location;
   {$ENDIF}
 end;
 
 method String.Substring(StartIndex: Int32): String;
 begin
-  {$IF COOPER}
-  exit mapped.substring(StartIndex);
-  {$ELSEIF ECHOES}
+  {$IF COOPER OR ECHOES}
   exit mapped.Substring(StartIndex);
   {$ELSEIF NOUGAT}
+  exit mapped.substringFromIndex(StartIndex);
   {$ENDIF}
 end;
 
 method String.Substring(StartIndex: Int32; aLength: Int32): String;
 begin
+  if (StartIndex < 0) or (aLength < 0) then
+    raise new SugarArgumentOutOfRangeException(ErrorMessage.NEGATIVE_VALUE_ERROR, "StartIndex and Length");
+
   {$IF COOPER}
-  exit mapped.substring(StartIndex, aLength);
+  exit mapped.substring(StartIndex, StartIndex + aLength);
   {$ELSEIF ECHOES}
   exit mapped.Substring(StartIndex, aLength);
   {$ELSEIF NOUGAT}
+  result := mapped.substringWithRange(Foundation.NSMakeRange(StartIndex, aLength));
   {$ENDIF}
 end;
 
@@ -295,17 +307,16 @@ end;
 
 method String.Replace(OldValue: String; NewValue: String): String;
 begin
-  {$IF COOPER}
   if IsNullOrEmpty(OldValue) then
     raise new SugarArgumentNullException("OldValue");
 
   if NewValue = nil then
     NewValue := "";
 
-  exit mapped.replace(OldValue, NewValue);
-  {$ELSEIF ECHOES}
+  {$IF COOPER OR ECHOES}
   exit mapped.Replace(OldValue, NewValue);
   {$ELSEIF NOUGAT}
+  exit mapped.stringByReplacingOccurrencesOfString(OldValue) withString(NewValue);
   {$ENDIF}
 end;
 
@@ -316,6 +327,7 @@ begin
   {$ELSEIF ECHOES}
   exit mapped.ToLower;
   {$ELSEIF NOUGAT}
+  exit mapped.lowercaseString;
   {$ENDIF}
 end;
 
@@ -326,36 +338,40 @@ begin
   {$ELSEIF ECHOES}
   exit mapped.ToUpper;
   {$ELSEIF NOUGAT}
+  exit mapped.uppercaseString;
   {$ENDIF}
 end;
 
 method String.Trim: String;
 begin
-  {$IF COOPER}
-  exit mapped.trim;
-  {$ELSEIF ECHOES}
+  {$IF COOPER OR ECHOES}
   exit mapped.Trim;
   {$ELSEIF NOUGAT}
+  exit mapped.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet);
   {$ENDIF}
 end;
 
 method String.StartsWith(Value: String): Boolean;
 begin
-  {$IF COOPER}
-  exit mapped.startsWith(Value);
-  {$ELSEIF ECHOES}
+  if Value.Length = 0 then
+    exit true;
+
+  {$IF COOPER OR ECHOES}
   exit mapped.StartsWith(Value);
   {$ELSEIF NOUGAT}
+  exit mapped.hasPrefix(Value);
   {$ENDIF}
 end;
 
 method String.EndsWith(Value: String): Boolean;
 begin
-  {$IF COOPER}
-  exit mapped.endsWith(Value);
-  {$ELSEIF ECHOES}
+  if Value.Length = 0 then
+    exit true;
+
+  {$IF COOPER OR ECHOES}
   exit mapped.EndsWith(Value);
   {$ELSEIF NOUGAT}
+  exit mapped.hasSuffix(Value);
   {$ENDIF}
 end;
 
