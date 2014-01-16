@@ -47,13 +47,21 @@ type
   ErrorMessage = public static class
   public
     class const FORMAT_ERROR = "Input string was not in a correct format";
-    class const FILE_EXISTS = "File {0} already exists";
-    class const FOLDER_EXISTS = "Folder {0} already exists";
     class const OUT_OF_RANGE_ERROR = "Range ({0},{1}) exceeds data length {2}";
     class const NEGATIVE_VALUE_ERROR = "{0} can not be negative";
     class const ARG_OUT_OF_RANGE_ERROR = "{0} argument was out of range of valid values.";
     class const ARG_NULL_ERROR = "Argument {0} can not be nil";
-    class const TYPE_RANGE_ERROR = "Specified value exceeds range of {}";
+    class const TYPE_RANGE_ERROR = "Specified value exceeds range of {0}";
+
+    class const FILE_EXISTS = "File {0} already exists";    
+    class const FILE_NOTFOUND = "File {0} not found";
+    class const FILE_WRITE_ERROR = "File {0} can not be written";
+    class const FILE_READ_ERROR = "File {0} can not be read";
+    class const FOLDER_EXISTS = "Folder {0} already exists";
+    class const FOLDER_NOTFOUND = "Folder {0} not found";
+    class const FOLDER_CREATE_ERROR = "Unable to create folder {0}";
+    class const FOLDER_DELETE_ERROR = "Unable to delete folder {0}";
+    class const IO_RENAME_ERROR = "Unable to reanme {0} to {1}";
   end;
 
 implementation

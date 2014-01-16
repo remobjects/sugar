@@ -81,19 +81,19 @@ begin
   var lFile := new java.io.File(aPath);
   
   if not lFile.exists then
-    raise new SugarIOException(String.Format("File {0} not found", aPath));
+    raise new SugarIOException(ErrorMessage.FILE_NOTFOUND, aPath);
 
   exit lFile;
   {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
   exit Windows.Storage.StorageFile.GetFileFromPathAsync(aPath).Await;
   {$ELSEIF ECHOES}
   if not System.IO.File.Exists(aPath) then
-    raise new SugarIOException(String.Format("File {0} not found", aPath));
+    raise new SugarIOException(ErrorMessage.FILE_NOTFOUND, aPath);
  
   exit File(aPath);
   {$ELSEIF NOUGAT} 
   if not NSFileManager.defaultManager.fileExistsAtPath(aPath) then
-    raise new SugarIOException(String.Format("File {0} not found", aPath));
+    raise new SugarIOException(ErrorMessage.FILE_NOTFOUND, aPath);
  
   exit File(aPath);
   {$ENDIF}
@@ -220,7 +220,7 @@ method File.&Copy(Destination: Folder; NewName: String): File;
 begin
   var NewFile := System.IO.Path.Combine(Destination, NewName);
   if System.IO.File.Exists(NewFile) then
-    raise new SugarIOException("File "+NewName+" already exists");
+    raise new SugarIOException(ErrorMessage.FILE_EXISTS, NewName);
 
   System.IO.File.Copy(mapped, NewFile);
   exit NewFile;
@@ -229,7 +229,7 @@ end;
 method File.Delete;
 begin
   if not System.IO.File.Exists(mapped) then
-    raise new SugarIOException("File {0} not found", mapped);
+    raise new SugarIOException(ErrorMessage.FILE_NOTFOUND, mapped);
 
   System.IO.File.Delete(mapped);
 end;
@@ -244,7 +244,7 @@ begin
   var NewFile := System.IO.Path.Combine(Destination, NewName);
 
   if System.IO.File.Exists(NewFile) then
-    raise new SugarIOException("File "+NewName+" already exists");
+    raise new SugarIOException(ErrorMessage.FILE_EXISTS, NewFile);
 
   System.IO.File.Move(mapped, NewFile);
   exit NewFile;
@@ -290,10 +290,10 @@ end;
 class method FileUtils.WriteBytes(File: java.io.File; Data: array of Byte; Append: Boolean);
 begin
   if not File.exists then
-    raise new SugarIOException("File {0} does not exists", File.Name);
+    raise new SugarIOException(ErrorMessage.FILE_NOTFOUND, File.Name);
 
   if not File.canWrite then
-    raise new SugarIOException("File {0} can not be written", File.Name);
+    raise new SugarIOException(ErrorMessage.FILE_WRITE_ERROR, File.Name);
 
   var Writer := new java.io.FileOutputStream(File, Append);
   try
@@ -308,7 +308,7 @@ begin
   var Data := ReadBytes(File);
 
   if Data = nil then
-    raise new SugarIOException("Unable to read string from file {0}", File.Name);
+    raise new SugarIOException(ErrorMessage.FILE_READ_ERROR, File.Name);
 
   exit new String(Data);
 end;
@@ -316,10 +316,10 @@ end;
 class method FileUtils.ReadBytes(File: java.io.File): array of Byte;
 begin
   if not File.exists then
-    raise new SugarIOException("File {0} does not exists", File.Name);
+    raise new SugarIOException(ErrorMessage.FILE_NOTFOUND, File.Name);
 
   if not File.canRead then
-    raise new SugarIOException("File {0} can not be read", File.Name);
+    raise new SugarIOException(ErrorMessage.FILE_READ_ERROR, File.Name);
 
   if File.length = 0 then
     exit [];
@@ -346,7 +346,7 @@ begin
 
   var NewFile := new java.io.File(Destination, NewName);
   if NewFile.exists then
-    raise new SugarIOException(String.Format("File {0} already exists", NewName));
+    raise new SugarIOException(ErrorMessage.FILE_EXISTS, NewName);
 
   NewFile.createNewFile;
   var source := new java.io.FileInputStream(mapped).Channel;
@@ -361,7 +361,7 @@ end;
 method File.Delete;
 begin
   if not mapped.exists then
-    raise new SugarIOException("File {0} not found", mapped.Name);
+    raise new SugarIOException(ErrorMessage.FILE_NOTFOUND, mapped.Name);
 
   mapped.delete;
 end;
@@ -383,10 +383,10 @@ begin
   var NewFile := new java.io.File(mapped.ParentFile, NewName);
   
   if NewFile.exists then
-    raise new SugarIOException("File {0} already exists", NewName);
+    raise new SugarIOException(ErrorMessage.FILE_EXISTS, NewName);
 
   if not mapped.renameTo(NewFile) then
-    raise new SugarIOException("Unable to reanme file {0} to {1}", mapped.Name, NewName);
+    raise new SugarIOException(ErrorMessage.IO_RENAME_ERROR, mapped.Name, NewName);
 
   exit NewFile;
 end;
@@ -511,7 +511,7 @@ begin
 
   var lData := NSData.dataWithBytesNoCopy(^Void(Data)) length(length(Data));
   if not lData:writeToFile(mapped) atomically(true) then
-    raise new SugarIOException("Failed to write data to a file");
+    raise new SugarIOException(ErrorMessage.FILE_WRITE_ERROR, mapped);
 end;
 
 method File.WriteText(Content: String);

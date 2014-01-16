@@ -80,19 +80,19 @@ begin
   var lFile := new java.io.File(aPath);
 
   if not lFile.exists then
-    raise new SugarIOException(String.Format("Folder {0} not found", aPath));
+    raise new SugarIOException(ErrorMessage.FOLDER_NOTFOUND, aPath);
 
   exit Folder(lFile);
   {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
   exit Windows.Storage.StorageFolder.GetFolderFromPathAsync(aPath).Await;
   {$ELSEIF ECHOES}
   if not System.IO.Directory.Exists(aPath) then
-    raise new SugarIOException(String.Format("Folder {0} not found", aPath));
+    raise new SugarIOException(ErrorMessage.FOLDER_NOTFOUND, aPath);
  
   exit Folder(aPath);
   {$ELSEIF NOUGAT} 
   if not NSFileManager.defaultManager.fileExistsAtPath(aPath) then
-    raise new SugarIOException(String.Format("Folder {0} not found", aPath));
+    raise new SugarIOException(ErrorMessage.FOLDER_NOTFOUND, aPath);
  
   exit Folder(aPath);
   {$ENDIF}
@@ -208,7 +208,7 @@ begin
 
   if System.IO.File.Exists(NewFileName) then begin
     if FailIfExists then
-      raise new SugarIOException(String.Format(ErrorMessage.FILE_EXISTS, FileName));
+      raise new SugarIOException(ErrorMessage.FILE_EXISTS, FileName);
 
     exit NewFileName;
   end;
@@ -224,7 +224,7 @@ begin
 
   if System.IO.Directory.Exists(NewFolderName) then begin
     if FailIfExists then
-      raise new SugarIOException(String.Format(ErrorMessage.FOLDER_EXISTS, FolderName));
+      raise new SugarIOException(ErrorMessage.FOLDER_EXISTS, FolderName);
 
     exit NewFolderName;
   end;
@@ -271,7 +271,7 @@ begin
   var TopLevel := System.IO.Path.GetDirectoryName(mapped);
   var FolderName := System.IO.Path.Combine(TopLevel, NewName);
   if System.IO.Directory.Exists(FolderName) then
-    raise new SugarIOException("Folder "+NewName+" already exists");
+    raise new SugarIOException(ErrorMessage.FOLDER_EXISTS, NewName);
 
   System.IO.Directory.Move(mapped, FolderName);
   mapped := FolderName;
@@ -282,7 +282,7 @@ begin
   var NewFile := new java.io.File(mapped, FileName);
   if NewFile.exists then begin
     if FailIfExists then
-      raise new SugarIOException(String.Format("File {0} already exists", FileName));
+      raise new SugarIOException(ErrorMessage.FILE_EXISTS, FileName);
 
     exit NewFile;
   end;
@@ -310,13 +310,13 @@ begin
   var NewFolder := new java.io.File(mapped, FolderName);
   if NewFolder.exists then begin
     if FailIfExists then
-      raise new SugarIOException(String.Format("Folder {0} already exists", FolderName));
+      raise new SugarIOException(ErrorMessage.FOLDER_EXISTS, FolderName);
 
     exit NewFolder;
   end;
 
   if not NewFolder.mkdir then
-    raise new SugarIOException("Failed to create new folder '{0}'", FolderName);
+    raise new SugarIOException(ErrorMessage.FOLDER_CREATE_ERROR, FolderName);
 
   exit NewFolder;
 end;
@@ -329,17 +329,17 @@ begin
       DeleteFolder(new java.io.File(Value, Item));
 
     if not Value.delete then
-      raise new SugarIOException("Unable to delete folder {0}", Value.Name);
+      raise new SugarIOException(ErrorMessage.FOLDER_DELETE_ERROR, Value.Name);
   end
   else
     if not Value.delete then
-      raise new SugarIOException("Unable to delete file {0}", Value.Name);
+      raise new SugarIOException(ErrorMessage.FOLDER_DELETE_ERROR, Value.Name);
 end;
 
 method Folder.Delete;
 begin
   if not mapped.exists then
-    raise new SugarIOException(String.Format("Folder {0} not found", mapped.Name));
+    raise new SugarIOException(ErrorMessage.FOLDER_NOTFOUND, mapped.Name);
 
   FolderHelper.DeleteFolder(mapped);
 end;
@@ -376,10 +376,10 @@ method Folder.Rename(NewName: String);
 begin
   var NewFolder := new java.io.File(mapped.ParentFile, NewName);
   if NewFolder.exists then
-    raise new SugarIOException(String.Format("Folder {0} already exists", NewName));
+    raise new SugarIOException(ErrorMessage.FOLDER_EXISTS, NewName);
 
   if not mapped.renameTo(NewFolder) then
-    raise new SugarIOException("Unable to rename folder '{0}' to '{1}'", mapped.Name, NewName);
+    raise new SugarIOException(ErrorMessage.IO_RENAME_ERROR, mapped.Name, NewName);
 
   mapped := NewFolder;
 end;
@@ -390,7 +390,7 @@ begin
   var Manager := NSFileManager.defaultManager;
   if Manager.fileExistsAtPath(NewFileName) then begin
     if FailIfExists then
-      raise new SugarIOException(String.Format(ErrorMessage.FILE_EXISTS, FileName));
+      raise new SugarIOException(ErrorMessage.FILE_EXISTS, FileName);
 
     exit File(NewFileName);
   end;
@@ -415,7 +415,7 @@ begin
   var Manager := NSFileManager.defaultManager;
   if Manager.fileExistsAtPath(NewFolderName) then begin
     if FailIfExists then
-      raise new SugarIOException(String.Format(ErrorMessage.FOLDER_EXISTS, FolderName));
+      raise new SugarIOException(ErrorMessage.FOLDER_EXISTS, FolderName);
 
     exit Folder(NewFolderName);
   end;
@@ -495,7 +495,7 @@ begin
   var Manager := NSFileManager.defaultManager;
 
   if Manager.fileExistsAtPath(NewFolderName) then
-    raise new SugarIOException(String.Format(ErrorMessage.FOLDER_EXISTS, NewName));
+    raise new SugarIOException(ErrorMessage.FOLDER_EXISTS, NewName);
 
   var lError: NSError := nil; 
   if not Manager.moveItemAtPath(mapped) toPath(NewFolderName) error(var lError) then
