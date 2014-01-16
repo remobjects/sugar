@@ -61,34 +61,28 @@ implementation
 
 class method Convert.ToString(Value: Byte): String;
 begin
-  {$IF COOPER}
-  exit Value.toString;
+  {$IF COOPER OR NOUGAT}
+  exit Value.ToString;
   {$ELSEIF ECHOES}
   exit mapped.ToString(Value);
-  {$ELSEIF NOUGAT}
-  exit Value.ToString;
   {$ENDIF}
 end;
 
 class method Convert.ToString(Value: Int32): String;
 begin
-  {$IF COOPER}
-  exit Value.toString;
+  {$IF COOPER OR NOUGAT}
+  exit Value.ToString;
   {$ELSEIF ECHOES}
   exit mapped.ToString(Value);
-  {$ELSEIF NOUGAT}
-  exit Value.ToString;
   {$ENDIF}
 end;
 
 class method Convert.ToString(Value: Int64): String;
 begin
-  {$IF COOPER}
-  exit Value.toString;
+  {$IF COOPER OR NOUGAT}
+  exit Value.ToString;
   {$ELSEIF ECHOES}
   exit mapped.ToString(Value);
-  {$ELSEIF NOUGAT}
-  exit Value.ToString;
   {$ENDIF}
 end;
 
@@ -128,48 +122,36 @@ end;
 
 class method Convert.ToString(Value: Char): String;
 begin
-  {$IF COOPER}
-  exit Value.toString;
+  {$IF COOPER OR NOUGAT}
+  exit Value;
   {$ELSEIF ECHOES}
   exit mapped.ToString(Value);
-  {$ELSEIF NOUGAT}
-  exit Value;
   {$ENDIF}
 end;
 
 class method Convert.ToString(Value: Object): String;
 begin
-  {$IF COOPER}
-  exit Value.toString;
-  {$ELSEIF ECHOES}
-  exit mapped.ToString(Value);
-  {$ELSEIF NOUGAT}
   exit Value.ToString;
-  {$ENDIF}
 end;
 
 class method Convert.ToInt32(Value: Byte): Int32;
 begin
-  {$IF COOPER}
-  exit Integer(Value);
+  {$IF COOPER OR NOUGAT}
+  exit Int32(Value);
   {$ELSEIF ECHOES}
   exit mapped.ToInt32(Value);
-  {$ELSEIF NOUGAT}
-  exit Int32(Value);
   {$ENDIF}
 end;
 
 class method Convert.ToInt32(Value: Int64): Int32;
 begin
   if (Value > Consts.MaxInteger) or (Value < Consts.MinInteger) then
-    raise new SugarArgumentOutOfRangeException("Specified value exceeds range of int32");
+    raise new SugarArgumentOutOfRangeException(ErrorMessage.TYPE_RANGE_ERROR, "Int32");
 
-  {$IF COOPER}
-  exit Integer(Value);
+  {$IF COOPER OR NOUGAT}
+  exit Int32(Value);
   {$ELSEIF ECHOES}
   exit mapped.ToInt32(Value);
-  {$ELSEIF NOUGAT}
-  exit Integer(Value);
   {$ENDIF}
 end;
 
@@ -178,19 +160,17 @@ begin
   var Number := Math.Round(Value);
 
   if (Number > Consts.MaxInteger) or (Number < Consts.MinInteger) then
-    raise new SugarArgumentOutOfRangeException("Specified value exceeds range of int32");
+    raise new SugarArgumentOutOfRangeException(ErrorMessage.TYPE_RANGE_ERROR, "Int32");
 
   exit Int32(Number);
 end;
 
 class method Convert.ToInt32(Value: Char): Int32;
 begin
-  {$IF COOPER}
+  {$IF COOPER OR NOUGAT}
   exit ord(Value);
   {$ELSEIF ECHOES}
   exit mapped.ToInt32(Value);
-  {$ELSEIF NOUGAT}
-  exit ord(Value);
   {$ENDIF}
 end;
 
@@ -210,42 +190,36 @@ end;
 
 class method Convert.ToInt64(Value: Byte): Int64;
 begin
-  {$IF COOPER}
+  {$IF COOPER OR NOUGAT}
   exit Int64(Value);
   {$ELSEIF ECHOES}
   exit mapped.ToInt64(Value);
-  {$ELSEIF NOUGAT}
-  exit Int64(Value);
   {$ENDIF}
 end;
 
 class method Convert.ToInt64(Value: Int32): Int64;
 begin
-  {$IF COOPER}
+  {$IF COOPER OR NOUGAT}
   exit Int64(Value);
   {$ELSEIF ECHOES}
   exit mapped.ToInt64(Value);
-  {$ELSEIF NOUGAT}
-  exit Int64(Value);
   {$ENDIF}
 end;
 
 class method Convert.ToInt64(Value: Double): Int64;
 begin
   if (Value > Consts.MaxInt64) or (Value < Consts.MinInt64) then
-    raise new SugarArgumentOutOfRangeException("Specified value exceeds range of int64");
+    raise new SugarArgumentOutOfRangeException(ErrorMessage.TYPE_RANGE_ERROR, "Int64");
 
   exit Math.Round(Value);
 end;
 
 class method Convert.ToInt64(Value: Char): Int64;
 begin
-  {$IF COOPER}
+  {$IF COOPER OR NOUGAT}
   exit ord(Value);
   {$ELSEIF ECHOES}
   exit mapped.ToInt64(Value);
-  {$ELSEIF NOUGAT}
-  exit ord(Value);
   {$ENDIF}
 end;
 
@@ -265,34 +239,28 @@ end;
 
 class method Convert.ToDouble(Value: Byte): Double;
 begin
-  {$IF COOPER}
+  {$IF COOPER OR NOUGAT}
   exit Double(Value);
   {$ELSEIF ECHOES}
   exit mapped.ToDouble(Value);
-  {$ELSEIF NOUGAT}
-  exit Double(Value);
   {$ENDIF}
 end;
 
 class method Convert.ToDouble(Value: Int32): Double;
 begin
-  {$IF COOPER}
+  {$IF COOPER OR NOUGAT}
   exit Double(Value);
   {$ELSEIF ECHOES}
   exit mapped.ToDouble(Value);
-  {$ELSEIF NOUGAT}
-  exit Double(Value);
   {$ENDIF}
 end;
 
 class method Convert.ToDouble(Value: Int64): Double;
 begin
-  {$IF COOPER}
+  {$IF COOPER OR NOUGAT}
   exit Double(Value);
   {$ELSEIF ECHOES}
   exit mapped.ToDouble(Value);
-  {$ELSEIF NOUGAT}
-  exit Double(Value);
   {$ENDIF}
 end;
 
@@ -331,43 +299,25 @@ begin
   var Number := Math.Round(Value);
 
   if (Number > 255) or (Number < 0) then
-    raise new SugarArgumentOutOfRangeException("Specified value exceeds range of byte");
+    raise new SugarArgumentOutOfRangeException(ErrorMessage.TYPE_RANGE_ERROR, "Byte");
 
-  {$IF COOPER}
   exit Byte(Number);
-  {$ELSEIF ECHOES}
-  exit mapped.ToByte(Number);
-  {$ELSEIF NOUGAT}
-  exit Byte(Number);
-  {$ENDIF}
 end;
 
 class method Convert.ToByte(Value: Int32): Byte;
 begin
   if (Value > 255) or (Value < 0) then
-    raise new SugarArgumentOutOfRangeException("Specified value exceeds range of byte");
+    raise new SugarArgumentOutOfRangeException(ErrorMessage.TYPE_RANGE_ERROR, "Byte");
 
-  {$IF COOPER}
   exit Byte(Value);
-  {$ELSEIF ECHOES}
-  exit mapped.ToByte(Value);
-  {$ELSEIF NOUGAT}
-  exit Byte(Value);
-  {$ENDIF}
 end;
 
 class method Convert.ToByte(Value: Int64): Byte;
 begin
   if (Value > 255) or (Value < 0) then
-    raise new SugarArgumentOutOfRangeException("Specified value exceeds range of byte");
+    raise new SugarArgumentOutOfRangeException(ErrorMessage.TYPE_RANGE_ERROR, "Byte");
 
-  {$IF COOPER}
   exit Byte(Value);
-  {$ELSEIF ECHOES}
-  exit mapped.ToByte(Value);
-  {$ELSEIF NOUGAT}
-  exit Byte(Value);
-  {$ENDIF}
 end;
 
 class method Convert.ToByte(Value: Char): Byte;
@@ -375,13 +325,12 @@ begin
   var Number := Convert.ToInt32(Value);
 
   if (Number > 255) or (Number < 0) then
-    raise new SugarArgumentOutOfRangeException("Specified value exceeds range of byte");
-  {$IF COOPER}
+    raise new SugarArgumentOutOfRangeException(ErrorMessage.TYPE_RANGE_ERROR, "Byte");
+
+  {$IF COOPER OR NOUGAT}
   exit ord(Value);
   {$ELSEIF ECHOES}
   exit mapped.ToByte(Value);
-  {$ELSEIF NOUGAT}
-  exit ord(Value);
   {$ENDIF}
 end;
 
@@ -393,39 +342,31 @@ begin
   exit mapped.ToByte(Value);
   {$ELSEIF NOUGAT}
   var Number: Int32 := ConvertHelper.ParseInt32(Value);
-
-  if (Number > 255) or (Number < 0) then
-    raise new SugarArgumentOutOfRangeException("Specified value exceeds range of byte");
-
-  exit Byte(Number);
+  exit ToByte(Number);
   {$ENDIF}
 end;
 
 class method Convert.ToChar(Value: Int32): Char;
 begin
   if (Value > Consts.MaxChar) or (Value < Consts.MinChar) then
-    raise new SugarArgumentOutOfRangeException("Specified value exceeds range of char");
+    raise new SugarArgumentOutOfRangeException(ErrorMessage.TYPE_RANGE_ERROR, "Char");
 
-  {$IF COOPER}
+  {$IF COOPER OR NOUGAT}
   exit chr(Value);
   {$ELSEIF ECHOES}
   exit mapped.ToChar(Value);
-  {$ELSEIF NOUGAT}
-  exit chr(Value);
   {$ENDIF}
 end;
 
 class method Convert.ToChar(Value: Int64): Char;
 begin
   if (Value > Consts.MaxChar) or (Value < Consts.MinChar) then
-    raise new SugarArgumentOutOfRangeException("Specified value exceeds range of char");
+    raise new SugarArgumentOutOfRangeException(ErrorMessage.TYPE_RANGE_ERROR, "Char");
 
-  {$IF COOPER}
+  {$IF COOPER OR NOUGAT}
   exit chr(Value);
   {$ELSEIF ECHOES}
   exit mapped.ToChar(Value);
-  {$ELSEIF NOUGAT}
-  exit chr(Value);
   {$ENDIF}
 end;
 
@@ -447,74 +388,38 @@ begin
   if Value.Length <> 1 then
     raise new SugarFormatException("Unable to convert string '{0}' to char.", Value);
 
-  {$IF COOPER}
   exit Value[0];
-  {$ELSEIF ECHOES}
-  exit mapped.ToChar(Value);
-  {$ELSEIF NOUGAT}
-  exit Value[0];
-  {$ENDIF}
 end;
 
 class method Convert.ToBoolean(Value: Double): Boolean;
 begin
-  {$IF COOPER}
   exit if Value = 0 then false else true;
-  {$ELSEIF ECHOES}
-  exit mapped.ToBoolean(Value);
-  {$ELSEIF NOUGAT}
-  exit if Value = 0 then false else true;
-  {$ENDIF}
 end;
 
 class method Convert.ToBoolean(Value: Int32): Boolean;
 begin
-  {$IF COOPER}
   exit if Value = 0 then false else true;
-  {$ELSEIF ECHOES}
-  exit mapped.ToBoolean(Value);
-  {$ELSEIF NOUGAT}
-  exit if Value = 0 then false else true;
-  {$ENDIF}
 end;
 
 class method Convert.ToBoolean(Value: Int64): Boolean;
 begin
-  {$IF COOPER}
   exit if Value = 0 then false else true;
-  {$ELSEIF ECHOES}
-  exit mapped.ToBoolean(Value);
-  {$ELSEIF NOUGAT}
-  exit if Value = 0 then false else true;
-  {$ENDIF}
 end;
 
 class method Convert.ToBoolean(Value: Byte): Boolean;
 begin
-  {$IF COOPER}
   exit if Value = 0 then false else true;
-  {$ELSEIF ECHOES}
-  exit mapped.ToBoolean(Value);
-  {$ELSEIF NOUGAT}
-  exit if Value = 0 then false else true;
-  {$ENDIF}
 end;
 
 class method Convert.ToBoolean(Value: String): Boolean;
 begin  
-  {$IF COOPER}
-  if (Value = nil) or (Value.EqualsIngoreCase(Consts.FalseString)) then exit false;
-  if Value.EqualsIngoreCase(Consts.TrueString) then exit true;  
+  if (Value = nil) or (Value.EqualsIngoreCase(Consts.FalseString)) then 
+    exit false;
+
+  if Value.EqualsIngoreCase(Consts.TrueString) then
+    exit true;  
   
-  raise new SugarFormatException("Unable to convert string '{0}' to boolean.", Value);
-  {$ELSEIF ECHOES}
-  exit mapped.ToBoolean(Value);
-  {$ELSEIF NOUGAT}
-  if (Value = nil) or (Value.EqualsIngoreCase(Consts.FalseString)) then exit false;
-  if Value.EqualsIngoreCase(Consts.TrueString) then exit true;  
-  
-  raise new SugarFormatException("Unable to convert string '{0}' to boolean.", Value);
-  {$ENDIF}
+  raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);
 end;
 
 {$IF NOUGAT}
@@ -546,7 +451,7 @@ begin
   var Number := ParseInt64(Value);
 
   if (Number > Consts.MaxInteger) or (Number < Consts.MinInteger) then
-    raise new SugarFormatException("Unable to convert string '{0}'.", Value);
+    raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);
 
   exit Int32(Number);
 end;
@@ -559,7 +464,7 @@ begin
   var Number := ParseNumber(Value);
 
   if Number = nil then
-    raise new SugarFormatException("Unable to convert string '{0}'.", Value);
+    raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);
 
   var obj: id := Number;
   var NumberType := CFNumberGetType(CFNumberRef(obj));
@@ -568,7 +473,7 @@ begin
                     CFNumberType.kCFNumberSInt16Type, CFNumberType.kCFNumberShortType, CFNumberType.kCFNumberSInt64Type, CFNumberType.kCFNumberCharType] then
     exit Number.longLongValue;
 
-  raise new SugarFormatException("Unable to convert string '{0}'.", Value);
+  raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);
 end;
 
 class method ConvertHelper.ParseDouble(Value: String): Double;
@@ -579,7 +484,7 @@ begin
   var Number := ParseNumber(Value);
 
   if Number = nil then
-    raise new SugarFormatException("Unable to convert string '{0}'.", Value);
+    raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);
 
   exit Number.doubleValue;
 end;
