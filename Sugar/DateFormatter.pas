@@ -137,13 +137,13 @@ begin
 
       //closing bracket not found
       if (Current >= Value.Length) or (Value[Current] <> '}') then
-        raise new SugarFormatException("Input string was not in a correct format.");
+        raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);
 
       //copy format
       var UserFormat := Value.Substring(StartPosition, Current - StartPosition);
       
       if String.IsNullOrEmpty(UserFormat) then
-        raise new SugarFormatException("Input string was not in a correct format.");
+        raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);
 
       inc(Current);
       BlockStart := Current;
@@ -170,7 +170,7 @@ begin
     end
     //not escaped closing bracket
     else if C = '}' then
-      raise new SugarFormatException("Input string was not in a correct format.");
+      raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);
   end;
 
   //text left to copy

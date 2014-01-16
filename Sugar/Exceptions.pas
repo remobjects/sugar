@@ -53,6 +53,7 @@ type
     class const NEGATIVE_VALUE_ERROR = "{0} can not be negative";
     class const ARG_OUT_OF_RANGE_ERROR = "{0} argument was out of range of valid values.";
     class const ARG_NULL_ERROR = "Argument {0} can not be nil";
+    class const TYPE_RANGE_ERROR = "Specified value exceeds range of {}";
   end;
 
 implementation

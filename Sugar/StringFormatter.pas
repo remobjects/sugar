@@ -105,7 +105,7 @@ begin
         inc(ptr);
     end
     else if c = '}' then begin
-      raise new SugarFormatException('Input string was not in a correct format.');
+      raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);
     end;
   end;
   if start < aFormat.Length then sb.Append(aFormat, start, aFormat.Length - start);
@@ -121,7 +121,7 @@ begin
   // where:
   // N = argument number (non-negative integer)
   n := ParseDecimal(aString, var ptr);
-  if n < 0 then raise new SugarFormatException('Input string was not in a correct format.');
+  if n < 0 then raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);
   // M = width (non-negative integer)
   if (ptr < max) and (aString[ptr] = ',') then begin
     // White space between ',' and number or sign.
@@ -132,7 +132,7 @@ begin
     left_align := ((ptr < max) and (aString[ptr] = '-'));
     if left_align then inc(ptr);
     width := ParseDecimal(aString, var ptr);
-    if width < 0 then raise new SugarFormatException('Input string was not in a correct format.')
+    if width < 0 then raise new SugarFormatException(ErrorMessage.FORMAT_ERROR)
   end
   else begin
     width := 0;
@@ -151,7 +151,7 @@ begin
     aFormat := nil;
   end;
   if ((ptr >= max)) or (aString[ptr] ≠ '}') then 
-    raise new SugarFormatException('Input string was not in a correct format.'); 
+    raise new SugarFormatException(ErrorMessage.FORMAT_ERROR); 
   inc(ptr);
 end;
 

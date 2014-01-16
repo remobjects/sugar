@@ -95,7 +95,7 @@ begin
     exit [];
 
   if Range.Location + Range.Length > self.Length then
-    raise new SugarArgumentOutOfRangeException(String.Format(ErrorMessage.OUT_OF_RANGE_ERROR, Range.Location, Range.Length, self.Length));
+    raise new SugarArgumentOutOfRangeException(ErrorMessage.OUT_OF_RANGE_ERROR, Range.Location, Range.Length, self.Length);
 
   result := new Byte[Range.Length];
   {$IF COOPER}  
