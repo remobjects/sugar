@@ -54,7 +54,7 @@ end;
 method Stack<T>.Peek: T;
 begin
   if self.Count = 0 then
-    raise new SugarStackEmptyException("Stack is empty");
+    raise new SugarStackEmptyException(ErrorMessage.COLLECTION_EMPTY);
   
   {$IF COOPER OR ECHOES}
   exit mapped.Peek;
@@ -66,7 +66,7 @@ end;
 method Stack<T>.Pop: T;
 begin
   if self.Count = 0 then
-    raise new SugarStackEmptyException("Stack is empty");
+    raise new SugarStackEmptyException(ErrorMessage.COLLECTION_EMPTY);
 
   {$IF COOPER OR ECHOES}
   exit mapped.Pop;

@@ -45,7 +45,7 @@ end;
 method Queue<T>.Dequeue: T;
 begin
   if self.Count = 0 then
-    raise new SugarInvalidOperationException("Queue is empty");
+    raise new SugarInvalidOperationException(ErrorMessage.COLLECTION_EMPTY);
 
   {$IF COOPER}
   exit mapped.poll;
@@ -84,7 +84,7 @@ end;
 method Queue<T>.Peek: T;
 begin
   if self.Count = 0 then
-    raise new SugarInvalidOperationException("Queue is empty");
+    raise new SugarInvalidOperationException(ErrorMessage.COLLECTION_EMPTY);
 
   {$IF COOPER OR ECHOES}
   exit mapped.Peek;

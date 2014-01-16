@@ -47,7 +47,7 @@ begin
     raise new SugarArgumentNullException("Value");
 
   if ContainsKey(Key) then
-    raise new SugarArgumentException("An element with the same key already exists in the dictionary");
+    raise new SugarArgumentException(ErrorMessage.KEY_EXISTS);
 
   {$IF COOPER}
   mapped.put(Key, Value);
@@ -110,7 +110,7 @@ begin
   {$ENDIF}
 
   if result = nil then
-    raise new SugarKeyNotFoundException("Entry with specified key does not exist");
+    raise new SugarKeyNotFoundException(ErrorMessage.KEY_NOTFOUND);
 end;
 
 method Dictionary<T, U>.GetKeys: array of T;

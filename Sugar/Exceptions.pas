@@ -52,6 +52,9 @@ type
     class const ARG_OUT_OF_RANGE_ERROR = "{0} argument was out of range of valid values.";
     class const ARG_NULL_ERROR = "Argument {0} can not be nil";
     class const TYPE_RANGE_ERROR = "Specified value exceeds range of {0}";
+    class const COLLECTION_EMPTY = "Collection is empty";
+    class const KEY_NOTFOUND = "Entry with specified key does not exist";
+    class const KEY_EXISTS = "An element with the same key already exists in the dictionary";
 
     class const FILE_EXISTS = "File {0} already exists";    
     class const FILE_NOTFOUND = "File {0} not found";
