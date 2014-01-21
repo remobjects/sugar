@@ -24,15 +24,15 @@ type
     method Exists(Key: String): Boolean;
     {$ENDIF}
   public
-    method ReadString(Key: String; DefaultValue: String): String;
-    method ReadInteger(Key: String; DefaultValue: Integer): Integer;
-    method ReadBoolean(Key: String; DefaultValue: Boolean): Boolean;
-    method ReadDouble(Key: String; DefaultValue: Double): Double;
+    method &Read(Key: String; DefaultValue: String): String;
+    method &Read(Key: String; DefaultValue: Integer): Integer;
+    method &Read(Key: String; DefaultValue: Boolean): Boolean;
+    method &Read(Key: String; DefaultValue: Double): Double;
 
-    method WriteString(Key: String; Value: String);
-    method WriteInteger(Key: String; Value: Integer);
-    method WriteBoolean(Key: String; Value: Boolean);
-    method WriteDouble(Key: String; Value: Double);
+    method &Write(Key: String; Value: String);
+    method &Write(Key: String; Value: Integer);
+    method &Write(Key: String; Value: Boolean);
+    method &Write(Key: String; Value: Double);
 
     method Save;
     method Clear;
@@ -124,7 +124,7 @@ begin
   {$ENDIF}
 end;
 
-method UserSettings.ReadBoolean(Key: String; DefaultValue: Boolean): Boolean;
+method UserSettings.&Read(Key: String; DefaultValue: Boolean): Boolean;
 begin
   SugarArgumentNullException.RaiseIfNil(Key, "Key");
   {$IF ANDROID}  
@@ -147,7 +147,7 @@ begin
   {$ENDIF}
 end;
 
-method UserSettings.ReadDouble(Key: String; DefaultValue: Double): Double;
+method UserSettings.&Read(Key: String; DefaultValue: Double): Double;
 begin
   SugarArgumentNullException.RaiseIfNil(Key, "Key");
   {$IF ANDROID}  
@@ -170,7 +170,7 @@ begin
   {$ENDIF}
 end;
 
-method UserSettings.ReadInteger(Key: String; DefaultValue: Integer): Integer;
+method UserSettings.&Read(Key: String; DefaultValue: Integer): Integer;
 begin
   SugarArgumentNullException.RaiseIfNil(Key, "Key");
   {$IF ANDROID}  
@@ -193,7 +193,7 @@ begin
   {$ENDIF}
 end;
 
-method UserSettings.ReadString(Key: String; DefaultValue: String): String;
+method UserSettings.&Read(Key: String; DefaultValue: String): String;
 begin
   SugarArgumentNullException.RaiseIfNil(Key, "Key");
   {$IF ANDROID}  
@@ -254,7 +254,7 @@ begin
   {$ENDIF}
 end;
 
-method UserSettings.WriteBoolean(Key: String; Value: Boolean);
+method UserSettings.&Write(Key: String; Value: Boolean);
 begin
   SugarArgumentNullException.RaiseIfNil(Key, "Key");
   {$IF ANDROID}  
@@ -266,13 +266,13 @@ begin
   {$ELSEIF NETFX_CORE}
   mapped.Values[Key] := Value;
   {$ELSEIF ECHOES}
-  WriteString(Key, Value.ToString);
+  &Write(Key, Value.ToString);
   {$ELSEIF NOUGAT}
   mapped.setBool(Value) forKey(Key);
   {$ENDIF}
 end;
 
-method UserSettings.WriteDouble(Key: String; Value: Double);
+method UserSettings.&Write(Key: String; Value: Double);
 begin
   SugarArgumentNullException.RaiseIfNil(Key, "Key");
   {$IF ANDROID}
@@ -284,13 +284,13 @@ begin
   {$ELSEIF NETFX_CORE}
   mapped.Values[Key] := Value;
   {$ELSEIF ECHOES}
-  WriteString(Key, Value.ToString);
+  &Write(Key, Value.ToString);
   {$ELSEIF NOUGAT}
   mapped.setDouble(Value) forKey(Key);
   {$ENDIF}
 end;
 
-method UserSettings.WriteInteger(Key: String; Value: Integer);
+method UserSettings.&Write(Key: String; Value: Integer);
 begin
   SugarArgumentNullException.RaiseIfNil(Key, "Key");
   {$IF ANDROID}  
@@ -302,13 +302,13 @@ begin
   {$ELSEIF NETFX_CORE}
   mapped.Values[Key] := Value;
   {$ELSEIF ECHOES}
-  WriteString(Key, Value.ToString);
+  &Write(Key, Value.ToString);
   {$ELSEIF NOUGAT}  
   mapped.setInteger(Value) forKey(Key);
   {$ENDIF}
 end;
 
-method UserSettings.WriteString(Key: String; Value: String);
+method UserSettings.&Write(Key: String; Value: String);
 begin
   SugarArgumentNullException.RaiseIfNil(Key, "Key");
   {$IF ANDROID}  
