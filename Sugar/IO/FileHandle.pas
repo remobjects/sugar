@@ -10,28 +10,18 @@ uses
   Sugar;
 
 type
-  FileOpenMode = public (&Read, ReadWrite, &Write);
+  FileOpenMode = public (&ReadOnly, ReadWrite);
   SeekOrigin = public (&Begin, Current, &End);
 
-  FileHandle = public class
+  FileHandle = public class mapped to {$IF COOPER}java.io.RandomAccessFile{$ELSEIF WINDOWS_PHONE OR NETFX_CORE}Stream{$ELSEIF ECHOES}System.IO.FileStream{$ELSEIF NOUGAT}NSFileHandle{$ENDIF}
   private
-    {$IF COOPER}
-    Data: java.io.RandomAccessFile;
-    {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
-    Data: Stream;
-    {$ELSEIF ECHOES}
-    Data: System.IO.FileStream;
-    {$ELSEIF NOUGAT}
-    Data: NSFileHandle;
-    {$ENDIF}
-
     method GetLength: Int64;
     method SetLength(value: Int64);
     method GetPosition: Int64;
     method SetPosition(value: Int64);
     method ValidateBuffer(Buffer: array of Byte; Offset: Integer; Count: Integer);
   public
-    constructor(aFileName: String; aMode: FileOpenMode);
+    constructor(FileName: String; Mode: FileOpenMode);
 
     method Close;
     method Flush;
@@ -39,45 +29,28 @@ type
     method &Write(Buffer: array of Byte; Offset: Integer; Count: Integer);
     method Seek(Offset: Int64; Origin: SeekOrigin);
 
-    property FileName: String read write; readonly;
-    property Mode: FileOpenMode read write; readonly;
     property Length: Int64 read GetLength write SetLength;
     property Position: Int64 read GetPosition write SetPosition;
   end;
 
 implementation
 
-constructor FileHandle(aFileName: String; aMode: FileOpenMode);
+constructor FileHandle(FileName: String; Mode: FileOpenMode);
 begin
-  FileName := aFileName;
-  Mode := aMode;
   {$IF COOPER}
-  var lMode: String := case aMode of
-      FileOpenMode.Read: "r";
-      FileOpenMode.ReadWrite: "rw";
-      FileOpenMode.Write: "rw";
-  end;
-  Data := new java.io.RandomAccessFile(aFileName, lMode);
+  var lMode: String := if Mode = FileOpenMode.ReadOnly then "r" else "rw";
+  exit new java.io.RandomAccessFile(FileName, lMode);
   {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
-  var lFile: Windows.Storage.StorageFile := Windows.Storage.StorageFile.GetFileFromPathAsync(aFileName).Await;
-  var lMode: Windows.Storage.FileAccessMode := case aMode of
-      FileOpenMode.Read: Windows.Storage.FileAccessMode.Read;
-      FileOpenMode.ReadWrite: Windows.Storage.FileAccessMode.ReadWrite;
-      FileOpenMode.Write: Windows.Storage.FileAccessMode.ReadWrite;
-  end;
-  Data := lFile.OpenAsync(lMode).Await.AsStream;
+  var lFile: Windows.Storage.StorageFile := Windows.Storage.StorageFile.GetFileFromPathAsync(FileName).Await;
+  var lMode: Windows.Storage.FileAccessMode := if Mode = FileOpenMode.ReadOnly then Windows.Storage.FileAccessMode.Read else Windows.Storage.FileAccessMode.ReadWrite;
+  exit new lFile.OpenAsync(lMode).Await.AsStream;
   {$ELSEIF ECHOES}
-  var lMode: System.IO.FileAccess := case aMode of
-      FileOpenMode.Read: System.IO.FileAccess.Read;
-      FileOpenMode.ReadWrite: System.IO.FileAccess.ReadWrite;
-      FileOpenMode.Write: System.IO.FileAccess.Write;
-  end;
-  Data := new System.IO.FileStream(aFileName, System.IO.FileMode.Open, lMode, System.IO.FileShare.Read);
+  var lMode: System.IO.FileAccess := if Mode = FileOpenMode.ReadOnly then System.IO.FileAccess.Read else System.IO.FileAccess.ReadWrite;
+  exit new System.IO.FileStream(FileName, System.IO.FileMode.Open, lMode);
   {$ELSEIF NOUGAT}
-  case aMode of
-    FileOpenMode.Read: Data := NSFileHandle.fileHandleForReadingAtPath(aFileName);
-    FileOpenMode.ReadWrite: Data := NSFileHandle.fileHandleForUpdatingAtPath(aFileName);
-    FileOpenMode.Write: Data := NSFileHandle.fileHandleForWritingAtPath(aFileName);
+  case Mode of
+    FileOpenMode.ReadOnly: exit NSFileHandle.fileHandleForReadingAtPath(FileName);
+    FileOpenMode.ReadWrite: exit NSFileHandle.fileHandleForUpdatingAtPath(FileName);
   end;
   {$ENDIF}
 end;
@@ -85,26 +58,26 @@ end;
 method FileHandle.Close;
 begin
   {$IF COOPER}
-  Data.close;
+  mapped.close;
   {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}  
-  Data.Dispose;
+  mapped.Dispose;
   {$ELSEIF ECHOES}
-  Data.Close;
+  mapped.Close;
   {$ELSEIF NOUGAT}
-  Data.closeFile;
+  mapped.closeFile;
   {$ENDIF}
 end;
 
 method FileHandle.Flush;
 begin
   {$IF COOPER}
-  Data.Channel.force(false);
+  mapped.Channel.force(false);
   {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
-  Data.Flush;
+  mapped.Flush;
   {$ELSEIF ECHOES}
-  Data.Flush;
+  mapped.Flush;
   {$ELSEIF NOUGAT}
-  Data.synchronizeFile;
+  mapped.synchronizeFile;
   {$ENDIF}
 end;
 
@@ -133,18 +106,15 @@ end;
 
 method FileHandle.Read(Buffer: array of Byte; Offset: Integer; Count: Integer): Integer;
 begin
-  if Mode = FileOpenMode.Write then
-    raise new SugarIOException(ErrorMessage.FILE_WRITE_ERROR, FileName);
-
   ValidateBuffer(Buffer, Offset, Count);
   {$IF COOPER}
-  exit Data.read(Buffer, Offset, Count);
+  exit mapped.read(Buffer, Offset, Count);
   {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
-  exit Data.Read(Buffer, Offset, Count);
+  exit mapped.Read(Buffer, Offset, Count);
   {$ELSEIF ECHOES}
-  exit Data.Read(Buffer, Offset, Count);
+  exit mapped.Read(Buffer, Offset, Count);
   {$ELSEIF NOUGAT}
-  var Bin := Data.readDataOfLength(Count);
+  var Bin := mapped.readDataOfLength(Count);
   Bin.getBytes(@Buffer[Offset]) length(Bin.length);
 
   exit Bin.length;
@@ -153,19 +123,16 @@ end;
 
 method FileHandle.Write(Buffer: array of Byte; Offset: Integer; Count: Integer);
 begin
-  if Mode = FileOpenMode.Read then
-    raise new SugarIOException(ErrorMessage.FILE_READ_ERROR, FileName);
-
   ValidateBuffer(Buffer, Offset, Count);
   {$IF COOPER}
-  Data.write(Buffer, Offset, Count);
+  mapped.write(Buffer, Offset, Count);
   {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
-  Data.Write(Buffer, Offset, Count);
+  mapped.Write(Buffer, Offset, Count);
   {$ELSEIF ECHOES}
-  Data.Write(Buffer, Offset, Count);
+  mapped.Write(Buffer, Offset, Count);
   {$ELSEIF NOUGAT}
   var Bin := new NSData withBytes(@Buffer[Offset]) length(Count);
-  Data.writeData(Bin);
+  mapped.writeData(Bin);
   {$ENDIF}
 end;
 
@@ -173,19 +140,19 @@ method FileHandle.Seek(Offset: Int64; Origin: SeekOrigin);
 begin
   {$IF COOPER}
   case Origin of
-    SeekOrigin.Begin: Data.seek(Offset);
-    SeekOrigin.Current: Data.seek(Position + Offset);
-    SeekOrigin.End: Data.seek(Length + Offset);
+    SeekOrigin.Begin: mapped.seek(Offset);
+    SeekOrigin.Current: mapped.seek(Position + Offset);
+    SeekOrigin.End: mapped.seek(Length + Offset);
   end;
   {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
-  Data.Seek(Offset, System.IO.SeekOrigin(Origin));
+  mapped.Seek(Offset, System.IO.SeekOrigin(Origin));
   {$ELSEIF ECHOES}
-  Data.Seek(Offset, System.IO.SeekOrigin(Origin));
+  mapped.Seek(Offset, System.IO.SeekOrigin(Origin));
   {$ELSEIF NOUGAT}  
   case Origin of
-    SeekOrigin.Begin: Data.seekToFileOffset(Offset);
-    SeekOrigin.Current: Data.seekToFileOffset(Position + Offset);
-    SeekOrigin.End: Data.seekToFileOffset(Length + Offset);
+    SeekOrigin.Begin: mapped.seekToFileOffset(Offset);
+    SeekOrigin.Current: mapped.seekToFileOffset(Position + Offset);
+    SeekOrigin.End: mapped.seekToFileOffset(Length + Offset);
   end;
   {$ENDIF}
 end;
@@ -193,34 +160,34 @@ end;
 method FileHandle.GetLength: Int64;
 begin
   {$IF COOPER}
-  exit Data.length;
+  exit mapped.length;
   {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
-  exit Data.Length;
+  exit mapped.Length;
   {$ELSEIF ECHOES}
-  exit Data.Length;
+  exit mapped.Length;
   {$ELSEIF NOUGAT}
-  var Origin := Data.offsetInFile;
-  result := Data.seekToEndOfFile;
-  Data.seekToFileOffset(Origin);
+  var Origin := mapped.offsetInFile;
+  result := mapped.seekToEndOfFile;
+  mapped.seekToFileOffset(Origin);
   {$ENDIF}
 end;
 
 method FileHandle.SetLength(value: Int64);
 begin
   {$IF COOPER}
-  Data.setLength(Value);
+  mapped.setLength(Value);
   {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
-  var Origin := Data.Position;
-  Data.SetLength(value);
+  var Origin := mapped.Position;
+  mapped.SetLength(value);
   if Origin > value then
     Seek(0, SeekOrigin.Begin)
   else
     Seek(Origin, SeekOrigin.Begin);
   {$ELSEIF ECHOES}
-  Data.SetLength(Value);
+  mapped.SetLength(Value);
   {$ELSEIF NOUGAT}
-  var Origin := Data.offsetInFile;
-  Data.truncateFileAtOffset(value);
+  var Origin := mapped.offsetInFile;
+  mapped.truncateFileAtOffset(value);
   if Origin > value then
     Seek(0, SeekOrigin.Begin)
   else
@@ -231,13 +198,13 @@ end;
 method FileHandle.GetPosition: Int64;
 begin
   {$IF COOPER}
-  exit Data.FilePointer;
+  exit mapped.FilePointer;
   {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
-  exit Data.Position;
+  exit mapped.Position;
   {$ELSEIF ECHOES}
-  exit Data.Position;
+  exit mapped.Position;
   {$ELSEIF NOUGAT}
-  exit Data.offsetInFile;
+  exit mapped.offsetInFile;
   {$ENDIF}
 end;
 
@@ -246,9 +213,9 @@ begin
   {$IF COOPER}
   Seek(value, SeekOrigin.Begin);
   {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
-  Data.Position := value;
+  mapped.Position := value;
   {$ELSEIF ECHOES}
-  Data.Position := value;
+  mapped.Position := value;
   {$ELSEIF NOUGAT}
   Seek(value, SeekOrigin.Begin);
   {$ENDIF}
