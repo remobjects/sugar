@@ -38,6 +38,7 @@ type
     method ReadText: String;
     method WriteBytes(Data: array of Byte);
     method WriteText(Content: String);
+
     {$IF WINDOWS_PHONE OR NETFX_CORE}
     property Path: String read mapped.Path;
     property Name: String read mapped.Name;
@@ -54,7 +55,7 @@ type
   end;
 
   {$IF COOPER}
-  FileUtils = public static class
+  FileHelper = public static class
   public
     method WriteString(File: java.io.File; Content: String; Append: Boolean);
     method WriteBytes(File: java.io.File; Data: array of Byte; Append: Boolean);
@@ -62,7 +63,7 @@ type
     method ReadString(File: java.io.File): String;
   end;
   {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
-  FileUtils = public static class
+  FileHelper = public static class
   public
     method WriteString(File: Windows.Storage.StorageFile; Content: String; Append: Boolean);
     method WriteBytes(File: Windows.Storage.StorageFile; Data: array of Byte; Append: Boolean);
@@ -100,7 +101,7 @@ begin
 end;
 
 {$IF WINDOWS_PHONE OR NETFX_CORE}
-class method FileUtils.ReadBytes(File: Windows.Storage.StorageFile): array of Byte;
+class method FileHelper.ReadBytes(File: Windows.Storage.StorageFile): array of Byte;
 begin
   using Stream := File.OpenStreamForReadAsync.Result do begin
     result := new Byte[stream.Length];
@@ -108,18 +109,18 @@ begin
   end;  
 end;
 
-class method FileUtils.ReadString(File: Windows.Storage.StorageFile): String;
+class method FileHelper.ReadString(File: Windows.Storage.StorageFile): String;
 begin
   var Data := ReadBytes(File);
   exit System.Text.Encoding.UTF8.GetString(Data, 0, Data.Length);
 end;
 
-class method FileUtils.WriteBytes(File: Windows.Storage.StorageFile; Data: array of Byte; Append: Boolean);
+class method FileHelper.WriteBytes(File: Windows.Storage.StorageFile; Data: array of Byte; Append: Boolean);
 begin
   using Stream := File.OpenStreamForWriteAsync.Result do begin
     
     if Append then
-      Stream.Seek(0, SeekOrigin.End)
+      Stream.Seek(0, System.IO.SeekOrigin.End)
     else
       Stream.SetLength(0);
 
@@ -128,13 +129,13 @@ begin
   end;  
 end;
 
-class method FileUtils.WriteString(File: Windows.Storage.StorageFile; Content: String; Append: Boolean);
+class method FileHelper.WriteString(File: Windows.Storage.StorageFile; Content: String; Append: Boolean);
 begin
   var Data := System.Text.Encoding.UTF8.GetBytes(Content);
   WriteBytes(File, Data, Append);
 end;
 
-class method FileUtils.Move(File: Windows.Storage.StorageFile; Destination: Windows.Storage.StorageFolder; NewName: String): Windows.Storage.StorageFile;
+class method FileHelper.Move(File: Windows.Storage.StorageFile; Destination: Windows.Storage.StorageFolder; NewName: String): Windows.Storage.StorageFile;
 begin
   SugarArgumentNullException.RaiseIfNil(File, "File");
   SugarArgumentNullException.RaiseIfNil(File, "Folder");
@@ -170,7 +171,7 @@ end;
 
 method File.Move(Destination: Folder; NewName: String): File;
 begin
-  exit FileUtils.Move(mapped, Destination, NewName);
+  exit FileHelper.Move(mapped, Destination, NewName);
 end;
 
 method File.Rename(NewName: String): File;
@@ -183,27 +184,27 @@ end;
 
 method File.AppendText(Content: String);
 begin
-  FileUtils.WriteString(mapped, Content, true);
+  FileHelper.WriteString(mapped, Content, true);
 end;
 
 method File.ReadBytes: array of Byte;
 begin
-  exit FileUtils.ReadBytes(mapped);
+  exit FileHelper.ReadBytes(mapped);
 end;
 
 method File.ReadText: String;
 begin
-  exit FileUtils.ReadString(mapped);
+  exit FileHelper.ReadString(mapped);
 end;
 
 method File.WriteBytes(Data: array of Byte);
 begin
-  FileUtils.WriteBytes(mapped, Data, false);
+  FileHelper.WriteBytes(mapped, Data, false);
 end;
 
 method File.WriteText(Content: String);
 begin
-  FileUtils.WriteString(mapped, Content, false);
+  FileHelper.WriteString(mapped, Content, false);
 end;
 {$ELSEIF ECHOES}
 method File.GetName: String;
@@ -282,12 +283,12 @@ begin
   System.IO.File.WriteAllText(mapped, Content);
 end;
 {$ELSEIF COOPER}
-class method FileUtils.WriteString(File: java.io.File; Content: String; Append: Boolean);
+class method FileHelper.WriteString(File: java.io.File; Content: String; Append: Boolean);
 begin
   WriteBytes(File, Content.ToByteArray, Append);
 end;
 
-class method FileUtils.WriteBytes(File: java.io.File; Data: array of Byte; Append: Boolean);
+class method FileHelper.WriteBytes(File: java.io.File; Data: array of Byte; Append: Boolean);
 begin
   if not File.exists then
     raise new SugarIOException(ErrorMessage.FILE_NOTFOUND, File.Name);
@@ -303,7 +304,7 @@ begin
   end;
 end;
 
-class method FileUtils.ReadString(File: java.io.File): String;
+class method FileHelper.ReadString(File: java.io.File): String;
 begin
   var Data := ReadBytes(File);
 
@@ -313,7 +314,7 @@ begin
   exit new String(Data);
 end;
 
-class method FileUtils.ReadBytes(File: java.io.File): array of Byte;
+class method FileHelper.ReadBytes(File: java.io.File): array of Byte;
 begin
   if not File.exists then
     raise new SugarIOException(ErrorMessage.FILE_NOTFOUND, File.Name);
@@ -393,27 +394,27 @@ end;
 
 method File.AppendText(Content: String);
 begin
-  FileUtils.WriteString(mapped, Content, true);
+  FileHelper.WriteString(mapped, Content, true);
 end;
 
 method File.ReadBytes: array of Byte;
 begin
-  exit FileUtils.ReadBytes(mapped);
+  exit FileHelper.ReadBytes(mapped);
 end;
 
 method File.ReadText: String;
 begin
-  exit FileUtils.ReadString(mapped);
+  exit FileHelper.ReadString(mapped);
 end;
 
 method File.WriteBytes(Data: array of Byte);
 begin
-  FileUtils.WriteBytes(mapped, Data, false);
+  FileHelper.WriteBytes(mapped, Data, false);
 end;
 
 method File.WriteText(Content: String);
 begin
-  FileUtils.WriteString(mapped, Content, false);
+  FileHelper.WriteString(mapped, Content, false);
 end;
 {$ELSEIF NOUGAT}
 method File.Combine(BasePath: String; SubPath: String): String;
