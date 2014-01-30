@@ -15,6 +15,7 @@ type
     Data: java.io.RandomAccessFile;
     {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
     {$ELSEIF ECHOES}
+    Data: System.IO.FileStream;
     {$ELSEIF NOUGAT}
     {$ENDIF}
 
@@ -53,6 +54,12 @@ begin
   Data := new java.io.RandomAccessFile(aFileName, lMode);
   {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
   {$ELSEIF ECHOES}
+  var lMode: System.IO.FileAccess := case aMode of
+      FileOpenMode.Read: System.IO.FileAccess.Read;
+      FileOpenMode.ReadWrite: System.IO.FileAccess.ReadWrite;
+      FileOpenMode.Write: System.IO.FileAccess.Write;
+  end;
+  Data := new System.IO.FileStream(aFileName, System.IO.FileMode.Open, lMode, System.IO.FileShare.Read);
   {$ELSEIF NOUGAT}
   {$ENDIF}
 end;
@@ -63,6 +70,7 @@ begin
   Data.close;
   {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}  
   {$ELSEIF ECHOES}
+  Data.Close;
   {$ELSEIF NOUGAT}
   {$ENDIF}
 end;
@@ -73,6 +81,7 @@ begin
   Data.Channel.force(false);
   {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
   {$ELSEIF ECHOES}
+  Data.Flush;
   {$ELSEIF NOUGAT}
   {$ENDIF}
 end;
@@ -110,6 +119,7 @@ begin
   exit Data.read(Buffer, Offset, Count);
   {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
   {$ELSEIF ECHOES}
+  exit Data.Read(Buffer, Offset, Count);
   {$ELSEIF NOUGAT}
   {$ENDIF}
 end;
@@ -124,6 +134,7 @@ begin
   Data.write(Buffer, Offset, Count);
   {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
   {$ELSEIF ECHOES}
+  Data.Write(Buffer, Offset, Count);
   {$ELSEIF NOUGAT}
   {$ENDIF}
 end;
@@ -138,6 +149,7 @@ begin
   end;
   {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
   {$ELSEIF ECHOES}
+  Data.Seek(Offset, System.IO.SeekOrigin(Origin));
   {$ELSEIF NOUGAT}  
   {$ENDIF}
 end;
@@ -148,6 +160,7 @@ begin
   exit Data.length;
   {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
   {$ELSEIF ECHOES}
+  exit Data.Length;
   {$ELSEIF NOUGAT}
   {$ENDIF}
 end;
@@ -158,6 +171,7 @@ begin
   Data.setLength(Value);
   {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
   {$ELSEIF ECHOES}
+  Data.SetLength(Value);
   {$ELSEIF NOUGAT}
   {$ENDIF}
 end;
@@ -168,6 +182,7 @@ begin
   exit Data.FilePointer;
   {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
   {$ELSEIF ECHOES}
+  exit Data.Position;
   {$ELSEIF NOUGAT}
   {$ENDIF}
 end;
@@ -178,6 +193,7 @@ begin
   Seek(value, SeekOrigin.Begin);
   {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
   {$ELSEIF ECHOES}
+  Data.Position := value;
   {$ELSEIF NOUGAT}
   {$ENDIF}
 end;
