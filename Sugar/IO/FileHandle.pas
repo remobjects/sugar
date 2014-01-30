@@ -3,6 +3,10 @@
 interface
 
 uses
+  {$IF WINDOWS_PHONE OR NETFX_CORE}
+  System.Runtime.InteropServices.WindowsRuntime,
+  System.IO,
+  {$ENDIF}
   Sugar;
 
 type
@@ -14,6 +18,7 @@ type
     {$IF COOPER}
     Data: java.io.RandomAccessFile;
     {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
+    Data: Stream;
     {$ELSEIF ECHOES}
     Data: System.IO.FileStream;
     {$ELSEIF NOUGAT}
@@ -53,6 +58,13 @@ begin
   end;
   Data := new java.io.RandomAccessFile(aFileName, lMode);
   {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
+  var lFile: Windows.Storage.StorageFile := Windows.Storage.StorageFile.GetFileFromPathAsync(aFileName).Await;
+  var lMode: Windows.Storage.FileAccessMode := case aMode of
+      FileOpenMode.Read: Windows.Storage.FileAccessMode.Read;
+      FileOpenMode.ReadWrite: Windows.Storage.FileAccessMode.ReadWrite;
+      FileOpenMode.Write: Windows.Storage.FileAccessMode.ReadWrite;
+  end;
+  Data := lFile.OpenAsync(lMode).Await.AsStream;
   {$ELSEIF ECHOES}
   var lMode: System.IO.FileAccess := case aMode of
       FileOpenMode.Read: System.IO.FileAccess.Read;
@@ -69,6 +81,7 @@ begin
   {$IF COOPER}
   Data.close;
   {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}  
+  Data.Dispose;
   {$ELSEIF ECHOES}
   Data.Close;
   {$ELSEIF NOUGAT}
@@ -80,6 +93,7 @@ begin
   {$IF COOPER}
   Data.Channel.force(false);
   {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
+  Data.Flush;
   {$ELSEIF ECHOES}
   Data.Flush;
   {$ELSEIF NOUGAT}
@@ -118,6 +132,7 @@ begin
   {$IF COOPER}
   exit Data.read(Buffer, Offset, Count);
   {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
+  exit Data.Read(Buffer, Offset, Count);
   {$ELSEIF ECHOES}
   exit Data.Read(Buffer, Offset, Count);
   {$ELSEIF NOUGAT}
@@ -133,6 +148,7 @@ begin
   {$IF COOPER}
   Data.write(Buffer, Offset, Count);
   {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
+  Data.Write(Buffer, Offset, Count);
   {$ELSEIF ECHOES}
   Data.Write(Buffer, Offset, Count);
   {$ELSEIF NOUGAT}
@@ -148,6 +164,7 @@ begin
     SeekOrigin.End: Data.seek(Length + Offset);
   end;
   {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
+  Data.Seek(Offset, System.IO.SeekOrigin(Origin));
   {$ELSEIF ECHOES}
   Data.Seek(Offset, System.IO.SeekOrigin(Origin));
   {$ELSEIF NOUGAT}  
@@ -159,6 +176,7 @@ begin
   {$IF COOPER}
   exit Data.length;
   {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
+  exit Data.Length;
   {$ELSEIF ECHOES}
   exit Data.Length;
   {$ELSEIF NOUGAT}
@@ -170,6 +188,12 @@ begin
   {$IF COOPER}
   Data.setLength(Value);
   {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
+  var Origin := Data.Position;
+  Data.SetLength(value);
+  if Origin > value then
+    Seek(0, SeekOrigin.Begin)
+  else
+    Seek(Origin, SeekOrigin.Begin);
   {$ELSEIF ECHOES}
   Data.SetLength(Value);
   {$ELSEIF NOUGAT}
@@ -181,6 +205,7 @@ begin
   {$IF COOPER}
   exit Data.FilePointer;
   {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
+  exit Data.Position;
   {$ELSEIF ECHOES}
   exit Data.Position;
   {$ELSEIF NOUGAT}
@@ -192,6 +217,7 @@ begin
   {$IF COOPER}
   Seek(value, SeekOrigin.Begin);
   {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
+  Data.Position := value;
   {$ELSEIF ECHOES}
   Data.Position := value;
   {$ELSEIF NOUGAT}
