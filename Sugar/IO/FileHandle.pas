@@ -22,6 +22,7 @@ type
     {$ELSEIF ECHOES}
     Data: System.IO.FileStream;
     {$ELSEIF NOUGAT}
+    Data: NSFileHandle;
     {$ENDIF}
 
     method GetLength: Int64;
@@ -73,6 +74,11 @@ begin
   end;
   Data := new System.IO.FileStream(aFileName, System.IO.FileMode.Open, lMode, System.IO.FileShare.Read);
   {$ELSEIF NOUGAT}
+  case aMode of
+    FileOpenMode.Read: Data := NSFileHandle.fileHandleForReadingAtPath(aFileName);
+    FileOpenMode.ReadWrite: Data := NSFileHandle.fileHandleForUpdatingAtPath(aFileName);
+    FileOpenMode.Write: Data := NSFileHandle.fileHandleForWritingAtPath(aFileName);
+  end;
   {$ENDIF}
 end;
 
@@ -85,6 +91,7 @@ begin
   {$ELSEIF ECHOES}
   Data.Close;
   {$ELSEIF NOUGAT}
+  Data.closeFile;
   {$ENDIF}
 end;
 
@@ -97,6 +104,7 @@ begin
   {$ELSEIF ECHOES}
   Data.Flush;
   {$ELSEIF NOUGAT}
+  Data.synchronizeFile;
   {$ENDIF}
 end;
 
@@ -136,6 +144,10 @@ begin
   {$ELSEIF ECHOES}
   exit Data.Read(Buffer, Offset, Count);
   {$ELSEIF NOUGAT}
+  var Bin := Data.readDataOfLength(Count);
+  Bin.getBytes(@Buffer[Offset]) length(Bin.length);
+
+  exit Bin.length;
   {$ENDIF}
 end;
 
@@ -152,6 +164,8 @@ begin
   {$ELSEIF ECHOES}
   Data.Write(Buffer, Offset, Count);
   {$ELSEIF NOUGAT}
+  var Bin := new NSData withBytes(@Buffer[Offset]) length(Count);
+  Data.writeData(Bin);
   {$ENDIF}
 end;
 
@@ -168,6 +182,11 @@ begin
   {$ELSEIF ECHOES}
   Data.Seek(Offset, System.IO.SeekOrigin(Origin));
   {$ELSEIF NOUGAT}  
+  case Origin of
+    SeekOrigin.Begin: Data.seekToFileOffset(Offset);
+    SeekOrigin.Current: Data.seekToFileOffset(Position + Offset);
+    SeekOrigin.End: Data.seekToFileOffset(Length + Offset);
+  end;
   {$ENDIF}
 end;
 
@@ -180,6 +199,9 @@ begin
   {$ELSEIF ECHOES}
   exit Data.Length;
   {$ELSEIF NOUGAT}
+  var Origin := Data.offsetInFile;
+  result := Data.seekToEndOfFile;
+  Data.seekToFileOffset(Origin);
   {$ENDIF}
 end;
 
@@ -197,6 +219,12 @@ begin
   {$ELSEIF ECHOES}
   Data.SetLength(Value);
   {$ELSEIF NOUGAT}
+  var Origin := Data.offsetInFile;
+  Data.truncateFileAtOffset(value);
+  if Origin > value then
+    Seek(0, SeekOrigin.Begin)
+  else
+    Seek(Origin, SeekOrigin.Begin);
   {$ENDIF}
 end;
 
@@ -209,6 +237,7 @@ begin
   {$ELSEIF ECHOES}
   exit Data.Position;
   {$ELSEIF NOUGAT}
+  exit Data.offsetInFile;
   {$ENDIF}
 end;
 
@@ -221,6 +250,7 @@ begin
   {$ELSEIF ECHOES}
   Data.Position := value;
   {$ELSEIF NOUGAT}
+  Seek(value, SeekOrigin.Begin);
   {$ENDIF}
 end;
 
