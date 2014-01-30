@@ -26,7 +26,12 @@ type
     method Close;
     method Flush;
     method &Read(Buffer: array of Byte; Offset: Integer; Count: Integer): Integer;
+    method &Read(Buffer: array of Byte; Count: Integer): Integer;
+    method &Read(Count: Integer): Binary;
     method &Write(Buffer: array of Byte; Offset: Integer; Count: Integer);
+    method &Write(Buffer: array of Byte; Count: Integer);
+    method &Write(Buffer: array of Byte);
+    method &Write(Data: Binary);
     method Seek(Offset: Int64; Origin: SeekOrigin);
 
     property Length: Int64 read GetLength write SetLength;
@@ -121,6 +126,19 @@ begin
   {$ENDIF}
 end;
 
+method FileHandle.&Read(Buffer: array of Byte; Count: Integer): Integer;
+begin
+  exit &Read(Buffer, 0, Count);
+end;
+
+method FileHandle.&Read(Count: Integer): Binary;
+begin
+  var Buffer := new Byte[Count];
+  var Readed := &Read(Buffer, 0, Count);
+  result := new Binary;
+  result.Write(Buffer, Readed);
+end;
+
 method FileHandle.Write(Buffer: array of Byte; Offset: Integer; Count: Integer);
 begin
   ValidateBuffer(Buffer, Offset, Count);
@@ -134,6 +152,22 @@ begin
   var Bin := new NSData withBytes(@Buffer[Offset]) length(Count);
   mapped.writeData(Bin);
   {$ENDIF}
+end;
+
+method FileHandle.&Write(Buffer: array of Byte; Count: Integer);
+begin
+  &Write(Buffer, 0, Count);
+end;
+
+method FileHandle.&Write(Buffer: array of Byte);
+begin
+  &Write(Buffer, 0, RemObjects.Oxygene.System.length(Buffer));
+end;
+
+method FileHandle.&Write(Data: Binary);
+begin
+  SugarArgumentNullException.RaiseIfNil(Data, "Data");
+  &Write(Data.ToArray, 0, Data.Length);
 end;
 
 method FileHandle.Seek(Offset: Int64; Origin: SeekOrigin);
