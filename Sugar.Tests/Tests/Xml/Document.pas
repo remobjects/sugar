@@ -222,7 +222,8 @@ method DocumentTest.FromFile;
 begin
   var File := Sugar.IO.Folder.UserLocal.CreateFile("sugartest.xml", false);
   try
-    File.WriteText(XmlTestData.PIXml);
+    //File.WriteText(XmlTestData.PIXml);
+    Sugar.IO.FileUtils.WriteText(File.Path, XmlTestData.PIXml);
     Data := XmlDocument.FromFile(File);
     Assert.IsNotNull(Data);
     Assert.CheckInt(3, Data.ChildCount);

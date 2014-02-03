@@ -19,11 +19,6 @@ type
     method Delete;
     method Move;
     method Rename;
-    method AppendText;
-    method ReadBytes;
-    method ReadText;
-    method WriteBytes;
-    method WriteText;
     method FromPath;
     method Path;
     method Name;
@@ -109,58 +104,6 @@ begin
   Assert.IsException(->Data.Rename(nil));
   Assert.IsException(->Data.Rename("/"));
   Assert.IsException(->Data.Rename(""));
-end;
-
-method FileTest.AppendText;
-begin
-  Assert.CheckString("", Data.ReadText);
-  Data.AppendText("Hello");
-  Assert.CheckString("Hello", Data.ReadText);
-  Data.AppendText(" World");
-  Assert.CheckString("Hello World", Data.ReadText);
-  Assert.IsException(->Data.AppendText(nil));
-end;
-
-method FileTest.ReadBytes;
-begin
-  Assert.CheckString("", Data.ReadText);
-  Data.AppendText("Hello");
-  Assert.CheckString("Hello", Data.ReadText);
-
-  var Expected: array of Byte := [72, 101, 108, 108, 111];
-  var Actual := Data.ReadBytes;
-  Assert.CheckInt(5, length(Actual));
-  for i: Integer := 0 to length(Actual) - 1 do
-    Assert.CheckInt(Expected[i], Actual[i]);
-end;
-
-method FileTest.ReadText;
-begin
-  Assert.CheckString("", Data.ReadText);
-  Data.WriteText("Hello");
-  Assert.CheckString("Hello", Data.ReadText);
-end;
-
-method FileTest.WriteBytes;
-begin
-  Assert.CheckInt(0, length(Data.ReadBytes));
-  Data.WriteBytes(String("Hello").ToByteArray);
-  
-  var Expected: array of Byte := [72, 101, 108, 108, 111];
-  var Actual := Data.ReadBytes;
-  Assert.CheckInt(5, length(Actual));
-  for i: Integer := 0 to length(Actual) - 1 do
-    Assert.CheckInt(Expected[i], Actual[i]);
-
-  Assert.IsException(->Data.WriteBytes(nil));
-end;
-
-method FileTest.WriteText;
-begin
-  Assert.CheckString("", Data.ReadText);
-  Data.WriteText("Hello");
-  Assert.CheckString("Hello", Data.ReadText);
-  Assert.IsException(->Data.WriteText(nil));
 end;
 
 method FileTest.FromPath;

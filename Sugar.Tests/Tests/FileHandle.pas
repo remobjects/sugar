@@ -32,7 +32,7 @@ implementation
 method FileHandleTest.Setup;
 begin
   aFile := Folder.UserLocal.CreateFile("sugar.testcase.txt", false);
-  aFile.WriteText("");
+  FileUtils.WriteText(aFile.Path, "");
   Data := new FileHandle(aFile.Path, FileOpenMode.ReadWrite);
 end;
 
