@@ -215,7 +215,13 @@ end;
 
 class method XmlDocument.FromFile(aFile: File): XmlDocument;
 begin
-  exit ParseXml(aFile.ReadText, aFile.Path);
+  var Handle := aFile.Open(FileOpenMode.ReadOnly);  
+  try
+    var Bin := Handle.Read(Handle.Length);
+    exit ParseXml(new String(Bin.ToArray), aFile.Path);
+  finally
+    Handle.Close;
+  end;
 end;
 
 class method XmlDocument.FromBinary(aBinary: Binary): XmlDocument;
@@ -392,12 +398,19 @@ end;
 class method XmlDocument.FromFile(aFile: File): XmlDocument;
 begin
   {$IF WINDOWS_PHONE OR NETFX_CORE}
-  var reader := new System.IO.StringReader(aFile.ReadText);
-  var document := XDocument.Load(reader, LoadOptions.SetBaseUri);
+  var Handle := aFile.Open(FileOpenMode.ReadOnly);
+  try
+    var Content := new String(Handle.Read(Handle.Length).ToArray);
+    var reader := new System.IO.StringReader(Content);
+    var document := XDocument.Load(reader, LoadOptions.SetBaseUri);
+    exit new XmlDocument(document);
+  finally
+    Handle.Close;    
+  end;  
   {$ELSE}
   var document := XDocument.Load(System.String(aFile), LoadOptions.SetBaseUri);  
-  {$ENDIF}    
   result := new XmlDocument(document);
+  {$ENDIF}
 end;
 
 class method XmlDocument.FromBinary(aBinary: Binary): XmlDocument;
@@ -447,7 +460,13 @@ begin
   var sb := new StringBuilder;
   var writer := new UTF8StringWriter(sb);
   Doc.Save(writer);
-  aFile.WriteText(sb.ToString);
+  var Handle := aFile.Open(FileOpenMode.ReadWrite);
+  try
+    Handle.Length := 0;
+    Handle.Write(String(sb.ToString).ToByteArray);
+  finally
+    Handle.Close;
+  end;  
   {$ELSEIF ECHOES}
   Doc.Save(aFile);
   {$ENDIF}
