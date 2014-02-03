@@ -22,6 +22,8 @@ type
     method ValidateBuffer(Buffer: array of Byte; Offset: Integer; Count: Integer);
   public
     constructor(FileName: String; Mode: FileOpenMode);
+    
+    class method FromFile(aFile: File; Mode: FileOpenMode): FileHandle;
 
     method Close;
     method Flush;
@@ -42,13 +44,16 @@ implementation
 
 constructor FileHandle(FileName: String; Mode: FileOpenMode);
 begin
+  if not FileUtils.Exists(FileName) then
+    raise new SugarIOException(ErrorMessage.FILE_NOTFOUND, FileName);
+
   {$IF COOPER}
   var lMode: String := if Mode = FileOpenMode.ReadOnly then "r" else "rw";
   exit new java.io.RandomAccessFile(FileName, lMode);
   {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
   var lFile: Windows.Storage.StorageFile := Windows.Storage.StorageFile.GetFileFromPathAsync(FileName).Await;
   var lMode: Windows.Storage.FileAccessMode := if Mode = FileOpenMode.ReadOnly then Windows.Storage.FileAccessMode.Read else Windows.Storage.FileAccessMode.ReadWrite;
-  exit new lFile.OpenAsync(lMode).Await.AsStream;
+  exit lFile.OpenAsync(lMode).Await.AsStream;
   {$ELSEIF ECHOES}
   var lMode: System.IO.FileAccess := if Mode = FileOpenMode.ReadOnly then System.IO.FileAccess.Read else System.IO.FileAccess.ReadWrite;
   exit new System.IO.FileStream(FileName, System.IO.FileMode.Open, lMode);
@@ -56,6 +61,25 @@ begin
   case Mode of
     FileOpenMode.ReadOnly: exit NSFileHandle.fileHandleForReadingAtPath(FileName);
     FileOpenMode.ReadWrite: exit NSFileHandle.fileHandleForUpdatingAtPath(FileName);
+  end;
+  {$ENDIF}
+end;
+
+class method FileHandle.FromFile(aFile: File; Mode: FileOpenMode): FileHandle;
+begin
+  {$IF COOPER}
+  var lMode: String := if Mode = FileOpenMode.ReadOnly then "r" else "rw";
+  exit new java.io.RandomAccessFile(aFile, lMode);
+  {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}  
+  var lMode: Windows.Storage.FileAccessMode := if Mode = FileOpenMode.ReadOnly then Windows.Storage.FileAccessMode.Read else Windows.Storage.FileAccessMode.ReadWrite;
+  exit Windows.Storage.StorageFile(aFile).OpenAsync(lMode).Await.AsStream;
+  {$ELSEIF ECHOES}
+  var lMode: System.IO.FileAccess := if Mode = FileOpenMode.ReadOnly then System.IO.FileAccess.Read else System.IO.FileAccess.ReadWrite;
+  exit new System.IO.FileStream(System.String(aFile), System.IO.FileMode.Open, lMode);
+  {$ELSEIF NOUGAT}
+  case Mode of
+    FileOpenMode.ReadOnly: exit NSFileHandle.fileHandleForReadingAtPath(aFile);
+    FileOpenMode.ReadWrite: exit NSFileHandle.fileHandleForUpdatingAtPath(aFile);
   end;
   {$ENDIF}
 end;
