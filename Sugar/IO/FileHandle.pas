@@ -97,6 +97,9 @@ begin
   if Count < 0 then
     raise new SugarArgumentOutOfRangeException(ErrorMessage.NEGATIVE_VALUE_ERROR, "Count");
 
+  if Count = 0 then
+    exit;
+
   var BufferLength := RemObjects.Oxygene.System.length(Buffer); 
 
   if Offset >= BufferLength then
@@ -112,6 +115,10 @@ end;
 method FileHandle.Read(Buffer: array of Byte; Offset: Integer; Count: Integer): Integer;
 begin
   ValidateBuffer(Buffer, Offset, Count);
+  
+  if Count = 0 then
+    exit 0;
+
   {$IF COOPER}
   exit mapped.read(Buffer, Offset, Count);
   {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
@@ -142,6 +149,10 @@ end;
 method FileHandle.Write(Buffer: array of Byte; Offset: Integer; Count: Integer);
 begin
   ValidateBuffer(Buffer, Offset, Count);
+
+  if Count = 0 then
+    exit;
+
   {$IF COOPER}
   mapped.write(Buffer, Offset, Count);
   {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
