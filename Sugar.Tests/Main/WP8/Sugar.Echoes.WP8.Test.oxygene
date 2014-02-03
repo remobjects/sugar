@@ -26,6 +26,7 @@
     <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
     <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
     <Name>Sugar.Echoes.WP8.Test</Name>
+    <AllowLegacyCreate>False</AllowLegacyCreate>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -117,6 +118,7 @@
     <Compile Include="..\..\Tests\Dictionary.pas" />
     <Compile Include="..\..\Tests\Extensions.pas" />
     <Compile Include="..\..\Tests\FileHandle.pas" />
+    <Compile Include="..\..\Tests\FileUtils.pas" />
     <Compile Include="..\..\Tests\Folder.pas" />
     <Compile Include="..\..\Tests\File.pas" />
     <Compile Include="..\..\Tests\Guid.pas" />
