@@ -11,6 +11,7 @@
     <DefaultLanguage>en-US</DefaultLanguage>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{656346D9-4656-40DA-A068-22D5425D4639}</ProjectTypeGuids>
     <Name>Sugar.Echoes.WinRT</Name>
+    <AllowLegacyCreate>False</AllowLegacyCreate>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <GeneratePDB>True</GeneratePDB>
@@ -106,6 +107,7 @@
     <Compile Include="HTTP.pas" />
     <Compile Include="IO\File.pas" />
     <Compile Include="IO\FileHandle.pas" />
+    <Compile Include="IO\FileUtils.pas" />
     <Compile Include="IO\Folder.pas" />
     <Compile Include="Random.pas" />
     <Compile Include="Environment.pas" />

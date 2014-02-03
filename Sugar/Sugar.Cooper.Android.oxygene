@@ -67,7 +67,8 @@
     <Compile Include="DateFormatter.pas" />
     <Compile Include="HTTP.pas" />
     <Compile Include="IO\File.pas" />
-    <Compile Include="IO\FileHandle.pas" />    
+    <Compile Include="IO\FileHandle.pas" />
+    <Compile Include="IO\FileUtils.pas" />
     <Compile Include="IO\Folder.pas" />
     <Compile Include="Random.pas" />
     <Compile Include="Environment.pas" />
