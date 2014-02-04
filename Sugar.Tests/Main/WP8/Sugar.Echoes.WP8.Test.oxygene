@@ -117,13 +117,14 @@
     <Compile Include="..\..\Tests\DateTime.pas" />
     <Compile Include="..\..\Tests\Dictionary.pas" />
     <Compile Include="..\..\Tests\Extensions.pas" />
-    <Compile Include="..\..\Tests\FileHandle.pas" />
-    <Compile Include="..\..\Tests\FileUtils.pas" />
-    <Compile Include="..\..\Tests\Folder.pas" />
-    <Compile Include="..\..\Tests\File.pas" />
     <Compile Include="..\..\Tests\Guid.pas" />
     <Compile Include="..\..\Tests\HashSet.pas" />
     <Compile Include="..\..\Tests\HTTP.pas" />
+    <Compile Include="..\..\Tests\IO\File.pas" />
+    <Compile Include="..\..\Tests\IO\FileHandle.pas" />
+    <Compile Include="..\..\Tests\IO\FileUtils.pas" />
+    <Compile Include="..\..\Tests\IO\Folder.pas" />
+    <Compile Include="..\..\Tests\IO\Path.pas" />
     <Compile Include="..\..\Tests\List.pas" />
     <Compile Include="..\..\Tests\Queue.pas" />
     <Compile Include="..\..\Tests\Random.pas" />
@@ -191,6 +192,7 @@
     <Folder Include="..\..\Printer\" />
     <Folder Include="..\..\Tests\" />
     <Folder Include="..\..\Tests\Xml\" />
+    <Folder Include="..\..\Tests\IO" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Sugar.TestFramework\Sugar.Echoes.WP8.TestFramework.oxygene">
