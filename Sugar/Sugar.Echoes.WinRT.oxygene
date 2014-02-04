@@ -109,6 +109,7 @@
     <Compile Include="IO\FileHandle.pas" />
     <Compile Include="IO\FileUtils.pas" />
     <Compile Include="IO\Folder.pas" />
+    <Compile Include="IO\Path.pas" />
     <Compile Include="Random.pas" />
     <Compile Include="Environment.pas" />
     <Compile Include="Exceptions.pas" />

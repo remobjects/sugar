@@ -15,7 +15,7 @@ uses
 type
   Folder = public class mapped to {$IF WINDOWS_PHONE OR NETFX_CORE}Windows.Storage.StorageFolder{$ELSEIF ECHOES}System.String{$ELSEIF COOPER}java.io.File{$ELSEIF NOUGAT}Foundation.NSString{$ENDIF}
   private
-    class method GetSeparator: String;
+    class method GetSeparator: Char;
   {$IF ECHOES}
     method GetName: String;
   {$ELSEIF NOUGAT}
@@ -49,7 +49,7 @@ type
     property Name: String read NSFileManager.defaultManager.displayNameAtPath(mapped);
     {$ENDIF}
 
-    class property Separator: String read GetSeparator;
+    class property Separator: Char read GetSeparator;
   end;
 
   {$IF WINDOWS_PHONE OR NETFX_CORE}
@@ -126,9 +126,9 @@ begin
   exit mapped.Name;
 end;
 
-class method Folder.GetSeparator: String;
+class method Folder.GetSeparator: Char;
 begin
-  exit "\";
+  exit '\';
 end;
 
 class method Folder.UserLocal: Folder;
@@ -192,7 +192,7 @@ begin
   exit new System.IO.DirectoryInfo(mapped).Name;
 end;
 
-class method Folder.GetSeparator: String;
+class method Folder.GetSeparator: Char;
 begin
   exit System.IO.Path.DirectorySeparatorChar;
 end;
@@ -291,9 +291,9 @@ begin
   exit NewFile;
 end;
 
-class method Folder.GetSeparator: String;
+class method Folder.GetSeparator: Char;
 begin
-  exit java.io.File.separator;
+  exit java.io.File.separatorChar;
 end;
 
 class method Folder.UserLocal: Folder;
@@ -399,9 +399,9 @@ begin
   exit File(NewFileName);
 end;
 
-class method Folder.GetSeparator: String;
+class method Folder.GetSeparator: Char;
 begin
-  exit "/";
+  exit '/';
 end;
 
 class method Folder.UserLocal: Folder;
