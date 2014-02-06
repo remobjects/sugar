@@ -16,6 +16,7 @@ type
 
     method &Add(anItem: T);
     method AddRange(Items: List<T>);
+    method AddRange(Items: array of T);
     method Clear;
     method Contains(anItem: T): Boolean;
 
@@ -111,6 +112,12 @@ begin
   {$ELSEIF NOUGAT}
   mapped.addObjectsFromArray(Items);
   {$ENDIF}
+end;
+
+method List<T>.AddRange(Items: array of T);
+begin
+  for i: Integer := 0 to length(Items) - 1 do
+    &Add(Items[i]);
 end;
 
 method List<T>.Clear;
