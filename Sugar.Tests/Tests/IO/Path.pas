@@ -14,7 +14,7 @@ type
   public
     method ChangeExtension;
     method Combine;
-    method GetDirectoryName;
+    method GetParentDirectory;
     method GetExtension;
     method GetFileName;
     method GetFileNameWithoutExtension;
@@ -58,17 +58,17 @@ begin
   Assert.CheckString(FolderPath + Folder.Separator + "NewFolder" + Folder.Separator + "1.txt", Path.Combine(FolderPath, "NewFolder", "1.txt"));
 end;
 
-method PathTest.GetDirectoryName;
+method PathTest.GetParentDirectory;
 begin
-  Assert.CheckString("root", Path.GetDirectoryName(Path.Combine("root", "1.txt")));
-  Assert.CheckString(Path.Combine("root", "folder1"), Path.GetDirectoryName(Path.Combine("root", "folder1", "folder2")));
-  Assert.CheckString("root", Path.GetDirectoryName(Path.Combine("root", "folder1")));
-  Assert.IsNull(Path.GetDirectoryName("root"));
-  Assert.IsNull(Path.GetDirectoryName("root" + Folder.Separator));
-  Assert.IsNull(Path.GetDirectoryName("1.txt"));
-  Assert.IsNull(Path.GetDirectoryName(""));
+  Assert.CheckString("root", Path.GetParentDirectory(Path.Combine("root", "1.txt")));
+  Assert.CheckString(Path.Combine("root", "folder1"), Path.GetParentDirectory(Path.Combine("root", "folder1", "folder2")));
+  Assert.CheckString("root", Path.GetParentDirectory(Path.Combine("root", "folder1")));
+  Assert.IsNull(Path.GetParentDirectory("root"));
+  Assert.IsNull(Path.GetParentDirectory("root" + Folder.Separator));
+  Assert.IsNull(Path.GetParentDirectory("1.txt"));
+  Assert.IsNull(Path.GetParentDirectory(""));
 
-  Assert.IsException(->Path.GetDirectoryName(nil));
+  Assert.IsException(->Path.GetParentDirectory(nil));
 end;
 
 method PathTest.GetExtension;
@@ -89,6 +89,10 @@ begin
   Assert.CheckString("1.txt.jpg", Path.GetFileName("1.txt.jpg"));
   Assert.CheckString("", Path.GetFileName(""));
   Assert.CheckString("", Path.GetFileName(Folder.Separator));
+  Assert.CheckString("folder2", Path.GetFileName(Path.Combine("root", "folder1", "folder2")));
+  Assert.CheckString("folder1", Path.GetFileName(Path.Combine("root", "folder1")));
+  Assert.CheckString("root", Path.GetFileName("root"));
+  Assert.CheckString("root", Path.GetFileName("root" + Folder.Separator));
 
   Assert.CheckString("1.txt", Path.GetFileName(Path.Combine(FolderPath, "1.txt")));
 
