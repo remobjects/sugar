@@ -11,7 +11,7 @@ type
     method ChangeExtension(FileName: String; NewExtension: String): String;
     method Combine(BasePath: String; Path: String): String;
     method Combine(BasePath: String; Path1: String; Path2: String): String;
-    method GetDirectoryName(FileName: String): String;
+    method GetParentDirectory(FileName: String): String;
     method GetExtension(FileName: String): String;
     method GetFileName(FileName: String): String;
     method GetFileNameWithoutExtension(FileName: String): String;
@@ -66,7 +66,7 @@ begin
   exit Combine(Combine(BasePath, Path1), Path2);
 end;
 
-class method Path.GetDirectoryName(FileName: String): String;
+class method Path.GetParentDirectory(FileName: String): String;
 begin
   SugarArgumentNullException.RaiseIfNil(FileName, "FileName");
 

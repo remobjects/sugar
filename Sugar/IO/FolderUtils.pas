@@ -3,6 +3,9 @@
 interface
 
 uses
+  {$IF WINDOWS_PHONE OR NETFX_CORE}
+  Windows.Storage,
+  {$ENDIF}
   Sugar;
 
 
@@ -14,6 +17,8 @@ type
     method ListItems(FolderName: java.io.File; AllFolders: Boolean; FilesOnly: Boolean): array of String;
     {$ELSEIF NOUGAT}
     method ListItems(FolderName: String; AllFolders: Boolean; FilesOnly: Boolean): array of String;
+    {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
+    method GetFolder(FolderName: String): StorageFolder;
     {$ENDIF}
   public
     method &Create(FolderName: String);
@@ -25,6 +30,13 @@ type
 
 implementation
 
+{$IF WINDOWS_PHONE OR NETFX_CORE}
+class method FolderUtils.GetFolder(FolderName: String): StorageFolder;
+begin
+  exit StorageFolder.GetFolderFromPathAsync(FolderName).Await;
+end;
+{$ENDIF}
+
 class method FolderUtils.Create(FolderName: String);
 begin
   if Exists(FolderName) then
@@ -33,7 +45,10 @@ begin
   {$IF COOPER}  
   if not (new java.io.File(FolderName).mkdir) then
     raise new SugarIOException(ErrorMessage.FOLDER_CREATE_ERROR, FolderName);
-  {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}  
+  {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
+  var ParentFolder := GetFolder(Path.GetParentDirectory(FolderName));
+  FolderName := Path.GetFileName(FolderName);
+  ParentFolder.CreateFolderAsync(FolderName, CreationCollisionOption.FailIfExists).Await;
   {$ELSEIF ECHOES}
   System.IO.Directory.CreateDirectory(FolderName);
   {$ELSEIF NOUGAT}
@@ -64,7 +79,8 @@ begin
 
   {$IF COOPER}  
   RecursiveDelete(new java.io.File(FolderName));
-  {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}  
+  {$ELSEIF WINDOWS_PHONE OR NETFX_CORE} 
+  GetFolder(FolderName).DeleteAsync.AsTask.Wait;  
   {$ELSEIF ECHOES}
   System.IO.Directory.Delete(FolderName, true);
   {$ELSEIF NOUGAT}
@@ -82,6 +98,11 @@ begin
   var lFile := new java.io.File(FolderName);
   exit lFile.exists and lFile.isDirectory;
   {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}  
+  try
+    exit GetFolder(FolderName) <> nil;
+  except
+    exit false;
+  end;
   {$ELSEIF ECHOES}
   exit System.IO.Directory.Exists(FolderName);
   {$ELSEIF NOUGAT}
@@ -139,7 +160,22 @@ begin
 
   {$IF COOPER}
   exit ListItems(new java.io.File(FolderName), AllFolders, true);
-  {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}  
+  {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
+  var Items := new Sugar.Collections.List<String>;
+
+  if AllFolders then begin
+    Items.AddRange(GetFiles(FolderName, false));
+    var Folders := GetFolders(FolderName, true);
+    for i: Integer := 0 to Folders.Length - 1 do
+      Items.AddRange(GetFiles(Folders[i], false));
+  end
+  else begin
+    var Files := GetFolder(FolderName).GetFilesAsync.Await;
+    for i: Integer := 0 to Files.Count - 1 do
+      Items.Add(Files.Item[i].Path);
+  end;
+
+  exit Items.ToArray;
   {$ELSEIF ECHOES}
   exit System.IO.Directory.GetFiles(FolderName, "*", iif(AllFolders, System.IO.SearchOption.AllDirectories, System.IO.SearchOption.TopDirectoryOnly));
   {$ELSEIF NOUGAT}
@@ -154,7 +190,18 @@ begin
 
   {$IF COOPER}
   exit ListItems(new java.io.File(FolderName), AllFolders, false);
-  {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}  
+  {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
+  var lFolder := GetFolder(FolderName);
+  var Folders := lFolder.GetFoldersAsync.Await;
+  var Items := new Sugar.Collections.List<String>;
+
+  for i: Integer := 0 to Folders.Count - 1 do begin
+    Items.Add(Folders.Item[i].Path);
+    if AllFolders then
+      Items.AddRange(GetFolders(Folders.Item[i].Path, AllFolders));
+  end;
+
+  exit Items.ToArray;  
   {$ELSEIF ECHOES}
   exit System.IO.Directory.GetDirectories(FolderName, "*", iif(AllFolders, System.IO.SearchOption.AllDirectories, System.IO.SearchOption.TopDirectoryOnly));
   {$ELSEIF NOUGAT}

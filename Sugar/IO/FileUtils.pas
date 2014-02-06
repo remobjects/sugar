@@ -41,7 +41,7 @@ implementation
 {$IF WINDOWS_PHONE OR NETFX_CORE}
 class method FileUtils.GetFolder(FileName: String): StorageFolder;
 begin
-  exit StorageFolder.GetFolderFromPathAsync(Path.GetDirectoryName(FileName)).Await;
+  exit StorageFolder.GetFolderFromPathAsync(Path.GetParentDirectory(FileName)).Await;
 end;
 
 class method FileUtils.GetFile(FileName: String): StorageFile;
