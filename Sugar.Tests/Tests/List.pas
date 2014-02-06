@@ -90,7 +90,8 @@ begin
   Data.AddRange(new Sugar.Collections.List<String>);
   Assert.CheckInt(5, Data.Count);
 
-  Assert.IsException(->Data.AddRange(nil));
+  Value := nil;
+  Assert.IsException(->Data.AddRange(Value));
 end;
 
 method ListTest.Clear;

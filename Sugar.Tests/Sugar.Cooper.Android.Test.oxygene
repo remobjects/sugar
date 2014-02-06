@@ -105,6 +105,7 @@
     <Compile Include="Tests\IO\FileHandle.pas" />
     <Compile Include="Tests\IO\FileUtils.pas" />
     <Compile Include="Tests\IO\Folder.pas" />
+    <Compile Include="Tests\IO\FolderUtils.pas" />
     <Compile Include="Tests\IO\Path.pas" />
     <Compile Include="Tests\List.pas" />
     <Compile Include="Tests\Math.pas" />
