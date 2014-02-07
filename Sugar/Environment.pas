@@ -2,6 +2,9 @@
 
 interface
 
+uses
+  Sugar.IO;
+
 type
   TargetPlatform = public enum(Net, Java, OSX, iOS, Android, WinRT, WindowsPhone);
 
@@ -68,7 +71,7 @@ begin
   {$ELSEIF WINDOWS_PHONE}
   exit Windows.Networking.Proximity.PeerFinder.DisplayName;
   {$ELSEIF NETFX_CORE}
-  exit Windows.System.UserProfile.UserInformation.Await;
+  exit Windows.System.UserProfile.UserInformation.GetDisplayNameAsync.Await;
   {$ELSEIF ECHOES}
   exit System.Environment.UserName;
   {$ELSEIF OSX}
