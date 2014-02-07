@@ -299,7 +299,8 @@ end;
 class method Folder.UserLocal: Folder;
 begin
   {$IF ANDROID}
-  exit Environment.AppContext.FilesDir;
+  SugarAppContextMissingException.RaiseIfMissing;
+  exit Environment.ApplicationContext.FilesDir;
   {$ELSE}
   exit new java.io.File(System.getProperty("user.home"));
   {$ENDIF}

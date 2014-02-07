@@ -37,6 +37,11 @@ type
 
   SugarKeyNotFoundException = public class (SugarException);
 
+  SugarAppContextMissingException = public class (SugarException)
+  public
+    class method RaiseIfMissing;
+  end;
+
   {$IF NOUGAT}
   SugarNSErrorException = public class(SugarException)
   public
@@ -65,6 +70,8 @@ type
     class const FOLDER_CREATE_ERROR = "Unable to create folder {0}";
     class const FOLDER_DELETE_ERROR = "Unable to delete folder {0}";
     class const IO_RENAME_ERROR = "Unable to reanme {0} to {1}";
+
+    class const APP_CONTEXT_MISSING = "Environment.ApplicationContext is not set.";
   end;
 
 implementation
@@ -104,6 +111,12 @@ class method SugarArgumentNullException.RaiseIfNil(Value: Object; Name: String);
 begin
   if Value = nil then
     raise new SugarArgumentNullException(Name);
+end;
+
+class method SugarAppContextMissingException.RaiseIfMissing;
+begin
+  if Environment.ApplicationContext = nil then
+    raise new SugarAppContextMissingException(ErrorMessage.APP_CONTEXT_MISSING);
 end;
 
 end.

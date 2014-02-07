@@ -79,8 +79,9 @@ end;
 class method UserSettings.&Default: UserSettings;
 begin
   {$IF ANDROID}
-  SugarArgumentNullException.RaiseIfNil(Environment.AppContext, "Environment.AppContext");
-  exit new UserSettings(Environment.AppContext.getSharedPreferences("Sugar", android.content.Context.MODE_PRIVATE));
+  SugarAppContextMissingException.RaiseIfMissing;
+
+  exit new UserSettings(Environment.ApplicationContext.getSharedPreferences("Sugar", android.content.Context.MODE_PRIVATE));
   {$ELSEIF COOPER}
   exit mapped.userRoot;
   {$ELSEIF WINDOWS_PHONE}
