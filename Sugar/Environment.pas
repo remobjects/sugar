@@ -3,113 +3,149 @@
 interface
 
 type
-  {$IF COOPER}
-  Environment = public class
-  public 
-    class property NewLine: String read System.getProperty("line.separator");
-    class property UserName: String read System.getProperty("user.name");
-    class property OperatingSystemName: String read System.getProperty("os.name");
-    class property OperatingSystemVersion: String read System.getProperty("os.version");
-    class property TargetPlatform: TargetPlatform read TargetPlatform.Java;
-    class property TargetPlatforName: String read 'Java';
-    class method GetEnvironmentVariable(aVariableName: String): String;
-    {$IF ANDROID}
-    class property AppContext: android.content.Context read write;
-    {$ENDIF}
-  {$ELSEIF ECHOES}
-  Environment = public class mapped to System.Environment
+  TargetPlatform = public enum(Net, Java, OSX, iOS, Android, WinRT, WindowsPhone);
+
+  Environment = public static class
   private
-    {$IF NETFX_CORE}class method GetUserName: String;{$ENDIF}
+    class method GetNewLine: Sugar.String;
+    class method GetUserName: Sugar.String;
+    class method GetOSName: Sugar.String;
+    class method GetOSVersion: Sugar.String;
+    class method GetTargetPlatform: Sugar.TargetPlatform;
+    class method GetTargetPlatformName: Sugar.String;
   public
-    class property NewLine: String read mapped.NewLine;
-    class property UserName: String read {$IF WINDOWS_PHONE}""{$ELSEIF NETFX_CORE}GetUserName{$ELSE}mapped.UserName{$ENDIF};
-    class property OperatingSystemName: String read {$IF NETFX_CORE}"Microsoft Windows NT 6.2"{$ELSE}mapped.OSVersion.Platform.ToString(){$ENDIF};
-    class property OperatingSystemVersion: String read {$IF NETFX_CORE}"6.2"{$ELSE}mapped.OSVersion.Version.ToString(){$ENDIF};
-    class property TargetPlatform: TargetPlatform read TargetPlatform.Net;
-    class property TargetPlatforName: String read '.NET';
-    class property IsMono: Boolean read assigned(&Type.GetType('Mono.Runtime'));
-    {$IF NOT (WINDOWS_PHONE OR NETFX_CORE)}class method GetEnvironmentVariable(aVariableName: String): String; mapped to GetEnvironmentVariable(aVariableName);{$ENDIF}
-  {$ELSEIF NOUGAT}
-  Environment = public class
-  private
-    class method getOperatingSystemVersion: String;
-    class method getOperatingSystemName: String;
-  public 
-    {$REGION OS-specific Helper APIs}
-    class method SysCtl(aLevel: Int32; aValue: Int32): String;
-    {$ENDREGION}
+    property NewLine: String read GetNewLine;
+    property UserName: String read GetUserName;
+    property OSName: String read GetOSName;
+    property OSVersion: String read GetOSVersion;
+    property TargetPlatform: TargetPlatform read GetTargetPlatform;
+    property TargetPlatformName: String read GetTargetPlatformName;
+    property ApplicationContext: {$IF ANDROID}android.content.Context{$ELSE}Object{$ENDIF} read write;
 
-    class property NewLine: String read Sugar.String(#10);
-    class property UserName: String read Foundation.NSUserName();
-    class property OperatingSystemName: String read getOperatingSystemName;
-    class property OperatingSystemVersion: String read getOperatingSystemVersion; //todo
-    class property TargetPlatform: TargetPlatform read TargetPlatform.Cocoa;
-    class property TargetPlatforName: String read 'Cocoa';
-    class method GetEnvironmentVariable(aVariableName: String): String;
-  {$ENDIF}
+    method GetEnvironmentVariable(Name: String): String;
   end;
-
-  TargetPlatform = public enum(Net, Java, Cocoa);
 
 implementation
 
-{$IF COOPER}
-class method Environment.GetEnvironmentVariable(aVariableName: String): String;
+class method Environment.GetEnvironmentVariable(Name: String): String;
 begin
-  exit System.getenv(aVariableName);
-end;
-{$ENDIF}
-
-{$IF NETFX_CORE}
-class method Environment.GetUserName: String;
-begin
-  //var task := await Windows.System.UserProfile.UserInformation.GetDisplayNameAsync;
-  //exit task;
-  exit "";
-end;
-{$ENDIF}
-
-{$IF NOUGAT}
-class method Environment.getOperatingSystemName: String;
-begin
-  {$IF TARGET_OS_MAC}
-  result := ('OS X');
-  {$ELSEIF TARGET_OS_IPHONE}
-    {$IF TARGET_IPHONE_SIMULATOR}
-    result := 'iOS Simulator';
-    {$ELSE}
-    result := 'iOS';
-    {$ENDIF}
-  {$ELSE}
-    {$ERROR Unknown Nougat target platform}
+  {$IF COOPER}
+  exit System.getenv(Name); 
+  {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
+  raise new SugarNotSupportedException("GetEnvironmentVariable not supported on this platfrom");
+  {$ELSEIF ECHOES}
+  exit System.Environment.GetEnvironmentVariable(Name);
+  {$ELSEIF NOUGAT}
+  exit Foundation.NSProcessInfo.processInfo:environment:objectForKey(Name);
   {$ENDIF}
 end;
 
-class method Environment.SysCtl(aLevel: Int32; aValue: Int32): String;
+class method Environment.GetNewLine: String;
 begin
-  var mib: array of Integer := [aLevel, aValue];
-  var namelen: rtl.u_int := sizeOf(mib) / sizeOf(mib[0]);
-  
-  var bufferSize: size_t := 0;
-
-  rtl.sysctl(@mib, namelen, nil, @bufferSize, nil, 0);
-  var buildBuffer := new rtl.u_char[bufferSize];
-  if rtl.sysctl(mib, namelen, buildBuffer, @bufferSize, nil, 0) = 0 then
-    result := Foundation.NSString.alloc.initWithBytes(buildBuffer) length(bufferSize) encoding(Foundation.NSStringEncoding.NSUTF8StringEncoding);
- end;
-
-class method Environment.getOperatingSystemVersion: String;
-begin
-  result := Foundation.NSString.stringWithFormat('%@ %@ (%@)',
-                                                 SysCtl(rtl.CTL_KERN, rtl.KERN_OSTYPE),
-                                                 SysCtl(rtl.CTL_KERN, rtl.KERN_OSRELEASE),
-                                                 SysCtl(rtl.CTL_KERN, rtl.KERN_OSVERSION));
+  {$IF COOPER}
+  exit System.getProperty("line.separator");
+  {$ELSEIF ECHOES}
+  exit System.Environment.NewLine;
+  {$ELSEIF NOUGAT}
+  exit Sugar.String(#10);
+  {$ENDIF}
 end;
 
-class method Environment.GetEnvironmentVariable(aVariableName: String): String;
+class method Environment.GetUserName: String;
 begin
-  result := Foundation.NSProcessInfo.processInfo:environment:objectForKey(aVariableName);
+  {$IF ANDROID}
+  SugarAppContextMissingException.RaiseIfMissing;
+
+  var Manager := android.accounts.AccountManager.get(ApplicationContext);
+  var Accounts := Manager.Accounts;
+
+  if Accounts.length = 0 then
+    exit "";
+
+  exit Accounts[0].name;
+  {$ELSEIF COOPER}
+  exit System.getProperty("user.name");
+  {$ELSEIF WINDOWS_PHONE}
+  exit Windows.Networking.Proximity.PeerFinder.DisplayName;
+  {$ELSEIF NETFX_CORE}
+  exit Windows.System.UserProfile.UserInformation.Await;
+  {$ELSEIF ECHOES}
+  exit System.Environment.UserName;
+  {$ELSEIF OSX}
+  exit Foundation.NSUserName;
+  {$ELSEIF IOS}
+  exit UIKit.UIDevice.currentDevice.name;
+  {$ENDIF}
 end;
-{$ENDIF}
+
+class method Environment.GetOSName: String;
+begin
+  {$IF COOPER}
+  exit System.getProperty("os.name");
+  {$ELSEIF WINDOWS_PHONE}
+  exit System.Environment.OSVersion.Platform.ToString();
+  {$ELSEIF NETFX_CORE}
+  exit "Microsoft Windows NT 6.2";
+  {$ELSEIF ECHOES}
+  exit System.Environment.OSVersion.Platform.ToString();
+  {$ELSEIF OSX}
+  exit "OSX";
+  {$ELSEIF IOS}
+  exit "iOS";
+  {$ENDIF}
+end;
+
+class method Environment.GetOSVersion: String;
+begin
+  {$IF COOPER}  
+  System.getProperty("os.version");
+  {$ELSEIF WINDOWS_PHONE}
+  exit System.Environment.OSVersion.Version.ToString;
+  {$ELSEIF NETFX_CORE}
+  exit "6.2";
+  {$ELSEIF ECHOES}
+  exit System.Environment.OSVersion.Version.ToString;
+  {$ELSEIF NOUGAT}
+  exit NSProcessInfo.processInfo.operatingSystemVersionString;
+  {$ENDIF}
+end;
+
+class method Environment.GetTargetPlatform: TargetPlatform;
+begin
+  exit{$IF ANDROID}
+  TargetPlatform.Android
+  {$ELSEIF COOPER}
+  TargetPlatform.Java
+  {$ELSEIF WINDOWS_PHONE}
+  TargetPlatform.WindowsPhone
+  {$ELSEIF NETFX_CORE}
+  TargetPlatform.WinRT
+  {$ELSEIF ECHOES}
+  TargetPlatform.Net
+  {$ELSEIF OSX}
+  TargetPlatform.OSX
+  {$ELSEIF IOS}
+  TargetPlatform.iOS
+  {$ENDIF};
+end;
+
+class method Environment.GetTargetPlatformName: String;
+begin
+  exit{$IF ANDROID}
+  "Android"
+  {$ELSEIF COOPER}
+  "Java"
+  {$ELSEIF WINDOWS_PHONE}
+  "Windows Phone Runtime"
+  {$ELSEIF NETFX_CORE}
+  "Windows Runtime"
+  {$ELSEIF ECHOES}
+  ".NET"
+  {$ELSEIF OSX}
+  "Cocoa"
+  {$ELSEIF IOS}
+  "Cocoa Touch"
+  {$ENDIF};
+end;
 
 end.
