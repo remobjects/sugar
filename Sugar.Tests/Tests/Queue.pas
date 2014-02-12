@@ -107,7 +107,8 @@ begin
   Data.Enqueue(Msg);
   Assert.CheckInt(3, Data.Count);
 
-  Assert.IsException(->Data.Enqueue(nil));
+  Data.Enqueue(nil);
+  Assert.CheckInt(4, Data.Count);
 end;
 
 method QueueTest.Dequeue;
@@ -128,6 +129,12 @@ begin
   Assert.CheckBool(true, Actual.Equals(new Message("Three", 3)));
 
   Assert.IsException(->Data.Dequeue);
+
+  Data.Enqueue(nil);
+  Assert.CheckInt(1, Data.Count);
+  Actual := Data.Dequeue;
+  Assert.IsNull(Actual);
+  Assert.CheckInt(0, Data.Count);
 end;
 
 method QueueTest.Count;

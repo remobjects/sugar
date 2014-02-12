@@ -73,7 +73,9 @@ begin
   Data.Add("Four");
   Assert.CheckInt(5, Data.Count);
 
-  Assert.IsException(->Data.Add(nil));
+  Data.Add(nil);
+  Assert.CheckInt(6, Data.Count);
+  Assert.IsNull(Data[5]);
 end;
 
 method ListTest.AddRange;
@@ -188,7 +190,9 @@ begin
   Data.Insert(Data.Count, "Item2");
   Assert.CheckInt(4, Data.IndexOf("Item2"));
 
-  Assert.IsException(->Data.Insert(1, nil));
+  Data.Insert(1, nil);
+  Assert.CheckInt(1, Data.IndexOf(nil));
+  
   Assert.IsException(->Data.Insert(-1, "item"));
   Assert.IsException(->Data.Insert(555, "item"));
 end;
@@ -286,9 +290,11 @@ begin
   Data[1] := "Item1";
   Assert.CheckString("Item1", Data.Item[1]);
 
+  Data[1] := nil;
+  Assert.IsNull(Data.Item[1]);
+
   Assert.IsException(->Data[-1]);
-  Assert.IsException(->Data[55]);
-  Assert.IsException(->begin Data[0] := nil; end);
+  Assert.IsException(->Data[55]);  
 end;
 
 method ListTest.Enumerator;

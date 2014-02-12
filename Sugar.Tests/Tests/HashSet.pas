@@ -41,7 +41,8 @@ begin
   Assert.CheckBool(false, Data.Add("Four"));
   Assert.CheckInt(4, Data.Count);
 
-  Assert.IsException(->Data.Add(nil)); //no nil's allowed
+  Assert.CheckBool(true, Data.Add(nil));
+  Assert.CheckInt(5, Data.Count);
 end;
 
 method HashSetTest.Clear;

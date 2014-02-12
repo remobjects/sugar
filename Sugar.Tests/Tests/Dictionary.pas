@@ -42,9 +42,13 @@ begin
   Assert.CheckInt(4, Data.Count);
   Assert.CheckBool(true, Data.ContainsKey(new CodeClass(4)));
   Assert.CheckBool(true, Data.ContainsValue("Four"));
+
+  Data.Add(new CodeClass(-1), nil);
+  Assert.CheckInt(5, Data.Count);
+  Assert.CheckBool(true, Data.ContainsKey(new CodeClass(-1)));
+  Assert.CheckBool(true, Data.ContainsValue(nil));
   
   Assert.IsException(->Data.Add(new CodeClass(4), "")); //no duplicates
-  Assert.IsException(->Data.Add(new CodeClass(55), nil)); //no nil's
   Assert.IsException(->Data.Add(nil, ""));
 end;
 
@@ -70,8 +74,8 @@ begin
   Assert.CheckBool(true, Data.ContainsValue("Two"));
   Assert.CheckBool(true, Data.ContainsValue("Three"));
   Assert.CheckBool(false, Data.ContainsValue("Four"));
-  Assert.CheckBool(false, Data.ContainsValue("one"));  
-  Assert.IsException(->Data.ContainsValue(nil));
+  Assert.CheckBool(false, Data.ContainsValue("one"));
+  Assert.CheckBool(false, Data.ContainsValue(nil));
 end;
 
 method DictionaryTest.&Remove;
@@ -102,8 +106,7 @@ begin
   Assert.CheckInt(4, Data.Count);
   Assert.CheckBool(true, Data.ContainsKey(new CodeClass(4)));
   Assert.CheckBool(true, Data.ContainsValue("Four"));
-  Assert.IsException(->begin Data[nil] := ""; end);
-  Assert.IsException(->begin Data[C] := nil; end);
+  Assert.IsException(->begin Data[nil] := ""; end);  
 end;
 
 method DictionaryTest.Keys;
