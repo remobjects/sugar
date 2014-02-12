@@ -24,7 +24,7 @@ implementation
 method MainActivity.onCreate(savedInstanceState: Bundle);
 begin
   inherited;
-  Sugar.Environment.AppContext := self.ApplicationContext;
+  Sugar.Environment.ApplicationContext := self.ApplicationContext;
   ContentView := R.layout.main;
 
   var results := TestRunner.RunAll(self);
