@@ -9,6 +9,7 @@ type
   List<T> = public class mapped to {$IF COOPER}java.util.ArrayList<T>{$ELSEIF ECHOES}System.Collections.Generic.List<T>{$ELSEIF NOUGAT}Foundation.NSMutableArray where T is class;{$ENDIF}
   private
     method SetItem(&Index: Integer; Value: T);
+    method GetItem(&Index: Integer): T;
   public
     constructor; mapped to constructor();
     constructor(Items: List<T>);
@@ -41,11 +42,18 @@ type
     method ToArray: array of T;
 
     property Count: Integer read {$IF COOPER}mapped.Size{$ELSEIF ECHOES}mapped.Count{$ELSEIF NOUGAT}mapped.Count{$ENDIF};
-    property Item[i: Integer]: T read mapped[i] write SetItem; default;
+    property Item[i: Integer]: T read GetItem write SetItem; default;
   end;
 
   Predicate<T> = public block (Obj: T): Boolean;
   Action<T> = public block (Obj: T);
+
+  {$IF NOUGAT}
+  NullHelper = public static class
+  public
+    method ValueOf(Value: id): id;
+  end;
+  {$ENDIF}
 
 
 implementation
@@ -82,22 +90,30 @@ end;
 
 method List<T>.Add(anItem: T);
 begin
-  if anItem = nil then
-    raise new SugarArgumentNullException("Item");
-
   {$IF COOPER OR ECHOES}
   mapped.Add(anItem);
   {$ELSEIF NOUGAT}
-  mapped.addObject(anItem);
+  mapped.addObject(NullHelper.ValueOf(anItem));
   {$ENDIF}
 end;
 
 method List<T>.SetItem(&Index: Integer; Value: T);
 begin
-  if Value = nil then
-    raise new SugarArgumentNullException("Value");
-  
+  {$IF NOUGAT}
+  var x: id := NullHelper.ValueOf(Value);
+  mapped[&Index] := x;
+  {$ELSE}  
   mapped[&Index] := Value;
+  {$ENDIF}
+end;
+
+method List<T>.GetItem(&Index: Integer): T;
+begin
+  {$IF NOUGAT}
+  exit NullHelper.ValueOf(mapped.objectAtIndex(&Index));
+  {$ELSE}  
+  exit mapped[&Index];
+  {$ENDIF}
 end;
 
 method List<T>.AddRange(Items: List<T>);
@@ -138,7 +154,7 @@ begin
   {$ELSEIF ECHOES}
   exit mapped.Contains(anItem);
   {$ELSEIF NOUGAT}
-  exit mapped.ContainsObject(anItem);
+  exit mapped.ContainsObject(NullHelper.ValueOf(anItem));
   {$ENDIF}
 end;
 
@@ -171,7 +187,7 @@ begin
   var Length := StartIndex + aCount; 
 
   for i: Int32 := StartIndex to Length - 1 do
-    if Match(mapped[i]) then
+    if Match(Item[i]) then
       exit i;
 
   exit -1;
@@ -183,8 +199,8 @@ begin
     raise new SugarArgumentNullException("Match");
 
   for i: Integer := 0 to Count-1 do begin
-    if Match(mapped[i]) then
-      exit mapped[i];
+    if Match(Item[i]) then
+      exit Item[i];
   end;
 
   exit &default(T);
@@ -197,8 +213,8 @@ begin
 
   result := new List<T>();
   for i: Integer := 0 to Count-1 do begin
-    if Match(mapped[i]) then
-      result.Add(mapped[i]);
+    if Match(Item[i]) then
+      result.Add(Item[i]);
   end;
 end;
 
@@ -208,7 +224,7 @@ begin
     raise new SugarArgumentNullException("Match");
 
   for i: Integer := 0 to self.Count-1 do begin
-    if not Match(mapped[i]) then
+    if not Match(Item[i]) then
       exit false;
   end;
 
@@ -221,7 +237,7 @@ begin
     raise new SugarArgumentNullException("Action");
 
   for i: Integer := 0 to Count-1 do
-    Action(mapped[i]);
+    Action(Item[i]);
 end;
 
 method List<T>.IndexOf(anItem: T): Integer;
@@ -231,22 +247,19 @@ begin
   {$ELSEIF ECHOES}
   exit mapped.IndexOf(anItem);
   {$ELSEIF NOUGAT}
-  var lIndex := mapped.indexOfObject(anItem);
+  var lIndex := mapped.indexOfObject(NullHelper.ValueOf(anItem));
   exit if lIndex = NSNotFound then -1 else lIndex;
   {$ENDIF}
 end;
 
 method List<T>.Insert(&Index: Integer; anItem: T);
 begin
-  if anItem = nil then
-    raise new SugarArgumentNullException("Item");
-
   {$IF COOPER}
   mapped.Add(&Index, anItem);
   {$ELSEIF ECHOES}
   mapped.Insert(&Index, anItem);
   {$ELSEIF NOUGAT}
-  mapped.insertObject(anItem) atIndex(&Index);
+  mapped.insertObject(NullHelper.ValueOf(anItem)) atIndex(&Index);
   {$ENDIF}
 end;
 
@@ -257,7 +270,7 @@ begin
   {$ELSEIF ECHOES}
   exit mapped.LastIndexOf(anItem);
   {$ELSEIF NOUGAT}
-  var lIndex := mapped.indexOfObjectWithOptions(Foundation.NSEnumerationReverse) passingTest((x,y,z) -> x = id(anItem));
+  var lIndex := mapped.indexOfObjectWithOptions(Foundation.NSEnumerationReverse) passingTest((x,y,z) -> x = id(NullHelper.ValueOf(anItem)));
   exit if lIndex = NSNotFound then -1 else lIndex;
   {$ENDIF}
 end;
@@ -310,8 +323,15 @@ begin
   {$ELSEIF NOUGAT}
   result := new T[mapped.count];
   for i: Integer := 0 to mapped.count - 1 do
-    result[i] := mapped.objectAtIndex(i);
+    result[i] := Item[i];
   {$ENDIF}
 end;
+
+{$IF NOUGAT}
+class method NullHelper.ValueOf(Value: id): id;
+begin
+  exit if Value = NSNull.null then nil else if Value = nil then NSNull.null else Value;
+end;
+{$ENDIF}
 
 end.

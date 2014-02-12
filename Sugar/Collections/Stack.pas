@@ -28,7 +28,7 @@ begin
   {$IF COOPER OR ECHOES}
   exit mapped.Contains(Item);
   {$ELSE}
-  exit mapped.containsObject(Item);
+  exit mapped.containsObject(NullHelper.ValueOf(Item));
   {$ENDIF}
 end;
 
@@ -59,7 +59,7 @@ begin
   {$IF COOPER OR ECHOES}
   exit mapped.Peek;
   {$ELSE}
-  exit mapped.lastObject;
+  exit NullHelper.ValueOf(mapped.lastObject);
   {$ENDIF}
 end;
 
@@ -71,20 +71,17 @@ begin
   {$IF COOPER OR ECHOES}
   exit mapped.Pop;
   {$ELSE}
-  result := mapped.lastObject;
+  result := NullHelper.ValueOf(mapped.lastObject);
   mapped.removeLastObject;
   {$ENDIF}
 end;
 
 method Stack<T>.Push(Item: T);
 begin
-  if Item = nil then
-    raise new SugarArgumentNullException("Item");
-
   {$IF COOPER OR ECHOES}
   mapped.Push(Item);
   {$ELSE}
-  mapped.addObject(Item);
+  mapped.addObject(NullHelper.ValueOf(Item));
   {$ENDIF}
 end;
 
@@ -103,7 +100,7 @@ begin
   {$ELSEIF NOUGAT}
   result := new T[mapped.count];
   for i: Integer := mapped.Count - 1 downto 0 do
-    result[mapped.count - i - 1] := mapped.objectAtIndex(i);
+    result[mapped.count - i - 1] := NullHelper.ValueOf(mapped.objectAtIndex(i));
   {$ENDIF}
 end;
 

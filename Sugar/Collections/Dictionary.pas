@@ -43,9 +43,6 @@ begin
   if Key = nil then
     raise new SugarArgumentNullException("Key");
 
-  if Value = nil then
-    raise new SugarArgumentNullException("Value");
-
   if ContainsKey(Key) then
     raise new SugarArgumentException(ErrorMessage.KEY_EXISTS);
 
@@ -54,7 +51,7 @@ begin
   {$ELSEIF ECHOES}
   mapped.Add(Key, Value);
   {$ELSEIF NOUGAT}
-  mapped.setObject(Value) forKey(Key);
+  mapped.setObject(NullHelper.ValueOf(Value)) forKey(Key);
   {$ENDIF}
 end;
 
@@ -81,13 +78,10 @@ end;
 
 method Dictionary<T, U>.ContainsValue(Value: U): Boolean;
 begin
-  if Value = nil then
-    raise new SugarArgumentNullException("Value");
-
   {$IF COOPER OR ECHOES}
   exit mapped.ContainsValue(Value);
   {$ELSEIF NOUGAT}
-  exit mapped.allValues.containsObject(Value);
+  exit mapped.allValues.containsObject(NullHelper.ValueOf(Value));
   {$ENDIF}
 end;
 
@@ -107,6 +101,9 @@ begin
   result := mapped[Key];
   {$ELSEIF NOUGAT}
   result := mapped.objectForKey(Key);
+
+  if result <> nil then
+    exit NullHelper.ValueOf(result);
   {$ENDIF}
 
   if result = nil then
@@ -136,7 +133,7 @@ begin
   {$ELSEIF NOUGAT}
   result := new U[mapped.allValues.count];
   for i: Integer := 0 to mapped.allValues.count - 1 do
-    result[i] := mapped.allValues.objectAtIndex(i);
+    result[i] := NullHelper.ValueOf(mapped.allValues.objectAtIndex(i));
   {$ENDIF}
 end;
 
@@ -161,13 +158,10 @@ begin
   if Key = nil then
     raise new SugarArgumentNullException("Key");
 
-  if Value = nil then
-    raise new SugarArgumentNullException("Value");
-
   {$IF COOPER OR ECHOES}
   mapped[Key] := Value;
   {$ELSEIF NOUGAT}
-  mapped.setObject(Value) forKey(Key);
+  mapped.setObject(NullHelper.ValueOf(Value)) forKey(Key);
   {$ENDIF}
 end;
 

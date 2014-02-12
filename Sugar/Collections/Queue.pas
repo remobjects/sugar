@@ -29,7 +29,7 @@ begin
   {$IF COOPER OR ECHOES}
   exit mapped.Contains(Item);
   {$ELSEIF NOUGAT}
-  exit mapped.containsObject(Item);
+  exit mapped.containsObject(NullHelper.ValueOf(Item));
   {$ENDIF}
 end;
 
@@ -52,22 +52,19 @@ begin
   {$ELSEIF ECHOES}
   exit mapped.Dequeue;
   {$ELSEIF NOUGAT}
-  result := mapped.objectAtIndex(0);
+  result := NullHelper.ValueOf(mapped.objectAtIndex(0));
   mapped.removeObjectAtIndex(0);
   {$ENDIF}
 end;
 
 method Queue<T>.Enqueue(Item: T);
 begin
-  if Item = nil then
-    raise new SugarArgumentNullException("Item");
-
   {$IF COOPER}
   mapped.add(Item);
   {$ELSEIF ECHOES}
   mapped.Enqueue(Item);
   {$ELSEIF NOUGAT}
-  mapped.addObject(Item);
+  mapped.addObject(NullHelper.ValueOf(Item));
   {$ENDIF}
 end;
 
@@ -89,7 +86,7 @@ begin
   {$IF COOPER OR ECHOES}
   exit mapped.Peek;
   {$ELSEIF NOUGAT}
-  exit mapped.objectAtIndex(0);
+  exit NullHelper.ValueOf(mapped.objectAtIndex(0));
   {$ENDIF}
 end;
 
@@ -102,7 +99,7 @@ begin
   {$ELSEIF NOUGAT}
   result := new T[mapped.count];
   for i: Integer := 0 to mapped.count - 1 do
-    result[i] := mapped.objectAtIndex(i);
+    result[i] := NullHelper.ValueOf(mapped.objectAtIndex(i));
   {$ENDIF}
 end;
 

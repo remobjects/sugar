@@ -3,45 +3,49 @@
 interface
 
 type
-  HashSet<T> = public class mapped to {$IFDEF ECHOES}System.Collections.Generic.HashSet<T>{$ENDIF}{$IFDEF COOPER}java.util.HashSet<T>{$ENDIF}{$IFDEF NOUGAT}Foundation.NSMutableSet{$ENDIF}
+  HashSet<T> = public class mapped to {$IF COOPER}java.util.HashSet<T>{$ELSEIF ECHOES}System.Collections.Generic.HashSet<T>{$ELSEIF NOUGAT}Foundation.NSMutableSet{$ENDIF}
   public
     constructor; mapped to constructor();
 
     method &Add(Item: T): Boolean;
-    method Clear; mapped to {$IFNDEF NOUGAT}Clear{$ELSE}removeAllObjects{$ENDIF};
-    method Contains(Item: T): Boolean; mapped to {$IFNDEF NOUGAT}Contains(Item){$ELSE}containsObject(Item){$ENDIF};
-    method &Remove(Item: T): Boolean; {$IFNDEF NOUGAT}mapped to &Remove(Item);{$ENDIF} 
+    method Clear; mapped to {$IF COOPER OR ECHOES}Clear{$ELSE}removeAllObjects{$ENDIF};
+    method Contains(Item: T): Boolean;
+    method &Remove(Item: T): Boolean;
 
-    property Count: Integer read {$IFNDEF COOPER}mapped.Count{$ELSE}mapped.size{$ENDIF};
+    property Count: Integer read {$IF ECHOES OR NOUGAT}mapped.Count{$ELSE}mapped.size{$ENDIF};
   end;
 
 implementation
 
-{$IF COOPER OR ECHOES}
-method HashSet<T>.Add(Item: T): Boolean;
+method HashSet<T>.&Add(Item: T): Boolean;
 begin
-  if Item = nil then
-    raise new Sugar.SugarArgumentNullException("Item");
-
+  {$IF COOPER OR ECHOES}
   exit mapped.Add(Item);
-end;
-{$ELSEIF NOUGAT}
-method HashSet<T>.Add(Item: T): Boolean;
-begin
-  var lSize := mapped.Count;
-  mapped.addObject(Item);
-  exit lSize < mapped.Count;
+  {$ELSEIF NOUGAT}
+  var lSize := mapped.count;
+  mapped.addObject(NullHelper.ValueOf(Item));
+  exit lSize < mapped.count;
+  {$ENDIF}
 end;
 
-method HashSet<T>.Remove(Item: T): Boolean;
+method HashSet<T>.Contains(Item: T): Boolean;
 begin
-  if Item = nil then
-    exit false;
-
-  var lSize := mapped.Count;
-  mapped.removeObject(Item);
-  exit lSize > mapped.Count;  
+  {$IF COOPER OR ECHOES}
+  exit mapped.Contains(Item);
+  {$ELSEIF NOUGAT}
+  exit mapped.containsObject(NullHelper.ValueOf(Item));
+  {$ENDIF}
 end;
-{$ENDIF}
+
+method HashSet<T>.&Remove(Item: T): Boolean;
+begin
+  {$IF COOPER OR ECHOES}
+  exit mapped.Remove(Item);
+  {$ELSEIF NOUGAT}
+  var lSize := mapped.count;
+  mapped.removeObject(NullHelper.ValueOf(Item));
+  exit lSize > mapped.count;
+  {$ENDIF}
+end;
 
 end.
