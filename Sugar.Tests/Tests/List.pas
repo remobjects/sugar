@@ -36,6 +36,7 @@ type
     method Item;
     method Enumerator;
     method ForEach;
+    method Sort;
   end;
 
 implementation
@@ -321,6 +322,29 @@ begin
   end);
 
   Assert.CheckInt(3, &Index);
+end;
+
+method ListTest.Sort;
+begin
+  var Expected: array of String := ["A", "C", "b"];
+  Data.Clear;
+  Data.Add("C");
+  Data.Add("A");
+  Data.Add("b");
+
+  Assert.CheckInt(3, Data.Count);
+  Data.Sort((x, y) -> x.CompareTo(y));
+
+  for i: Integer := 0 to Data.Count - 1 do
+    Assert.CheckString(Expected[i], Data[i]);
+
+  Expected := ["A", "b", "C"];
+
+  Data.Sort((x, y) -> x.CompareToIgnoreCase(y));
+  for i: Integer := 0 to Data.Count - 1 do
+    Assert.CheckString(Expected[i], Data[i]);
+
+  Assert.IsException(->Data.Sort(nil));
 end;
 
 end.

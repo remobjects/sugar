@@ -87,8 +87,6 @@ begin
   Assert.IsNull(Data.FirstChild);
   Assert.IsNull(Data.LastChild);
   Assert.CheckInt(0, length(Data.ChildNodes));
-  {$WARNING Disabled due to bug #}
-  //Assert.IsException(->Data.Item[0]);
 end;
 
 method DocumentTypeTest.Value;

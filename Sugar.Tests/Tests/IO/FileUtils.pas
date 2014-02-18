@@ -18,7 +18,7 @@ type
     method Setup; override;
     method TearDown; override;
 
-    method &Copy;
+    method CopyTest;
     method Create;
     method Delete;
     method Exists;
@@ -52,7 +52,7 @@ begin
     FileUtils.Delete(CopyName);
 end;
 
-method FileUtilsTest.Copy;
+method FileUtilsTest.CopyTest;
 begin
   Assert.CheckBool(true, FileUtils.Exists(FileName));
   Assert.CheckBool(false, FileUtils.Exists(CopyName));
