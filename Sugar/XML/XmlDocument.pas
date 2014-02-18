@@ -415,13 +415,14 @@ end;
 
 class method XmlDocument.FromBinary(aBinary: Binary): XmlDocument;
 begin
-  var Position := aBinary.Data.Position;
-  aBinary.Data.Position := 0;
+  var ms := System.IO.MemoryStream(aBinary);
+  var Position := ms.Position;
+  ms.Position := 0;
   try
-    var document := XDocument.Load(aBinary.Data, LoadOptions.SetBaseUri);
+    var document := XDocument.Load(ms, LoadOptions.SetBaseUri);
     result := new XmlDocument(document);
   finally
-    aBinary.Data.Position := Position;
+    ms.Position := Position;
   end;  
 end;
 
