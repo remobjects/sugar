@@ -16,18 +16,13 @@ type
     property Length: Integer {$IF NOUGAT} read mapped.length write mapped.length{$ENDIF};
   end;
 
-  Binary = public class {$IF NOUGAT}mapped to Foundation.NSMutableData{$ENDIF}
+  Binary = public class {$IF ECHOES}mapped to System.IO.MemoryStream{$ELSEIF NOUGAT}mapped to Foundation.NSMutableData{$ENDIF}
   {$IF COOPER}
   private
     fData: java.io.ByteArrayOutputStream := new java.io.ByteArrayOutputStream();
-  {$ELSEIF ECHOES}
-  private
-    fData: System.IO.MemoryStream := new System.IO.MemoryStream();
-  assembly
-    property Data: System.IO.MemoryStream read fData;
   {$ENDIF}
   public
-    constructor; {$IF NOUGAT}mapped to constructor();{$ELSE}empty;{$ENDIF}
+    constructor; {$IF NOUGAT OR ECHOES}mapped to constructor();{$ELSE}empty;{$ENDIF}
     constructor(anArray: array of Byte);
     constructor(Bin: Binary);    
 
@@ -40,10 +35,11 @@ type
     method Subdata(Range: Range): Binary;
 
     method &Write(aData: array of Byte; aLength: Integer);
+    method &Write(aData: array of Byte);
     method &Write(aData: Binary);
 
     method ToArray: array of Byte;
-    property Length: Integer read {$IF COOPER}fData.size{$ELSEIF ECHOES}fData.Length{$ELSEIF NOUGAT}mapped.length{$ENDIF};
+    property Length: Integer read {$IF COOPER}fData.size{$ELSEIF ECHOES}mapped.Length{$ELSEIF NOUGAT}mapped.length{$ENDIF};
   end;
 
 implementation
@@ -61,8 +57,12 @@ begin
   if anArray = nil then
     raise new SugarArgumentNullException("Array");
 
-  {$IF COOPER OR ECHOES}
+  {$IF COOPER}
   &Write(anArray, anArray.length);
+  {$ELSEIF ECHOES}
+  var ms := new System.IO.MemoryStream;
+  ms.Write(anArray, 0, anArray.Length);
+  exit ms;
   {$ELSEIF NOUGAT}
   exit NSMutableData.dataWithBytes(anArray) length(length(anArray)); 
   {$ENDIF}  
@@ -71,8 +71,12 @@ end;
 constructor Binary(Bin: Binary);
 begin
   SugarArgumentNullException.RaiseIfNil(Bin, "Bin");
-  {$IF COOPER OR ECHOES}
+  {$IF COOPER}
   Assign(Bin);
+  {$ELSEIF ECHOES}
+  var ms := new System.IO.MemoryStream;
+  ms.Write(Bin.ToArray, 0, Bin.Length);
+  exit ms;
   {$ELSEIF NOUGAT}
   exit NSMutableData.dataWithData(Bin);
   {$ENDIF} 
@@ -83,7 +87,7 @@ begin
   {$IF COOPER OR ECHOES}
   Clear;
   if aData <> nil then
-    fData.write(aData.ToArray, 0, aData.Length);
+    {$IF COOPER}fData{$ELSEIF ECHOES}mapped{$ENDIF}.write(aData.ToArray, 0, aData.Length);
   {$ELSEIF NOUGAT}
   mapped.setData(aData);
   {$ENDIF}
@@ -101,13 +105,10 @@ begin
   {$IF COOPER}  
   System.arraycopy(fData.toByteArray, Range.Location, result, 0, Range.Length);
   {$ELSEIF ECHOES}
-  var lPosition := fData.Position;
-  fData.Position := Range.Location;
-  try
-    fData.Read(result, 0, Range.Length);
-  finally
-    fData.Position := lPosition;
-  end;
+  var lPosition := mapped.Position;
+  mapped.Position := Range.Location;
+  mapped.Read(result, 0, Range.Length);
+  mapped.Position := lPosition;
   {$ELSEIF NOUGAT}
   mapped.getBytes(result) range(Range);
   {$ENDIF}
@@ -137,10 +138,16 @@ begin
   {$IF COOPER}
   fData.write(aData, 0, aLength);
   {$ELSEIF ECHOES}
-  fData.Write(aData, 0, aLength);
+  mapped.Seek(0, System.IO.SeekOrigin.End);
+  mapped.Write(aData, 0, aLength);
   {$ELSEIF NOUGAT}
   mapped.appendBytes(aData) length(aLength);
   {$ENDIF}  
+end;
+
+method Binary.&Write(aData: array of Byte);
+begin
+  &Write(aData, RemObjects.Oxygene.System.length(aData));
 end;
 
 method Binary.Write(aData: Binary);
@@ -158,7 +165,7 @@ begin
   {$IF COOPER}
   exit fData.toByteArray;
   {$ELSEIF ECHOES}
-  exit fData.ToArray;
+  exit mapped.ToArray;
   {$ELSEIF NOUGAT}
   result := new Byte[mapped.length];
   mapped.getBytes(result) length(mapped.length);
@@ -170,7 +177,7 @@ begin
   {$IF COOPER}
   fData.reset;
   {$ELSEIF ECHOES}
-  fData.SetLength(0);
+  mapped.SetLength(0);
   {$ELSEIF NOUGAT}
   mapped.setLength(0);
   {$ENDIF}  
