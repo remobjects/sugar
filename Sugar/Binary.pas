@@ -26,17 +26,18 @@ type
     constructor(anArray: array of Byte);
     constructor(Bin: Binary);    
 
-    method Assign(aData: Binary);
+    method Assign(Bin: Binary);
     method Clear;
 
     method &Read(Range: Range): array of Byte;
-    method &Read(aLength: Integer): array of Byte;
+    method &Read(Count: Integer): array of Byte;
     
     method Subdata(Range: Range): Binary;
 
-    method &Write(aData: array of Byte; aLength: Integer);
-    method &Write(aData: array of Byte);
-    method &Write(aData: Binary);
+    method &Write(Buffer: array of Byte; Offset: Integer; Count: Integer);
+    method &Write(Buffer: array of Byte; Count: Integer);
+    method &Write(Buffer: array of Byte);
+    method &Write(Bin: Binary);
 
     method ToArray: array of Byte;
     property Length: Integer read {$IF COOPER}fData.size{$ELSEIF ECHOES}mapped.Length{$ELSEIF NOUGAT}mapped.length{$ENDIF};
@@ -75,21 +76,25 @@ begin
   Assign(Bin);
   {$ELSEIF ECHOES}
   var ms := new System.IO.MemoryStream;
-  ms.Write(Bin.ToArray, 0, Bin.Length);
+  System.IO.MemoryStream(Bin).WriteTo(ms);
   exit ms;
   {$ELSEIF NOUGAT}
   exit NSMutableData.dataWithData(Bin);
   {$ENDIF} 
 end;
 
-method Binary.Assign(aData: Binary);
+method Binary.Assign(Bin: Binary);
 begin
-  {$IF COOPER OR ECHOES}
+  {$IF COOPER}
   Clear;
-  if aData <> nil then
-    {$IF COOPER}fData{$ELSEIF ECHOES}mapped{$ENDIF}.write(aData.ToArray, 0, aData.Length);
+  if Bin <> nil then
+    fData.Write(Bin.ToArray, 0, Bin.Length);
+  {$ELSEIF ECHOES}
+  Clear;
+  if Bin <> nil then
+    System.IO.MemoryStream(Bin).WriteTo(System.IO.MemoryStream(self));
   {$ELSEIF NOUGAT}
-  mapped.setData(aData);
+  mapped.setData(Bin);
   {$ENDIF}
 end;
 
@@ -105,18 +110,16 @@ begin
   {$IF COOPER}  
   System.arraycopy(fData.toByteArray, Range.Location, result, 0, Range.Length);
   {$ELSEIF ECHOES}
-  var lPosition := mapped.Position;
   mapped.Position := Range.Location;
   mapped.Read(result, 0, Range.Length);
-  mapped.Position := lPosition;
   {$ELSEIF NOUGAT}
   mapped.getBytes(result) range(Range);
   {$ENDIF}
 end;
 
-method Binary.Read(aLength: Integer): array of Byte;
+method Binary.Read(Count: Integer): array of Byte;
 begin
-  exit &Read(Range.MakeRange(0, Math.Min(aLength, self.Length)));
+  exit &Read(Range.MakeRange(0, Math.Min(Count, self.Length)));
 end;
 
 method Binary.Subdata(Range: Range): Binary;
@@ -124,39 +127,58 @@ begin
   exit new Binary(&Read(Range));
 end;
 
-method Binary.Write(aData: array of Byte; aLength: Integer);
+method Binary.&Write(Buffer: array of Byte; Offset: Integer; Count: Integer);
 begin
-  if aData = nil then
-    raise new SugarArgumentNullException("Data");
+  if Buffer = nil then
+    raise new SugarArgumentNullException("Buffer");
 
-  if aLength = 0 then
+  if Offset < 0 then
+    raise new SugarArgumentOutOfRangeException(ErrorMessage.NEGATIVE_VALUE_ERROR, "Offset");
+
+  if Count < 0 then
+    raise new SugarArgumentOutOfRangeException(ErrorMessage.NEGATIVE_VALUE_ERROR, "Count");
+
+  if Count = 0 then
     exit;
 
-  if aLength > RemObjects.Oxygene.System.length(aData) then
-    raise new SugarArgumentOutOfRangeException("Length {0} exceeds data length {1}", aLength, RemObjects.Oxygene.System.length(aData));
+  var BufferLength := RemObjects.Oxygene.System.length(Buffer); 
+
+  if Offset >= BufferLength then
+    raise new SugarArgumentOutOfRangeException(ErrorMessage.ARG_OUT_OF_RANGE_ERROR, "Offset");
+
+  if Count > BufferLength then
+    raise new SugarArgumentOutOfRangeException(ErrorMessage.ARG_OUT_OF_RANGE_ERROR, "Count");
+
+  if Offset + Count > BufferLength then
+    raise new SugarArgumentOutOfRangeException(ErrorMessage.OUT_OF_RANGE_ERROR, Offset, Count, BufferLength);
 
   {$IF COOPER}
-  fData.write(aData, 0, aLength);
+  fData.write(Buffer, Offset, Count);
   {$ELSEIF ECHOES}
   mapped.Seek(0, System.IO.SeekOrigin.End);
-  mapped.Write(aData, 0, aLength);
+  mapped.Write(Buffer, Offset, Count);
   {$ELSEIF NOUGAT}
-  mapped.appendBytes(aData) length(aLength);
+  mapped.appendBytes(@Buffer[Offset]) length(Count);
   {$ENDIF}  
 end;
 
-method Binary.&Write(aData: array of Byte);
+method Binary.Write(Buffer: array of Byte; Count: Integer);
 begin
-  &Write(aData, RemObjects.Oxygene.System.length(aData));
+  &Write(Buffer, 0, Count);
 end;
 
-method Binary.Write(aData: Binary);
+method Binary.&Write(Buffer: array of Byte);
 begin
-  SugarArgumentNullException.RaiseIfNil(aData, "Data");
+  &Write(Buffer, RemObjects.Oxygene.System.length(Buffer));
+end;
+
+method Binary.Write(Bin: Binary);
+begin
+  SugarArgumentNullException.RaiseIfNil(Bin, "Bin");
   {$IF COOPER OR ECHOES}
-  &Write(aData.ToArray, aData.Length);
+  &Write(Bin.ToArray, Bin.Length);
   {$ELSEIF NOUGAT}
-  mapped.appendData(aData);
+  mapped.appendData(Bin);
   {$ENDIF}  
 end;
 
@@ -178,6 +200,7 @@ begin
   fData.reset;
   {$ELSEIF ECHOES}
   mapped.SetLength(0);
+  mapped.Position := 0;
   {$ELSEIF NOUGAT}
   mapped.setLength(0);
   {$ENDIF}  

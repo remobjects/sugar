@@ -112,7 +112,8 @@ begin
   Assert.CheckInt(8, Data.Length);
   AreEquals(Expected.ToArray, Data.Read(Range.MakeRange(5, 3)));
 
-  Assert.IsException(->Data.Write(nil));
+  Expected := nil;
+  Assert.IsException(->Data.Write(Expected));
   Data.Write(new Binary([]));
   Assert.CheckInt(8, Data.Length);
 end;
