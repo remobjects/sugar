@@ -359,7 +359,12 @@ begin
     //no parameters
     if method_getNumberOfArguments(lMethod) > 2 then
       continue;
+    
+    var MethodSelector := method_getName(lMethod);
+    var Signature: NSMethodSignature := Test.methodSignatureForSelector(MethodSelector);
 
+    if Signature.methodReturnLength <> 0 then
+      continue;
     //no return type
     //var buf := method_copyReturnType(lMethod);
     //var Data: String := String.stringWithUTF8String(buf);
@@ -384,8 +389,11 @@ begin
       continue;
 
     Setup;
-    RetVal.TestResults.Add(ProcessMethod(Test, lMethod));
-    TearDown;
+    try
+      RetVal.TestResults.Add(ProcessMethod(Test, lMethod));
+    finally
+      TearDown;
+    end;
   end;
   
 
