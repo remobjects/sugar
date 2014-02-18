@@ -39,6 +39,8 @@ type
     method RemoveAt(&Index: Integer);
     method RemoveRange(&Index: Integer; aCount: Integer);
 
+    method Sort(Comparison: Comparison<T>);
+
     method ToArray: array of T;
 
     property Count: Integer read {$IF COOPER}mapped.Size{$ELSEIF ECHOES}mapped.Count{$ELSEIF NOUGAT}mapped.Count{$ENDIF};
@@ -47,6 +49,7 @@ type
 
   Predicate<T> = public block (Obj: T): Boolean;
   Action<T> = public block (Obj: T);
+  Comparison<T> = public block (x: T; y: T): Integer;
 
   {$IF NOUGAT}
   NullHelper = public static class
@@ -311,6 +314,23 @@ begin
   mapped.RemoveRange(&Index, aCount);
   {$ELSEIF NOUGAT}
   mapped.removeObjectsInRange(Foundation.NSMakeRange(&Index, aCount));
+  {$ENDIF}
+end;
+
+method List<T>.Sort(Comparison: Comparison<T>);
+begin
+  if Comparison = nil then
+    raise new SugarArgumentNullException("Comparison");
+
+  {$IF COOPER}  
+  java.util.Collections.sort(mapped, new class java.util.Comparator<T>(compare := (x, y) -> Comparison(x, y)));
+  {$ELSEIF ECHOES} 
+  mapped.Sort((x, y) -> Comparison(x, y));
+  {$ELSEIF NOUGAT}
+  mapped.sortUsingComparator((x, y) -> begin
+                                         var lResult := Comparison(x, y);
+                                         exit if lResult < 0 then NSComparisonResult.NSOrderedAscending else if lResult = 0 then NSComparisonResult.NSOrderedSame else NSComparisonResult.NSOrderedDescending;
+                                       end);
   {$ENDIF}
 end;
 
