@@ -8,7 +8,7 @@
     <Name>Sugar.Cooper</Name>
     <RootNamespace>sugar</RootNamespace>
     <ProjectGuid>{d1ee6c41-515b-4175-873f-ee188ac43450}</ProjectGuid>
-    <AssemblyName>com.sugar</AssemblyName>
+    <AssemblyName>sugar</AssemblyName>
     <DefaultUses />
     <StartupClass />
   </PropertyGroup>

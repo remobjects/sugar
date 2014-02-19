@@ -8,7 +8,7 @@
     <AllowLegacyCreate>False</AllowLegacyCreate>
     <Name>Sugar.Cooper.Android</Name>
     <RootNamespace>sugar</RootNamespace>
-    <AssemblyName>com.sugar.android</AssemblyName>
+    <AssemblyName>sugar</AssemblyName>
     <DefaultUses />
     <StartupClass />
   </PropertyGroup>
