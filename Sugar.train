@@ -7,7 +7,9 @@ saveVersionNumberToSharedIni("Sugar", sugarVersion);
 //msbuild["rebuild"]("Sugar.BuildServer.sln", {configuration: "Release", destinationFolder: "./Bin",  extraArgs: "/p:CrossBox=Onyx;CrossBoxDeviceID=Mac;CrossBoxDevice=Mac"});
 
 msbuild["rebuild"]("Sugar/Sugar.Cooper.oxygene", 		{configuration: "Release", destinationFolder: "./Bin" });
-msbuild["rebuild"]("Sugar/Sugar.Cooper.Android.oxygene", {configuration: "Release", destinationFolder: "./Bin" });
+folder.remove("./Obj")
+msbuild["rebuild"]("Sugar/Sugar.Cooper.Android.oxygene", {configuration: "Release", destinationFolder: "./Bin/Android" });
+folder.remove("./Obj")
 
 msbuild["rebuild"]("Sugar/Sugar.Echoes.oxygene", 		{configuration: "Release", destinationFolder: "./Bin" });
 msbuild["rebuild"]("Sugar/Sugar.Echoes.WinRT.BuildServer.oxygene", 	{configuration: "Release", destinationFolder: "./Bin" });
