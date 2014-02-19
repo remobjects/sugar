@@ -63,7 +63,7 @@ end;
 class method FileUtils.Copy(SourceFileName: String; DestFileName: String);
 begin
   if not Exists(SourceFileName) then
-    raise new SugarIOException(ErrorMessage.FILE_NOTFOUND, SourceFileName);
+    raise new SugarFileNotFoundException(SourceFileName);
 
   if Exists(DestFileName) then
     raise new SugarIOException(ErrorMessage.FILE_EXISTS, DestFileName);
@@ -112,7 +112,7 @@ end;
 class method FileUtils.Delete(FileName: String);
 begin
   if not Exists(FileName) then
-    raise new SugarIOException(ErrorMessage.FILE_NOTFOUND, FileName);
+    raise new SugarFileNotFoundException(FileName);
 
   {$IF COOPER}
   new java.io.File(FileName).delete;
@@ -148,7 +148,7 @@ end;
 class method FileUtils.Move(SourceFileName: String; DestFileName: String);
 begin
   if not Exists(SourceFileName) then
-    raise new SugarIOException(ErrorMessage.FILE_NOTFOUND, SourceFileName);
+    raise new SugarFileNotFoundException(SourceFileName);
 
   if Exists(DestFileName) then
     raise new SugarIOException(ErrorMessage.FILE_EXISTS, DestFileName);

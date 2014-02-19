@@ -45,7 +45,7 @@ implementation
 constructor FileHandle(FileName: String; Mode: FileOpenMode);
 begin
   if not FileUtils.Exists(FileName) then
-    raise new SugarIOException(ErrorMessage.FILE_NOTFOUND, FileName);
+    raise new SugarFileNotFoundException(FileName);
 
   {$IF COOPER}
   var lMode: String := if Mode = FileOpenMode.ReadOnly then "r" else "rw";

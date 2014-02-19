@@ -31,6 +31,12 @@ type
 
   SugarIOException = public class(SugarException);
 
+  SugarFileNotFoundException = public class (SugarException)
+  public
+    property FileName: String read write; readonly;
+    constructor (aFileName: String);
+  end;
+
   SugarStackEmptyException = public class (SugarException);
 
   SugarInvalidOperationException = public class (SugarException);
@@ -117,6 +123,12 @@ class method SugarAppContextMissingException.RaiseIfMissing;
 begin
   if Environment.ApplicationContext = nil then
     raise new SugarAppContextMissingException(ErrorMessage.APP_CONTEXT_MISSING);
+end;
+
+constructor SugarFileNotFoundException(aFileName: String);
+begin
+  inherited constructor (ErrorMessage.FILE_NOTFOUND, aFileName);
+  FileName := aFileName;
 end;
 
 end.

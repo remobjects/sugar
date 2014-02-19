@@ -42,7 +42,7 @@ begin
   SugarArgumentNullException.RaiseIfNil(aPath, "Path");
 
   if not FileUtils.Exists(aPath) then
-    raise new SugarIOException(ErrorMessage.FILE_NOTFOUND, aPath);
+    raise new SugarFileNotFoundException(aPath);
 
   {$IF COOPER}  
   exit new java.io.File(aPath);
@@ -104,14 +104,14 @@ method File.Delete;
 begin
   {$IF COOPER}  
   if not mapped.exists then
-    raise new SugarIOException(ErrorMessage.FILE_NOTFOUND, mapped.Name);
+    raise new SugarFileNotFoundException(self.Path);
 
   mapped.delete;
   {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
   mapped.DeleteAsync.AsTask.Wait;
   {$ELSEIF ECHOES}
   if not System.IO.File.Exists(mapped) then
-    raise new SugarIOException(ErrorMessage.FILE_NOTFOUND, mapped);
+    raise new SugarFileNotFoundException(self.Path);
 
   System.IO.File.Delete(mapped);
   {$ELSEIF NOUGAT}
@@ -200,7 +200,7 @@ end;
 method File.Open(Mode: FileOpenMode): FileHandle;
 begin
   if not Exists then
-    raise new SugarIOException(ErrorMessage.FILE_NOTFOUND, self.Path);
+    raise new SugarFileNotFoundException(self.Path);
 
   exit FileHandle.FromFile(mapped, Mode);
 end;
