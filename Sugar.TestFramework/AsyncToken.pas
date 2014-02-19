@@ -107,7 +107,7 @@ method AsyncToken.Done;
 begin
   locking fEvent do begin
     fOpen := true;
-    fEvent.signal;
+    fEvent.broadcast;
   end;
 end;
 
@@ -116,14 +116,19 @@ begin
   locking fEvent do begin
     fOpen := true;
     fException := Ex;
-    fEvent.signal;
+    fEvent.broadcast;
   end;
 end;
 
 method AsyncToken.Wait;
 begin
+  fEvent.lock;
+  fOpen := false;
+
   while not fOpen do
     fEvent.wait;
+
+  fEvent.unlock;
 
   if assigned(fException) then
     raise fException;
