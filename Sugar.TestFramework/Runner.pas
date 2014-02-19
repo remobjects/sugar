@@ -116,8 +116,11 @@ begin
       continue;
 
     Setup();
-    RetVal.TestResults.Add(ProcessMethod(Test, lMethod));
-    TearDown();
+    try
+      RetVal.TestResults.Add(ProcessMethod(Test, lMethod));
+    finally
+      TearDown();
+    end;
   end;
 
   exit RetVal;
@@ -258,8 +261,11 @@ begin
       continue;
 
     Setup;
-    RetVal.TestResults.Add(ProcessMethod(Test, lMethod));
-    TearDown;
+    try
+      RetVal.TestResults.Add(ProcessMethod(Test, lMethod));
+    finally
+      TearDown;
+    end;
   end;
 
   exit RetVal;
@@ -361,15 +367,10 @@ begin
       continue;
     
     var MethodSelector := method_getName(lMethod);
-    var Signature: NSMethodSignature := Test.methodSignatureForSelector(MethodSelector);
+    var Signature := Test.methodSignatureForSelector(MethodSelector);
 
     if Signature.methodReturnLength <> 0 then
       continue;
-    //no return type
-    //var buf := method_copyReturnType(lMethod);
-    //var Data: String := String.stringWithUTF8String(buf);
-    //if Data.caseInsensitiveCompare("v") <> 0 then
-    //  continue;
 
     //not overriden
     var superclass := class_getSuperclass(Test.class);
