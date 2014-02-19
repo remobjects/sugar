@@ -280,6 +280,16 @@ begin
   var Position := new java.text.ParsePosition(0);
   
   Value := Value.Trim.ToUpper;
+  {$IF ANDROID}
+  if Value.Length > 1 then begin
+    var DecimalIndex := Value.IndexOf(".");
+    if DecimalIndex = -1 then
+      DecimalIndex := Value.Length;
+
+    Value := Value[0] + Value.Substring(1, DecimalIndex - 1).Replace(",", "") + Value.Substring(DecimalIndex);    
+  end;
+  {$ENDIF}
+
   result := DecFormat.parse(Value, Position).doubleValue;
 
   if Position.Index < Value.Length then
