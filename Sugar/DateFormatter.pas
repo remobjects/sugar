@@ -6,9 +6,9 @@ uses
   Sugar.Collections;
 
 type
-  DateFormater = public class
+  DateFormatter = public class
   private
-    class method GetFormaters: List<FormatSpecifier>;
+    class method GetFormatters: List<FormatSpecifier>;
     class method AppendEscaped(Value: String; Start, Count: Integer; sb: StringBuilder);
   public
     class method Format(Value: String): String;
@@ -87,7 +87,7 @@ type
 
 implementation
 
-class method DateFormater.AppendEscaped(Value: String; Start: Integer; Count: Integer; sb: StringBuilder);
+class method DateFormatter.AppendEscaped(Value: String; Start: Integer; Count: Integer; sb: StringBuilder);
 begin
   if Count > 0 then
     sb.Append("'");
@@ -98,7 +98,7 @@ begin
     sb.Append("'");
 end;
 
-class method DateFormater.Format(Value: String): String;
+class method DateFormatter.Format(Value: String): String;
 begin
   if Value = nil then
     raise new SugarArgumentNullException('Value');
@@ -111,7 +111,7 @@ begin
   var sb := new StringBuilder;
   var Current: Integer := 0;
   var BlockStart: Integer := 0;
-  var Formaters: List<FormatSpecifier> := GetFormaters;
+  var Formatters: List<FormatSpecifier> := GetFormatters;
 
   while Current < Value.Length do begin
     var C: Char := Value[Current];
@@ -149,16 +149,16 @@ begin
       BlockStart := Current;
 
       //convert format specifier to a valid platform format
-      var Formater: FormatSpecifier := nil;
-      for i: Integer := 0 to Formaters.Count-1 do begin
-        if Formaters[i].Supports(UserFormat) then begin
-          Formater := Formaters[i];
+      var Formatter: FormatSpecifier := nil;
+      for i: Integer := 0 to Formatters.Count-1 do begin
+        if Formatters[i].Supports(UserFormat) then begin
+          Formatter := Formatters[i];
           break;
         end;
       end;
 
-      if Formater <> nil then
-        sb.Append(Formater.Convert(UserFormat))
+      if Formatter <> nil then
+        sb.Append(Formatter.Convert(UserFormat))
       else //unknown format
         raise new SugarFormatException("Unknown format specified: "+UserFormat);        
     end
@@ -179,7 +179,7 @@ begin
   exit sb.ToString();
 end;
 
-class method DateFormater.GetFormaters: List<FormatSpecifier>;
+class method DateFormatter.GetFormatters: List<FormatSpecifier>;
 begin
   result := new List<FormatSpecifier>;
   result.Add(new YearFormatSpecifier);

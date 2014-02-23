@@ -215,9 +215,9 @@ begin
   var Formatter: java.text.SimpleDateFormat;
 
   if String.IsNullOrEmpty(Culture) then
-    Formatter := new java.text.SimpleDateFormat(DateFormater.Format(Format))
+    Formatter := new java.text.SimpleDateFormat(DateFormatter.Format(Format))
   else    
-    Formatter := new java.text.SimpleDateFormat(DateFormater.Format(Format), Sugar.Cooper.LocaleUtils.ForLanguageTag(Culture));
+    Formatter := new java.text.SimpleDateFormat(DateFormatter.Format(Format), Sugar.Cooper.LocaleUtils.ForLanguageTag(Culture));
     
   exit Formatter.format(fDate);
   {$ELSEIF ECHOES}
@@ -225,9 +225,9 @@ begin
     exit "";
 
   if String.IsNullOrEmpty(Culture) then
-    exit mapped.ToString(DateFormater.Format(Format))
+    exit mapped.ToString(DateFormatter.Format(Format))
   else
-    exit mapped.ToString(DateFormater.Format(Format), new System.Globalization.CultureInfo(Culture));
+    exit mapped.ToString(DateFormatter.Format(Format), new System.Globalization.CultureInfo(Culture));
   {$ELSEIF NOUGAT}
   var Formatter: NSDateFormatter := new NSDateFormatter();
 
@@ -236,7 +236,7 @@ begin
     Formatter.locale := Locale;
   end;
 
-  Formatter.setDateFormat(DateFormater.Format(Format));
+  Formatter.setDateFormat(DateFormatter.Format(Format));
   exit Formatter.stringFromDate(fDate);
   {$ENDIF}
 end;
