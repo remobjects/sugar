@@ -7,7 +7,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Sugar.Echoes.WinRT</RootNamespace>
-    <AssemblyName>Sugar.WinRT</AssemblyName>
+    <AssemblyName>Sugar</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{656346D9-4656-40DA-A068-22D5425D4639}</ProjectTypeGuids>
     <Name>Sugar.Echoes.WinRT</Name>
