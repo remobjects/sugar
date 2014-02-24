@@ -6,7 +6,7 @@ uses
   Sugar.Collections;
 
 type
-  DateFormater = public class
+  DateFormatter = public class
   private
     class method GetFormaters: List<FormatSpecifier>;
     class method AppendEscaped(Value: String; Start, Count: Integer; sb: StringBuilder);
@@ -87,7 +87,7 @@ type
 
 implementation
 
-class method DateFormater.AppendEscaped(Value: String; Start: Integer; Count: Integer; sb: StringBuilder);
+class method DateFormatter.AppendEscaped(Value: String; Start: Integer; Count: Integer; sb: StringBuilder);
 begin
   if Count > 0 then
     sb.Append("'");
@@ -98,7 +98,7 @@ begin
     sb.Append("'");
 end;
 
-class method DateFormater.Format(Value: String): String;
+class method DateFormatter.Format(Value: String): String;
 begin
   if Value = nil then
     raise new SugarArgumentNullException('Value');
@@ -179,7 +179,7 @@ begin
   exit sb.ToString();
 end;
 
-class method DateFormater.GetFormaters: List<FormatSpecifier>;
+class method DateFormatter.GetFormaters: List<FormatSpecifier>;
 begin
   result := new List<FormatSpecifier>;
   result.Add(new YearFormatSpecifier);
