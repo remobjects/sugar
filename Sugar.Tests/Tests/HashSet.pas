@@ -19,6 +19,7 @@ type
     method &Remove;
     method Count;
     method Enumerator;
+    method ForEach;
   end;
 
 implementation
@@ -97,6 +98,21 @@ begin
     Assert.CheckBool(true, Expected.Contains(Item));
   end;
   Assert.CheckInt(3, lCount);    
+end;
+
+method HashSetTest.ForEach;
+begin
+  var Expected: HashSet<String> := new HashSet<String>;
+  Expected.Add("One");
+  Expected.Add("Two");
+  Expected.Add("Three");
+
+  var lCount: Integer := 0;
+  Data.ForEach(x -> begin
+                 inc(lCount);
+                 Assert.CheckBool(true, Expected.Contains(x));
+                 end);
+  Assert.CheckInt(3, lCount);   
 end;
 
 end.
