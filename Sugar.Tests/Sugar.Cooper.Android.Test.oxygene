@@ -80,8 +80,8 @@
     <Reference Include="com.remobjects.elements.rtl.jar">
       <Private>True</Private>
     </Reference>
-    <Reference Include="com.Sugar.android.jar">
-      <HintPath>..\Sugar\bin\Android\com.Sugar.android.jar</HintPath>
+    <Reference Include="Sugar.jar">
+      <HintPath>..\Sugar\bin\Android\Sugar.jar</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="com.Sugar.testframework.android.jar">

@@ -40,8 +40,8 @@
     <Reference Include="com.remobjects.elements.rtl.jar">
       <Private>True</Private>
     </Reference>
-    <Reference Include="com.Sugar.jar">
-      <HintPath>..\Sugar\bin\Java\com.Sugar.jar</HintPath>
+    <Reference Include="Sugar.jar">
+      <HintPath>..\Sugar\bin\Java\Sugar.jar</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="com.Sugar.testframework.jar">
