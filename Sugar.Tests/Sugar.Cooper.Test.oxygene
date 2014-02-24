@@ -37,7 +37,7 @@
     <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="com.remobjects.oxygene.rtl.jar">
+    <Reference Include="com.remobjects.elements.rtl.jar">
       <Private>True</Private>
     </Reference>
     <Reference Include="com.Sugar.jar">

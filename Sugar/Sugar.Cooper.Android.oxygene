@@ -43,7 +43,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="android.jar" />
-    <Reference Include="com.remobjects.oxygene.rtl.jar">
+    <Reference Include="com.remobjects.elements.rtl.jar">
       <Private>True</Private>
     </Reference>
   </ItemGroup>
