@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Nougat.iOS.Test", "Sugar.Tests\Sugar.Nougat.iOS.Test.oxygene", "{E8CDF7D0-43B8-48F4-A06D-37748B1FA463}"
+EndProject
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Nougat.iOS.TestFramework", "Sugar.TestFramework\Sugar.Nougat.iOS.TestFramework.oxygene", "{E132A412-2431-41C6-9D98-63F942A32B8E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Mixed Platforms = Debug|Mixed Platforms
+		Release|Mixed Platforms = Release|Mixed Platforms
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E8CDF7D0-43B8-48F4-A06D-37748B1FA463}.Debug|Mixed Platforms.ActiveCfg = Debug
+		{E8CDF7D0-43B8-48F4-A06D-37748B1FA463}.Debug|Mixed Platforms.Build.0 = Debug
+		{E8CDF7D0-43B8-48F4-A06D-37748B1FA463}.Release|Mixed Platforms.ActiveCfg = Release
+		{E8CDF7D0-43B8-48F4-A06D-37748B1FA463}.Release|Mixed Platforms.Build.0 = Release
+		{E132A412-2431-41C6-9D98-63F942A32B8E}.Debug|Mixed Platforms.ActiveCfg = Debug
+		{E132A412-2431-41C6-9D98-63F942A32B8E}.Debug|Mixed Platforms.Build.0 = Debug
+		{E132A412-2431-41C6-9D98-63F942A32B8E}.Release|Mixed Platforms.ActiveCfg = Release
+		{E132A412-2431-41C6-9D98-63F942A32B8E}.Release|Mixed Platforms.Build.0 = Release
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

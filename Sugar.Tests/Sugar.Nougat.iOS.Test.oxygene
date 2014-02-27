@@ -20,14 +20,18 @@
     <StartupClass />
     <CreateHeaderFile>False</CreateHeaderFile>
     <BundleExtension />
+    <BundleIdentifier>com.deksden.SugarTest</BundleIdentifier>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <Optimize>False</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE;</DefineConstants>
     <CaptureConsoleOutput>False</CaptureConsoleOutput>
-    <SimulatorArchitectures>i386</SimulatorArchitectures>
+    <SimulatorArchitectures>i386;x86_64</SimulatorArchitectures>
     <XmlDocWarningLevel>WarningOnPublicMembers</XmlDocWarningLevel>
+    <ProvisioningProfile>7C62D944-9EE1-4E34-BBBB-51A50EE4F9CD</ProvisioningProfile>
+    <ProvisioningProfileName>Deks iOS Dev</ProvisioningProfileName>
+    <CodesignCertificateName>iPhone Developer: denis kiselev (4VZYU275J4)</CodesignCertificateName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <Optimize>true</Optimize>
@@ -42,10 +46,7 @@
     <Reference Include="CoreGraphics.fx" />
     <Reference Include="Foundation.fx" />
     <Reference Include="libSugar.fx">
-      <HintPath>..\Sugar\bin\iOS Simulator\libSugar.fx</HintPath>
-    </Reference>
-    <Reference Include="libSugarTestFramework.fx">
-      <HintPath>..\Sugar.TestFramework\bin\iOS Simulator\libSugarTestFramework.fx</HintPath>
+      <HintPath>..\Sugar\bin\iOS\libSugar.fx</HintPath>
     </Reference>
     <Reference Include="libxml2.fx" />
     <Reference Include="UIKit.fx" />
@@ -118,6 +119,14 @@
     <Folder Include="Tests" />
     <Folder Include="Tests\Xml" />
     <Folder Include="Tests\IO" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Sugar.TestFramework\Sugar.Nougat.iOS.TestFramework.oxygene">
+      <Name>Sugar.Nougat.iOS.TestFramework</Name>
+      <Project>{e132a412-2431-41c6-9d98-63f942a32b8e}</Project>
+      <Private>True</Private>
+      <HintPath>..\Sugar.TestFramework\bin\iOS\libSugarTestFramework.fx</HintPath>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Nougat.targets" />
   <PropertyGroup>

@@ -27,6 +27,9 @@
     <XmlDocWarningLevel>WarningOnPublicMembers</XmlDocWarningLevel>
     <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
     <SimulatorArchitectures>i386;x86_64</SimulatorArchitectures>
+    <ProvisioningProfile>7C62D944-9EE1-4E34-BBBB-51A50EE4F9CD</ProvisioningProfile>
+    <ProvisioningProfileName>Deks iOS Dev</ProvisioningProfileName>
+    <CodesignCertificateName>iPhone Developer: denis kiselev (4VZYU275J4)</CodesignCertificateName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <Optimize>True</Optimize>
@@ -40,6 +43,9 @@
     <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
     <DefineConstants>IOS</DefineConstants>
     <SimulatorArchitectures>i386;x86_64</SimulatorArchitectures>
+    <ProvisioningProfile>7C62D944-9EE1-4E34-BBBB-51A50EE4F9CD</ProvisioningProfile>
+    <ProvisioningProfileName>Deks iOS Dev</ProvisioningProfileName>
+    <CodesignCertificateName>iPhone Developer: denis kiselev (4VZYU275J4)</CodesignCertificateName>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Foundation.fx" />
