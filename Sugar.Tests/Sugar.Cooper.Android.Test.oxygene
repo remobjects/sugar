@@ -80,14 +80,6 @@
     <Reference Include="com.remobjects.elements.rtl.jar">
       <Private>True</Private>
     </Reference>
-    <Reference Include="Sugar.jar">
-      <HintPath>..\Sugar\bin\Android\Sugar.jar</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="com.Sugar.testframework.android.jar">
-      <HintPath>..\Sugar.TestFramework\bin\Android\com.Sugar.testframework.android.jar</HintPath>
-      <Private>True</Private>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main\Android\MainActivity.pas" />
@@ -123,6 +115,20 @@
     <Compile Include="Tests\Xml\Node.pas" />
     <Compile Include="Tests\Xml\ProcessingInstruction.pas" />
     <Compile Include="Tests\Xml\TestData.pas" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Sugar.TestFramework\Sugar.Android.TestFramework.oxygene">
+      <Name>Sugar.Android.TestFramework</Name>
+      <Project>{d4c017d4-e773-4138-872d-72adae69da3d}</Project>
+      <Private>True</Private>
+      <HintPath>..\Sugar.TestFramework\bin\Android\com.sugar.testframework.android.jar</HintPath>
+    </ProjectReference>
+    <ProjectReference Include="..\Sugar\Sugar.Cooper.Android.oxygene">
+      <Name>Sugar.Cooper.Android</Name>
+      <Project>{8dac177a-64eb-4175-ac9c-e6b121b6f34b}</Project>
+      <Private>True</Private>
+      <HintPath>..\Sugar\bin\Android\sugar.jar</HintPath>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Cooper.Android.targets" />
   <PropertyGroup>
