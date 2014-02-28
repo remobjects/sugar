@@ -407,7 +407,6 @@ end;
 
 class method Folder.UserLocal: Folder;
 begin
-  {$IF IOS}
   result := NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.NSApplicationSupportDirectory, NSSearchPathDomainMask.NSUserDomainMask, true).objectAtIndex(0);
 
   if not NSFileManager.defaultManager.fileExistsAtPath(result) then begin
@@ -415,9 +414,6 @@ begin
     if not NSFileManager.defaultManager.createDirectoryAtPath(result) withIntermediateDirectories(false) attributes(nil) error(var lError) then
       raise new SugarNSErrorException(lError);
   end;
-  {$ELSEIF OSX}
-  exit Folder(Foundation.NSHomeDirectory);
-  {$ENDIF}
 end;
 
 method Folder.CreateFolder(FolderName: String; FailIfExists: Boolean): Folder;
