@@ -43,7 +43,7 @@
     <FutureHelperClassName />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="com.remobjects.oxygene.rtl.jar">
+    <Reference Include="com.remobjects.elements.rtl.jar">
       <Private>True</Private>
     </Reference>
     <Reference Include="rt.jar" />
@@ -108,6 +108,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Cooper.targets" />
   <PropertyGroup>
-    <PreBuildEvent />
+    <PreBuildEvent>rmdir /s /q $(ProjectDir)\Obj</PreBuildEvent>
   </PropertyGroup>
 </Project>

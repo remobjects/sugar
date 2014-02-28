@@ -93,7 +93,7 @@ begin
   var lIndex := FileName.LastIndexOf(".");
   
   if (lIndex <> -1) and (lIndex < FileName.Length - 1) then
-    exit FileName.Substring(lIndex + 1);
+    exit FileName.Substring(lIndex);
 
   exit "";
 end;

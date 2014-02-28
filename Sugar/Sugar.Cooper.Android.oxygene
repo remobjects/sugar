@@ -43,7 +43,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="android.jar" />
-    <Reference Include="com.remobjects.oxygene.rtl.jar">
+    <Reference Include="com.remobjects.elements.rtl.jar">
       <Private>True</Private>
     </Reference>
   </ItemGroup>
@@ -107,6 +107,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Cooper.Android.targets" />
   <PropertyGroup>
-    <PreBuildEvent />
+    <PreBuildEvent>rmdir /s /q $(ProjectDir)\Obj</PreBuildEvent>
   </PropertyGroup>
 </Project>
