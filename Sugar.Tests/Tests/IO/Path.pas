@@ -73,11 +73,11 @@ end;
 
 method PathTest.GetExtension;
 begin
-  Assert.CheckString("txt", Path.GetExtension("1.txt"));
-  Assert.CheckString("jpg", Path.GetExtension("1.txt.jpg"));
+  Assert.CheckString(".txt", Path.GetExtension("1.txt"));
+  Assert.CheckString(".jpg", Path.GetExtension("1.txt.jpg"));
   Assert.CheckString("", Path.GetExtension("1"));
   Assert.CheckString("", Path.GetExtension("1."));
-  Assert.CheckString("txt", Path.GetExtension(Path.Combine(FolderPath, "1.txt")));
+  Assert.CheckString(".txt", Path.GetExtension(Path.Combine(FolderPath, "1.txt")));
 
   Assert.IsException(->Path.GetExtension(nil));
 end;
