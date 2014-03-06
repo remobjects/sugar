@@ -7,27 +7,15 @@ uses
   Sugar.Xml;
 
 type
-  {$IF NOUGAT}
-  HttpResponse = public class
+
+  HttpResponse<T> = public class
+  unit
+    constructor (aContent: T);
+    constructor withException(anException: Exception);
+
   public
-    method initWithContent(aContent: id): id;
-    method initWithException(anException: Exception): id;
-
-    property Exception: Exception read private write;
-    property Content: id read private write;
-    property IsFailed: Boolean read self.Exception <> nil;
-  end;
-  {$ENDIF}
-
-  HttpResponse<T> = public class {$IF NOUGAT}mapped to HttpResponse{$ENDIF}
-  public
-    {$IF NOT NOUGAT}
-    constructor(aContent: T);
-    constructor(anException: Exception);
-    {$ENDIF}
-
-    property Exception: Exception {$IF NOUGAT}read mapped.Exception;{$ELSE}read write; readonly;{$ENDIF}
-    property Content: T {$IF NOUGAT}read mapped.Content;{$ELSE}read write; readonly;{$ENDIF}
+    property Exception: Exception read write; readonly;
+    property Content: T read write; readonly;
     property IsFailed: Boolean read self.Exception <> nil;
   end;
 
@@ -50,27 +38,15 @@ implementation
 
 { HttpResponse }
 
-{$IF NOUGAT}
-method  HttpResponse.initWithContent(aContent: id): id;
-begin
-  self.Content := aContent;
-end;
-
-method HttpResponse.initWithException(anException: Exception): id;
-begin
-  self.Exception := anException;
-end;
-{$ELSE}
-constructor HttpResponse<T>(anException: Exception);
-begin
-  self.Exception := anException;
-end;
-
 constructor HttpResponse<T>(aContent: T);
 begin
   self.Content := aContent;
 end;
-{$ENDIF}
+
+constructor HttpResponse<T> withException(anException: Exception);
+begin
+  self.Exception := anException;
+end;
 
 { Http }
 
