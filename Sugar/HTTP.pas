@@ -91,19 +91,19 @@ begin
     end;
 
     if Content.Length = 0 then
-      exit new HttpResponse<Binary>(new SugarException("Content is empty"));
+      exit new HttpResponse<Binary> withException(new SugarException("Content is empty"));
 
     exit new HttpResponse<Binary>(Content); 
   {$ELSEIF WINDOWS_PHONE}
     var Response := InternalDownload(anUrl).Result;
     
     if Response.StatusCode <> System.Net.HttpStatusCode.OK then
-      exit new HttpResponse<Binary>(new SugarException("Unable to download data, Response: " + Response.StatusDescription));
+      exit new HttpResponse<Binary> withException(new SugarException("Unable to download data, Response: " + Response.StatusDescription));
 
     var Stream := Response.GetResponseStream;
     
     if Stream = nil then
-      exit new HttpResponse<Binary>(new SugarException("Content is empty"));
+      exit new HttpResponse<Binary> withException(new SugarException("Content is empty"));
 
     var Content := new Binary;
     var Buffer := new Byte[16 * 1024];
@@ -115,7 +115,7 @@ begin
     end;
 
     if Content.Length = 0 then
-      exit new HttpResponse<Binary>(new SugarException("Content is empty"));
+      exit new HttpResponse<Binary> withException(new SugarException("Content is empty"));
 
     exit new HttpResponse<Binary>(Content);
   {$ELSEIF NETFX_CORE}
@@ -124,10 +124,10 @@ begin
     var Content := Client.GetByteArrayAsync(anUrl).Result;
 
     if Content = nil then
-      exit new HttpResponse<Binary>(new SugarException("Content is empty"));
+      exit new HttpResponse<Binary> withException(new SugarException("Content is empty"));
 
     if Content.Length = 0 then
-      exit new HttpResponse<Binary>(new SugarException("Content is empty"));
+      exit new HttpResponse<Binary> withException(new SugarException("Content is empty"));
 
 
     exit new HttpResponse<Binary>(new Binary(Content));
@@ -136,10 +136,10 @@ begin
     var Content := lClient.DownloadData(anUrl);
     
     if Content = nil then
-      exit new HttpResponse<Binary>(new SugarException("Content is empty"));
+      exit new HttpResponse<Binary> withException(new SugarException("Content is empty"));
 
     if Content.Length = 0 then
-      exit new HttpResponse<Binary>(new SugarException("Content is empty"));
+      exit new HttpResponse<Binary> withException(new SugarException("Content is empty"));
 
     exit new HttpResponse<Binary>(new Binary(Content));
   end;
@@ -162,7 +162,7 @@ begin
         Actual := AggregateException(E).InnerException;
       {$ENDIF}
 
-      exit new HttpResponse<Binary>(Actual);
+      exit new HttpResponse<Binary> withException(Actual);
     end;
   end;
 end;
@@ -175,7 +175,7 @@ begin
   async begin
     var Data := Download(anUrl);
     if Data.IsFailed then
-      ResponseCallback(new HttpResponse<String>(Data.Exception))
+      ResponseCallback(new HttpResponse<String> withException(Data.Exception))
     else
       ResponseCallback(new HttpResponse<String>(new String(Data.Content.ToArray)));
   end;
@@ -199,7 +199,7 @@ begin
   async begin
     var Data := Download(anUrl);
     if Data.IsFailed then
-      ResponseCallback(new HttpResponse<XmlDocument>(Data.Exception))
+      ResponseCallback(new HttpResponse<XmlDocument> withException(Data.Exception))
     else
       ResponseCallback(new HttpResponse<XmlDocument>(XmlDocument.FromBinary(Data.Content)));
   end;
