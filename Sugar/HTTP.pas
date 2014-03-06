@@ -8,7 +8,7 @@ uses
 
 type
   {$IF NOUGAT}
-  HttpResponce = public class
+  HttpResponse = public class
   public
     method initWithContent(aContent: id): id;
     method initWithException(anException: Exception): id;
@@ -19,7 +19,7 @@ type
   end;
   {$ENDIF}
 
-  HttpResponce<T> = public class {$IF NOUGAT}mapped to HttpResponce{$ENDIF}
+  HttpResponse<T> = public class {$IF NOUGAT}mapped to HttpResponse{$ENDIF}
   public
     {$IF NOT NOUGAT}
     constructor(aContent: T);
@@ -31,42 +31,42 @@ type
     property IsFailed: Boolean read self.Exception <> nil;
   end;
 
-  HttpResponceBlock<T> = public block (Responce: HttpResponce<T>);
+  HttpResponseBlock<T> = public block (Response: HttpResponse<T>);
 
   Http = public static class
   private
     {$IF WINDOWS_PHONE}
     method InternalDownload(anUrl: Url): System.Threading.Tasks.Task<System.Net.HttpWebResponse>;
     {$ENDIF}
-    method Download(anUrl: Url): HttpResponce<Binary>;
+    method Download(anUrl: Url): HttpResponse<Binary>;
   public
-    method DownloadStringAsync(anUrl: Url; ResponceCallback: HttpResponceBlock<String>);
-    method DownloadBinaryAsync(anUrl: Url; ResponceCallback: HttpResponceBlock<Binary>);
-    method DownloadXmlAsync(anUrl: Url; ResponceCallback: HttpResponceBlock<XmlDocument>);
+    method DownloadStringAsync(anUrl: Url; ResponseCallback: HttpResponseBlock<String>);
+    method DownloadBinaryAsync(anUrl: Url; ResponseCallback: HttpResponseBlock<Binary>);
+    method DownloadXmlAsync(anUrl: Url; ResponseCallback: HttpResponseBlock<XmlDocument>);
   end;
 
 implementation
 
 
-{ HttpResponce }
+{ HttpResponse }
 
 {$IF NOUGAT}
-method  HttpResponce.initWithContent(aContent: id): id;
+method  HttpResponse.initWithContent(aContent: id): id;
 begin
   self.Content := aContent;
 end;
 
-method HttpResponce.initWithException(anException: Exception): id;
+method HttpResponse.initWithException(anException: Exception): id;
 begin
   self.Exception := anException;
 end;
 {$ELSE}
-constructor HttpResponce<T>(anException: Exception);
+constructor HttpResponse<T>(anException: Exception);
 begin
   self.Exception := anException;
 end;
 
-constructor HttpResponce<T>(aContent: T);
+constructor HttpResponse<T>(aContent: T);
 begin
   self.Content := aContent;
 end;
@@ -86,9 +86,9 @@ begin
 
   Request.BeginGetResponse(x -> begin
                              try
-                              var ResponceRequest := System.Net.HttpWebRequest(x.AsyncState);
-                              var Responce := System.Net.HttpWebResponse(ResponceRequest.EndGetResponse(x));
-                              TaskComplete.TrySetResult(Responce);
+                              var ResponseRequest := System.Net.HttpWebRequest(x.AsyncState);
+                              var Response := System.Net.HttpWebResponse(ResponseRequest.EndGetResponse(x));
+                              TaskComplete.TrySetResult(Response);
                              except
                                on E: Exception do
                                 TaskComplete.TrySetException(E);
@@ -98,7 +98,7 @@ begin
 end;
 {$ENDIF}
 
-class method Http.Download(anUrl: Url): HttpResponce<Binary>;
+class method Http.Download(anUrl: Url): HttpResponse<Binary>;
 begin
   try
   {$IF COOPER}
@@ -115,19 +115,19 @@ begin
     end;
 
     if Content.Length = 0 then
-      exit new HttpResponce<Binary>(new SugarException("Content is empty"));
+      exit new HttpResponse<Binary>(new SugarException("Content is empty"));
 
-    exit new HttpResponce<Binary>(Content); 
+    exit new HttpResponse<Binary>(Content); 
   {$ELSEIF WINDOWS_PHONE}
-    var Responce := InternalDownload(anUrl).Result;
+    var Response := InternalDownload(anUrl).Result;
     
-    if Responce.StatusCode <> System.Net.HttpStatusCode.OK then
-      exit new HttpResponce<Binary>(new SugarException("Unable to download data, responce: " + Responce.StatusDescription));
+    if Response.StatusCode <> System.Net.HttpStatusCode.OK then
+      exit new HttpResponse<Binary>(new SugarException("Unable to download data, Response: " + Response.StatusDescription));
 
-    var Stream := Responce.GetResponseStream;
+    var Stream := Response.GetResponseStream;
     
     if Stream = nil then
-      exit new HttpResponce<Binary>(new SugarException("Content is empty"));
+      exit new HttpResponse<Binary>(new SugarException("Content is empty"));
 
     var Content := new Binary;
     var Buffer := new Byte[16 * 1024];
@@ -139,33 +139,33 @@ begin
     end;
 
     if Content.Length = 0 then
-      exit new HttpResponce<Binary>(new SugarException("Content is empty"));
+      exit new HttpResponse<Binary>(new SugarException("Content is empty"));
 
-    exit new HttpResponce<Binary>(Content);
+    exit new HttpResponse<Binary>(Content);
   {$ELSEIF NETFX_CORE}
     var Client := new System.Net.Http.HttpClient;
 
     var Content := Client.GetByteArrayAsync(anUrl).Result;
 
     if Content = nil then
-      exit new HttpResponce<Binary>(new SugarException("Content is empty"));
+      exit new HttpResponse<Binary>(new SugarException("Content is empty"));
 
     if Content.Length = 0 then
-      exit new HttpResponce<Binary>(new SugarException("Content is empty"));
+      exit new HttpResponse<Binary>(new SugarException("Content is empty"));
 
 
-    exit new HttpResponce<Binary>(new Binary(Content));
+    exit new HttpResponse<Binary>(new Binary(Content));
   {$ELSEIF ECHOES}
   using lClient: System.Net.WebClient := new System.Net.WebClient() do begin
     var Content := lClient.DownloadData(anUrl);
     
     if Content = nil then
-      exit new HttpResponce<Binary>(new SugarException("Content is empty"));
+      exit new HttpResponse<Binary>(new SugarException("Content is empty"));
 
     if Content.Length = 0 then
-      exit new HttpResponce<Binary>(new SugarException("Content is empty"));
+      exit new HttpResponse<Binary>(new SugarException("Content is empty"));
 
-    exit new HttpResponce<Binary>(new Binary(Content));
+    exit new HttpResponse<Binary>(new Binary(Content));
   end;
   {$ELSEIF NOUGAT}
   var lError: NSError := nil;
@@ -173,9 +173,9 @@ begin
   var lData := new NSMutableData withContentsOfURL(anUrl) options(NSDataReadingOptions.NSDataReadingUncached) error(var lError);
 
   if not assigned(lData) then
-    exit new HttpResponce<Binary>(Exception(new SugarNSErrorException(lError)));
+    exit new HttpResponse<Binary>(Exception(new SugarNSErrorException(lError)));
 
-  exit new HttpResponce<Binary>(lData);
+  exit new HttpResponse<Binary>(lData);
   {$ENDIF}
   except
     on E: Exception do begin
@@ -186,46 +186,46 @@ begin
         Actual := AggregateException(E).InnerException;
       {$ENDIF}
 
-      exit new HttpResponce<Binary>(Actual);
+      exit new HttpResponse<Binary>(Actual);
     end;
   end;
 end;
 
-class method Http.DownloadStringAsync(anUrl: Url; ResponceCallback: HttpResponceBlock<String>);
+class method Http.DownloadStringAsync(anUrl: Url; ResponseCallback: HttpResponseBlock<String>);
 begin
   SugarArgumentNullException.RaiseIfNil(anUrl, "Url");
-  if ResponceCallback = nil then
-    raise new SugarArgumentNullException("ResponceCallback");
+  if ResponseCallback = nil then
+    raise new SugarArgumentNullException("ResponseCallback");
   async begin
     var Data := Download(anUrl);
     if Data.IsFailed then
-      ResponceCallback(new HttpResponce<String>(Data.Exception))
+      ResponseCallback(new HttpResponse<String>(Data.Exception))
     else
-      ResponceCallback(new HttpResponce<String>(new String(Data.Content.ToArray)));
+      ResponseCallback(new HttpResponse<String>(new String(Data.Content.ToArray)));
   end;
 end;
 
-class method Http.DownloadBinaryAsync(anUrl: Url; ResponceCallback: HttpResponceBlock<Binary>);
+class method Http.DownloadBinaryAsync(anUrl: Url; ResponseCallback: HttpResponseBlock<Binary>);
 begin
   SugarArgumentNullException.RaiseIfNil(anUrl, "Url");
-  if ResponceCallback = nil then
-    raise new SugarArgumentNullException("ResponceCallback");
+  if ResponseCallback = nil then
+    raise new SugarArgumentNullException("ResponseCallback");
   async begin
-    ResponceCallback(Download(anUrl));
+    ResponseCallback(Download(anUrl));
   end;
 end;
 
-class method Http.DownloadXmlAsync(anUrl: Url; ResponceCallback: HttpResponceBlock<XmlDocument>);
+class method Http.DownloadXmlAsync(anUrl: Url; ResponseCallback: HttpResponseBlock<XmlDocument>);
 begin
   SugarArgumentNullException.RaiseIfNil(anUrl, "Url");
-  if ResponceCallback = nil then
-    raise new SugarArgumentNullException("ResponceCallback");
+  if ResponseCallback = nil then
+    raise new SugarArgumentNullException("ResponseCallback");
   async begin
     var Data := Download(anUrl);
     if Data.IsFailed then
-      ResponceCallback(new HttpResponce<XmlDocument>(Data.Exception))
+      ResponseCallback(new HttpResponse<XmlDocument>(Data.Exception))
     else
-      ResponceCallback(new HttpResponce<XmlDocument>(XmlDocument.FromBinary(Data.Content)));
+      ResponseCallback(new HttpResponse<XmlDocument>(XmlDocument.FromBinary(Data.Content)));
   end;
 end;
 
