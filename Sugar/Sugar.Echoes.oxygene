@@ -104,6 +104,7 @@
     <None Include="Threading\Semaphore.pas" />
     <None Include="Threading\Thread.pas" />
     <None Include="Threading\ThreadPool.pas" />
+    <Compile Include="Reflection\Type.pas" />
     <Compile Include="UserSettings.pas" />
     <Compile Include="Math.pas" />
     <Compile Include="Properties\AssemblyInfo.pas" />
@@ -121,6 +122,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Crypto" />
+    <Folder Include="Reflection" />
     <Folder Include="XML" />
     <Folder Include="Properties\" />
     <Folder Include="Collections" />
