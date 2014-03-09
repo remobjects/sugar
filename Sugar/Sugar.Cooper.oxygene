@@ -84,6 +84,7 @@
     <None Include="Threading\Semaphore.pas" />
     <None Include="Threading\Thread.pas" />
     <None Include="Threading\ThreadPool.pas" />
+    <Compile Include="Reflection\Type.pas" />
     <Compile Include="UserSettings.pas" />
     <Compile Include="Math.pas" />
     <Compile Include="String.pas" />
@@ -102,6 +103,7 @@
     <Folder Include="Collections" />
     <Folder Include="IO" />
     <Folder Include="Crypto" />
+	<Folder Include="Reflection" />
     <Folder Include="Threading" />
     <Folder Include="Properties\" />
     <Folder Include="XML\" />
