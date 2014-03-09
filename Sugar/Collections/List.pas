@@ -43,7 +43,7 @@ type
 
     method ToArray: array of T;
 
-    property Count: Integer read {$IF COOPER}mapped.Size{$ELSEIF ECHOES}mapped.Count{$ELSEIF NOUGAT}mapped.Count{$ENDIF};
+    property Count: Integer read {$IF COOPER}mapped.Size{$ELSEIF ECHOES}mapped.Count{$ELSEIF NOUGAT}mapped.count{$ENDIF};
     property Item[i: Integer]: T read GetItem write SetItem; default;
   end;
 

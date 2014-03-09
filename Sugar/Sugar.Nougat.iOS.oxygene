@@ -104,6 +104,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Nougat.targets" />
   <PropertyGroup>
-    <PreBuildEvent>rmdir /s /q $(ProjectDir)\Obj</PreBuildEvent>
+    <PreBuildEvent></PreBuildEvent>
   </PropertyGroup>
 </Project>

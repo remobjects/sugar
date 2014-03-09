@@ -20,7 +20,6 @@ type
     property Element: {$IF COOPER}Element{$ELSEIF ECHOES}XElement{$ENDIF} 
                       read Node as{$IF COOPER}Element{$ELSEIF ECHOES}XElement{$ENDIF};
     {$ENDIF}
-    method GetAttributes: array of XmlAttribute;
     {$IF NOUGAT}
     method CopyNS(aNode: XmlAttribute);
     {$ENDIF}
@@ -56,7 +55,8 @@ type
     method HasAttribute(aName: String): Boolean;
     method HasAttribute(aLocalName, NamespaceUri: String): Boolean;
     
-    property Attributes: array of XmlAttribute read GetAttributes;
+    property Attributes[aName: String]: XmlAttribute read GetAttributeNode(aName);
+    method GetAttributes: array of XmlAttribute;
 
     { Elements }
     method GetElementsByTagName(aName: String): array of XmlElement;

@@ -40,14 +40,6 @@
     <Reference Include="com.remobjects.elements.rtl.jar">
       <Private>True</Private>
     </Reference>
-    <Reference Include="Sugar.jar">
-      <HintPath>..\Sugar\bin\Java\Sugar.jar</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="com.Sugar.testframework.jar">
-      <HintPath>..\Sugar.TestFramework\bin\Java\com.Sugar.testframework.jar</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="rt.jar" />
   </ItemGroup>
   <ItemGroup>
@@ -93,6 +85,20 @@
     <Folder Include="Tests\Xml" />
     <Folder Include="Tests\IO" />
     <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Sugar.TestFramework\Sugar.Cooper.TestFramework.oxygene">
+      <Name>Sugar.Cooper.TestFramework</Name>
+      <Project>{dba17ca8-59bc-4544-a0f5-c632737d5aa0}</Project>
+      <Private>True</Private>
+      <HintPath>..\Sugar.TestFramework\bin\Java\com.Sugar.testframework.jar</HintPath>
+    </ProjectReference>
+    <ProjectReference Include="..\Sugar\Sugar.Cooper.oxygene">
+      <Name>Sugar.Cooper</Name>
+      <Project>{d1ee6c41-515b-4175-873f-ee188ac43450}</Project>
+      <Private>True</Private>
+      <HintPath>..\Sugar\bin\Java\sugar.jar</HintPath>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Cooper.targets" />
   <PropertyGroup>
