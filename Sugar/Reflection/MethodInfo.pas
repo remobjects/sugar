@@ -10,7 +10,7 @@ type
   public
     {$IF ECHOES}
     property Name: String read mapped.Name;
-    property ReturnType: Sugar.Reflection.Type read mapped.ReflectedType;
+    property ReturnType: Sugar.Reflection.Type read mapped.ReturnType;
     property IsStatic: Boolean read mapped.IsStatic;
     property IsPublic: Boolean read mapped.IsPublic;
     property IsPrivate: Boolean read mapped.IsPrivate;
