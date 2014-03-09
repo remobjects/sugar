@@ -105,6 +105,7 @@
     <None Include="Threading\Thread.pas" />
     <None Include="Threading\ThreadPool.pas" />
     <Compile Include="Reflection\MethodInfo.pas" />
+    <Compile Include="Reflection\ParameterInfo.pas" />
     <Compile Include="Reflection\Type.pas" />
     <Compile Include="UserSettings.pas" />
     <Compile Include="Math.pas" />
