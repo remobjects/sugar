@@ -1,5 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build" ToolsVersion="4.0">
   <PropertyGroup>
     <ProductVersion>3.5</ProductVersion>
     <OutputType>StaticLibrary</OutputType>
@@ -11,11 +11,9 @@
     <ProjectGuid>{91B301FC-331E-48A7-803B-4CBE3FFF6ED7}</ProjectGuid>
     <AssemblyName>Sugar</AssemblyName>
     <DefaultUses>Foundation</DefaultUses>
-    <StartupClass />
     <DeploymentTargetVersion>6.0</DeploymentTargetVersion>
     <AllowLegacyOutParams>False</AllowLegacyOutParams>
     <CreateHeaderFile>False</CreateHeaderFile>
-    <BundleExtension />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <Optimize>False</Optimize>
@@ -93,17 +91,21 @@
     <Compile Include="XML\XmlElement.pas" />
     <Compile Include="XML\XmlNode.pas" />
     <Compile Include="XML\XmlProcessingInstruction.pas" />
+    <Compile Include="Reflection\MethodInfo.pas" />
+    <Compile Include="Reflection\ParameterInfo.pas" />
+    <Compile Include="Reflection\Type.pas" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Crypto" />
     <Folder Include="Properties\" />
     <Folder Include="Collections" />
+    <Folder Include="Reflection\" />
     <Folder Include="Threading" />
     <Folder Include="IO" />
     <Folder Include="XML" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Nougat.targets" />
   <PropertyGroup>
-    <PreBuildEvent></PreBuildEvent>
+    <PreBuildEvent />
   </PropertyGroup>
 </Project>

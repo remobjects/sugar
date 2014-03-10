@@ -91,14 +91,18 @@
     <Compile Include="XML\XmlElement.pas" />
     <Compile Include="XML\XmlNode.pas" />
     <Compile Include="XML\XmlProcessingInstruction.pas" />
+    <Compile Include="Reflection\MethodInfo.pas" />
+    <Compile Include="Reflection\ParameterInfo.pas" />
+    <Compile Include="Reflection\Type.pas" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Crypto" />
     <Folder Include="Properties\" />
     <Folder Include="Collections" />
+    <Folder Include="Reflection\" />
     <Folder Include="Threading" />
     <Folder Include="IO" />
-    <Folder Include="XML\" />
+    <Folder Include="XML" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Nougat.targets" />
   <PropertyGroup>
