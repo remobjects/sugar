@@ -18,7 +18,7 @@ type
     method getParameters: array of ParameterInfo;
     {$ENDIF}
     {$IF COOPER}
-    method GetParameters: array of Sugar.Reflection.ParameterInfo;
+    method getParameters: array of Sugar.Reflection.ParameterInfo;
     {$ENDIF}
   protected
   public
@@ -40,7 +40,7 @@ type
     property IsPrivate: Boolean read java.lang.reflect.Modifier.isPrivate(mapped.getModifiers);
     property IsFinal: Boolean read java.lang.reflect.Modifier.isFinal(mapped.getModifiers);
     property IsAbstract: Boolean read java.lang.reflect.Modifier.isAbstract(mapped.getModifiers);
-    property Parameters: array of Sugar.Reflection.ParameterInfo read GetParameters;
+    property Parameters: array of Sugar.Reflection.ParameterInfo read getParameters;
     {$ENDIF}
     {$IF NOUGAT}
     method initWithClass(aClass: Sugar.Reflection.Type) &method(aMethod: rtl.Method): instancetype;
@@ -89,14 +89,14 @@ end;
 {$ENDIF}
 
 {$IF COOPER}
-method MethodInfo.GetParameters: array of Sugar.Reflection.ParameterInfo;
+method MethodInfo.getParameters: array of Sugar.Reflection.ParameterInfo;
 begin
   var parameterTypes := mapped.ParameterTypes;
   var parameterAttributes := mapped.ParameterAnnotations;
   result := new Sugar.Reflection.ParameterInfo[parameterTypes.length];
   for i: Integer := 0 to parameterTypes.length - 1 do
   begin
-    result[i] := new Sugar.Reflection.ParameterInfo(Name := 'param' + i.toString(), 
+    result[i] := new Sugar.Reflection.ParameterInfo(Name := 'Parameter #' + i.toString(), //Java does not support reflection of parameter names in a simple way, debug info is needed.
                                                     ParameterType := parameterTypes[i], 
                                                     Position := i, 
                                                     CustomAttributes := parameterAttributes[i]);

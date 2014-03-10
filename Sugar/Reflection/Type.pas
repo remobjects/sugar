@@ -29,7 +29,7 @@ type
     method GetInterfaces: array of Sugar.Reflection.Type; mapped to GetInterfaces();
     method GetMethods: array of Sugar.Reflection.MethodInfo; mapped to GetMethods();
     property BaseType: Sugar.Reflection.Type read mapped.BaseType; 
-    property IsClass: Boolean read not IsInterface; // is this right?
+    property IsClass: Boolean read mapped.IsClass;
     property IsInterface: Boolean read mapped.IsInterface;
     property IsArray: Boolean read mapped.IsArray;
     property IsEnum: Boolean read mapped.IsEnum;
@@ -39,7 +39,7 @@ type
     method GetInterfaces: array of Sugar.Reflection.Type; mapped to getInterfaces();
     method GetMethods: array of Sugar.Reflection.MethodInfo; mapped to getMethods();
     property BaseType: Sugar.Reflection.Type read mapped.getSuperclass(); 
-    property IsClass: Boolean read not IsInterface; // is this right?
+    property IsClass: Boolean read (not mapped.isInterface()) and (not mapped.isPrimitive());
     property IsInterface: Boolean read mapped.isInterface();
     property IsArray: Boolean read mapped.isArray();
     property IsEnum: Boolean read mapped.isEnum();
