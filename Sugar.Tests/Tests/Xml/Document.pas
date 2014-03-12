@@ -65,7 +65,7 @@ begin
   Assert.IsNotNull(Item);
   Data.AddChild(Item);
   Item.AddChild(Data.CreateXmlNs("cfg", "http://example.com/config/"));
-  Assert.CheckInt(1, length(Item.Attributes));
+  Assert.CheckInt(1, length(Item.GetAttributes));
   Item := Data.CreateElement("item");
   Data.DocumentElement.AddChild(Item);  
 
@@ -73,14 +73,14 @@ begin
   Value.Value := "0";
   Assert.IsNotNull(Value);
   Item.SetAttributeNode(Value);
-  Assert.CheckInt(1, length(Item.Attributes));
+  Assert.CheckInt(1, length(Item.GetAttributes));
   Assert.CheckString("0", Item.GetAttribute("id"));
 
   Value := Data.CreateAttribute("cfg:Saved", "http://example.com/config/");
   Value.Value := "true";
   Assert.IsNotNull(Value);
   Item.SetAttributeNode(Value);
-  Assert.CheckInt(2, length(Item.Attributes));
+  Assert.CheckInt(2, length(Item.GetAttributes));
   Assert.CheckString("true", Item.GetAttribute("Saved", "http://example.com/config/"));
 
   Assert.IsException(->Data.CreateAttribute(nil));
@@ -96,7 +96,7 @@ begin
   Assert.IsNotNull(Item);
   Data.AddChild(Item);
   Item.AddChild(Data.CreateXmlNs("cfg", "http://example.com/config/"));
-  Assert.CheckInt(1, length(Item.Attributes));
+  Assert.CheckInt(1, length(Item.GetAttributes));
   Assert.IsException(->Data.CreateXmlNs(nil, "http://example.com/config/"));
   Assert.IsException(->Data.CreateXmlNs("cfg", nil));
   Assert.IsException(->Data.CreateXmlNs("<xml>", "http://example.com/config/"));

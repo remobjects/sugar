@@ -141,23 +141,23 @@ begin
   var Node := Data.FirstChild.FirstChild as XmlElement;
   Assert.IsNotNull(Node);
 
-  Assert.CheckInt(2, length(Node.Attributes));
+  Assert.CheckInt(2, length(Node.GetAttributes));
   Node.SetAttribute("Logged", "YES");
-  Assert.CheckInt(3, length(Node.Attributes));
+  Assert.CheckInt(3, length(Node.GetAttributes));
   Assert.CheckString("YES", Node.GetAttribute("Logged"));
 
   //replace existing
   Node.SetAttribute("Logged", "NO");
-  Assert.CheckInt(3, length(Node.Attributes));
+  Assert.CheckInt(3, length(Node.GetAttributes));
   Assert.CheckString("NO", Node.GetAttribute("Logged"));
 
   Node.SetAttribute("Logged", "");
-  Assert.CheckInt(3, length(Node.Attributes));
+  Assert.CheckInt(3, length(Node.GetAttributes));
   Assert.CheckString("", Node.GetAttribute("Logged"));
 
   //Remove
   Node.SetAttribute("Logged", nil);
-  Assert.CheckInt(2, length(Node.Attributes));
+  Assert.CheckInt(2, length(Node.GetAttributes));
 
   Assert.IsException(->Node.SetAttribute(nil, "true"));  
 end;
@@ -167,23 +167,23 @@ begin
   var Node := Data.FirstChild.FirstChild.FirstChild.FirstChild as XmlElement;
   Assert.IsNotNull(Node);
 
-  Assert.CheckInt(1, length(Node.Attributes));
+  Assert.CheckInt(1, length(Node.GetAttributes));
   Node.SetAttribute("Logged", "http://example.com/config/","YES");
-  Assert.CheckInt(2, length(Node.Attributes));
+  Assert.CheckInt(2, length(Node.GetAttributes));
   Assert.CheckString("YES", Node.GetAttribute("Logged", "http://example.com/config/"));
 
   //replace existing
   Node.SetAttribute("Logged", "http://example.com/config/" ,"NO");
-  Assert.CheckInt(2, length(Node.Attributes));
+  Assert.CheckInt(2, length(Node.GetAttributes));
   Assert.CheckString("NO", Node.GetAttribute("Logged", "http://example.com/config/"));
 
   Node.SetAttribute("Logged", "http://example.com/config/", "");
-  Assert.CheckInt(2, length(Node.Attributes));
+  Assert.CheckInt(2, length(Node.GetAttributes));
   Assert.CheckString("", Node.GetAttribute("Logged", "http://example.com/config/"));
 
   //Remove
   Node.SetAttribute("Logged", "http://example.com/config/", nil);
-  Assert.CheckInt(1, length(Node.Attributes));
+  Assert.CheckInt(1, length(Node.GetAttributes));
 
   Assert.IsException(->Node.SetAttribute(nil, "http://example.com/config/", "true"));  
   Assert.IsException(->Node.SetAttribute("Logged", nil, "true"));
@@ -196,9 +196,9 @@ begin
   Attr.Value := "YES";
   Assert.IsNotNull(Attr);
 
-  Assert.CheckInt(2, length(Node.Attributes));
+  Assert.CheckInt(2, length(Node.GetAttributes));
   Node.SetAttributeNode(Attr);
-  Assert.CheckInt(3, length(Node.Attributes));
+  Assert.CheckInt(3, length(Node.GetAttributes));
   Assert.CheckString("YES", Node.GetAttribute("Logged"));
   Attr.Value := "TEST"; // changing value
   Assert.CheckString("TEST", Node.GetAttribute("Logged"));
@@ -207,7 +207,7 @@ begin
   Attr := Doc.CreateAttribute("Logged");
   Attr.Value := "NO";
   Node.SetAttributeNode(Attr);
-  Assert.CheckInt(3, length(Node.Attributes));
+  Assert.CheckInt(3, length(Node.GetAttributes));
   Assert.CheckString("NO", Node.GetAttribute("Logged"));
 
   Assert.IsException(->Node.SetAttributeNode(nil));  
@@ -220,9 +220,9 @@ begin
   Attr.Value := "YES";
   Assert.IsNotNull(Node);
 
-  Assert.CheckInt(1, length(Node.Attributes));
+  Assert.CheckInt(1, length(Node.GetAttributes));
   Node.SetAttributeNode(Attr);
-  Assert.CheckInt(2, length(Node.Attributes));
+  Assert.CheckInt(2, length(Node.GetAttributes));
   Assert.CheckString("YES", Node.GetAttribute("Logged", "http://example.com/config/"));
   Attr.Value := "TEST";
   Assert.CheckString("TEST", Node.GetAttribute("Logged", "http://example.com/config/"));
@@ -231,7 +231,7 @@ begin
   Attr := Doc.CreateAttribute("cfg:Logged", "http://example.com/config/");
   Attr.Value := "NO";
   Node.SetAttributeNode(Attr);
-  Assert.CheckInt(2, length(Node.Attributes));
+  Assert.CheckInt(2, length(Node.GetAttributes));
   Assert.CheckString("NO", Node.GetAttribute("Logged", "http://example.com/config/"));  
 end;
 
@@ -239,20 +239,20 @@ method ElementTest.RemoveAttribute;
 begin
   var Node := Data.FirstChild.FirstChild as XmlElement;
 
-  Assert.CheckInt(2, length(Node.Attributes));
+  Assert.CheckInt(2, length(Node.GetAttributes));
   Node.RemoveAttribute("Id");
-  Assert.CheckInt(1, length(Node.Attributes));
+  Assert.CheckInt(1, length(Node.GetAttributes));
   Assert.IsNull(Node.GetAttribute("Id"));
 
   Node.RemoveAttribute(nil);
-  Assert.CheckInt(1, length(Node.Attributes));
+  Assert.CheckInt(1, length(Node.GetAttributes));
   Node.RemoveAttribute("NotExisting");
-  Assert.CheckInt(1, length(Node.Attributes));
+  Assert.CheckInt(1, length(Node.GetAttributes));
 
   Node := Node.FirstChild.FirstChild as XmlElement;
-  Assert.CheckInt(1, length(Node.Attributes));
+  Assert.CheckInt(1, length(Node.GetAttributes));
   Node.RemoveAttribute("verified", "http://example.com/config/");
-  Assert.CheckInt(0, length(Node.Attributes));
+  Assert.CheckInt(0, length(Node.GetAttributes));
 
   Assert.IsException(->Node.RemoveAttribute(nil, "http://example.com/config/"));
   Assert.IsException(->Node.RemoveAttribute("verified", nil));
@@ -262,18 +262,18 @@ method ElementTest.RemoveAttributeNode;
 begin
   var Node := Data.FirstChild.FirstChild as XmlElement;
 
-  Assert.CheckInt(2, length(Node.Attributes));
+  Assert.CheckInt(2, length(Node.GetAttributes));
   Node.RemoveAttributeNode(Node.GetAttributeNode("Id"));
-  Assert.CheckInt(1, length(Node.Attributes));
+  Assert.CheckInt(1, length(Node.GetAttributes));
   Assert.IsNull(Node.GetAttribute("Id"));
 
   Assert.IsException(->Node.RemoveAttributeNode(nil));
   Assert.IsException(->Node.RemoveAttributeNode(Doc.CreateAttribute("NotExists")));
 
   Node := Node.FirstChild.FirstChild as XmlElement;
-  Assert.CheckInt(1, length(Node.Attributes));
+  Assert.CheckInt(1, length(Node.GetAttributes));
   Node.RemoveAttributeNode(Node.GetAttributeNode("verified", "http://example.com/config/"));
-  Assert.CheckInt(0, length(Node.Attributes));
+  Assert.CheckInt(0, length(Node.GetAttributes));
 end;
 
 method ElementTest.HasAttribute;
@@ -300,12 +300,12 @@ begin
   Expected.Add("Name");
   Expected.Add("Id");
   
-  Assert.CheckInt(2, length(Node.Attributes));
-  for i: Integer := 0 to length(Node.Attributes) - 1 do
-    Assert.CheckBool(true, Expected.Contains(Node.Attributes[i].Name));
+  Assert.CheckInt(2, length(Node.GetAttributes));
+  for i: Integer := 0 to length(Node.GetAttributes) - 1 do
+    Assert.CheckBool(true, Expected.Contains(Node.GetAttributes[i].Name));
 
   Node := Doc.CreateElement("Sample");
-  Assert.CheckInt(0, length(Node.Attributes));
+  Assert.CheckInt(0, length(Node.GetAttributes));
 end;
 
 method ElementTest.NodeType;
@@ -345,7 +345,7 @@ begin
   Assert.IsNotNull(Element);
   Root.AddChild(Element);
   Assert.CheckInt(0, Root.ChildCount);
-  Assert.CheckInt(1, length(Root.Attributes));
+  Assert.CheckInt(1, length(Root.GetAttributes));
   //Element
   Element := Doc.CreateElement("SubNode");
   Assert.IsNotNull(Element);

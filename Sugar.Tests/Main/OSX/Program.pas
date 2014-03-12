@@ -16,7 +16,7 @@ implementation
 
 method Program.Main(aArguments: array of String): Int32;
 begin
-  var results := TestRunner.RunAll;
+  var results := TestRunner.RunAll([new DictionaryTest]);
   var output := new StringPrinter(results);  
   NSLog("%@", output.Result);
   //giving time for output to catch our log
