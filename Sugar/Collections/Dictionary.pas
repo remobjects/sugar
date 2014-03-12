@@ -107,7 +107,7 @@ begin
   {$ENDIF}
 
   if result = nil then
-    raise new SugarKeyNotFoundException(ErrorMessage.KEY_NOTFOUND);
+    raise new SugarKeyNotFoundException;
 end;
 
 method Dictionary<T, U>.GetKeys: array of T;
