@@ -19,13 +19,13 @@ type
 
   SugarArgumentException = public class (SugarException);
 
-  SugarArgumentNullException = public class(SugarException)
+  SugarArgumentNullException = public class(SugarArgumentException)
   public
     constructor(aMessage: String);
     class method RaiseIfNil(Value: Object; Name: String);
   end;
   
-  SugarArgumentOutOfRangeException = public class (SugarException);
+  SugarArgumentOutOfRangeException = public class (SugarArgumentException);
 
   SugarFormatException = public class(SugarException);
 
@@ -41,7 +41,10 @@ type
 
   SugarInvalidOperationException = public class (SugarException);
 
-  SugarKeyNotFoundException = public class (SugarException);
+  SugarKeyNotFoundException = public class (SugarException)
+  public
+    constructor;
+  end;
 
   SugarAppContextMissingException = public class (SugarException)
   public
@@ -129,6 +132,11 @@ constructor SugarFileNotFoundException(aFileName: String);
 begin
   inherited constructor (ErrorMessage.FILE_NOTFOUND, aFileName);
   FileName := aFileName;
+end;
+
+constructor SugarKeyNotFoundException;
+begin
+  inherited constructor(ErrorMessage.KEY_NOTFOUND);
 end;
 
 end.
