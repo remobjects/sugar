@@ -38,6 +38,7 @@ type
     method ToByteArray;
     method Operators;
     method FromCharArray;
+    method ToCharArray;
   end;
 
 implementation
@@ -376,6 +377,21 @@ begin
   Assert.CheckString("", new String(Encoded));
   Encoded := nil;
   Assert.IsException(-> new String(Encoded));
+end;
+
+method StringTest.ToCharArray;
+begin
+  var Expected: array of Char := ['g', 'r', 'ö', 'ß', 'e', 'r', 'e', 'n'];
+  
+  var Value: String := "größeren";
+  var Actual: array of Char := Value.ToCharArray;
+
+  Assert.CheckInt(Expected.Length, Actual.Length);
+  for i: Int32 := 0 to Expected.Length -1 do
+    Assert.CheckBool(true, Expected[i] = Actual[i], "Invalid character in ToCharArray");
+
+  Value := "";
+  Assert.CheckInt(0, Value.ToCharArray.Length);
 end;
 
 end.
