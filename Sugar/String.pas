@@ -39,6 +39,7 @@ type
     method StartsWith(Value: String): Boolean;
     method EndsWith(Value: String): Boolean;
     method ToByteArray: array of Byte;
+    method ToCharArray: array of Char;
 
     property Length: Int32 read mapped.Length;
     property Chars[aIndex: Int32]: Char read get_Chars; default;
@@ -388,6 +389,18 @@ begin
   exit mapped.EndsWith(Value);
   {$ELSEIF NOUGAT}
   exit mapped.hasSuffix(Value);
+  {$ENDIF}
+end;
+
+method String.ToCharArray: array of Char;
+begin
+  {$IF COOPER}
+  exit mapped.ToCharArray;
+  {$ELSEIF ECHOES}
+  exit mapped.ToCharArray;
+  {$ELSEIF NOUGAT}
+  result := new Char[mapped.length];
+  mapped.getCharacters(result) range(NSMakeRange(0, mapped.length));
   {$ENDIF}
 end;
 
