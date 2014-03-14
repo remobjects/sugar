@@ -87,12 +87,7 @@ end;
 
 method Encoding.GetString(Value: array of Byte): String;
 begin
-  {$IF COOPER}
   exit GetString(Value, 0, Value.length);
-  {$ELSEIF ECHOES}
-  exit mapped.GetString(Value);
-  {$ELSEIF NOUGAT}
-  {$ENDIF}
 end;
 
 method Encoding.GetString(Value: array of Byte; Offset: Integer; Count: Integer): String;
