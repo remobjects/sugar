@@ -61,7 +61,7 @@
     <Compile Include="Convert.pas" />
     <Compile Include="DateTime.pas" />
     <Compile Include="DateFormatter.pas" />
-    <None Include="Encoding.pas" />
+    <Compile Include="Encoding.pas" />
     <Compile Include="HTTP.pas" />
     <Compile Include="IO\File.pas" />
     <Compile Include="IO\FileHandle.pas" />
