@@ -16,6 +16,11 @@ type
     property Length: Integer {$IF NOUGAT} read mapped.length write mapped.length{$ENDIF};
   end;
 
+  RangeHelper = public static class
+  public
+    method Validate(aRange: Range; BufferSize: Integer);
+  end;
+
   Binary = public class {$IF ECHOES}mapped to System.IO.MemoryStream{$ELSEIF NOUGAT}mapped to Foundation.NSMutableData{$ENDIF}
   {$IF COOPER}
   private
@@ -50,6 +55,26 @@ implementation
 class method Range.MakeRange(aLocation: Integer; aLength: Integer): Range;
 begin  
   exit new Range(Location := aLocation, Length := aLength);
+end;
+
+{ RangeHelper }
+
+class method RangeHelper.Validate(aRange: Range; BufferSize: Integer);
+begin
+  if aRange.Location < 0 then
+    raise new SugarArgumentOutOfRangeException(ErrorMessage.NEGATIVE_VALUE_ERROR, "Location");
+
+  if aRange.Length < 0 then
+    raise new SugarArgumentOutOfRangeException(ErrorMessage.NEGATIVE_VALUE_ERROR, "Length");
+
+  if aRange.Location >= BufferSize then
+    raise new SugarArgumentOutOfRangeException(ErrorMessage.ARG_OUT_OF_RANGE_ERROR, "Location");
+
+  if aRange.Length > BufferSize then
+    raise new SugarArgumentOutOfRangeException(ErrorMessage.ARG_OUT_OF_RANGE_ERROR, "Length");
+
+  if aRange.Location + aRange.Length > BufferSize then
+    raise new SugarArgumentOutOfRangeException(ErrorMessage.OUT_OF_RANGE_ERROR, aRange.Location, aRange.Length, BufferSize);
 end;
 
 { Binary }
@@ -103,8 +128,7 @@ begin
   if Range.Length = 0 then
     exit [];
 
-  if Range.Location + Range.Length > self.Length then
-    raise new SugarArgumentOutOfRangeException(ErrorMessage.OUT_OF_RANGE_ERROR, Range.Location, Range.Length, self.Length);
+  RangeHelper.Validate(Range, self.Length);
 
   result := new Byte[Range.Length];
   {$IF COOPER}  
@@ -132,26 +156,10 @@ begin
   if Buffer = nil then
     raise new SugarArgumentNullException("Buffer");
 
-  if Offset < 0 then
-    raise new SugarArgumentOutOfRangeException(ErrorMessage.NEGATIVE_VALUE_ERROR, "Offset");
-
-  if Count < 0 then
-    raise new SugarArgumentOutOfRangeException(ErrorMessage.NEGATIVE_VALUE_ERROR, "Count");
-
   if Count = 0 then
     exit;
 
-  var BufferLength := RemObjects.Oxygene.System.length(Buffer); 
-
-  if Offset >= BufferLength then
-    raise new SugarArgumentOutOfRangeException(ErrorMessage.ARG_OUT_OF_RANGE_ERROR, "Offset");
-
-  if Count > BufferLength then
-    raise new SugarArgumentOutOfRangeException(ErrorMessage.ARG_OUT_OF_RANGE_ERROR, "Count");
-
-  if Offset + Count > BufferLength then
-    raise new SugarArgumentOutOfRangeException(ErrorMessage.OUT_OF_RANGE_ERROR, Offset, Count, BufferLength);
-
+  RangeHelper.Validate(Range.MakeRange(Offset, Count), Buffer.Length);
   {$IF COOPER}
   fData.write(Buffer, Offset, Count);
   {$ELSEIF ECHOES}
