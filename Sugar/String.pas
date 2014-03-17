@@ -9,6 +9,7 @@ type
   public
     constructor(Value: array of Byte);
     constructor(Value: array of Char);
+    constructor(Value: array of Char; Offset: Integer; Count: Integer);
 
     class operator Add(Value1: String; Value2: String): String;
     class operator Implicit(Value: Char): String;
@@ -72,6 +73,25 @@ begin
   exit new System.String(Value);
   {$ELSEIF NOUGAT}
   exit new Foundation.NSString withCharacters(Value) length(length(Value));
+  {$ENDIF}
+end;
+
+constructor String(Value: array of Char; Offset: Integer; Count: Integer);
+begin
+  if Value = nil then
+    raise new SugarArgumentNullException("Value");
+
+  if Count = 0 then
+    exit "";
+
+  RangeHelper.Validate(Range.MakeRange(Offset, Count), Value.Length);
+
+  {$IF COOPER}
+  exit new java.lang.String(Value, Offset, Count);
+  {$ELSEIF ECHOES}
+  exit new System.String(Value, Offset, Count);
+  {$ELSEIF NOUGAT}
+  exit new Foundation.NSString withCharacters(@Value[Offset]) length(Count);
   {$ENDIF}
 end;
 
