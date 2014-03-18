@@ -7,7 +7,7 @@ type
   private
     method get_Chars(aIndex: Int32): Char;
   public
-    constructor(Value: array of Byte);
+    constructor(Value: array of Byte; Encoding: Encoding);
     constructor(Value: array of Char);
     constructor(Value: array of Char; Offset: Integer; Count: Integer);
 
@@ -48,18 +48,12 @@ type
 
 implementation
 
-constructor String(Value: array of Byte);
+constructor String(Value: array of Byte; Encoding: Encoding);
 begin
   if Value = nil then
     raise new SugarArgumentNullException("Value");
 
-  {$IF COOPER}
-  exit new java.lang.String(Value, "UTF-8");
-  {$ELSEIF ECHOES}
-  exit System.Text.Encoding.UTF8.GetString(Value, 0, Value.Length);
-  {$ELSEIF NOUGAT}
-  exit new NSString withBytes(Value) length(length(Value)) encoding(NSStringEncoding.NSUTF8StringEncoding);
-  {$ENDIF}
+  exit Encoding.GetString(Value);
 end;
 
 constructor String(Value: array of Char);
