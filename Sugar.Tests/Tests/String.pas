@@ -146,13 +146,13 @@ method StringTest.FromByteArray;
 begin
   var Encoded: array of Byte := [103, 114, 195, 182, 195, 159, 101, 114, 101, 110];
   var Expected: String := "größeren";
-  var Actual: String := new String(Encoded);
+  var Actual: String := new String(Encoded, Encoding.UTF8);
   Assert.CheckInt(8, Actual.Length);
   Assert.CheckString(Expected, Actual);
   Encoded := [];
-  Assert.CheckString("", new String(Encoded));
+  Assert.CheckString("", new String(Encoded, Encoding.UTF8));
   Encoded := nil;
-  Assert.IsException(-> new String(Encoded));
+  Assert.IsException(-> new String(Encoded, Encoding.UTF8));
 end;
 
 method StringTest.CompareTo;

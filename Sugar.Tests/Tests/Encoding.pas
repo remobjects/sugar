@@ -118,5 +118,4 @@ begin
   Assert.IsException(->Encoding.GetEncoding("Something completely different"));
 end;
 
-
 end.
