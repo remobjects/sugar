@@ -74,7 +74,7 @@ begin
   var Actual := new Byte[5];
   Assert.CheckInt(5, Data.Read(Actual, 0, 5));
 
-  Assert.CheckString("Hello", new String(Actual));
+  Assert.CheckString("Hello", new String(Actual, Encoding.UTF8));
   
   var Full := new Byte[Original.Length + 5];
   Data.Position := 0;
@@ -82,14 +82,14 @@ begin
 
   Data.Position := 6;
   Assert.CheckInt(5, Data.Read(Actual, 0, 5));
-  Assert.CheckString("World", new String(Actual));
+  Assert.CheckString("World", new String(Actual, Encoding.UTF8));
 
   Data.Position := 0;
   var Actual2 := new Byte[Original.Length];
   Assert.CheckInt(5, Data.Read(Actual2, 0, 5));
   Assert.CheckInt(1, Data.Read(Actual2, 5, 1));
   Assert.CheckInt(5, Data.Read(Actual2, 6, 5));
-  Assert.CheckString(Original, new String(Actual2));
+  Assert.CheckString(Original, new String(Actual2, Encoding.UTF8));
 
   Assert.IsException(->Data.Read(nil, 0, 1));
   Assert.IsException(->Data.Read(Actual, -1, 1));
@@ -128,14 +128,14 @@ begin
   var Actual := new Byte[Original.Length];
   Data.Position := 0;
   Assert.CheckInt(Original.Length, Data.Read(Actual, 0, Original.Length));
-  Assert.CheckString(Original, new String(Actual));
+  Assert.CheckString(Original, new String(Actual, Encoding.UTF8));
 
   Data.Length := 0;
   Data.Write(Original.ToByteArray, 6, 5);
   Data.Position := 0;
   var Actual2 := new Byte[5];
   Assert.CheckInt(5, Data.Read(Actual2, 0, 5));
-  Assert.CheckString("World", new String(Actual2));
+  Assert.CheckString("World", new String(Actual2, Encoding.UTF8));
 
   Assert.IsException(->Data.Write(nil, 0, 1));
   Assert.IsException(->Data.Write(Actual, -1, 1));
