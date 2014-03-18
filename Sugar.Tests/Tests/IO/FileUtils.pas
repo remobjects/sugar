@@ -112,11 +112,11 @@ end;
 
 method FileUtilsTest.AppendText;
 begin
-  Assert.CheckString("", FileUtils.ReadText(FileName));
+  Assert.CheckString("", FileUtils.ReadText(FileName, Encoding.UTF8));
   FileUtils.AppendText(FileName, "Hello");
-  Assert.CheckString("Hello", FileUtils.ReadText(FileName));
+  Assert.CheckString("Hello", FileUtils.ReadText(FileName, Encoding.UTF8));
   FileUtils.AppendText(FileName, " World");
-  Assert.CheckString("Hello World", FileUtils.ReadText(FileName));
+  Assert.CheckString("Hello World", FileUtils.ReadText(FileName, Encoding.UTF8));
 
   Assert.IsException(->FileUtils.AppendText(CopyName, ""));
   Assert.IsException(->FileUtils.AppendText(FileName, nil));
@@ -125,11 +125,11 @@ end;
 
 method FileUtilsTest.AppendBytes;
 begin
-  Assert.CheckString("", FileUtils.ReadText(FileName));
+  Assert.CheckString("", FileUtils.ReadText(FileName, Encoding.UTF8));
   FileUtils.AppendBytes(FileName, String("Hello").ToByteArray);
-  Assert.CheckString("Hello", FileUtils.ReadText(FileName));
+  Assert.CheckString("Hello", FileUtils.ReadText(FileName, Encoding.UTF8));
   FileUtils.AppendBytes(FileName, String(" World").ToByteArray);
-  Assert.CheckString("Hello World", FileUtils.ReadText(FileName));
+  Assert.CheckString("Hello World", FileUtils.ReadText(FileName, Encoding.UTF8));
 
   Assert.IsException(->FileUtils.AppendBytes(CopyName, []));
   Assert.IsException(->FileUtils.AppendBytes(FileName, nil));
@@ -138,11 +138,11 @@ end;
 
 method FileUtilsTest.AppendBinary;
 begin
-  Assert.CheckString("", FileUtils.ReadText(FileName));
+  Assert.CheckString("", FileUtils.ReadText(FileName, Encoding.UTF8));
   FileUtils.AppendBinary(FileName, new Binary(String("Hello").ToByteArray));
-  Assert.CheckString("Hello", FileUtils.ReadText(FileName));
+  Assert.CheckString("Hello", FileUtils.ReadText(FileName, Encoding.UTF8));
   FileUtils.AppendBinary(FileName, new Binary(String(" World").ToByteArray));
-  Assert.CheckString("Hello World", FileUtils.ReadText(FileName));
+  Assert.CheckString("Hello World", FileUtils.ReadText(FileName, Encoding.UTF8));
 
   Assert.IsException(->FileUtils.AppendBinary(CopyName, new Binary));
   Assert.IsException(->FileUtils.AppendBinary(FileName, nil));
@@ -151,12 +151,12 @@ end;
 
 method FileUtilsTest.ReadText;
 begin
-  Assert.CheckString("", FileUtils.ReadText(FileName));
+  Assert.CheckString("", FileUtils.ReadText(FileName, Encoding.UTF8));
   FileUtils.WriteText(FileName, "Hello");
-  Assert.CheckString("Hello", FileUtils.ReadText(FileName));
+  Assert.CheckString("Hello", FileUtils.ReadText(FileName, Encoding.UTF8));
 
-  Assert.IsException(->FileUtils.ReadText(nil));
-  Assert.IsException(->FileUtils.ReadText(CopyName));
+  Assert.IsException(->FileUtils.ReadText(nil, Encoding.UTF8));
+  Assert.IsException(->FileUtils.ReadText(CopyName, Encoding.UTF8));
 end;
 
 method FileUtilsTest.ReadBytes;
@@ -196,11 +196,11 @@ end;
 
 method FileUtilsTest.WriteBytes;
 begin
-  Assert.CheckString("", FileUtils.ReadText(FileName));
+  Assert.CheckString("", FileUtils.ReadText(FileName, Encoding.UTF8));
   FileUtils.WriteBytes(FileName, String("Hello").ToByteArray);
-  Assert.CheckString("Hello", FileUtils.ReadText(FileName));
+  Assert.CheckString("Hello", FileUtils.ReadText(FileName, Encoding.UTF8));
   FileUtils.WriteBytes(FileName, String("World").ToByteArray);
-  Assert.CheckString("World", FileUtils.ReadText(FileName));
+  Assert.CheckString("World", FileUtils.ReadText(FileName, Encoding.UTF8));
 
   Assert.IsException(->FileUtils.WriteBytes(FileName, nil));
   Assert.IsException(->FileUtils.WriteBytes(nil, []));
@@ -209,11 +209,11 @@ end;
 
 method FileUtilsTest.WriteText;
 begin
-  Assert.CheckString("", FileUtils.ReadText(FileName));
+  Assert.CheckString("", FileUtils.ReadText(FileName, Encoding.UTF8));
   FileUtils.WriteText(FileName, "Hello");
-  Assert.CheckString("Hello", FileUtils.ReadText(FileName));
+  Assert.CheckString("Hello", FileUtils.ReadText(FileName, Encoding.UTF8));
   FileUtils.WriteText(FileName, "World");
-  Assert.CheckString("World", FileUtils.ReadText(FileName));
+  Assert.CheckString("World", FileUtils.ReadText(FileName, Encoding.UTF8));
 
   Assert.IsException(->FileUtils.WriteText(FileName, nil));
   Assert.IsException(->FileUtils.WriteText(nil, ""));
@@ -222,11 +222,11 @@ end;
 
 method FileUtilsTest.WriteBinary;
 begin
-  Assert.CheckString("", FileUtils.ReadText(FileName));
+  Assert.CheckString("", FileUtils.ReadText(FileName, Encoding.UTF8));
   FileUtils.WriteBinary(FileName, new Binary(String("Hello").ToByteArray));
-  Assert.CheckString("Hello", FileUtils.ReadText(FileName));
+  Assert.CheckString("Hello", FileUtils.ReadText(FileName, Encoding.UTF8));
   FileUtils.WriteBinary(FileName, new Binary(String("World").ToByteArray));
-  Assert.CheckString("World", FileUtils.ReadText(FileName));
+  Assert.CheckString("World", FileUtils.ReadText(FileName, Encoding.UTF8));
 
   Assert.IsException(->FileUtils.WriteBinary(FileName, nil));
   Assert.IsException(->FileUtils.WriteBinary(nil, new Binary));
