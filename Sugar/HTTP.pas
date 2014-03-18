@@ -28,7 +28,7 @@ type
     {$ENDIF}
     method Download(anUrl: Url): HttpResponse<Binary>;
   public
-    method DownloadStringAsync(anUrl: Url; ResponseCallback: HttpResponseBlock<String>);
+    method DownloadStringAsync(anUrl: Url; Encoding: Encoding; ResponseCallback: HttpResponseBlock<String>);
     method DownloadBinaryAsync(anUrl: Url; ResponseCallback: HttpResponseBlock<Binary>);
     method DownloadXmlAsync(anUrl: Url; ResponseCallback: HttpResponseBlock<XmlDocument>);
   end;
@@ -167,7 +167,7 @@ begin
   end;
 end;
 
-class method Http.DownloadStringAsync(anUrl: Url; ResponseCallback: HttpResponseBlock<String>);
+class method Http.DownloadStringAsync(anUrl: Url; Encoding: Encoding; ResponseCallback: HttpResponseBlock<String>);
 begin
   SugarArgumentNullException.RaiseIfNil(anUrl, "Url");
   if ResponseCallback = nil then
@@ -177,7 +177,7 @@ begin
     if Data.IsFailed then
       ResponseCallback(new HttpResponse<String> withException(Data.Exception))
     else
-      ResponseCallback(new HttpResponse<String>(new String(Data.Content.ToArray)));
+      ResponseCallback(new HttpResponse<String>(new String(Data.Content.ToArray, Encoding)));
   end;
 end;
 
