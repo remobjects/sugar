@@ -19,7 +19,7 @@ implementation
 method HTTPTest.DownloadAsString;
 begin
   var Token: IAsyncToken := NewAsyncToken;
-  Http.DownloadStringAsync(new Url("http://example.com"), Responce -> begin
+  Http.DownloadStringAsync(new Url("http://example.com"), Encoding.UTF8, Responce -> begin
       try
         Assert.IsNotNull(Responce);
         Assert.CheckBool(false, Responce.IsFailed);
@@ -36,7 +36,7 @@ begin
   Token.Wait;
   Token := NewAsyncToken;
 
-  Http.DownloadStringAsync(new Url("http://example.com/notexists"), Responce -> begin
+  Http.DownloadStringAsync(new Url("http://example.com/notexists"), Encoding.UTF8, Responce -> begin
       try
         Assert.IsNotNull(Responce);
         Assert.CheckBool(true, Responce.IsFailed);
@@ -50,8 +50,8 @@ begin
     end);
 
   Token.Wait;
-  Assert.IsException(->Http.DownloadStringAsync(nil, x -> begin end));
-  Assert.IsException(->Http.DownloadStringAsync(new Url("http://example.com"), nil));
+  Assert.IsException(->Http.DownloadStringAsync(nil, Encoding.UTF8, x -> begin end));
+  Assert.IsException(->Http.DownloadStringAsync(new Url("http://example.com"), Encoding.UTF8, nil));
 end;
 
 method HTTPTest.DownloadAsBinary;
@@ -63,7 +63,7 @@ begin
         Assert.CheckBool(false, Responce.IsFailed);
         Assert.IsNull(Responce.Exception);
         Assert.IsNotNull(Responce.Content);
-        var Line := new String(Responce.Content.Read(15));
+        var Line := new String(Responce.Content.Read(15), Encoding.UTF8);
         Assert.CheckBool(true, Line.StartsWith("<!doctype html>"));
         Token.Done;
       except
