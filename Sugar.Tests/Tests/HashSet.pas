@@ -22,6 +22,7 @@ type
     method Intersect;
     method ForEach;
     method Constructors;
+    method &Union;
   end;
 
 implementation
@@ -143,6 +144,26 @@ begin
   Assert.CheckInt(0, Data.Count);
 
   Assert.IsException(->Data.Intersect(nil));
+end;
+
+method HashSetTest.&Union;
+begin
+  var Value: HashSet<String> := new HashSet<String>;
+  Value.Add("Zero");
+  Value.Add("Two");
+  Value.Add("Three");
+
+  var Expected: HashSet<String> := new HashSet<String>;
+  Expected.Add("One");
+  Expected.Add("Two");
+  Expected.Add("Three");
+  Expected.Add("Zero");
+
+  Data.Union(Value);
+  Assert.CheckInt(4, Data.Count);
+  Assert.CheckInt(3, Value.Count);
+
+  Data.ForEach(item -> Assert.CheckBool(true, Expected.Contains(item)));
 end;
 
 end.
