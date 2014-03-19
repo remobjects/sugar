@@ -218,7 +218,7 @@ begin
   var Handle := aFile.Open(FileOpenMode.ReadOnly);  
   try
     var Bin := Handle.Read(Handle.Length);
-    exit ParseXml(new String(Bin.ToArray), aFile.Path);
+    exit ParseXml(new String(Bin.ToArray, Encoding.UTF8), aFile.Path);
   finally
     Handle.Close;
   end;
@@ -226,7 +226,7 @@ end;
 
 class method XmlDocument.FromBinary(aBinary: Binary): XmlDocument;
 begin
-  exit ParseXml(new String(aBinary.ToArray), nil);
+  exit ParseXml(new String(aBinary.ToArray, Encoding.UTF8), nil);
 end;
 
 class method XmlDocument.FromString(aString: String): XmlDocument;

@@ -15,6 +15,7 @@ type
     method ForEach(Action: Action<T>);
 
     method Intersect(&Set: HashSet<T>);
+    method &Union(&Set: HashSet<T>);
 
     property Count: Integer read {$IF ECHOES OR NOUGAT}mapped.Count{$ELSE}mapped.size{$ENDIF};
   end;
@@ -102,6 +103,20 @@ begin
   mapped.IntersectWith(&Set);
   {$ELSEIF NOUGAT}  
   mapped.intersectSet(&Set);
+  {$ENDIF}
+end;
+
+method HashSet<T>.&Union(&Set: HashSet<T>);
+begin
+  if &Set = nil then
+    raise new Sugar.SugarArgumentNullException("Set");
+  
+  {$IF COOPER}
+  mapped.addAll(&Set);
+  {$ELSEIF ECHOES}
+  mapped.UnionWith(&Set);
+  {$ELSEIF NOUGAT}  
+  mapped.unionSet(&Set);
   {$ENDIF}
 end;
 
