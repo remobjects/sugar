@@ -6,6 +6,7 @@ type
   HashSet<T> = public class mapped to {$IF COOPER}java.util.HashSet<T>{$ELSEIF ECHOES}System.Collections.Generic.HashSet<T>{$ELSEIF NOUGAT}Foundation.NSMutableSet{$ENDIF}
   public
     constructor; mapped to constructor();
+    constructor(&Set: HashSet<T>);
 
     method &Add(Item: T): Boolean;
     method Clear; mapped to {$IF COOPER OR ECHOES}Clear{$ELSE}removeAllObjects{$ENDIF};
@@ -13,10 +14,17 @@ type
     method &Remove(Item: T): Boolean;
     method ForEach(Action: Action<T>);
 
+    method Intersect(&Set: HashSet<T>);
+
     property Count: Integer read {$IF ECHOES OR NOUGAT}mapped.Count{$ELSE}mapped.size{$ENDIF};
   end;
 
 implementation
+
+constructor HashSet<T>(&Set: HashSet<T>);
+begin
+
+end;
 
 method HashSet<T>.&Add(Item: T): Boolean;
 begin
@@ -69,6 +77,20 @@ begin
     Action(NullHelper.ValueOf(item));
     item := Enumerator.nextObject;
   end;
+  {$ENDIF}
+end;
+
+method HashSet<T>.Intersect(&Set: HashSet<T>);
+begin
+  if &Set = nil then
+    raise new Sugar.SugarArgumentNullException("Set");
+  
+  {$IF COOPER}
+  mapped.retainAll(&Set);
+  {$ELSEIF ECHOES}
+  mapped.IntersectWith(&Set);
+  {$ELSEIF NOUGAT}  
+  mapped.intersectSet(&Set);
   {$ENDIF}
 end;
 
