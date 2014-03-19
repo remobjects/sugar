@@ -400,7 +400,7 @@ begin
   {$IF WINDOWS_PHONE OR NETFX_CORE}
   var Handle := aFile.Open(FileOpenMode.ReadOnly);
   try
-    var Content := new String(Handle.Read(Handle.Length).ToArray);
+    var Content := new String(Handle.Read(Handle.Length).ToArray, Encoding.UTF8);
     var reader := new System.IO.StringReader(Content);
     var document := XDocument.Load(reader, LoadOptions.SetBaseUri);
     exit new XmlDocument(document);
@@ -464,7 +464,7 @@ begin
   var Handle := aFile.Open(FileOpenMode.ReadWrite);
   try
     Handle.Length := 0;
-    Handle.Write(String(sb.ToString).ToByteArray);
+    Handle.Write(Encoding.UTF8.GetBytes(sb.ToString));
   finally
     Handle.Close;
   end;  
