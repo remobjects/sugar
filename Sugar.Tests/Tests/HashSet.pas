@@ -19,6 +19,7 @@ type
     method &Remove;
     method Count;
     method Enumerator;
+    method Intersect;
     method ForEach;
   end;
 
@@ -113,6 +114,25 @@ begin
                  Assert.CheckBool(true, Expected.Contains(x));
                  end);
   Assert.CheckInt(3, lCount);   
+end;
+
+method HashSetTest.Intersect;
+begin
+  var Value: HashSet<String> := new HashSet<String>;
+  Value.Add("Zero");
+  Value.Add("Two");
+  Value.Add("Three");
+
+  Data.Intersect(Value);
+  Assert.CheckInt(2, Data.Count);
+  Assert.CheckBool(true, Data.Contains("Two"));  
+  Assert.CheckBool(true, Data.Contains("Three"));
+  Assert.CheckInt(3, Value.Count);
+
+  Data.Intersect(new HashSet<String>);
+  Assert.CheckInt(0, Data.Count);
+
+  Assert.IsException(->Data.Intersect(nil));
 end;
 
 end.
