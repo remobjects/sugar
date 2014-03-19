@@ -21,6 +21,7 @@ type
     method Enumerator;
     method Intersect;
     method ForEach;
+    method Constructors;
   end;
 
 implementation
@@ -31,6 +32,15 @@ begin
   Data.Add("One");
   Data.Add("Two");
   Data.Add("Three");
+end;
+
+method HashSetTest.Constructors;
+begin
+  var Actual := new HashSet<String>(Data);
+  Assert.CheckInt(3, Actual.Count);
+  Assert.CheckInt(3, Data.Count);
+
+  Actual.ForEach(item -> Assert.CheckBool(true, Data.Contains(item)));
 end;
 
 method HashSetTest.&Add;
