@@ -23,7 +23,18 @@ implementation
 
 constructor HashSet<T>(&Set: HashSet<T>);
 begin
-
+  if &Set = nil then
+    raise new Sugar.SugarArgumentNullException("Set");
+  
+  {$IF COOPER}
+  exit new java.util.HashSet<T>(&Set);
+  {$ELSEIF ECHOES}
+  exit new System.Collections.Generic.HashSet<T>(&Set);
+  {$ELSEIF NOUGAT}  
+  var NewSet := new Foundation.NSMutableSet();
+  NewSet.setSet(&Set);
+  exit NewSet;
+  {$ENDIF}
 end;
 
 method HashSet<T>.&Add(Item: T): Boolean;
