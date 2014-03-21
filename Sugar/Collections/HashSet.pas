@@ -17,6 +17,7 @@ type
     method Intersect(&Set: HashSet<T>);
     method &Union(&Set: HashSet<T>);
     method IsSubsetOf(&Set: HashSet<T>): Boolean;
+    method IsSupersetOf(&Set: HashSet<T>): Boolean;
 
     property Count: Integer read {$IF ECHOES OR NOUGAT}mapped.Count{$ELSE}mapped.size{$ENDIF};
   end;
@@ -194,6 +195,25 @@ begin
   {$ELSEIF NOUGAT}  
   mapped.unionSet(&Set);
   {$ENDIF}
+end;
+
+method HashSet<T>.IsSupersetOf(&Set: HashSet<T>): Boolean;
+begin
+  Sugar.SugarArgumentNullException.RaiseIfNil(&Set, "Set");
+  
+  if &Set.Count = 0 then
+    exit true;
+
+  if self.Count < &Set.Count then
+    exit false;
+  
+  var Helper := new EnumeratorHelper<T>(&Set);
+
+  while Helper.MoveNext do
+    if not self.Contains(Helper.Current) then
+      exit false;
+
+  exit true;  
 end;
 
 method HashSet<T>.IsSubsetOf(&Set: HashSet<T>): Boolean;
