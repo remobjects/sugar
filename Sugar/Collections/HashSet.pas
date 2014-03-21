@@ -20,7 +20,94 @@ type
     property Count: Integer read {$IF ECHOES OR NOUGAT}mapped.Count{$ELSE}mapped.size{$ENDIF};
   end;
 
+  EnumeratorHelper<T> = public class
+  private
+    {$IF COOPER}
+    fEnumerator: java.util.&Iterator<T>;
+    fCurrent: T;
+    {$ELSEIF ECHOES}
+    fEnumerator: System.Collections.Generic.IEnumerator<T>;
+    {$ELSEIF NOUGAT}  
+    fEnumerator: NSEnumerator;
+    fCurrent: T;
+    {$ENDIF}
+    method GetCurrent: T;
+  public
+    {$IF COOPER}
+    constructor (Enumerator: Iterable<T>);
+    {$ELSEIF ECHOES}
+    constructor (Enumerator: System.Collections.Generic.IEnumerable<T>);
+    {$ELSEIF NOUGAT}  
+    constructor withEnumerator(Enumerator: NSEnumerator);
+    constructor (Obj: id);
+    {$ENDIF}
+
+    method MoveNext: Boolean;
+    property Current: T read GetCurrent;
+  end;
+
 implementation
+
+{ EnumeratorHelper }
+
+{$IF COOPER}
+constructor EnumeratorHelper<T>(Enumerator: Iterable<T>);
+begin
+  Sugar.SugarArgumentNullException.RaiseIfNil(Enumerator, "Enumerator");
+  fEnumerator := Enumerator.iterator;
+end;
+{$ELSEIF ECHOES}
+constructor EnumeratorHelper<T>(Enumerator:System.Collections.Generic.IEnumerable<T>);
+begin
+  Sugar.SugarArgumentNullException.RaiseIfNil(Enumerator, "Enumerator");
+  fEnumerator := Enumerator.GetEnumerator;
+end;
+{$ELSEIF NOUGAT}  
+constructor EnumeratorHelper<T> withEnumerator(Enumerator: NSEnumerator);
+begin
+  Sugar.SugarArgumentNullException.RaiseIfNil(Enumerator, "Enumerator");
+  fEnumerator := Enumerator;
+end;
+
+constructor EnumeratorHelper<T>(Obj: id);
+begin
+  Sugar.SugarArgumentNullException.RaiseIfNil(Obj, "Obj");  
+  if Obj.respondsToSelector(selector(objectEnumerator)) then
+    fEnumerator := Obj.objectEnumerator;
+end;
+{$ENDIF}
+
+method EnumeratorHelper<T>.MoveNext: Boolean;
+begin
+  {$IF COOPER}
+  if not fEnumerator.hasNext then
+    exit false;
+
+  fCurrent := fEnumerator.next;
+  exit true;
+  {$ELSEIF ECHOES}  
+  exit fEnumerator.MoveNext;
+  {$ELSEIF NOUGAT}  
+  fCurrent := fEnumerator.nextObject;
+  exit assigned(fCurrent);
+  {$ENDIF}
+end;
+
+method EnumeratorHelper<T>.GetCurrent: T;
+begin
+  {$IF COOPER}
+  exit fCurrent;
+  {$ELSEIF ECHOES}
+  exit fEnumerator.Current;
+  {$ELSEIF NOUGAT}  
+  if fCurrent = nil then
+    exit nil;
+
+  exit NullHelper.ValueOf(Item);
+  {$ENDIF}
+end;
+
+{ HashSet }
 
 constructor HashSet<T>(&Set: HashSet<T>);
 begin
@@ -74,22 +161,10 @@ begin
   if Action = nil then
     raise new Sugar.SugarArgumentNullException("Action");
   
-  {$IF COOPER}
-  var Enumerator := mapped.Iterator;
-  while Enumerator.hasNext do
-    Action(Enumerator.next);
-  {$ELSEIF ECHOES}
-  var Enumerator := mapped.GetEnumerator;
-  while Enumerator.MoveNext do
-    Action(Enumerator.Current);
-  {$ELSEIF NOUGAT}  
-  var Enumerator := mapped.objectEnumerator;
-  var item := Enumerator.nextObject;
-  while item <> nil do begin
-    Action(NullHelper.ValueOf(item));
-    item := Enumerator.nextObject;
-  end;
-  {$ENDIF}
+  var Helper := new EnumeratorHelper<T>(mapped);
+
+  while Helper.MoveNext do
+    Action(Helper.Current);
 end;
 
 method HashSet<T>.Intersect(&Set: HashSet<T>);
