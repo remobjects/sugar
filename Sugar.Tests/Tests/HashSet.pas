@@ -24,6 +24,7 @@ type
     method Constructors;
     method &Union;
     method IsSubsetOf;
+    method IsSupersetOf;
   end;
 
 implementation
@@ -165,6 +166,26 @@ begin
   Assert.CheckInt(3, Value.Count);
 
   Data.ForEach(item -> Assert.CheckBool(true, Expected.Contains(item)));
+end;
+
+method HashSetTest.IsSupersetOf;
+begin
+  var Value: HashSet<String> := new HashSet<String>;
+  Value.Add("Two");
+  Value.Add("Three");
+
+  Assert.CheckBool(true, Data.IsSupersetOf(Value));
+
+  Value.Add("One");
+  Assert.CheckBool(true, Data.IsSupersetOf(Value));
+
+  Value.Remove("One");
+  Value.Add("Zero");
+  Assert.CheckBool(false, Data.IsSupersetOf(Value));
+
+  Assert.CheckBool(true, Data.IsSupersetOf(new HashSet<String>));
+
+  Assert.IsException(->Data.IsSupersetOf(nil));
 end;
 
 method HashSetTest.IsSubsetOf;
