@@ -23,6 +23,7 @@ type
     method ForEach;
     method Constructors;
     method &Union;
+    method IsSubsetOf;
   end;
 
 implementation
@@ -164,6 +165,27 @@ begin
   Assert.CheckInt(3, Value.Count);
 
   Data.ForEach(item -> Assert.CheckBool(true, Expected.Contains(item)));
+end;
+
+method HashSetTest.IsSubsetOf;
+begin
+  var Value: HashSet<String> := new HashSet<String>;
+  Value.Add("Two");
+  Value.Add("Three");
+
+  Assert.CheckBool(true, Value.IsSubsetOf(Data));
+
+  Value.Add("One");
+  Assert.CheckBool(true, Value.IsSubsetOf(Data));
+
+  Value.Remove("One");
+  Value.Add("Zero");
+  Assert.CheckBool(false, Value.IsSubsetOf(Data));
+
+  Assert.CheckBool(true, new HashSet<String>().IsSubsetOf(Data));
+  Assert.CheckBool(false, Data.IsSubsetOf(new HashSet<String>));
+
+  Assert.IsException(->Data.IsSubsetOf(nil));
 end;
 
 end.
