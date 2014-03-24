@@ -25,6 +25,7 @@ type
     method &Union;
     method IsSubsetOf;
     method IsSupersetOf;
+    method SetEquals;
   end;
 
 implementation
@@ -207,6 +208,23 @@ begin
   Assert.CheckBool(false, Data.IsSubsetOf(new HashSet<String>));
 
   Assert.IsException(->Data.IsSubsetOf(nil));
+end;
+
+method HashSetTest.SetEquals;
+begin
+  var Value: HashSet<String> := new HashSet<String>;
+  Value.Add("Two");
+  Value.Add("Three");
+
+  Assert.CheckBool(false, Data.SetEquals(Value));
+
+  Value.Add("One");
+  Assert.CheckBool(true, Data.SetEquals(Value));
+  Value.Clear;
+  Data.Clear;
+  Assert.CheckBool(true, Data.SetEquals(Value));
+  
+  Assert.IsException(->Data.SetEquals(nil));
 end;
 
 end.
