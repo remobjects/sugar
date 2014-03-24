@@ -18,6 +18,7 @@ type
     method &Union(&Set: HashSet<T>);
     method IsSubsetOf(&Set: HashSet<T>): Boolean;
     method IsSupersetOf(&Set: HashSet<T>): Boolean;
+    method SetEquals(&Set: HashSet<T>): Boolean;
 
     property Count: Integer read {$IF ECHOES OR NOUGAT}mapped.Count{$ELSE}mapped.size{$ENDIF};
   end;
@@ -105,7 +106,7 @@ begin
   if fCurrent = nil then
     exit nil;
 
-  exit NullHelper.ValueOf(Item);
+  exit NullHelper.ValueOf(fCurrent);
   {$ENDIF}
 end;
 
@@ -194,6 +195,19 @@ begin
   mapped.UnionWith(&Set);
   {$ELSEIF NOUGAT}  
   mapped.unionSet(&Set);
+  {$ENDIF}
+end;
+
+method HashSet<T>.SetEquals(&Set: HashSet<T>): Boolean;
+begin
+  Sugar.SugarArgumentNullException.RaiseIfNil(&Set, "Set");
+
+  {$IF COOPER}
+  exit mapped.equals(&Set);
+  {$ELSEIF ECHOES}
+  exit mapped.SetEquals(&Set);
+  {$ELSEIF NOUGAT}  
+  exit mapped.isEqualToSet(&Set);
   {$ENDIF}
 end;
 
