@@ -44,7 +44,7 @@
   <ItemGroup>
     <Reference Include="android.jar" />
     <Reference Include="com.remobjects.elements.rtl.jar">
-      <Private>True</Private>
+      <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
