@@ -15,7 +15,7 @@ uses
 type  
   DigestAlgorithm = public (MD5, SHA1, SHA256, SHA384, SHA512); 
 
-  MessageDigest = public class {$IF COOPER}{$ELSEIF ECHOES}mapped to System.Security.Cryptography.HashAlgorithm{$ELSEIF NOUGAT}{$ENDIF}
+  MessageDigest = public class {$IF COOPER}mapped to java.security.MessageDigest{$ELSEIF ECHOES}mapped to System.Security.Cryptography.HashAlgorithm{$ELSEIF NOUGAT}{$ENDIF}
   public
     constructor(Algorithm: DigestAlgorithm);
 
@@ -35,6 +35,15 @@ implementation
 constructor MessageDigest(Algorithm: DigestAlgorithm);
 begin
   {$IF COOPER}
+  case Algorithm of
+    DigestAlgorithm.MD5: exit java.security.MessageDigest.getInstance("MD5");
+    DigestAlgorithm.SHA1: exit java.security.MessageDigest.getInstance("SHA-1");
+    DigestAlgorithm.SHA256: exit java.security.MessageDigest.getInstance("SHA-256");
+    DigestAlgorithm.SHA384: exit java.security.MessageDigest.getInstance("SHA-384");
+    DigestAlgorithm.SHA512: exit java.security.MessageDigest.getInstance("SHA-512");
+    else
+      raise new SugarNotImplementedException;
+  end;
   {$ELSEIF ECHOES}
   case Algorithm of
     DigestAlgorithm.MD5: exit MD5.Create();
@@ -46,6 +55,7 @@ begin
       raise new SugarNotImplementedException;
   end;
   {$ELSEIF NOUGAT}
+  
   {$ENDIF}
 end;
 
@@ -58,6 +68,7 @@ begin
     RangeHelper.Validate(Range.MakeRange(Offset, Count), Data.Length);
 
   {$IF COOPER}
+  mapped.update(Data, Offset, Count);
   {$ELSEIF ECHOES}
   mapped.TransformBlock(Data, Offset, Count, nil, 0);
   {$ELSEIF NOUGAT}
@@ -86,6 +97,8 @@ begin
     RangeHelper.Validate(Range.MakeRange(Offset, Count), Data.Length);
 
   {$IF COOPER}
+  mapped.update(Data, Offset, Count);
+  exit mapped.digest;
   {$ELSEIF ECHOES}
   mapped.TransformFinalBlock(Data, Offset, Count);
   exit mapped.Hash;
