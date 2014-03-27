@@ -67,6 +67,7 @@
     <Compile Include="Tests\IO\Path.pas" />
     <Compile Include="Tests\List.pas" />
     <Compile Include="Tests\Math.pas" />
+    <Compile Include="Tests\MessageDigest.pas" />
     <Compile Include="Tests\Queue.pas" />
     <Compile Include="Tests\Random.pas" />
     <Compile Include="Tests\Stack.pas" />
