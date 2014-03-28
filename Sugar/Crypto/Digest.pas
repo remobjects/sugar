@@ -19,6 +19,8 @@ type
   public
     constructor(Algorithm: DigestAlgorithm);
 
+    method Reset; virtual;
+
     method Update(Data: array of Byte; Offset: Integer; Count: Integer); virtual;
     method Update(Data: array of Byte; Count: Integer);
     method Update(Data: array of Byte);
@@ -35,45 +37,45 @@ type
   private
     Context: CC_MD5_CTX;
   public
-    constructor;
     method Update(Data: array of Byte; Offset: Integer; Count: Integer); override;
     method Digest(Data: array of Byte; Offset: Integer; Count: Integer): array of Byte; override;
+    method Reset; override;
   end;
 
   SHA1 = private class (MessageDigest)
   private
     Context: CC_SHA1_CTX;
   public
-    constructor;
     method Update(Data: array of Byte; Offset: Integer; Count: Integer); override;
     method Digest(Data: array of Byte; Offset: Integer; Count: Integer): array of Byte; override;
+    method Reset; override;
   end;
 
   SHA256 = private class (MessageDigest)
   private
     Context: CC_SHA256_CTX;
   public
-    constructor;
     method Update(Data: array of Byte; Offset: Integer; Count: Integer); override;
     method Digest(Data: array of Byte; Offset: Integer; Count: Integer): array of Byte; override;
+    method Reset; override;
   end;
 
   SHA384 = private class (MessageDigest)
   private
     Context: CC_SHA512_CTX;
   public
-    constructor;
     method Update(Data: array of Byte; Offset: Integer; Count: Integer); override;
     method Digest(Data: array of Byte; Offset: Integer; Count: Integer): array of Byte; override;
+    method Reset; override;
   end;
 
   SHA512 = private class (MessageDigest)
   private
     Context: CC_SHA512_CTX;
   public
-    constructor;
     method Update(Data: array of Byte; Offset: Integer; Count: Integer); override;
     method Digest(Data: array of Byte; Offset: Integer; Count: Integer): array of Byte; override;
+    method Reset; override;
   end;
   {$ENDIF}
 
@@ -103,14 +105,16 @@ begin
   end;
   {$ELSEIF NOUGAT}
   case Algorithm of
-    DigestAlgorithm.MD5: exit new MD5;
-    DigestAlgorithm.SHA1: exit new SHA1;
-    DigestAlgorithm.SHA256: exit new SHA256;
-    DigestAlgorithm.SHA384: exit new SHA384;
-    DigestAlgorithm.SHA512: exit new SHA512;
+    DigestAlgorithm.MD5: result := new MD5;
+    DigestAlgorithm.SHA1: result := new SHA1;
+    DigestAlgorithm.SHA256: result := new SHA256;
+    DigestAlgorithm.SHA384: result := new SHA384;
+    DigestAlgorithm.SHA512: result := new SHA512;
     else
       raise new SugarNotImplementedException;
   end;
+
+  result.Reset;
   {$ENDIF}
 end;
 
@@ -153,10 +157,11 @@ begin
 
   {$IF COOPER}
   mapped.update(Data, Offset, Count);
-  exit mapped.digest;
+  result := mapped.digest;
   {$ELSEIF ECHOES}
   mapped.TransformFinalBlock(Data, Offset, Count);
-  exit mapped.Hash;
+  result := mapped.Hash;
+  mapped.Initialize;
   {$ELSEIF NOUGAT}
   {$ENDIF}
 end;
@@ -172,6 +177,16 @@ begin
     raise new SugarArgumentNullException("Data");
 
   exit Digest(Data, 0, Data.Length);
+end;
+
+method MessageDigest.Reset;
+begin
+  {$IF COOPER}
+  mapped.reset;
+  {$ELSEIF ECHOES}  
+  mapped.Initialize;
+  {$ELSEIF NOUGAT}
+  {$ENDIF}
 end;
 
 class method MessageDigest.ToHexString(Data: array of Byte): String;
@@ -196,11 +211,6 @@ begin
 end;
 
 {$IF NOUGAT}
-constructor MD5;
-begin
-  CC_MD5_Init(@Context);
-end;
-
 method MD5.Update(Data: array of Byte; Offset: Integer; Count: Integer);
 begin
   inherited Update(Data, Offset, Count);
@@ -213,9 +223,15 @@ begin
   CC_MD5_Update(@Context, @Data[Offset], Count);
   result := new Byte[CC_MD5_DIGEST_LENGTH];
   CC_MD5_Final(result, @Context);
+  Reset;
 end;
 
-constructor SHA1;
+method MD5.Reset;
+begin
+  CC_MD5_Init(@Context);
+end;
+
+method SHA1.Reset;
 begin
   CC_SHA1_Init(@Context);
 end;
@@ -232,9 +248,10 @@ begin
   CC_SHA1_Update(@Context, @Data[Offset], Count);
   result := new Byte[CC_SHA1_DIGEST_LENGTH];
   CC_SHA1_Final(result, @Context);
+  Reset;
 end;
 
-constructor SHA256;
+method SHA256.Reset;
 begin
   CC_SHA256_Init(@Context);
 end;
@@ -251,9 +268,10 @@ begin
   CC_SHA256_Update(@Context, @Data[Offset], Count);
   result := new Byte[CC_SHA256_DIGEST_LENGTH];
   CC_SHA256_Final(result, @Context);
+  Reset;
 end;
 
-constructor SHA384;
+method SHA384.Reset;
 begin
   CC_SHA384_Init(@Context);
 end;
@@ -270,9 +288,10 @@ begin
   CC_SHA384_Update(@Context, @Data[Offset], Count);
   result := new Byte[CC_SHA384_DIGEST_LENGTH];
   CC_SHA384_Final(result, @Context);
+  Reset;
 end;
 
-constructor SHA512;
+method SHA512.Reset;
 begin
   CC_SHA512_Init(@Context);
 end;
@@ -289,6 +308,7 @@ begin
   CC_SHA512_Update(@Context, @Data[Offset], Count);
   result := new Byte[CC_SHA512_DIGEST_LENGTH];
   CC_SHA512_Final(result, @Context);
+  Reset;
 end;
 {$ENDIF}
 
