@@ -105,6 +105,16 @@ begin
     else
       raise new SugarNotImplementedException;
   end;
+  {$ELSEIF WINDOWS_PHONE}
+  case Algorithm of
+    DigestAlgorithm.MD5: raise new SugarNotSupportedException(ErrorMessage.NOTSUPPORTED_ERROR, "MD5");
+    DigestAlgorithm.SHA1: exit new SHA1Managed;
+    DigestAlgorithm.SHA256: exit new SHA256Managed;
+    DigestAlgorithm.SHA384: raise new SugarNotSupportedException(ErrorMessage.NOTSUPPORTED_ERROR, "SHA-384");
+    DigestAlgorithm.SHA512: raise new SugarNotSupportedException(ErrorMessage.NOTSUPPORTED_ERROR, "SHA-512");
+    else
+      raise new SugarNotImplementedException;
+  end;
   {$ELSEIF ECHOES}
   case Algorithm of
     DigestAlgorithm.MD5: exit MD5.Create();
