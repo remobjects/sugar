@@ -81,6 +81,7 @@ type
     class const IO_RENAME_ERROR = "Unable to reanme {0} to {1}";
 
     class const APP_CONTEXT_MISSING = "Environment.ApplicationContext is not set.";
+    class const NOTSUPPORTED_ERROR = "{0} is not supported on current platform";
   end;
 
 implementation

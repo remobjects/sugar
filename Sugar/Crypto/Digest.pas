@@ -3,7 +3,9 @@
 interface
 
 uses
-{$IF ECHOES}
+{$IF NETFX_CORE}
+Windows.Security.Cryptography.Core;
+{$ELSEIF ECHOES}
   System.Security.Cryptography;
 {$ELSEIF COOPER}
   Sugar.Cooper,
@@ -15,7 +17,7 @@ uses
 type  
   DigestAlgorithm = public (MD5, SHA1, SHA256, SHA384, SHA512); 
 
-  MessageDigest = public class {$IF COOPER}mapped to java.security.MessageDigest{$ELSEIF ECHOES}mapped to System.Security.Cryptography.HashAlgorithm{$ELSEIF NOUGAT}{$ENDIF}
+  MessageDigest = public class {$IF COOPER}mapped to java.security.MessageDigest{$ELSEIF NETFX_CORE}mapped to CryptographicHash{$ELSEIF ECHOES}mapped to System.Security.Cryptography.HashAlgorithm{$ELSEIF NOUGAT}{$ENDIF}
   public
     constructor(Algorithm: DigestAlgorithm);
 
@@ -93,6 +95,16 @@ begin
     else
       raise new SugarNotImplementedException;
   end;
+  {$ELSEIF NETFX_CORE}
+  case Algorithm of
+    DigestAlgorithm.MD5: exit HashAlgorithmProvider.OpenAlgorithm(HashAlgorithmNames.Md5).CreateHash;
+    DigestAlgorithm.SHA1: exit HashAlgorithmProvider.OpenAlgorithm(HashAlgorithmNames.Sha1).CreateHash;
+    DigestAlgorithm.SHA256: exit HashAlgorithmProvider.OpenAlgorithm(HashAlgorithmNames.Sha256).CreateHash;
+    DigestAlgorithm.SHA384: exit HashAlgorithmProvider.OpenAlgorithm(HashAlgorithmNames.Sha384).CreateHash;
+    DigestAlgorithm.SHA512: exit HashAlgorithmProvider.OpenAlgorithm(HashAlgorithmNames.Sha512).CreateHash;
+    else
+      raise new SugarNotImplementedException;
+  end;
   {$ELSEIF ECHOES}
   case Algorithm of
     DigestAlgorithm.MD5: exit MD5.Create();
@@ -128,6 +140,11 @@ begin
 
   {$IF COOPER}
   mapped.update(Data, Offset, Count);
+  {$ELSEIF NETFX_CORE}
+  var lData := new Byte[Count];
+  Array.Copy(Data, Offset, lData, 0, Count);
+  var Buffer := Windows.Security.Cryptography.CryptographicBuffer.CreateFromByteArray(lData);
+  mapped.Append(Buffer);
   {$ELSEIF ECHOES}
   mapped.TransformBlock(Data, Offset, Count, nil, 0);
   {$ELSEIF NOUGAT}
@@ -158,6 +175,14 @@ begin
   {$IF COOPER}
   mapped.update(Data, Offset, Count);
   result := mapped.digest;
+  {$ELSEIF NETFX_CORE}
+  var lData := new Byte[Count];
+  Array.Copy(Data, Offset, lData, 0, Count);
+  var Buffer := Windows.Security.Cryptography.CryptographicBuffer.CreateFromByteArray(lData);
+  mapped.Append(Buffer);
+  Buffer := mapped.GetValueAndReset;
+  result := new Byte[Buffer.Length];
+  Windows.Security.Cryptography.CryptographicBuffer.CopyToByteArray(Buffer, result);
   {$ELSEIF ECHOES}
   mapped.TransformFinalBlock(Data, Offset, Count);
   result := mapped.Hash;
@@ -183,6 +208,8 @@ method MessageDigest.Reset;
 begin
   {$IF COOPER}
   mapped.reset;
+  {$ELSEIF NETFX_CORE}
+  mapped.GetValueAndReset;
   {$ELSEIF ECHOES}  
   mapped.Initialize;
   {$ELSEIF NOUGAT}
