@@ -21,7 +21,7 @@ type
 
     property Name: String read GetName;
 
-    class property ASCII: Encoding read GetEncoding("ASCII");
+    class property ASCII: Encoding read GetEncoding("US-ASCII");
     class property UTF8: Encoding read GetEncoding("UTF-8");
     class property UTF16LE: Encoding read GetEncoding("UTF-16LE");
     class property UTF16BE: Encoding read GetEncoding("UTF-16BE");
@@ -156,6 +156,11 @@ begin
   SugarArgumentNullException.RaiseIfNil(Name, "Name");
   {$IF COOPER}
   exit java.nio.charset.Charset.forName(Name);
+  {$ELSEIF WINDOWS_PHONE}
+  result := CustomEncoding.ForName(Name);
+
+  if result = nil then
+    exit System.Text.Encoding.GetEncoding(Name);
   {$ELSEIF ECHOES}
   exit System.Text.Encoding.GetEncoding(Name);
   {$ELSEIF NOUGAT}
