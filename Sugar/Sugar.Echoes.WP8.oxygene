@@ -110,12 +110,13 @@
     <Compile Include="Collections\Stack.pas" />
     <Compile Include="Color.pas" />
     <None Include="Crypto\Cipher.pas" />
-    <None Include="Crypto\Digest.pas" />
+    <Compile Include="Crypto\Digest.pas" />
     <Compile Include="Consts.pas" />
     <Compile Include="Convert.pas" />
     <Compile Include="DateTime.pas" />
     <Compile Include="DateFormatter.pas" />
     <Compile Include="Encoding.pas" />
+    <Compile Include="CustomEncodings.pas" />
     <Compile Include="HTTP.pas" />
     <Compile Include="IO\File.pas" />
     <Compile Include="IO\FileHandle.pas" />
