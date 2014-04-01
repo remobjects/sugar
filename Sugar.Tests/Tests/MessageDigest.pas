@@ -58,6 +58,11 @@ begin
   Assert.IsException(->new MessageDigest(DigestAlgorithm.SHA256).Digest(Data, 1, -1));
   Assert.IsException(->new MessageDigest(DigestAlgorithm.SHA384).Digest(Data, 55, 1));
   Assert.IsException(->new MessageDigest(DigestAlgorithm.MD5).Digest(Data, 1, 55));
+
+  var md := new MessageDigest(DigestAlgorithm.SHA1);
+  Assert.CheckString("7037807198C22A7D2B0807371D763779A84FDFCF", MessageDigest.ToHexString(md.Digest([1, 2, 3])));
+  Assert.CheckString("E809C5D1CEA47B45E34701D23F608A9A58034DC9", MessageDigest.ToHexString(md.Digest([4, 5, 6])));
+  Assert.CheckString("B470CF972A0D84FBAEEEDB51A963A902269417E8", MessageDigest.ToHexString(md.Digest([7, 8, 9])));
 end;
 
 method MessageDigestTest.ToHexString;
@@ -69,7 +74,7 @@ end;
 
 method MessageDigestTest.Updatable;
 begin
-  var Expected := new MessageDigest(DigestAlgorithm.MD5).Digest(Encoding.UTF8.GetBytes("PingPong"));
+  var Expected: array of Byte := [153, 229, 39, 4, 70, 45, 53, 128, 219, 53, 40, 202, 215, 234, 150, 96];
 
   var Digest := new MessageDigest(DigestAlgorithm.MD5);
   Digest.Update(Encoding.UTF8.GetBytes("Ping"));

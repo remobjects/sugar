@@ -111,7 +111,6 @@ begin
   Assert.IsNotNull(Encoding.UTF16LE);
   Assert.IsNotNull(Encoding.UTF16BE);
   Assert.IsNotNull(Encoding.GetEncoding("Windows-1251"));
-  Assert.IsNotNull(Encoding.GetEncoding("ISO-8859-7"));
 
   Assert.IsException(->Encoding.GetEncoding(nil));
   Assert.IsException(->Encoding.GetEncoding(""));

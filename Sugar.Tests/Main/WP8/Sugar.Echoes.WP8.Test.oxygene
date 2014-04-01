@@ -136,6 +136,7 @@
     <Compile Include="..\..\Tests\Url.pas" />
     <Compile Include="..\..\Tests\UserSettings.pas" />
     <Compile Include="..\..\Tests\Math.pas" />
+    <Compile Include="..\..\Tests\MessageDigest.pas" />
     <Compile Include="..\..\Tests\Xml\CharacterData.pas" />
     <Compile Include="..\..\Tests\Xml\Document.pas" />
     <Compile Include="..\..\Tests\Xml\DocumentType.pas" />
