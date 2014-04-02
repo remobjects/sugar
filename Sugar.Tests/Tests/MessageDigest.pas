@@ -31,11 +31,11 @@ method MessageDigestTest.Algorithms;
 begin
   var Data := Encoding.UTF8.GetBytes("These aren't the droids you're looking for");
 
-  Assert.CheckString("6ECD7F39E50E4C52D4E383133E18AEB3", MessageDigest.ToHexString(new MessageDigest(DigestAlgorithm.MD5).Digest(Data)));
-  Assert.CheckString("1BD44F7B2657CA9C9D7516885FA925D5791D624C", MessageDigest.ToHexString(new MessageDigest(DigestAlgorithm.SHA1).Digest(Data)));
-  Assert.CheckString("DBCE3DDA001C46C396653CF6C5435DC9833741FA9257DC031FDFF48B57DAB374", MessageDigest.ToHexString(new MessageDigest(DigestAlgorithm.SHA256).Digest(Data)));
-  Assert.CheckString("3729BBA3B503AC182F75586E69B6F4A6AB5B26D88569B65817EE495D4821B8B9831B8F78CD6DB407A59B321509AB9E8D", MessageDigest.ToHexString(new MessageDigest(DigestAlgorithm.SHA384).Digest(Data)));
-  Assert.CheckString("B9DF79CE9E94E4C014D21E2B98424FD79665CF224804761BD56164D7E704A6B0C98C4658CD937DABA449892F0A643522BA7F66C3FB7B9116A2961F999BB36463", MessageDigest.ToHexString(new MessageDigest(DigestAlgorithm.SHA512).Digest(Data)));
+  Assert.CheckString("6ECD7F39E50E4C52D4E383133E18AEB3", Utils.ToHexString(new MessageDigest(DigestAlgorithm.MD5).Digest(Data)));
+  Assert.CheckString("1BD44F7B2657CA9C9D7516885FA925D5791D624C", Utils.ToHexString(new MessageDigest(DigestAlgorithm.SHA1).Digest(Data)));
+  Assert.CheckString("DBCE3DDA001C46C396653CF6C5435DC9833741FA9257DC031FDFF48B57DAB374", Utils.ToHexString(new MessageDigest(DigestAlgorithm.SHA256).Digest(Data)));
+  Assert.CheckString("3729BBA3B503AC182F75586E69B6F4A6AB5B26D88569B65817EE495D4821B8B9831B8F78CD6DB407A59B321509AB9E8D", Utils.ToHexString(new MessageDigest(DigestAlgorithm.SHA384).Digest(Data)));
+  Assert.CheckString("B9DF79CE9E94E4C014D21E2B98424FD79665CF224804761BD56164D7E704A6B0C98C4658CD937DABA449892F0A643522BA7F66C3FB7B9116A2961F999BB36463", Utils.ToHexString(new MessageDigest(DigestAlgorithm.SHA512).Digest(Data)));
 end;
 
 method MessageDigestTest.ComputeHash;
@@ -61,16 +61,16 @@ begin
   Assert.IsException(->new MessageDigest(DigestAlgorithm.MD5).Digest(Data, 1, 55));
 
   var md := new MessageDigest(DigestAlgorithm.SHA1);
-  Assert.CheckString("7037807198C22A7D2B0807371D763779A84FDFCF", MessageDigest.ToHexString(md.Digest([1, 2, 3])));
-  Assert.CheckString("E809C5D1CEA47B45E34701D23F608A9A58034DC9", MessageDigest.ToHexString(md.Digest([4, 5, 6])));
-  Assert.CheckString("B470CF972A0D84FBAEEEDB51A963A902269417E8", MessageDigest.ToHexString(md.Digest([7, 8, 9])));
+  Assert.CheckString("7037807198C22A7D2B0807371D763779A84FDFCF", Utils.ToHexString(md.Digest([1, 2, 3])));
+  Assert.CheckString("E809C5D1CEA47B45E34701D23F608A9A58034DC9", Utils.ToHexString(md.Digest([4, 5, 6])));
+  Assert.CheckString("B470CF972A0D84FBAEEEDB51A963A902269417E8", Utils.ToHexString(md.Digest([7, 8, 9])));
 end;
 
 method MessageDigestTest.ToHexString;
 begin
-  Assert.CheckString("D41D8CD98F00B204E9800998ECF8427E", MessageDigest.ToHexString(new MessageDigest(DigestAlgorithm.MD5).Digest([])));
-  Assert.CheckString("F7FF9E8B7BB2E09B70935A5D785E0CC5D9D0ABF0", MessageDigest.ToHexString(new MessageDigest(DigestAlgorithm.SHA1).Digest(Encoding.UTF8.GetBytes("Hello"))));
-  Assert.CheckString("000102030405060708090A0B0C0D0E0F2A", MessageDigest.ToHexString([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 42]));
+  Assert.CheckString("D41D8CD98F00B204E9800998ECF8427E", Utils.ToHexString(new MessageDigest(DigestAlgorithm.MD5).Digest([])));
+  Assert.CheckString("F7FF9E8B7BB2E09B70935A5D785E0CC5D9D0ABF0", Utils.ToHexString(new MessageDigest(DigestAlgorithm.SHA1).Digest(Encoding.UTF8.GetBytes("Hello"))));
+  Assert.CheckString("000102030405060708090A0B0C0D0E0F2A", Utils.ToHexString([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 42]));
 end;
 
 method MessageDigestTest.Updatable;

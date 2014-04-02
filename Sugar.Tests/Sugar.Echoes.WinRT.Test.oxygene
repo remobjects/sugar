@@ -99,6 +99,7 @@
     <Folder Include="Tests" />
     <Folder Include="Tests\Xml" />
     <Folder Include="Tests\IO" />
+    <Folder Include="Tests\Cryptography" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.xaml.pas">
@@ -112,6 +113,7 @@
     <Compile Include="Tests\AutoreleasePool.pas" />
     <Compile Include="Tests\Binary.pas" />
     <Compile Include="Tests\Convert.pas" />
+    <Compile Include="Tests\Cryptography\Utils.pas" />
     <Compile Include="Tests\DateTime.pas" />
     <Compile Include="Tests\Dictionary.pas" />
     <Compile Include="Tests\Encoding.pas" />
