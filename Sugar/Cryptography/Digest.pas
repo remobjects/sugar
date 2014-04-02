@@ -1,8 +1,9 @@
-﻿namespace Sugar;
+﻿namespace Sugar.Cryptography;
 
 interface
 
 uses
+  Sugar,
 {$IF NETFX_CORE}
 Windows.Security.Cryptography.Core;
 {$ELSEIF ECHOES}
@@ -107,11 +108,11 @@ begin
   end;
   {$ELSEIF WINDOWS_PHONE}
   case Algorithm of
-    DigestAlgorithm.MD5: exit new Sugar.Crypto.MD5Managed;
+    DigestAlgorithm.MD5: exit new Sugar.Cryptography.MD5Managed;
     DigestAlgorithm.SHA1: exit new SHA1Managed;
     DigestAlgorithm.SHA256: exit new SHA256Managed;
-    DigestAlgorithm.SHA384: exit new Sugar.Crypto.SHA384Managed;
-    DigestAlgorithm.SHA512: exit new Sugar.Crypto.SHA512Managed;
+    DigestAlgorithm.SHA384: exit new Sugar.Cryptography.SHA384Managed;
+    DigestAlgorithm.SHA512: exit new Sugar.Cryptography.SHA512Managed;
     else
       raise new SugarNotImplementedException;
   end;

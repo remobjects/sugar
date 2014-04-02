@@ -4,6 +4,7 @@ interface
 
 uses
   Sugar,
+  Sugar.Cryptography,
   Sugar.TestFramework;
 
 type
