@@ -81,10 +81,11 @@
     <Compile Include="Collections\Queue.pas" />
     <Compile Include="Collections\Stack.pas" />
     <Compile Include="Color.pas" />
-    <None Include="Cryptography\Cipher.pas" />
-    <Compile Include="Cryptography\MessageDigest.pas" />
     <Compile Include="Consts.pas" />
     <Compile Include="Convert.pas" />
+    <None Include="Cryptography\Cipher.pas" />
+    <Compile Include="Cryptography\MessageDigest.pas" />
+    <Compile Include="Cryptography\Utils.pas" />
     <Compile Include="DateTime.pas" />
     <Compile Include="DateFormatter.pas" />
     <Compile Include="Encoding.pas" />

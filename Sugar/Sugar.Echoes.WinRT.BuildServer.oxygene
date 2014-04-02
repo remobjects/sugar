@@ -100,6 +100,7 @@
     <Compile Include="Color.pas" />
     <None Include="Cryptography\Cipher.pas" />
     <Compile Include="Cryptography\MessageDigest.pas" />
+    <Compile Include="Cryptography\Utils.pas" />
     <Compile Include="Consts.pas" />
     <Compile Include="Convert.pas" />
     <Compile Include="DateTime.pas" />

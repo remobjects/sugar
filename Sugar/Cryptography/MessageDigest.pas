@@ -31,8 +31,6 @@ type
     method Digest(Data: array of Byte; Offset: Integer; Count: Integer): array of Byte; virtual;
     method Digest(Data: array of Byte; Count: Integer): array of Byte;
     method Digest(Data: array of Byte): array of Byte;
-
-    class method ToHexString(Data: array of Byte): String;
   end;
 
 implementation
@@ -178,27 +176,6 @@ begin
   mapped.Initialize;
   {$ELSEIF NOUGAT}
   {$ENDIF}
-end;
-
-class method MessageDigest.ToHexString(Data: array of Byte): String;
-begin
-  if Data = nil then
-    raise new SugarArgumentNullException("Data");
-
-  if Data.Length = 0 then
-    exit "";
-
-  var Chars := new Char[Data.Length * 2];
-  var Num: Integer;
-
-  for i: Integer := 0 to Data.Length - 1 do begin
-    Num := Data[i] shr 4;
-    Chars[i * 2] := chr(55 + Num + (((Num - 10) shr 31) and -7));
-    Num := Data[i] and $F;
-    Chars[i * 2 + 1] := chr(55 + Num + (((Num - 10) shr 31) and -7));
-  end;
-
-  exit new String(Chars);
 end;
 
 end.

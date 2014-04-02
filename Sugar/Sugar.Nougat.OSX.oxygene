@@ -60,6 +60,7 @@
     <Compile Include="Consts.pas" />
     <Compile Include="Convert.pas" />
     <Compile Include="Cryptography\MessageDigests.pas" />
+    <Compile Include="Cryptography\Utils.pas" />
     <Compile Include="DateTime.pas" />
     <Compile Include="DateFormatter.pas" />
     <Compile Include="Encoding.pas" />
