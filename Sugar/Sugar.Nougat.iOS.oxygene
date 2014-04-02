@@ -55,8 +55,8 @@
     <Compile Include="Collections\Queue.pas" />
     <Compile Include="Collections\Stack.pas" />
     <Compile Include="Color.pas" />
-    <None Include="Crypto\Cipher.pas" />
-    <Compile Include="Crypto\Digest.pas" />
+    <None Include="Cryptography\Cipher.pas" />
+    <Compile Include="Cryptography\Digest.pas" />
     <Compile Include="Consts.pas" />
     <Compile Include="Convert.pas" />
     <Compile Include="DateTime.pas" />
@@ -97,7 +97,7 @@
     <Compile Include="Reflection\Type.pas" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Crypto" />
+    <Folder Include="Cryptography" />
     <Folder Include="Properties\" />
     <Folder Include="Collections" />
     <Folder Include="Reflection\" />

@@ -60,8 +60,8 @@
     <Compile Include="Color.pas" />
     <Compile Include="Cooper\EnumerationSequence.pas" />
     <Compile Include="Cooper\LocaleUtils.pas" />
-    <None Include="Crypto\Cipher.pas" />
-    <Compile Include="Crypto\Digest.pas" />
+    <None Include="Cryptography\Cipher.pas" />
+    <Compile Include="Cryptography\Digest.pas" />
     <Compile Include="Consts.pas" />
     <Compile Include="Convert.pas" />
     <Compile Include="DateTime.pas" />
@@ -105,7 +105,7 @@
     <Folder Include="Cooper" />
     <Folder Include="Collections" />
     <Folder Include="IO" />
-    <Folder Include="Crypto" />
+    <Folder Include="Cryptography" />
 	<Folder Include="Reflection" />
     <Folder Include="Threading" />
     <Folder Include="Properties\" />
