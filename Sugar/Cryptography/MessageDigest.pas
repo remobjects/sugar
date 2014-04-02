@@ -31,6 +31,8 @@ type
     method Digest(Data: array of Byte; Offset: Integer; Count: Integer): array of Byte; virtual;
     method Digest(Data: array of Byte; Count: Integer): array of Byte;
     method Digest(Data: array of Byte): array of Byte;
+
+    class method ComputeHash(Data: array of Byte; Algorithm: DigestAlgorithm): array of Byte;
   end;
 
 implementation
@@ -176,6 +178,12 @@ begin
   mapped.Initialize;
   {$ELSEIF NOUGAT}
   {$ENDIF}
+end;
+
+class method MessageDigest.ComputeHash(Data: array of Byte; Algorithm: DigestAlgorithm): array of Byte;
+begin
+  var Digest := new MessageDigest(Algorithm);
+  exit Digest.Digest(Data);
 end;
 
 end.
