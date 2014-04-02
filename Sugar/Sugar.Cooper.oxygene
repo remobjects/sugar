@@ -61,7 +61,7 @@
     <Compile Include="Cooper\EnumerationSequence.pas" />
     <Compile Include="Cooper\LocaleUtils.pas" />
     <None Include="Cryptography\Cipher.pas" />
-    <Compile Include="Cryptography\Digest.pas" />
+    <Compile Include="Cryptography\MessageDigest.pas" />
     <Compile Include="Consts.pas" />
     <Compile Include="Convert.pas" />
     <Compile Include="DateTime.pas" />
