@@ -59,6 +59,7 @@
     <Compile Include="Cryptography\MessageDigest.pas" />
     <Compile Include="Consts.pas" />
     <Compile Include="Convert.pas" />
+    <Compile Include="Cryptography\MessageDigests.pas" />
     <Compile Include="DateTime.pas" />
     <Compile Include="DateFormatter.pas" />
     <Compile Include="Encoding.pas" />
@@ -107,6 +108,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Nougat.targets" />
   <PropertyGroup>
-    <PreBuildEvent></PreBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
 </Project>
