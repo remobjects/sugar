@@ -31,6 +31,9 @@ implementation
 
 method Encoding.GetBytes(Value: array of Char): array of Byte;
 begin
+  if Value = nil then
+    raise new SugarArgumentNullException("Value");
+
   exit GetBytes(Value, 0, Value.length);
 end;
 
@@ -43,7 +46,16 @@ begin
     exit [];
 
   RangeHelper.Validate(Range.MakeRange(Offset, Count), Value.Length);
-  {$IF COOPER}
+  {$IF ANDROID}
+  var Buffer := mapped.newEncoder.
+    onMalformedInput(java.nio.charset.CodingErrorAction.REPLACE).
+    onUnmappableCharacter(java.nio.charset.CodingErrorAction.REPLACE).
+    replaceWith([63]).
+    encode(java.nio.CharBuffer.wrap(Value, Offset, Count));
+
+  result := new Byte[Buffer.remaining];
+  Buffer.get(result);
+  {$ELSEIF COOPER}
   var Buffer := mapped.encode(java.nio.CharBuffer.wrap(Value, Offset, Count));
   result := new Byte[Buffer.remaining];
   Buffer.get(result);
@@ -57,7 +69,16 @@ end;
 method Encoding.GetBytes(Value: String): array of Byte;
 begin
   SugarArgumentNullException.RaiseIfNil(Value, "Value");
-  {$IF COOPER}
+  {$IF ANDROID}
+  var Buffer := mapped.newEncoder.
+    onMalformedInput(java.nio.charset.CodingErrorAction.REPLACE).
+    onUnmappableCharacter(java.nio.charset.CodingErrorAction.REPLACE).
+    replaceWith([63]).
+    encode(java.nio.CharBuffer.wrap(Value));
+
+  result := new Byte[Buffer.remaining];
+  Buffer.get(result);
+  {$ELSEIF COOPER}
   var Buffer := mapped.encode(Value);
   result := new Byte[Buffer.remaining];
   Buffer.get(result);
@@ -115,6 +136,9 @@ end;
 
 method Encoding.GetString(Value: array of Byte): String;
 begin
+  if Value = nil then
+    raise new SugarArgumentNullException("Value");
+
   exit GetString(Value, 0, Value.length);
 end;
 
