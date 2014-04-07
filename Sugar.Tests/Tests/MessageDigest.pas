@@ -64,6 +64,11 @@ begin
   Assert.CheckString("7037807198C22A7D2B0807371D763779A84FDFCF", Utils.ToHexString(md.Digest([1, 2, 3])));
   Assert.CheckString("E809C5D1CEA47B45E34701D23F608A9A58034DC9", Utils.ToHexString(md.Digest([4, 5, 6])));
   Assert.CheckString("B470CF972A0D84FBAEEEDB51A963A902269417E8", Utils.ToHexString(md.Digest([7, 8, 9])));
+
+  Assert.CheckString("7037807198C22A7D2B0807371D763779A84FDFCF", Utils.ToHexString(MessageDigest.ComputeHash([1, 2, 3], DigestAlgorithm.SHA1)));
+  Assert.CheckString("E809C5D1CEA47B45E34701D23F608A9A58034DC9", Utils.ToHexString(MessageDigest.ComputeHash([4, 5, 6], DigestAlgorithm.SHA1)));
+  Assert.CheckString("B470CF972A0D84FBAEEEDB51A963A902269417E8", Utils.ToHexString(MessageDigest.ComputeHash([7, 8, 9], DigestAlgorithm.SHA1)));
+
 end;
 
 method MessageDigestTest.ToHexString;
