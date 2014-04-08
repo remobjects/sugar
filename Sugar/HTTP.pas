@@ -145,13 +145,18 @@ begin
   end;
   {$ELSEIF NOUGAT}
   var lError: NSError := nil;
+  var lRequest := new NSURLRequest withURL(anUrl) cachePolicy(0) timeoutInterval(30);
+  var lResponse: NSURLResponse;
   
-  var lData := new NSMutableData withContentsOfURL(anUrl) options(NSDataReadingOptions.NSDataReadingUncached) error(var lError);
+  var lData := NSURLConnection.sendSynchronousRequest(lRequest) returningResponse(var lResponse) error(var lError);
 
-  if not assigned(lData) then
-    exit new HttpResponse<Binary>(Exception(new SugarNSErrorException(lError)));
+  if lError <> nil then
+    exit new HttpResponse<Binary> withException(Exception(new SugarNSErrorException(lError)));
 
-  exit new HttpResponse<Binary>(lData);
+  if NSHTTPURLResponse(lResponse).statusCode <> 200 then
+    exit new HttpResponse<Binary> withException(Exception(new SugarIOException("Unable to complete request. Error code: {0}", NSHTTPURLResponse(lResponse).statusCode)));
+
+  exit new HttpResponse<Binary>(Binary(NSMutableData.dataWithData(lData)));
   {$ENDIF}
   except
     on E: Exception do begin
