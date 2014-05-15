@@ -19,7 +19,7 @@ type
   private
     {$IF NOUGAT}
     fIsID: Boolean;
-    fClass: rtl.Class;
+    fClass: &Class;
     fProtocol: Protocol;
     fSimpleType: String;
     method GetName: String;
@@ -47,7 +47,7 @@ type
     {$ENDIF}
     {$IF NOUGAT}
     method initWithID: instancetype;
-    method initWithClass(aClass: rtl.Class): instancetype;
+    method initWithClass(aClass: &Class): instancetype;
     method initWithProtocol(aProtocol: id): instancetype;
     method initWithSimpleType(aTypeEncoding: String): instancetype;
     method GetInterfaces: NSArray<Sugar.Reflection.Type>; 
