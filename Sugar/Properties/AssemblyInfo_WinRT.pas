@@ -6,31 +6,22 @@ uses System.Reflection,
   System.Runtime.CompilerServices,
   System.Runtime.InteropServices;
 
-// General Information about an assembly is controlled through the following 
-// set of attributes. Change these attribute values to modify the information
-// associated with an assembly.
-[assembly: AssemblyTitle('Sugar.Echoes.WinRT')]
-[assembly: AssemblyDescription('')]
-[assembly: AssemblyConfiguration('')]
-[assembly: AssemblyCompany('')]
-[assembly: AssemblyProduct('Sugar.Echoes.WinRT')]
-[assembly: AssemblyCopyright('Copyright ©  2013')]
+[assembly: AssemblyTitle('RemObjects Sugar')]
+[assembly: AssemblyDescription('RemObjects Sugar Corss-PLatform Library')]
+[assembly: AssemblyCompany('RemObjects Software')]
+[assembly: AssemblyProduct('')]
+[assembly: AssemblyCopyright('RemObjects Software')]
 [assembly: AssemblyTrademark('')]
 [assembly: AssemblyCulture('')]
-
-// Version information for an assembly consists of the following four values:
-//
-//      Major Version
-//      Minor Version 
-//      Build Number
-//      Revision
-//
-// You can specify all the values or you can default the Build and Revision Numbers 
-// by using the '*' as shown below:
-// [assembly: AssemblyVersion('1.0.*')]
-[assembly: AssemblyVersion('1.0.0.0')]
-[assembly: AssemblyFileVersion('1.0.0.0')]
+[assembly: AssemblyVersion('1.0.0.1')]
+[assembly: NeutralResourcesLanguage('')]
 [assembly: ComVisible(false)]
+
+[assembly: AssemblyDelaySign(false)]
+[assembly: AssemblyKeyFile('')]
+{$IF CODESIGN}
+[assembly: AssemblyKeyName('RemObjectsSoftware')]
+{$ENDIF}
 
 implementation
 
