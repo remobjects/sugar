@@ -7,7 +7,7 @@ saveVersionNumberToSharedIni("Sugar", sugarVersion);
 var lFiles =
 			["Sugar/Properties/AssemblyInfo.pas",
 			"Sugar/Properties/AssemblyInfo_WinRT.pas",
-			"Sugar/Properties/AssemblyInfo_WP8.pas",];
+			"Sugar/Properties/AssemblyInfo_WP8.pas"];
 
 msbuild.updateAssemblyVersion(lFiles, sugarVersion);
 
