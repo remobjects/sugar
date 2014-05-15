@@ -14,7 +14,6 @@ uses System.Reflection,
 [assembly: AssemblyTrademark('')]
 [assembly: AssemblyCulture('')]
 [assembly: AssemblyVersion('1.0.0.1')]
-[assembly: NeutralResourcesLanguage('')]
 [assembly: ComVisible(false)]
 
 [assembly: AssemblyDelaySign(false)]
