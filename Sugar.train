@@ -4,6 +4,13 @@ var sugarVersion = getVersionNumberFromGlobalIni("Oxygene");
 export("CIVersionNumber", sugarVersion);
 saveVersionNumberToSharedIni("Sugar", sugarVersion);
 
+var lFiles =
+			["Sugar/Properties/AssemblyInfo.pas",
+			"Sugar/Properties/AssemblyInfo_WinRT.pas",
+			"Sugar/Properties/AssemblyInfo_WP8.pas",];
+
+msbuild.updateAssemblyVersion(lFiles, sugarVersion);
+
 //msbuild["rebuild"]("Sugar.BuildServer.sln", {configuration: "Release", destinationFolder: "./Bin",  extraArgs: "/p:CrossBox=Onyx;CrossBoxDeviceID=Mac;CrossBoxDevice=Mac"});
 
 msbuild["rebuild"]("Sugar/Sugar.Cooper.oxygene", 		{configuration: "Release", destinationFolder: "./Bin" });
