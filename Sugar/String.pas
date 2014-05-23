@@ -17,6 +17,8 @@ type
     class operator Less(Value1, Value2: String): Boolean;
     class operator GreaterOrEqual(Value1, Value2: String): Boolean;
     class operator LessOrEqual(Value1, Value2: String): Boolean;
+    class operator Equal(Value1, Value2: String): Boolean;
+    class operator NotEqual(Value1, Value2: String): Boolean;
 
     class method Format(aFormat: String; params aParams: array of Object): String;    
     class method CharacterIsWhiteSpace(Value: Char): Boolean;
@@ -125,6 +127,28 @@ begin
     exit NSString.stringWithFormat(#0);
 
   exit NSString.stringWithFormat("%c", Value);
+  {$ENDIF}
+end;
+
+class operator String.Equal(Value1: String; Value2: String): Boolean;
+begin
+  {$IF COOPER}
+  result := java.lang.String(Value1).compareTo(java.lang.String(Value2)) = 0;
+  {$ELSEIF ECHOES}
+  result := System.String(Value1).CompareTo(System.String(Value2)) = 0;
+  {$ELSEIF NOUGAT}
+  result := Foundation.NSString(Value1).compare(Value2) = 0;
+  {$ENDIF}
+end;
+
+class operator String.NotEqual(Value1: String; Value2: String): Boolean;
+begin
+  {$IF COOPER}
+  result := java.lang.String(Value1).compareTo(java.lang.String(Value2)) <> 0;
+  {$ELSEIF ECHOES}
+  result := System.String(Value1).CompareTo(System.String(Value2)) <> 0;
+  {$ELSEIF NOUGAT}
+  result := Foundation.NSString(Value1).compare(Value2) <> 0;
   {$ENDIF}
 end;
 
