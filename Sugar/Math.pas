@@ -158,7 +158,7 @@ begin
   if Consts.IsNaN(a) or Consts.IsInfinity(a) then
     raise new SugarArgumentException("Value can not be rounded to Int64");
 
-  exit Int64(Floor(a + 0.4));
+  exit Int64(Floor(a + 0.499999999999999999));
 end;
 
 {$IF COOPER or NOUGAT}
