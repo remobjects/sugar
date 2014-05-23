@@ -6,6 +6,7 @@ type
   String = public class mapped to {$IF COOPER}java.lang.String{$ELSEIF ECHOES}System.String{$ELSEIF NOUGAT}Foundation.NSString{$ENDIF}
   private
     method get_Chars(aIndex: Int32): Char;
+    class method Compare(Value1, Value2: String): Integer;
   public
     constructor(Value: array of Byte; Encoding: Encoding);
     constructor(Value: array of Char);
@@ -130,70 +131,61 @@ begin
   {$ENDIF}
 end;
 
+class method String.Compare(Value1: String; Value2: String): Integer;
+begin
+  var First := {$IF COOPER}java.lang.String{$ELSEIF ECHOES}System.String{$ELSEIF NOUGAT}Foundation.NSString{$ENDIF}(Value1);
+  var Second := {$IF COOPER}java.lang.String{$ELSEIF ECHOES}System.String{$ELSEIF NOUGAT}Foundation.NSString{$ENDIF}(Value2);
+
+  if (First = nil) and (Second = nil) then
+    exit 0;
+
+  if not assigned(First) then
+    exit -1;
+
+  if not assigned(Second) then
+    exit 1;
+
+  exit {$IF COOPER}First.compareTo(Second){$ELSEIF ECHOES}First.CompareTo(Second){$ELSEIF NOUGAT}First.compare(Second){$ENDIF};
+end;
+
 class operator String.Equal(Value1: String; Value2: String): Boolean;
 begin
-  {$IF COOPER}
-  result := java.lang.String(Value1).compareTo(java.lang.String(Value2)) = 0;
-  {$ELSEIF ECHOES}
-  result := System.String(Value1).CompareTo(System.String(Value2)) = 0;
-  {$ELSEIF NOUGAT}
-  result := Foundation.NSString(Value1).compare(Value2) = 0;
-  {$ENDIF}
+  var First := {$IF COOPER}java.lang.String{$ELSEIF ECHOES}System.String{$ELSEIF NOUGAT}Foundation.NSString{$ENDIF}(Value1);
+  var Second := {$IF COOPER}java.lang.String{$ELSEIF ECHOES}System.String{$ELSEIF NOUGAT}Foundation.NSString{$ENDIF}(Value2);
+
+  if (First = nil) and (Second = nil) then
+    exit true;
+
+  if First = nil then
+    exit false;
+
+
+  exit {$IF COOPER}First.compareTo(Second){$ELSEIF ECHOES}First.CompareTo(Second){$ELSEIF NOUGAT}First.compare(Second){$ENDIF} = 0;  
 end;
 
 class operator String.NotEqual(Value1: String; Value2: String): Boolean;
 begin
-  {$IF COOPER}
-  result := java.lang.String(Value1).compareTo(java.lang.String(Value2)) <> 0;
-  {$ELSEIF ECHOES}
-  result := System.String(Value1).CompareTo(System.String(Value2)) <> 0;
-  {$ELSEIF NOUGAT}
-  result := Foundation.NSString(Value1).compare(Value2) <> 0;
-  {$ENDIF}
+  exit Compare(Value1, Value2) <> 0;
 end;
 
 class operator String.Greater(Value1: String; Value2: String): Boolean;
 begin
-  {$IF COOPER}
-  result := java.lang.String(Value1).compareTo(java.lang.String(Value2)) > 0;
-  {$ELSEIF ECHOES}
-  result := System.String(Value1).CompareTo(System.String(Value2)) > 0;
-  {$ELSEIF NOUGAT}
-  result := Foundation.NSString(Value1).compare(Value2) > 0;
-  {$ENDIF}
+  exit Compare(Value1, Value2) > 0;
 end;
 
 class operator String.Less(Value1: String; Value2: String): Boolean;
 begin
-  {$IF COOPER}
-  result := java.lang.String(Value1).compareTo(java.lang.String(Value2)) < 0;
-  {$ELSEIF ECHOES}
-  result := System.String(Value1).CompareTo(System.String(Value2)) < 0;
-  {$ELSEIF NOUGAT}
-  result := Foundation.NSString(Value1).compare(Value2) < 0;
-  {$ENDIF}
+  exit Compare(Value1, Value2) < 0;
 end;
 
 class operator String.GreaterOrEqual(Value1: String; Value2: String): Boolean;
 begin
-  {$IF COOPER}
-  result := java.lang.String(Value1).compareTo(java.lang.String(Value2)) >= 0;
-  {$ELSEIF ECHOES}
-  result := System.String(Value1).CompareTo(System.String(Value2)) >= 0;
-  {$ELSEIF NOUGAT}
-  result := Foundation.NSString(Value1).compare(Value2) >= 0;
-  {$ENDIF}
+  exit Compare(Value1, Value2) >= 0;
 end;
 
 class operator String.LessOrEqual(Value1: String; Value2: String): Boolean;
 begin
-  {$IF COOPER}
-  result := java.lang.String(Value1).compareTo(java.lang.String(Value2)) <= 0;
-  {$ELSEIF ECHOES}
-  result := System.String(Value1).CompareTo(System.String(Value2)) <= 0;
-  {$ELSEIF NOUGAT}
-  result := Foundation.NSString(Value1).compare(Value2) <= 0;
-  {$ENDIF}
+  exit Compare(Value1, Value2) <= 0;
 end;
 
 class method String.Format(aFormat: String; params aParams: array of Object): String;
@@ -367,7 +359,6 @@ begin
 
   if NewValue = nil then
     NewValue := "";
-
   {$IF COOPER OR ECHOES}
   exit mapped.Replace(OldValue, NewValue);
   {$ELSEIF NOUGAT}
