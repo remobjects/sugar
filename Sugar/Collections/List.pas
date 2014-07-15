@@ -6,7 +6,7 @@ uses
   Sugar;
 
 type  
-  List<T> = public class mapped to {$IF COOPER}java.util.ArrayList<T>{$ELSEIF ECHOES}System.Collections.Generic.List<T>{$ELSEIF NOUGAT}Foundation.NSMutableArray where T is class;{$ENDIF}
+  List<T> = public class {$IF NOUGAT}(sequence of T){$ENDIF} mapped to {$IF COOPER}java.util.ArrayList<T>{$ELSEIF ECHOES}System.Collections.Generic.List<T>{$ELSEIF NOUGAT}Foundation.NSMutableArray where T is class;{$ENDIF}
   private
     method SetItem(&Index: Integer; Value: T);
     method GetItem(&Index: Integer): T;
