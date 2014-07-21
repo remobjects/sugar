@@ -514,7 +514,8 @@ begin
   if (not XmlNode.IsNode(fNode)) or (fNode^.ns = nil) then
     exit LocalName;
 
-  exit new NSString withFormat("{%@}%@", Uri, LocalName);
+  //exit new NSString withFormat("{%@}%@", Uri, LocalName);
+    exit String.Format("{{{0}}}{1}", Uri, LocalName);
 end;
 
 method XmlNode.XmlNamespace.GetUri: String;

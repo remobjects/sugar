@@ -14,7 +14,8 @@ type
   Random = public class 
   private
     const Multiplier: UInt64 = $5DEECE66D;
-    const Mask: UInt64 = (UInt64(1) shl 48) - 1;
+    const Temp: Uint64 = 1;
+    const Mask: UInt64 = (Temp shl 48) - 1;
   private
     Seed: UInt64 := 0;
     method Next(Bits: Integer): UInt32;
