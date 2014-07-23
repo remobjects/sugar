@@ -267,13 +267,13 @@ begin
 end;
 
 method List<T>.LastIndexOf(anItem: T): Integer;
-begin
+begin  
   {$IF COOPER}
   exit mapped.LastIndexOf(anItem);
   {$ELSEIF ECHOES}
   exit mapped.LastIndexOf(anItem);
   {$ELSEIF NOUGAT}
-  var lIndex := mapped.indexOfObjectWithOptions(Foundation.NSEnumerationReverse) passingTest((x,y,z) -> x = id(NullHelper.ValueOf(anItem)));
+  var lIndex := mapped.indexOfObjectWithOptions(NSEnumerationOptions.NSEnumerationReverse) passingTest((x,y,z) -> x = id(NullHelper.ValueOf(anItem)));
   exit if lIndex = NSNotFound then -1 else lIndex;
   {$ENDIF}
 end;
