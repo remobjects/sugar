@@ -5,10 +5,10 @@ interface
 uses
   Sugar,
   Sugar.Collections,
-  Sugar.TestFramework;
+  RemObjects.Elements.EUnit;
 
 type
-  StackTest = public class (Testcase)
+  StackTest = public class (Test)
   private
     Data: Stack<String>;
   public
@@ -35,68 +35,71 @@ end;
 
 method StackTest.Count;
 begin
-  Assert.CheckInt(3, Data.Count);
-  Assert.CheckInt(0, new Stack<Integer>().Count);
+  Assert.AreEqual(Data.Count, 3);
+  Data.Pop;
+  Assert.AreEqual(Data.Count, 2);
+  Assert.AreEqual(new Stack<Integer>().Count, 0);
 end;
 
 method StackTest.Contains;
 begin
-  Assert.CheckBool(true, Data.Contains("One"));
-  Assert.CheckBool(true, Data.Contains("Two"));
-  Assert.CheckBool(true, Data.Contains("Three"));
-  Assert.CheckBool(false, Data.Contains("one")); //case sensetive
-  Assert.CheckBool(false, Data.Contains("xxx"));
-  Assert.CheckBool(false, Data.Contains(nil));
+  Assert.IsTrue(Data.Contains("One"));
+  Assert.IsTrue(Data.Contains("Two"));
+  Assert.IsTrue(Data.Contains("Three"));
+  Assert.IsFalse(Data.Contains("one")); //case sensetive
+  Assert.IsFalse(Data.Contains("xxx"));
+  Assert.IsFalse(Data.Contains(nil));
 end;
 
 method StackTest.Clear;
 begin
-  Assert.CheckInt(3, Data.Count);
+  Assert.AreEqual(Data.Count, 3);
   Data.Clear;
-  Assert.CheckInt(0, Data.Count);
+  Assert.AreEqual(Data.Count, 0);
 end;
 
 method StackTest.Peek;
 begin
-  Assert.CheckString("Three", Data.Peek);
-  Assert.CheckString("Three", Data.Peek); //peek shouldn't remove item from stack
+  Assert.AreEqual(Data.Peek, "Three");
+  Assert.AreEqual(Data.Peek, "Three"); //peek shouldn't remove item from stack
   Data.Push("Four");
-  Assert.CheckString("Four", Data.Peek);
+  Assert.AreEqual(Data.Peek, "Four");
   Data.Clear;
-  Assert.IsException(->Data.Peek); //empty stack
+  Assert.Throws(->Data.Peek); //empty stack
 end;
 
 method StackTest.Pop;
 begin
   //pop removes item from stack
-  Assert.CheckString("Three", Data.Pop);
-  Assert.CheckString("Two", Data.Pop);
-  Assert.CheckString("One", Data.Pop);
-  Assert.CheckInt(0, Data.Count);
-  Assert.IsException(->Data.Pop);
+  Assert.AreEqual(Data.Pop, "Three");
+  Assert.AreEqual(Data.Pop, "Two");
+  Assert.AreEqual(Data.Pop, "One");
+  Assert.AreEqual(Data.Count, 0);
+  Assert.Throws(->Data.Pop);
 end;
 
 method StackTest.Push;
 begin
   Data.Push("Four");
-  Assert.CheckInt(4, Data.Count);
-  Assert.CheckString("Four", Data.Peek);
+  Assert.AreEqual(Data.Count, 4);
+  Assert.AreEqual(Data.Peek, "Four");
   
   Data.Push(nil);
-  Assert.CheckInt(5, Data.Count);
-  Assert.IsNull(Data.Peek);
+  Assert.AreEqual(Data.Count, 5);
+  Assert.IsNil(Data.Peek);
 
   //duplicates allowed
+  Assert.AreEqual(Data.Count, 5);
   Data.Push("x");
   Data.Push("x");
+  Assert.AreEqual(Data.Count, 7);
 end;
 
 method StackTest.ToArray;
 begin
   var Expected: array of String := ["Three", "Two", "One"];
   var Values: array of String := Data.ToArray;
-  for i: Integer := 0 to length(Expected) - 1 do
-    Assert.CheckString(Expected[i], Values[i]);
+  Assert.AreEqual(Values, Expected);
 end;
 
 method StackTest.ForEach;
@@ -105,11 +108,11 @@ begin
   var &Index: Integer := 0;
 
   Data.ForEach(x -> begin
-    Assert.CheckString(Expected[&Index], x);
+    Assert.AreEqual(x, Expected[&Index]);
     &Index := &Index + 1;
   end);
 
-  Assert.CheckInt(3, &Index);
+  Assert.AreEqual(&Index, 3);
 end;
 
 end.
