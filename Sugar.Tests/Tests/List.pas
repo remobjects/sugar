@@ -5,10 +5,10 @@ interface
 uses
   Sugar,
   Sugar.Collections,
-  Sugar.TestFramework;
+  RemObjects.Elements.EUnit;
 
 type
-  ListTest = public class (Testcase)
+  ListTest = public class (Test)
   private
     Data: Sugar.Collections.List<String>;
   public
@@ -52,31 +52,30 @@ end;
 method ListTest.Constructors;
 begin
   var Actual := new Sugar.Collections.List<String>(Data);
-  Assert.IsNotNull(Actual);
-  Assert.CheckInt(3, Actual.Count);
-  Assert.CheckString("One", Actual[0]);
+  Assert.IsNotNil(Actual);
+  Assert.AreEqual(Actual.Count, 3);
+  Assert.AreEqual(Actual[0], "One");
 
   var Expected: array of String := ["A", "B", "C"];
   Actual := new Sugar.Collections.List<String>(Expected);
-  Assert.IsNotNull(Actual);
-  Assert.CheckInt(3, Actual.Count);
-  for i: Integer := 0 to Actual.Count - 1 do
-    Assert.CheckString(Expected[i], Actual[i]);
+  Assert.IsNotNil(Actual);
+  Assert.AreEqual(Actual.Count, 3);
+  Assert.AreEqual(Actual, Expected, true);
 end;
 
 method ListTest.&Add;
 begin
-  Assert.CheckInt(3, Data.Count);
+  Assert.AreEqual(Data.Count, 3);
   Data.Add("Four");
-  Assert.CheckInt(4, Data.Count);
-  Assert.CheckBool(true, Data.Contains("Four"));
+  Assert.AreEqual(Data.Count, 4);
+  Assert.Contains("Four", Data);
 
   Data.Add("Four");
-  Assert.CheckInt(5, Data.Count);
+  Assert.AreEqual(Data.Count, 5);
 
   Data.Add(nil);
-  Assert.CheckInt(6, Data.Count);
-  Assert.IsNull(Data[5]);
+  Assert.AreEqual(Data.Count, 6);
+  Assert.IsNil(Data[5]);
 end;
 
 method ListTest.AddRange;
@@ -86,216 +85,218 @@ begin
   Value.Add("Item2");
 
   Data.AddRange(Value);
-  Assert.CheckInt(5, Data.Count);
-  Assert.CheckBool(true, Data.Contains("Item1"));
-  Assert.CheckBool(true, Data.Contains("Item2"));
+  Assert.AreEqual(Data.Count, 5);
+  Assert.Contains("Item1", Data);
+  Assert.Contains("Item2", Data);
 
   Data.AddRange(new Sugar.Collections.List<String>);
-  Assert.CheckInt(5, Data.Count);
+  Assert.AreEqual(Data.Count, 5);
 
   Value := nil;
-  Assert.IsException(->Data.AddRange(Value));
+  Assert.Throws(->Data.AddRange(Value));
 end;
 
 method ListTest.Clear;
 begin
-  Assert.CheckInt(3, Data.Count);
+  Assert.AreEqual(Data.Count, 3);
   Data.Clear;
+  Assert.AreEqual(Data.Count, 0);
 end;
 
 method ListTest.Contains;
 begin
-  Assert.CheckBool(true, Data.Contains("One"));
-  Assert.CheckBool(true, Data.Contains("Two"));
-  Assert.CheckBool(true, Data.Contains("Three"));
+  Assert.IsTrue(Data.Contains("One"));
+  Assert.IsTrue(Data.Contains("Two"));
+  Assert.IsTrue(Data.Contains("Three"));
 
-  Assert.CheckBool(false, Data.Contains("one"));
-  Assert.CheckBool(false, Data.Contains(nil));
+  Assert.IsFalse(Data.Contains("one"));
+  Assert.IsFalse(Data.Contains(nil));
+  Data.Add(nil);
+  Assert.IsTrue(Data.Contains(nil));
 end;
 
 method ListTest.Exists;
 begin
-  Assert.CheckBool(true, Data.Exists(x -> x = "Two"));
-  Assert.CheckBool(false, Data.Exists(x -> x = "tWo"));
-  Assert.CheckBool(true, Data.Exists(x -> x.EqualsIngoreCase("tWo")));
+  Assert.IsTrue(Data.Exists(x -> x = "Two"));
+  Assert.IsFalse(Data.Exists(x -> x = "tWo"));
+  Assert.IsTrue(Data.Exists(x -> x.EqualsIngoreCase("tWo")));
 end;
 
 method ListTest.FindIndex;
 begin
-  Assert.CheckInt(1, Data.FindIndex(x -> x = "Two"));
-  Assert.CheckInt(-1, Data.FindIndex(x -> x = "two"));
+  Assert.AreEqual(Data.FindIndex(x -> x = "Two"), 1);
+  Assert.AreEqual(Data.FindIndex(x -> x = "two"), -1);
 
-  Assert.CheckInt(1, Data.FindIndex(1, x -> x = "Two"));
-  Assert.CheckInt(-1, Data.FindIndex(1, x -> x = "two"));
-  Assert.CheckInt(-1, Data.FindIndex(2, x -> x = "Two"));
+  Assert.AreEqual(Data.FindIndex(1, x -> x = "Two"), 1);
+  Assert.AreEqual(Data.FindIndex(1, x -> x = "two"), -1);
+  Assert.AreEqual(Data.FindIndex(2, x -> x = "Two"), -1);
 
-  Assert.CheckInt(1, Data.FindIndex(1, 2, x -> x = "Two"));
-  Assert.CheckInt(-1, Data.FindIndex(1, 2, x -> x = "two"));
-  Assert.CheckInt(-1, Data.FindIndex(0, 1, x -> x = "Two"));
+  Assert.AreEqual(Data.FindIndex(1, 2, x -> x = "Two"), 1);
+  Assert.AreEqual(Data.FindIndex(1, 2, x -> x = "two"), -1);
+  Assert.AreEqual(Data.FindIndex(0, 1, x -> x = "Two"), -1);
 
-  Assert.IsException(->Data.FindIndex(-1, x -> x = "Two"));
-  Assert.IsException(->Data.FindIndex(55, x -> x = "Two"));
-  Assert.IsException(->Data.FindIndex(-1, 3, x -> x = "Two"));
-  Assert.IsException(->Data.FindIndex(55, 3, x -> x = "Two"));
-  Assert.IsException(->Data.FindIndex(0, 55, x -> x = "Two"));
-  Assert.IsException(->Data.FindIndex(0, -1, x -> x = "Two"));
+  Assert.Throws(->Data.FindIndex(-1, x -> x = "Two"));
+  Assert.Throws(->Data.FindIndex(55, x -> x = "Two"));
+  Assert.Throws(->Data.FindIndex(-1, 3, x -> x = "Two"));
+  Assert.Throws(->Data.FindIndex(55, 3, x -> x = "Two"));
+  Assert.Throws(->Data.FindIndex(0, 55, x -> x = "Two"));
+  Assert.Throws(->Data.FindIndex(0, -1, x -> x = "Two"));
 end;
 
 method ListTest.Find;
 begin
-  Assert.CheckString("Two", Data.Find(x -> x = "Two"));
-  Assert.IsNull(Data.Find(x -> x = "!Two!"));
+  Assert.AreEqual(Data.Find(x -> x = "Two"), "Two");
+  Assert.IsNil(Data.Find(x -> x = "!Two!"));
 end;
 
 method ListTest.FindAll;
 begin
   Data.Add("Two");
-  Assert.CheckInt(4, Data.Count);
+  Assert.AreEqual(Data.Count, 4);
 
   var Actual := Data.FindAll(x -> x = "Two");
-  Assert.IsNotNull(Actual);
-  Assert.CheckInt(2, Actual.Count);
+  Assert.IsNotNil(Actual);
+  Assert.AreEqual(Actual.Count, 2);
 
   for Item: String in Actual do
-    Assert.CheckString("Two", Item);
+    Assert.AreEqual(Item, "Two");
 
   Actual := Data.FindAll(x -> x = "!Two!");
-  Assert.IsNotNull(Actual);
-  Assert.CheckInt(0, Actual.Count);
+  Assert.IsNotNil(Actual);
+  Assert.AreEqual(Actual.Count, 0);
 end;
 
 method ListTest.TrueForAll;
 begin
-  Assert.CheckBool(true, Data.TrueForAll(x -> x <> ""));
-  Assert.CheckBool(false, Data.TrueForAll(x -> x = ""));
+  Assert.IsTrue(Data.TrueForAll(x -> x <> ""));
+  Assert.IsFalse(Data.TrueForAll(x -> x = ""));
 end;
 
 method ListTest.IndexOf;
 begin
-  Assert.CheckInt(0, Data.IndexOf("One"));
-  Assert.CheckInt(1, Data.IndexOf("Two"));
-  Assert.CheckInt(2, Data.IndexOf("Three"));
-  Assert.CheckInt(-1, Data.IndexOf("one"));
-  Assert.CheckInt(-1, Data.IndexOf(nil));
+  Assert.AreEqual(Data.IndexOf("One"), 0);
+  Assert.AreEqual(Data.IndexOf("Two"), 1);
+  Assert.AreEqual(Data.IndexOf("Three"), 2);
+  Assert.AreEqual(Data.IndexOf("one"), -1);
+  Assert.AreEqual(Data.IndexOf(nil), -1);
 end;
 
 method ListTest.Insert;
 begin
-  Assert.CheckInt(1, Data.IndexOf("Two"));
+  Assert.AreEqual(Data.IndexOf("Two"), 1);
   Data.Insert(1, "Item");
-  Assert.CheckInt(4, Data.Count);
-  Assert.CheckInt(1, Data.IndexOf("Item"));
-  Assert.CheckInt(2, Data.IndexOf("Two"));
+  Assert.AreEqual(Data.Count, 4);
+  Assert.AreEqual(Data.IndexOf("Item"), 1);
+  Assert.AreEqual(Data.IndexOf("Two"), 2);
 
   //added to end of list
   Data.Insert(Data.Count, "Item2");
-  Assert.CheckInt(4, Data.IndexOf("Item2"));
+  Assert.AreEqual(Data.IndexOf("Item2"), 4);
 
   Data.Insert(1, nil);
-  Assert.CheckInt(1, Data.IndexOf(nil));
+  Assert.AreEqual(Data.IndexOf(nil), 1);
   
-  Assert.IsException(->Data.Insert(-1, "item"));
-  Assert.IsException(->Data.Insert(555, "item"));
+  Assert.Throws(->Data.Insert(-1, "item"));
+  Assert.Throws(->Data.Insert(555, "item"));
 end;
 
 method ListTest.LastIndexOf;
 begin
-  Assert.CheckInt(1, Data.LastIndexOf("Two"));
+  Assert.AreEqual(Data.LastIndexOf("Two"), 1);
   Data.Add("Two");
-  Assert.CheckInt(3, Data.LastIndexOf("Two"));
+  Assert.AreEqual(Data.LastIndexOf("Two"), 3);
   
-  Assert.CheckInt(-1, Data.LastIndexOf("two"));
-  Assert.CheckInt(-1, Data.LastIndexOf(nil));
+  Assert.AreEqual(Data.LastIndexOf("two"), -1);
+  Assert.AreEqual(Data.LastIndexOf(nil), -1);
 end;
 
 method ListTest.&Remove;
 begin
-  Assert.CheckBool(true, Data.Remove("One"));
-  Assert.CheckInt(2, Data.Count);
-  Assert.CheckBool(false, Data.Contains("One"));
-  Assert.CheckBool(false, Data.Remove("qwerty"));
-  Assert.CheckBool(false, Data.Remove(nil));
+  Assert.IsTrue(Data.Remove("One"));
+  Assert.AreEqual(Data.Count, 2);
+  Assert.IsFalse(Data.Contains("One"));
+  Assert.IsFalse(Data.Remove("qwerty"));
+  Assert.IsFalse(Data.Remove(nil));
 
   Data.Clear;
   Data.Add("Item");
   Data.Add("Item");
-  Assert.CheckInt(2, Data.Count);
+  Assert.AreEqual(Data.Count, 2);
 
-  Assert.CheckBool(true, Data.Remove("Item")); //removes first occurense
-  Assert.CheckInt(1, Data.Count);
-  Assert.CheckBool(true, Data.Remove("Item"));
-  Assert.CheckInt(0, Data.Count);
-  Assert.CheckBool(false, Data.Remove("Item"));
+  Assert.IsTrue(Data.Remove("Item")); //removes first occurense
+  Assert.AreEqual(Data.Count, 1);
+  Assert.IsTrue( Data.Remove("Item"));
+  Assert.AreEqual(Data.Count, 0);
+  Assert.IsFalse( Data.Remove("Item"));
 end;
 
 method ListTest.RemoveAt;
 begin
   Data.RemoveAt(1);
-  Assert.CheckInt(2, Data.Count);
-  Assert.CheckBool(false, Data.Contains("Two"));
+  Assert.AreEqual(Data.Count, 2);
+  Assert.IsFalse(Data.Contains("Two"));
 
-  Assert.IsException(->Data.RemoveAt(-1));
-  Assert.IsException(->Data.RemoveAt(Data.Count));
+  Assert.Throws(->Data.RemoveAt(-1));
+  Assert.Throws(->Data.RemoveAt(Data.Count));
 end;
 
 method ListTest.RemoveRange;
 begin
   Data.RemoveRange(1, 2);
-  Assert.CheckInt(1, Data.Count);
-  Assert.CheckBool(false, Data.Contains("Two"));
-  Assert.CheckBool(false, Data.Contains("Three"));
+  Assert.AreEqual(Data.Count, 1);
+  Assert.IsFalse(Data.Contains("Two"));
+  Assert.IsFalse(Data.Contains("Three"));
 
   Data.Add("Item");
   Data.RemoveRange(1, 0);
-  Assert.CheckInt(2, Data.Count);
-  Assert.CheckBool(true, Data.Contains("Item"));
+  Assert.AreEqual(Data.Count, 2);
+  Assert.IsTrue(Data.Contains("Item"));
   Data.RemoveRange(1, 1);
-  Assert.CheckInt(1, Data.Count);
-  Assert.CheckBool(false, Data.Contains("Item"));
+  Assert.AreEqual(Data.Count, 1);
+  Assert.IsFalse(Data.Contains("Item"));
 
-  Assert.IsException(->Data.RemoveRange(-1, 1));
-  Assert.IsException(->Data.RemoveRange(1, -1));
-  Assert.IsException(->Data.RemoveRange(1, 55));
-  Assert.IsException(->Data.RemoveRange(55, 1));
+  Assert.Throws(->Data.RemoveRange(-1, 1));
+  Assert.Throws(->Data.RemoveRange(1, -1));
+  Assert.Throws(->Data.RemoveRange(1, 55));
+  Assert.Throws(->Data.RemoveRange(55, 1));
 end;
 
 method ListTest.ToArray;
 begin
   var Expected: array of String := ["One", "Two", "Three"];
   var Actual := Data.ToArray;
-  Assert.CheckInt(3, length(Actual));
-  for i: Integer := 0 to length(Expected) -1 do
-    Assert.CheckString(Expected[i], Actual[i]);
+  Assert.AreEqual(length(Actual), 3);
+  Assert.AreEqual(Actual, Expected, true);
 end;
 
 method ListTest.Count;
 begin
-  Assert.CheckInt(3, Data.Count);
+  Assert.AreEqual(Data.Count,3 );
   Data.RemoveAt(0);
-  Assert.CheckInt(2, Data.Count);
+  Assert.AreEqual(Data.Count, 2);
   Data.Add("Item");
-  Assert.CheckInt(3, Data.Count);
+  Assert.AreEqual(Data.Count, 3);
   Data.Clear;
-  Assert.CheckInt(0, Data.Count);
+  Assert.AreEqual(Data.Count, 0);
 end;
 
 method ListTest.Item;
 begin
-  Assert.CheckString("One", Data.Item[0]);
-  Assert.CheckString("One", Data[0]);
+  Assert.AreEqual(Data.Item[0], "One");
+  Assert.AreEqual(Data[0], "One");
   
-  Assert.CheckString("Two", Data.Item[1]);
+  Assert.AreEqual(Data.Item[1], "Two");
   Data.Insert(1, "Item");
-  Assert.CheckString("Item", Data.Item[1]);
+  Assert.AreEqual(Data.Item[1], "Item");
 
   Data[1] := "Item1";
-  Assert.CheckString("Item1", Data.Item[1]);
+  Assert.AreEqual(Data.Item[1], "Item1");
 
   Data[1] := nil;
-  Assert.IsNull(Data.Item[1]);
+  Assert.IsNil(Data.Item[1]);
 
-  Assert.IsException(->Data[-1]);
-  Assert.IsException(->Data[55]);  
+  Assert.Throws(->Data[-1]);
+  Assert.Throws(->Data[55]);  
 end;
 
 method ListTest.Enumerator;
@@ -304,11 +305,11 @@ begin
   var &Index: Integer := 0;
 
   for Item: String in Data do begin
-    Assert.CheckString(Expected[&Index], Item);
+    Assert.AreEqual(Item, Expected[&Index]);
     inc(&Index);
   end;
 
-  Assert.CheckInt(3, &Index);
+  Assert.AreEqual(&Index, 3);
 end;
 
 method ListTest.ForEach;
@@ -317,11 +318,11 @@ begin
   var &Index: Integer := 0;
 
   Data.ForEach(x -> begin
-    Assert.CheckString(Expected[&Index], x);
+    Assert.AreEqual(x, Expected[&Index]);
     &Index := &Index + 1;
   end);
 
-  Assert.CheckInt(3, &Index);
+  Assert.AreEqual(&Index, 3);
 end;
 
 method ListTest.Sort;
@@ -332,19 +333,19 @@ begin
   Data.Add("A");
   Data.Add("b");
 
-  Assert.CheckInt(3, Data.Count);
+  Assert.AreEqual(Data.Count, 3);
   Data.Sort((x, y) -> x.CompareTo(y));
 
   for i: Integer := 0 to Data.Count - 1 do
-    Assert.CheckString(Expected[i], Data[i]);
+    Assert.AreEqual(Data[i], Expected[i]);
 
   Expected := ["A", "b", "C"];
 
   Data.Sort((x, y) -> x.CompareToIgnoreCase(y));
   for i: Integer := 0 to Data.Count - 1 do
-    Assert.CheckString(Expected[i], Data[i]);
+    Assert.AreEqual(Data[i], Expected[i]);
 
-  Assert.IsException(->Data.Sort(nil));
+  Assert.Throws(->Data.Sort(nil));
 end;
 
 end.
