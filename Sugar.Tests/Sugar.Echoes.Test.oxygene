@@ -52,48 +52,49 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
+    <Reference Include="RemObjects.Elements.EUnit" />
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main\Echoes\Program.pas" />
-    <Compile Include="Printer\Printer.pas" />
+    <None Include="Printer\Printer.pas" />
     <Compile Include="Properties\AssemblyInfo.pas" />
     <Compile Include="Tests\AutoreleasePool.pas" />
     <Compile Include="Tests\Binary.pas" />
     <Compile Include="Tests\Convert.pas" />
-    <Compile Include="Tests\Cryptography\Utils.pas" />
+    <None Include="Tests\Cryptography\Utils.pas" />
     <Compile Include="Tests\DateTime.pas" />
     <Compile Include="Tests\Dictionary.pas" />
-    <Compile Include="Tests\Encoding.pas" />
+    <None Include="Tests\Encoding.pas" />
     <Compile Include="Tests\Extensions.pas" />
     <Compile Include="Tests\Guid.pas" />
     <Compile Include="Tests\HashSet.pas" />
-    <Compile Include="Tests\HTTP.pas" />
-    <Compile Include="Tests\IO\File.pas" />
-    <Compile Include="Tests\IO\FileHandle.pas" />
-    <Compile Include="Tests\IO\FileUtils.pas" />
-    <Compile Include="Tests\IO\Folder.pas" />
-    <Compile Include="Tests\IO\FolderUtils.pas" />
-    <Compile Include="Tests\IO\Path.pas" />
+    <None Include="Tests\HTTP.pas" />
+    <None Include="Tests\IO\File.pas" />
+    <None Include="Tests\IO\FileHandle.pas" />
+    <None Include="Tests\IO\FileUtils.pas" />
+    <None Include="Tests\IO\Folder.pas" />
+    <None Include="Tests\IO\FolderUtils.pas" />
+    <None Include="Tests\IO\Path.pas" />
     <Compile Include="Tests\List.pas" />
-    <Compile Include="Tests\Math.pas" />
-    <Compile Include="Tests\MessageDigest.pas" />
-    <Compile Include="Tests\Queue.pas" />
+    <None Include="Tests\Math.pas" />
+    <None Include="Tests\MessageDigest.pas" />
+    <None Include="Tests\Queue.pas" />
     <Compile Include="Tests\Random.pas" />
     <Compile Include="Tests\Stack.pas" />
-    <Compile Include="Tests\String.pas" />
-    <Compile Include="Tests\StringBuilder.pas" />
-    <Compile Include="Tests\Url.pas" />
-    <Compile Include="Tests\UserSettings.pas" />
-    <Compile Include="Tests\Xml\CharacterData.pas" />
-    <Compile Include="Tests\Xml\Document.pas" />
-    <Compile Include="Tests\Xml\DocumentType.pas" />
-    <Compile Include="Tests\Xml\Element.pas" />
-    <Compile Include="Tests\Xml\Node.pas" />
-    <Compile Include="Tests\Xml\ProcessingInstruction.pas" />
-    <Compile Include="Tests\Xml\TestData.pas" />
+    <None Include="Tests\String.pas" />
+    <None Include="Tests\StringBuilder.pas" />
+    <None Include="Tests\Url.pas" />
+    <None Include="Tests\UserSettings.pas" />
+    <None Include="Tests\Xml\CharacterData.pas" />
+    <None Include="Tests\Xml\Document.pas" />
+    <None Include="Tests\Xml\DocumentType.pas" />
+    <None Include="Tests\Xml\Element.pas" />
+    <None Include="Tests\Xml\Node.pas" />
+    <None Include="Tests\Xml\ProcessingInstruction.pas" />
+    <None Include="Tests\Xml\TestData.pas" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Main\" />
@@ -106,12 +107,6 @@
     <Folder Include="Tests\Xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Sugar.TestFramework\Sugar.Echoes.TestFramework.oxygene">
-      <Name>Sugar.Echoes.TestFramework</Name>
-      <Project>{532c6e08-1256-4168-8973-08c9d3d7b239}</Project>
-      <Private>True</Private>
-      <HintPath>..\Sugar.TestFramework\bin\.NET\Sugar.TestFramework.dll</HintPath>
-    </ProjectReference>
     <ProjectReference Include="..\Sugar\Sugar.Echoes.oxygene">
       <Name>Sugar.Echoes</Name>
       <Project>{79301a0c-1f95-4fb0-9605-207e288c6171}</Project>
