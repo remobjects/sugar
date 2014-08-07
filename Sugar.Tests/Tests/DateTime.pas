@@ -4,10 +4,10 @@ interface
 
 uses
   Sugar,
-  Sugar.TestFramework;
+  RemObjects.Elements.EUnit;
 
 type
-  DateTimeTest = public class (Testcase)
+  DateTimeTest = public class (Test)
   private
     Data: DateTime;
     method AreEqual(Expected, Actual: DateTime);
@@ -46,17 +46,17 @@ end;
 
 method DateTimeTest.AreEqual(Expected: DateTime; Actual: DateTime);
 begin
-  Assert.CheckInt(Expected.Year, Actual.Year);
-  Assert.CheckInt(Expected.Month, Actual.Month);
-  Assert.CheckInt(Expected.Day, Actual.Day);
-  Assert.CheckInt(Expected.Hour, Actual.Hour);
-  Assert.CheckInt(Expected.Minute, Actual.Minute);
-  Assert.CheckInt(Expected.Second, Actual.Second);
+  Assert.AreEqual(Actual.Year, Expected.Year);
+  Assert.AreEqual(Actual.Month, Expected.Month);
+  Assert.AreEqual(Actual.Day, Expected.Day);
+  Assert.AreEqual(Actual.Hour, Expected.Hour);
+  Assert.AreEqual(Actual.Minute, Expected.Minute);
+  Assert.AreEqual(Actual.Second, Expected.Second);
 end;
 
 method DateTimeTest.AssertFormat(Expected: String; Date: DateTime; Locale: String; Format: String);
 begin
-  Assert.CheckString(Expected, Date.ToString(Format, Locale));
+  Assert.AreEqual(Date.ToString(Format, Locale), Expected);
 end;
 
 method DateTimeTest.AssertFormat(Expected: String; Date: DateTime; Format: String);
@@ -77,83 +77,83 @@ end;
 method DateTimeTest.AddDays;
 begin
   var Value := Data.AddDays(1);
-  Assert.CheckInt(13, Value.Day);
+  Assert.AreEqual(Value.Day, 13);
   Value := Data.AddDays(-1);
-  Assert.CheckInt(11, Value.Day);
+  Assert.AreEqual(Value.Day, 11);
 
   Value := Data.AddDays(19); //next month
-  Assert.CheckInt(1, Value.Day);
-  Assert.CheckInt(5, Value.Month);
+  Assert.AreEqual(Value.Day, 1);
+  Assert.AreEqual(Value.Month, 5);
 end;
 
 method DateTimeTest.AddHours;
 begin
   var Value := Data.AddHours(1);
-  Assert.CheckInt(7, Value.Hour);
+  Assert.AreEqual(Value.Hour, 7);
   Value := Data.AddHours(-1);
-  Assert.CheckInt(5, Value.Hour);
+  Assert.AreEqual(Value.Hour, 5);
 
   Value := Data.AddHours(19); //next day
-  Assert.CheckInt(13, Value.Day);
-  Assert.CheckInt(1, Value.Hour);
+  Assert.AreEqual(Value.Day, 13);
+  Assert.AreEqual(Value.Hour, 1);
 end;
 
 method DateTimeTest.AddMinutes;
 begin
   var Value := Data.AddMinutes(1);
-  Assert.CheckInt(8, Value.Minute);
+  Assert.AreEqual(Value.Minute, 8);
   Value := Data.AddMinutes(-1);
-  Assert.CheckInt(6, Value.Minute);
+  Assert.AreEqual(Value.Minute, 6);
 
   Value := Data.AddMinutes(53); //next hour
-  Assert.CheckInt(0, Value.Minute);
-  Assert.CheckInt(7, Value.Hour);
+  Assert.AreEqual(Value.Minute, 0);
+  Assert.AreEqual(Value.Hour, 7);
 end;
 
 method DateTimeTest.AddMonths;
 begin
   var Value := Data.AddMonths(1);
-  Assert.CheckInt(5, Value.Month);
+  Assert.AreEqual(Value.Month, 5);
   Value := Data.AddMonths(-1);
-  Assert.CheckInt(3, Value.Month);
+  Assert.AreEqual(Value.Month, 3);
 
   Value := Data.AddMonths(9); //next year
-  Assert.CheckInt(1, Value.Month);
-  Assert.CheckInt(1962, Value.Year);
+  Assert.AreEqual(Value.Month, 1);
+  Assert.AreEqual(Value.Year, 1962);
 end;
 
 method DateTimeTest.AddSeconds;
 begin
   var Value := Data.AddSeconds(1);
-  Assert.CheckInt(1, Value.Second);
+  Assert.AreEqual(Value.Second, 1);
   Value := Data.AddSeconds(-1);
-  Assert.CheckInt(59, Value.Second);
+  Assert.AreEqual(Value.Second, 59);
 
   Value := Data.AddSeconds(60); //next year
-  Assert.CheckInt(0, Value.Second);
-  Assert.CheckInt(8, Value.Minute);
+  Assert.AreEqual(Value.Second, 0);
+  Assert.AreEqual(Value.Minute, 8);
 end;
 
 method DateTimeTest.AddYears;
 begin
   var Value := Data.AddYears(1);
-  Assert.CheckInt(1962, Value.Year);
+  Assert.AreEqual(Value.Year, 1962);
   Value := Data.AddYears(-1);
-  Assert.CheckInt(1960, Value.Year);
+  Assert.AreEqual(Value.Year, 1960);
 end;
 
 method DateTimeTest.CompareTo;
 begin
-  Assert.CheckInt(0, Data.CompareTo(Data));
-  Assert.CheckBool(true, Data.CompareTo(Data.AddDays(10)) <> 0);
-  Assert.CheckInt(0, Data.CompareTo(new DateTime(1961, 4, 12, 6, 7, 0)));
+  Assert.AreEqual(Data.CompareTo(Data), 0);
+  Assert.IsTrue(Data.CompareTo(Data.AddDays(10)) <> 0);
+  Assert.AreEqual(Data.CompareTo(new DateTime(1961, 4, 12, 6, 7, 0)), 0);
 end;
 
 method DateTimeTest.FormatYears;
 begin
   //single digit not supported
-  Assert.IsException(->Data.ToString("{y}"));
-  Assert.IsException(->Data.ToString("{yyy}"));
+  Assert.Throws(->Data.ToString("{y}"));
+  Assert.Throws(->Data.ToString("{yyy}"));
 
   AssertFormatDef("61", "{yy}");  
   AssertFormatDef("1961", "{yyyy}");
@@ -333,34 +333,34 @@ begin
               "On {dddd}, {dd} {MMMM}, {yyyy} at {h}:{mm} – the first human traveled into outer space");
   AssertFormatDef("Formating year 1961, 61", "Formating year {yyyy}, {yy}");
   AssertFormatDef("Time is 6 o'clock", "Time is {h} o\'clock");
-  Assert.IsException(->Data.ToString(nil));
-  Assert.IsException(->Data.ToString("Year is {yyyy"));
-  Assert.IsException(->Data.ToString("Year is yyyy}"));
-  Assert.IsException(->Data.ToString("Year is {}"));
-  Assert.IsException(->Data.ToString("Year is {Yyyy}"));  
-  Assert.CheckString('', Data.ToString(''));
+  Assert.Throws(->Data.ToString(nil));
+  Assert.Throws(->Data.ToString("Year is {yyyy"));
+  Assert.Throws(->Data.ToString("Year is yyyy}"));
+  Assert.Throws(->Data.ToString("Year is {}"));
+  Assert.Throws(->Data.ToString("Year is {Yyyy}"));  
+  Assert.AreEqual(Data.ToString(''), '');
 end;
 
 method DateTimeTest.Fields;
 begin
-  Assert.CheckInt(1961, Data.Year);
-  Assert.CheckInt(4, Data.Month);
-  Assert.CheckInt(12, Data.Day);
-  Assert.CheckInt(6, Data.Hour);
-  Assert.CheckInt(7, Data.Minute);
-  Assert.CheckInt(0, Data.Second);
+  Assert.AreEqual(Data.Year, 1961);
+  Assert.AreEqual(Data.Month, 4);
+  Assert.AreEqual(Data.Day, 12);
+  Assert.AreEqual(Data.Hour, 6);
+  Assert.AreEqual(Data.Minute, 7);
+  Assert.AreEqual(Data.Second, 0);
 
   var Value := new DateTime(106, 12, 27, 23, 51, 37);
   
-  Assert.CheckInt(106, Value.Year);
-  Assert.CheckInt(12, Value.Month);
-  Assert.CheckInt(27, Value.Day);
-  Assert.CheckInt(23, Value.Hour);
-  Assert.CheckInt(51, Value.Minute);
-  Assert.CheckInt(37, Value.Second);
+  Assert.AreEqual(Value.Year, 106);
+  Assert.AreEqual(Value.Month, 12);
+  Assert.AreEqual(Value.Day, 27);
+  Assert.AreEqual(Value.Hour, 23);
+  Assert.AreEqual(Value.Minute, 51);
+  Assert.AreEqual(Value.Second, 37);
 
   AreEqual(new DateTime(1961, 4, 12), Data.Date);
-  Assert.CheckInt(0, Data.Date.Hour);
+  Assert.AreEqual(Data.Date.Hour, 0);
 end;
 
 end.
