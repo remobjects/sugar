@@ -282,7 +282,7 @@ begin
   Assert.CheckDouble(10, Math.Round(10.2));
   Assert.CheckDouble(10, Math.Round(10.3));
   Assert.CheckDouble(10, Math.Round(10.4));
-  Assert.CheckDouble(10, Math.Round(10.5));
+  Assert.CheckDouble(11, Math.Round(10.5));
   Assert.CheckDouble(11, Math.Round(10.6));
   Assert.CheckDouble(11, Math.Round(10.7));
   Assert.CheckDouble(11, Math.Round(10.8));
@@ -293,7 +293,7 @@ begin
   Assert.CheckDouble(11, Math.Round(11.2));
   Assert.CheckDouble(11, Math.Round(11.3));
   Assert.CheckDouble(11, Math.Round(11.4));
-  Assert.CheckDouble(11, Math.Round(11.5));
+  Assert.CheckDouble(12, Math.Round(11.5));
   Assert.CheckDouble(12, Math.Round(11.6));
   Assert.CheckDouble(12, Math.Round(11.7));
   Assert.CheckDouble(12, Math.Round(11.8));
