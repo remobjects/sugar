@@ -5,10 +5,10 @@ interface
 uses
   Sugar,
   Sugar.Collections,
-  Sugar.TestFramework;
+  RemObjects.Elements.EUnit;
 
 type
-  HashSetTest = public class (Testcase)
+  HashSetTest = public class (Test)
   private  
     Data: HashSet<String>;
   public
@@ -41,63 +41,63 @@ end;
 method HashSetTest.Constructors;
 begin
   var Actual := new HashSet<String>(Data);
-  Assert.CheckInt(3, Actual.Count);
-  Assert.CheckInt(3, Data.Count);
+  Assert.AreEqual(Actual.Count, 3);
+  Assert.AreEqual(Data.Count, 3);
 
-  Actual.ForEach(item -> Assert.CheckBool(true, Data.Contains(item)));
+  Actual.ForEach(item -> Assert.IsTrue(Data.Contains(item)));
 end;
 
 method HashSetTest.&Add;
 begin
-  Assert.CheckBool(true,Data.Add("Four"));
-  Assert.CheckInt(4, Data.Count);
-  Assert.CheckBool(true, Data.Contains("Four"));
+  Assert.IsTrue(Data.Add("Four"));
+  Assert.AreEqual(Data.Count, 4);
+  Assert.IsTrue(Data.Contains("Four"));
   
   //no duplicates allowed
-  Assert.CheckBool(false, Data.Add("Four"));
-  Assert.CheckInt(4, Data.Count);
+  Assert.IsFalse(Data.Add("Four"));
+  Assert.AreEqual(Data.Count, 4);
 
-  Assert.CheckBool(true, Data.Add(nil));
-  Assert.CheckInt(5, Data.Count);
+  Assert.IsTrue(Data.Add(nil));
+  Assert.AreEqual(Data.Count, 5);
 end;
 
 method HashSetTest.Clear;
 begin
-  Assert.CheckInt(3, Data.Count);
+  Assert.AreEqual(Data.Count, 3);
   Data.Clear;
-  Assert.CheckInt(0, Data.Count);
+  Assert.AreEqual(Data.Count, 0);
 end;
 
 method HashSetTest.Contains;
 begin
-  Assert.CheckBool(true, Data.Contains("One"));
-  Assert.CheckBool(true, Data.Contains("Two"));
-  Assert.CheckBool(true, Data.Contains("Three"));
-  Assert.CheckBool(false, Data.Contains("one")); 
-  Assert.CheckBool(false, Data.Contains(nil));
+  Assert.IsTrue(Data.Contains("One"));
+  Assert.IsTrue(Data.Contains("Two"));
+  Assert.IsTrue(Data.Contains("Three"));
+  Assert.IsFalse(Data.Contains("one")); 
+  Assert.IsFalse(Data.Contains(nil));
 end;
 
 method HashSetTest.&Remove;
 begin
-  Assert.CheckBool(true, Data.Remove("One"));
-  Assert.CheckInt(2, Data.Count);
-  Assert.CheckBool(false, Data.Contains("One")); 
+  Assert.IsTrue(Data.Remove("One"));
+  Assert.AreEqual(Data.Count, 2);
+  Assert.IsFalse(Data.Contains("One")); 
 
-  Assert.CheckBool(false, Data.Remove("One"));
-  Assert.CheckBool(false, Data.Remove(nil));
+  Assert.IsFalse(Data.Remove("One"));
+  Assert.IsFalse(Data.Remove(nil));
 
-  Assert.CheckBool(false, Data.Remove("two"));
-  Assert.CheckInt(2, Data.Count);
-  Assert.CheckBool(true, Data.Contains("Two")); 
+  Assert.IsFalse(Data.Remove("two"));
+  Assert.AreEqual(Data.Count, 2);
+  Assert.IsTrue(Data.Contains("Two")); 
 end;
 
 method HashSetTest.Count;
 begin
-  Assert.CheckInt(3, Data.Count);
-  Assert.CheckBool(true, Data.Remove("One"));
-  Assert.CheckInt(2, Data.Count);
+  Assert.AreEqual(Data.Count, 3);
+  Assert.IsTrue(Data.Remove("One"));
+  Assert.AreEqual(Data.Count, 2);
   Data.Clear;
-  Assert.CheckInt(0, Data.Count);
+  Assert.AreEqual(Data.Count, 0);
 end;
 
 method HashSetTest.Enumerator;
@@ -110,9 +110,9 @@ begin
   var lCount: Integer := 0;
   for Item: String in Data do begin
     inc(lCount);
-    Assert.CheckBool(true, Expected.Contains(Item));
+    Assert.IsTrue(Expected.Contains(Item));
   end;
-  Assert.CheckInt(3, lCount);    
+  Assert.AreEqual(lCount, 3);
 end;
 
 method HashSetTest.ForEach;
@@ -125,9 +125,9 @@ begin
   var lCount: Integer := 0;
   Data.ForEach(x -> begin
                  inc(lCount);
-                 Assert.CheckBool(true, Expected.Contains(x));
+                 Assert.IsTrue(Expected.Contains(x));
                  end);
-  Assert.CheckInt(3, lCount);   
+  Assert.AreEqual(lCount, 3);  
 end;
 
 method HashSetTest.Intersect;
@@ -138,15 +138,15 @@ begin
   Value.Add("Three");
 
   Data.Intersect(Value);
-  Assert.CheckInt(2, Data.Count);
-  Assert.CheckBool(true, Data.Contains("Two"));  
-  Assert.CheckBool(true, Data.Contains("Three"));
-  Assert.CheckInt(3, Value.Count);
+  Assert.AreEqual(Data.Count, 2);
+  Assert.IsTrue(Data.Contains("Two"));  
+  Assert.IsTrue(Data.Contains("Three"));
+  Assert.AreEqual(Value.Count, 3);
 
   Data.Intersect(new HashSet<String>);
-  Assert.CheckInt(0, Data.Count);
+  Assert.AreEqual(Data.Count, 0);
 
-  Assert.IsException(->Data.Intersect(nil));
+  Assert.Throws(->Data.Intersect(nil));
 end;
 
 method HashSetTest.&Union;
@@ -163,10 +163,10 @@ begin
   Expected.Add("Zero");
 
   Data.Union(Value);
-  Assert.CheckInt(4, Data.Count);
-  Assert.CheckInt(3, Value.Count);
+  Assert.AreEqual(Data.Count, 4);
+  Assert.AreEqual(Value.Count, 3);
 
-  Data.ForEach(item -> Assert.CheckBool(true, Expected.Contains(item)));
+  Data.ForEach(item -> Assert.IsTrue(Expected.Contains(item)));
 end;
 
 method HashSetTest.IsSupersetOf;
@@ -175,18 +175,18 @@ begin
   Value.Add("Two");
   Value.Add("Three");
 
-  Assert.CheckBool(true, Data.IsSupersetOf(Value));
+  Assert.IsTrue(Data.IsSupersetOf(Value));
 
   Value.Add("One");
-  Assert.CheckBool(true, Data.IsSupersetOf(Value));
+  Assert.IsTrue(Data.IsSupersetOf(Value));
 
   Value.Remove("One");
   Value.Add("Zero");
-  Assert.CheckBool(false, Data.IsSupersetOf(Value));
+  Assert.IsFalse(Data.IsSupersetOf(Value));
 
-  Assert.CheckBool(true, Data.IsSupersetOf(new HashSet<String>));
+  Assert.IsTrue(Data.IsSupersetOf(new HashSet<String>));
 
-  Assert.IsException(->Data.IsSupersetOf(nil));
+  Assert.Throws(->Data.IsSupersetOf(nil));
 end;
 
 method HashSetTest.IsSubsetOf;
@@ -195,19 +195,19 @@ begin
   Value.Add("Two");
   Value.Add("Three");
 
-  Assert.CheckBool(true, Value.IsSubsetOf(Data));
+  Assert.IsTrue(Value.IsSubsetOf(Data));
 
   Value.Add("One");
-  Assert.CheckBool(true, Value.IsSubsetOf(Data));
+  Assert.IsTrue(Value.IsSubsetOf(Data));
 
   Value.Remove("One");
   Value.Add("Zero");
-  Assert.CheckBool(false, Value.IsSubsetOf(Data));
+  Assert.IsFalse(Value.IsSubsetOf(Data));
 
-  Assert.CheckBool(true, new HashSet<String>().IsSubsetOf(Data));
-  Assert.CheckBool(false, Data.IsSubsetOf(new HashSet<String>));
+  Assert.IsTrue(new HashSet<String>().IsSubsetOf(Data));
+  Assert.IsFalse(Data.IsSubsetOf(new HashSet<String>));
 
-  Assert.IsException(->Data.IsSubsetOf(nil));
+  Assert.Throws(->Data.IsSubsetOf(nil));
 end;
 
 method HashSetTest.SetEquals;
@@ -216,15 +216,15 @@ begin
   Value.Add("Two");
   Value.Add("Three");
 
-  Assert.CheckBool(false, Data.SetEquals(Value));
+  Assert.IsFalse(Data.SetEquals(Value));
 
   Value.Add("One");
-  Assert.CheckBool(true, Data.SetEquals(Value));
+  Assert.IsTrue(Data.SetEquals(Value));
   Value.Clear;
   Data.Clear;
-  Assert.CheckBool(true, Data.SetEquals(Value));
+  Assert.IsTrue(Data.SetEquals(Value));
   
-  Assert.IsException(->Data.SetEquals(nil));
+  Assert.Throws(->Data.SetEquals(nil));
 end;
 
 end.
