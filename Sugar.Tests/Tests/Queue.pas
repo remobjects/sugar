@@ -5,10 +5,10 @@ interface
 uses
   Sugar,
   Sugar.Collections,
-  Sugar.TestFramework;
+  RemObjects.Elements.EUnit;
 
 type
-  QueueTest = public class (Testcase)
+  QueueTest = public class (Test)
   private
     Data: Queue<Message>;
   public
@@ -66,95 +66,95 @@ end;
 
 method QueueTest.Contains;
 begin
-  Assert.CheckBool(true, Data.Contains(Data.Peek));
-  Assert.CheckBool(true, Data.Contains(new Message("Two", 2)));
-  Assert.CheckBool(false, Data.Contains(new Message("Two", 3)));
-  Assert.CheckBool(false, Data.Contains(nil));
+  Assert.IsTrue(Data.Contains(Data.Peek));
+  Assert.IsTrue(Data.Contains(new Message("Two", 2)));
+  Assert.IsFalse(Data.Contains(new Message("Two", 3)));
+  Assert.IsFalse(Data.Contains(nil));
 end;
 
 method QueueTest.Clear;
 begin
-  Assert.CheckInt(3, Data.Count);
+  Assert.AreEqual(Data.Count, 3);
   Data.Clear;
-  Assert.CheckInt(0, Data.Count);
+  Assert.AreEqual(Data.Count, 0);
 end;
 
 method QueueTest.Peek;
 begin
-  Assert.CheckInt(3, Data.Count);
+  Assert.AreEqual(Data.Count, 3);
   var Actual := Data.Peek;
-  Assert.CheckInt(3, Data.Count);
-  Assert.CheckBool(true, new Message("One", 1).Equals(Actual));
+  Assert.AreEqual(Data.Count, 3);
+  Assert.IsTrue(new Message("One", 1).Equals(Actual));
   Data.Clear;
-  Assert.IsException(->Data.Peek);
+  Assert.Throws(->Data.Peek);
 end;
 
 method QueueTest.Enqueue;
 begin
-  Assert.CheckInt(3, Data.Count);
+  Assert.AreEqual(Data.Count, 3);
   var Msg := new Message("Four", 4);
   Data.Enqueue(Msg);
-  Assert.CheckInt(4, Data.Count);
-  Assert.CheckBool(true, Data.Contains(Msg));
+  Assert.AreEqual(Data.Count, 4);
+  Assert.IsTrue(Data.Contains(Msg));
   //must be last
   Data.Dequeue;
   Data.Dequeue;
   Data.Dequeue;
-  Assert.CheckBool(true, Data.Peek.Equals(Msg));
+  Assert.IsTrue(Data.Peek.Equals(Msg));
   
   //allow duplicates
   Data.Enqueue(Msg);
   Data.Enqueue(Msg);
-  Assert.CheckInt(3, Data.Count);
+  Assert.AreEqual(Data.Count, 3);
 
   Data.Enqueue(nil);
-  Assert.CheckInt(4, Data.Count);
+  Assert.AreEqual(Data.Count, 4);
 end;
 
 method QueueTest.Dequeue;
 begin
   var Actual := Data.Dequeue;
-  Assert.IsNotNull(Actual);
-  Assert.CheckBool(true, Actual.Equals(new Message("One", 1)));
-  Assert.CheckInt(2, Data.Count);
+  Assert.IsNotNil(Actual);
+  Assert.IsTrue(Actual.Equals(new Message("One", 1)));
+  Assert.AreEqual(Data.Count, 2);
 
   Actual := Data.Dequeue;
-  Assert.IsNotNull(Actual);
-  Assert.CheckInt(1, Data.Count);
-  Assert.CheckBool(true, Actual.Equals(new Message("Two", 2)));
+  Assert.IsNotNil(Actual);
+  Assert.AreEqual(Data.Count, 1);
+  Assert.IsTrue(Actual.Equals(new Message("Two", 2)));
 
   Actual := Data.Dequeue;
-  Assert.IsNotNull(Actual);
-  Assert.CheckInt(0, Data.Count);
-  Assert.CheckBool(true, Actual.Equals(new Message("Three", 3)));
+  Assert.IsNotNil(Actual);
+  Assert.AreEqual(Data.Count, 0);
+  Assert.IsTrue(Actual.Equals(new Message("Three", 3)));
 
-  Assert.IsException(->Data.Dequeue);
+  Assert.Throws(->Data.Dequeue);
 
   Data.Enqueue(nil);
-  Assert.CheckInt(1, Data.Count);
+  Assert.AreEqual(Data.Count, 1);
   Actual := Data.Dequeue;
-  Assert.IsNull(Actual);
-  Assert.CheckInt(0, Data.Count);
+  Assert.IsNil(Actual);
+  Assert.AreEqual(Data.Count, 0);
 end;
 
 method QueueTest.Count;
 begin
-  Assert.CheckInt(3, Data.Count);
+  Assert.AreEqual(Data.Count, 3);
   Data.Dequeue;
-  Assert.CheckInt(2, Data.Count);
+  Assert.AreEqual(Data.Count, 2);
   Data.Enqueue(new Message("", 0));
-  Assert.CheckInt(3, Data.Count);
+  Assert.AreEqual(Data.Count, 3);
   Data.Clear;
-  Assert.CheckInt(0, Data.Count);
+  Assert.AreEqual(Data.Count, 0);
 end;
 
 method QueueTest.ToArray;
 begin
   var Expected: array of Message := [new Message("One", 1), new Message("Two", 2), new Message("Three", 3)];
   var Actual: array of Message := Data.ToArray;
-  Assert.CheckInt(3, length(Actual));
+  Assert.AreEqual(length(Actual), 3);
   for i: Integer := 0 to length(Expected) - 1 do
-    Assert.CheckBool(true, Expected[i].Equals(Actual[i]));
+    Assert.IsTrue(Expected[i].Equals(Actual[i]));
 end;
 
 method QueueTest.Enumerator;
@@ -163,11 +163,11 @@ begin
   var &Index: Integer := 0;
 
   for Item: Message in Data do begin
-    Assert.CheckBool(true, Expected[&Index].Equals(Item));
+    Assert.IsTrue(Expected[&Index].Equals(Item));
     inc(&Index);
   end;
 
-  Assert.CheckInt(3, &Index);
+  Assert.AreEqual(&Index, 3);
 end;
 
 method QueueTest.ForEach;
@@ -176,11 +176,11 @@ begin
   var &Index: Integer := 0;
 
   Data.ForEach(x -> begin 
-    Assert.CheckBool(true, Expected[&Index].Equals(x));
+    Assert.IsTrue(Expected[&Index].Equals(x));
     &Index := &Index + 1;
   end);
 
-  Assert.CheckInt(3, &Index);
+  Assert.AreEqual(&Index, 3);
 end;
 
 end.
