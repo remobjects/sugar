@@ -4,10 +4,10 @@ interface
 
 uses
   Sugar,
-  Sugar.TestFramework;
+  RemObjects.Elements.EUnit;
 
 type
-  UrlTest = public class (Testcase)
+  UrlTest = public class (Test)
   private
     Data: Url;
   public
@@ -32,64 +32,64 @@ end;
 
 method UrlTest.Scheme;
 begin
-  Assert.CheckString("https", Data.Scheme);
-  Assert.CheckString("ftp", new Url("ftp://1.1.1.1/").Scheme);
+  Assert.AreEqual(Data.Scheme, "https");
+  Assert.AreEqual(new Url("ftp://1.1.1.1/").Scheme, "ftp");
 end;
 
 method UrlTest.Host;
 begin
-  Assert.CheckString("example.com", Data.Host);
-  Assert.CheckString("1.1.1.1", new Url("ftp://1.1.1.1/").Host);
+  Assert.AreEqual(Data.Host, "example.com");
+  Assert.AreEqual(new Url("ftp://1.1.1.1/").Host, "1.1.1.1");
 end;
 
 method UrlTest.Port;
 begin
-  Assert.CheckInt(8080, Data.Port);
-  Assert.CheckInt(-1, new Url("ftp://1.1.1.1/").Port);
+  Assert.AreEqual(Data.Port, 8080);
+  Assert.AreEqual(new Url("ftp://1.1.1.1/").Port, -1);
 end;
 
 method UrlTest.Path;
 begin
-  Assert.CheckString("/users", Data.Path);
-  Assert.CheckString("/", new Url("ftp://1.1.1.1/").Path);
-  Assert.CheckString("/", new Url("http://1.1.1.1/?id=1").Path);
-  Assert.CheckString("/page.html", new Url("http://1.1.1.1/page.html").Path);
+  Assert.AreEqual(Data.Path, "/users");
+  Assert.AreEqual(new Url("ftp://1.1.1.1/").Path, "/");
+  Assert.AreEqual(new Url("http://1.1.1.1/?id=1").Path, "/");
+  Assert.AreEqual(new Url("http://1.1.1.1/page.html").Path, "/page.html");
 end;
 
 method UrlTest.QueryString;
 begin
-  Assert.CheckString("user_id=42", Data.QueryString);
-  Assert.IsNull(new Url("ftp://1.1.1.1/").QueryString);
+  Assert.AreEqual(Data.QueryString, "user_id=42");
+  Assert.IsNil(new Url("ftp://1.1.1.1/").QueryString);
 end;
 
 method UrlTest.Fragment;
 begin
-  Assert.CheckString("phone", Data.Fragment);
-  Assert.IsNull(new Url("ftp://1.1.1.1/").Fragment);
+  Assert.AreEqual(Data.Fragment, "phone");
+  Assert.IsNil(new Url("ftp://1.1.1.1/").Fragment);
 end;
 
 method UrlTest.FromString;
 begin
-  Assert.CheckString("http://example.com/", new Url("http://example.com/").ToString);
+  Assert.AreEqual(new Url("http://example.com/").ToString, "http://example.com/");
 
-  Assert.IsException(->new Url(nil), "Nil");
-  Assert.IsException(->new Url(""), "Empty");
-  Assert.IsException(->new Url("1http://example.com"), "1http");
-  Assert.IsException(->new Url("http_ex://example.com"), "http_ex");
-  Assert.IsException(->new Url("http://%$444;"), "url");
+  Assert.Throws(->new Url(nil), "Nil");
+  Assert.Throws(->new Url(""), "Empty");
+  Assert.Throws(->new Url("1http://example.com"), "1http");
+  Assert.Throws(->new Url("http_ex://example.com"), "http_ex");
+  Assert.Throws(->new Url("http://%$444;"), "url");
 end;
 
 method UrlTest.TestToString;
 begin
-  Assert.CheckString("https://username:password@example.com:8080/users?user_id=42#phone", Data.ToString);
-  Assert.CheckString("ftp://1.1.1.1/", new Url("ftp://1.1.1.1/").ToString);
+  Assert.AreEqual(Data.ToString, "https://username:password@example.com:8080/users?user_id=42#phone");
+  Assert.AreEqual(new Url("ftp://1.1.1.1/").ToString, "ftp://1.1.1.1/");
 end;
 
 method UrlTest.UserInfo;
 begin
-  Assert.CheckString("username:password", Data.UserInfo);
-  Assert.IsNull(new Url("ftp://1.1.1.1/").UserInfo);
-  Assert.CheckString("user", new Url("ftp://user@1.1.1.1/").UserInfo);
+  Assert.AreEqual(Data.UserInfo, "username:password");
+  Assert.IsNil(new Url("ftp://1.1.1.1/").UserInfo);
+  Assert.AreEqual(new Url("ftp://user@1.1.1.1/").UserInfo, "user");
 end;
 
 end.
