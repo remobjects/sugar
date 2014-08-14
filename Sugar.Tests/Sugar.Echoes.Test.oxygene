@@ -52,7 +52,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
-    <Reference Include="RemObjects.Elements.EUnit" />
+    <Reference Include="RemObjects.Elements.EUnit">
+      <HintPath>C:\Program Files (x86)\RemObjects Software\Elements\EUnit\Echoes\RemObjects.Elements.EUnit.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
@@ -73,11 +75,11 @@
     <Compile Include="Tests\HashSet.pas" />
     <None Include="Tests\HTTP.pas" />
     <Compile Include="Tests\IO\File.pas" />
-    <None Include="Tests\IO\FileHandle.pas" />
-    <None Include="Tests\IO\FileUtils.pas" />
-    <None Include="Tests\IO\Folder.pas" />
-    <None Include="Tests\IO\FolderUtils.pas" />
-    <None Include="Tests\IO\Path.pas" />
+    <Compile Include="Tests\IO\FileHandle.pas" />
+    <Compile Include="Tests\IO\FileUtils.pas" />
+    <Compile Include="Tests\IO\Folder.pas" />
+    <Compile Include="Tests\IO\FolderUtils.pas" />
+    <Compile Include="Tests\IO\Path.pas" />
     <Compile Include="Tests\List.pas" />
     <Compile Include="Tests\Math.pas" />
     <Compile Include="Tests\MessageDigest.pas" />
@@ -88,8 +90,8 @@
     <Compile Include="Tests\StringBuilder.pas" />
     <Compile Include="Tests\Url.pas" />
     <Compile Include="Tests\UserSettings.pas" />
-    <None Include="Tests\Xml\CharacterData.pas" />
-    <None Include="Tests\Xml\Document.pas" />
+    <Compile Include="Tests\Xml\CharacterData.pas" />
+    <Compile Include="Tests\Xml\Document.pas" />
     <None Include="Tests\Xml\DocumentType.pas" />
     <None Include="Tests\Xml\Element.pas" />
     <None Include="Tests\Xml\Node.pas" />
