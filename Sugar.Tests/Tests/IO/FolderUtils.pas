@@ -5,10 +5,10 @@ interface
 uses
   Sugar,
   Sugar.IO,
-  Sugar.TestFramework;
+  RemObjects.Elements.EUnit;
 
 type
-  FolderUtilsTest = public class (Testcase)
+  FolderUtilsTest = public class (Test)
   private
     FolderName: String;
     SubFolder: String;
@@ -40,40 +40,40 @@ end;
 
 method FolderUtilsTest.Create;
 begin
-  Assert.CheckBool(false, FolderUtils.Exists(SubFolder));
+  Assert.IsFalse(FolderUtils.Exists(SubFolder));
   FolderUtils.Create(SubFolder);
-  Assert.CheckBool(true, FolderUtils.Exists(SubFolder));
+  Assert.IsTrue(FolderUtils.Exists(SubFolder));
 
-  Assert.IsException(->FolderUtils.Create(SubFolder));
-  Assert.IsException(->FolderUtils.Create(nil));
+  Assert.Throws(->FolderUtils.Create(SubFolder));
+  Assert.Throws(->FolderUtils.Create(nil));
 end;
 
 method FolderUtilsTest.Delete;
 begin
-  Assert.CheckBool(false, FolderUtils.Exists(SubFolder));
+  Assert.IsFalse(FolderUtils.Exists(SubFolder));
   FolderUtils.Create(SubFolder);
-  Assert.CheckBool(true, FolderUtils.Exists(SubFolder));
+  Assert.IsTrue(FolderUtils.Exists(SubFolder));
   FolderUtils.Delete(SubFolder);
-  Assert.CheckBool(false, FolderUtils.Exists(SubFolder));
+  Assert.IsFalse(FolderUtils.Exists(SubFolder));
 
-  Assert.IsException(->FolderUtils.Delete(SubFolder));
-  Assert.IsException(->FolderUtils.Delete(nil));
+  Assert.Throws(->FolderUtils.Delete(SubFolder));
+  Assert.Throws(->FolderUtils.Delete(nil));
 
   FolderUtils.Create(SubFolder);
   FileUtils.Create(Path.Combine(SubFolder, "1"));
   FileUtils.Create(Path.Combine(SubFolder, "2"));
   FolderUtils.Delete(FolderName);
-  Assert.CheckBool(false, FolderUtils.Exists(FolderName));
+  Assert.IsFalse(FolderUtils.Exists(FolderName));
 end;
 
 method FolderUtilsTest.Exists;
 begin
-  Assert.CheckBool(false, FolderUtils.Exists(SubFolder));
+  Assert.IsFalse(FolderUtils.Exists(SubFolder));
   FolderUtils.Create(SubFolder);
-  Assert.CheckBool(true, FolderUtils.Exists(SubFolder));
+  Assert.IsTrue(FolderUtils.Exists(SubFolder));
   FolderUtils.Delete(SubFolder);
-  Assert.CheckBool(false, FolderUtils.Exists(SubFolder));
-  Assert.IsException(->FolderUtils.Exists(nil));
+  Assert.IsFalse(FolderUtils.Exists(SubFolder));
+  Assert.Throws(->FolderUtils.Exists(nil));
 end;
 
 method FolderUtilsTest.GetFiles;
@@ -88,10 +88,7 @@ begin
   var Expected := new Sugar.Collections.List<String>;
   Expected.Add(Path.Combine(FolderName, "1"));
   Expected.Add(Path.Combine(FolderName, "2"));
-
-  Assert.CheckInt(2, length(Actual));
-  for i: Integer := 0 to length(Actual) - 1 do
-    Assert.CheckBool(true, Expected.Contains(Actual[i]));
+  Assert.AreEqual(Actual, Expected, true);
 
   Actual := FolderUtils.GetFiles(FolderName, true);
   Expected.Clear;
@@ -99,10 +96,7 @@ begin
   Expected.Add(Path.Combine(FolderName, "2"));
   Expected.Add(Path.Combine(SubFolder, "3"));
   Expected.Add(Path.Combine(SubFolder, "4"));
-
-  Assert.CheckInt(4, length(Actual));
-  for i: Integer := 0 to length(Actual) - 1 do
-    Assert.CheckBool(true, Expected.Contains(Actual[i]));
+  Assert.AreEqual(Actual, Expected, true);
 end;
 
 method FolderUtilsTest.GetFolders;
@@ -112,17 +106,14 @@ begin
   FolderUtils.Create(Path.Combine(SubFolder, "NewFolder"));
 
   var Actual := FolderUtils.GetFolders(FolderName, false);  
-  Assert.CheckInt(1, length(Actual));
-  Assert.CheckString(SubFolder, Actual[0]);
+  Assert.AreEqual(length(Actual), 1);
+  Assert.AreEqual(Actual[0], SubFolder);
 
   Actual := FolderUtils.GetFolders(FolderName, true);
   var Expected := new Sugar.Collections.List<String>;
   Expected.Add(SubFolder);
   Expected.Add(Path.Combine(SubFolder, "NewFolder"));
-
-  Assert.CheckInt(2, length(Actual));
-  for i: Integer := 0 to length(Actual) - 1 do
-    Assert.CheckBool(true, Expected.Contains(Actual[i]));
+  Assert.AreEqual(Actual, Expected, true);
 end;
 
 end.
