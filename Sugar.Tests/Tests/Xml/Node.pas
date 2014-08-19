@@ -5,10 +5,10 @@ interface
 uses
   Sugar,
   Sugar.Xml,
-  Sugar.TestFramework;
+  RemObjects.Elements.EUnit;
 
 type
-  NodeTest = public class (Testcase)
+  NodeTest = public class (Test)
   private
     Doc: XmlDocument;
     Data: XmlNode;
@@ -35,128 +35,128 @@ implementation
 method NodeTest.Setup;
 begin
   Doc := XmlDocument.FromString(XmlTestData.RssXml);
-  Assert.IsNotNull(Doc);
+  Assert.IsNotNil(Doc);
   Data := Doc.FirstChild;
-  Assert.IsNotNull(Data);
+  Assert.IsNotNil(Data);
 end;
 
 method NodeTest.Name;
 begin
-  Assert.CheckString("rss", Data.Name);
+  Assert.AreEqual(Data.Name, "rss");
   var lValue := Data.FirstChild.FirstChild.NextSibling;
-  Assert.IsNotNull(lValue);
-  Assert.CheckString("{http://www.w3.org/2005/Atom}link", lValue.Name);
+  Assert.IsNotNil(lValue);
+  Assert.AreEqual(lValue.Name, "{http://www.w3.org/2005/Atom}link");
   lValue := lValue.NextSibling.FirstChild;
-  Assert.IsNotNull(lValue);
-  Assert.CheckString("#text", lValue.Name);
+  Assert.IsNotNil(lValue);
+  Assert.AreEqual(lValue.Name, "#text");
 end;
 
 method NodeTest.Value;
 begin
   var lValue := Data.FirstChild.ChildNodes[2];
-  Assert.IsNotNull(lValue);
-  Assert.CheckString("http://blogs.remobjects.com", lValue.Value);
+  Assert.IsNotNil(lValue);
+  Assert.AreEqual(lValue.Value, "http://blogs.remobjects.com");
   lValue.Value := "http://test.com";
-  Assert.CheckString("http://test.com", lValue.Value);
+  Assert.AreEqual(lValue.Value, "http://test.com");
 
   lValue := Data.FirstChild.ChildNodes[10];
-  Assert.IsNotNull(lValue);
-  Assert.CheckInt(13, lValue.ChildCount);  
+  Assert.IsNotNil(lValue);
+  Assert.AreEqual(lValue.ChildCount, 13);
   lValue.Value := "Test"; //replaces all content with text node
-  Assert.CheckInt(1, lValue.ChildCount);
-  Assert.CheckString("Test", lValue.Value);
+  Assert.AreEqual(lValue.ChildCount, 1);
+  Assert.AreEqual(lValue.Value, "Test");
 
   lValue.Value := "";
-  Assert.CheckInt(0, lValue.ChildCount);
-  Assert.CheckString("", lValue.Value);
+  Assert.AreEqual(lValue.ChildCount, 0);
+  Assert.AreEqual(lValue.Value, "");
 
-  Assert.IsException(->begin lValue.Value := nil; end);
+  Assert.Throws(->begin lValue.Value := nil; end);
 end;
 
 method NodeTest.LocalName;
 begin
-  Assert.CheckString("rss", Data.LocalName);
+  Assert.AreEqual(Data.LocalName, "rss");
   var lValue := Data.FirstChild.FirstChild.NextSibling;
-  Assert.IsNotNull(lValue);
-  Assert.CheckString("link", lValue.LocalName);
+  Assert.IsNotNil(lValue);
+  Assert.AreEqual(lValue.LocalName, "link");
   lValue := lValue.NextSibling.FirstChild;
-  Assert.IsNotNull(lValue);
-  Assert.CheckString("#text", lValue.LocalName);
+  Assert.IsNotNil(lValue);
+  Assert.AreEqual(lValue.LocalName, "#text");
 end;
 
 method NodeTest.Document;
 begin
-  Assert.IsNotNull(Data.Document);
-  Assert.IsNotNull(Data.FirstChild.Document);
-  Assert.CheckBool(true, Data.Document.Equals(Doc));
+  Assert.IsNotNil(Data.Document);
+  Assert.IsNotNil(Data.FirstChild.Document);
+  Assert.IsTrue(Data.Document.Equals(Doc));
 end;
 
 method NodeTest.Parent;
 begin
-  Assert.IsNull(Data.Parent);
-  Assert.IsNotNull(Data.FirstChild.Parent);
-  Assert.CheckBool(true, Data.FirstChild.Parent.Equals(Data));
+  Assert.IsNil(Data.Parent);
+  Assert.IsNotNil(Data.FirstChild.Parent);
+  Assert.IsTrue(Data.FirstChild.Parent.Equals(Data));
 end;
 
 method NodeTest.NextSibling;
 begin
-  Assert.IsNull(Data.NextSibling);
+  Assert.IsNil(Data.NextSibling);
   var lValue := Data.FirstChild.FirstChild;
-  Assert.CheckBool(true, lValue.Equals(Data.FirstChild.ChildNodes[0]));
-  Assert.IsNotNull(lValue.NextSibling);
-  Assert.CheckBool(true, lValue.NextSibling.Equals(Data.FirstChild.ChildNodes[1]));
+  Assert.IsTrue(lValue.Equals(Data.FirstChild.ChildNodes[0]));
+  Assert.IsNotNil(lValue.NextSibling);
+  Assert.IsTrue(lValue.NextSibling.Equals(Data.FirstChild.ChildNodes[1]));
 end;
 
 method NodeTest.PreviousSibling;
 begin
-  Assert.IsNull(Data.PreviousSibling);
+  Assert.IsNil(Data.PreviousSibling);
   var lValue := Data.FirstChild.LastChild;
-  Assert.CheckBool(true, lValue.Equals(Data.FirstChild.ChildNodes[10]));
-  Assert.IsNotNull(lValue.PreviousSibling);
-  Assert.CheckBool(true, lValue.PreviousSibling.Equals(Data.FirstChild.ChildNodes[9]));
+  Assert.IsTrue(lValue.Equals(Data.FirstChild.ChildNodes[10]));
+  Assert.IsNotNil(lValue.PreviousSibling);
+  Assert.IsTrue(lValue.PreviousSibling.Equals(Data.FirstChild.ChildNodes[9]));
 end;
 
 method NodeTest.FirstChild;
 begin
-  Assert.IsNotNull(Data.FirstChild);
-  Assert.CheckString("channel", Data.FirstChild.LocalName);
+  Assert.IsNotNil(Data.FirstChild);
+  Assert.AreEqual(Data.FirstChild.LocalName, "channel");
 
   var lValue := Data.FirstChild.FirstChild;
-  Assert.IsNotNull(lValue);
-  Assert.CheckString("title", lValue.LocalName);
+  Assert.IsNotNil(lValue);
+  Assert.AreEqual(lValue.LocalName, "title");
 end;
 
 method NodeTest.LastChild;
 begin
   var lValue := Data.FirstChild.LastChild;
-  Assert.IsNotNull(lValue);
-  Assert.CheckString("item", lValue.LocalName);
+  Assert.IsNotNil(lValue);
+  Assert.AreEqual(lValue.LocalName, "item");
 end;
 
 method NodeTest.Item;
 begin
-  Assert.IsNotNull(Data.Item[0]);
-  Assert.CheckString("channel", Data.Item[0].LocalName);
-  Assert.IsNotNull(Data[0]);
-  Assert.CheckString("channel", Data[0].LocalName);
-  Assert.CheckBool(true, Data[0].Equals(Data.FirstChild));
-  Assert.IsException(->Data.Item[-1]);
-  Assert.IsException(->Data.Item[555]);
+  Assert.IsNotNil(Data.Item[0]);
+  Assert.AreEqual(Data.Item[0].LocalName, "channel");
+  Assert.IsNotNil(Data[0]);
+  Assert.AreEqual(Data[0].LocalName, "channel");
+  Assert.IsTrue(Data[0].Equals(Data.FirstChild));
+  Assert.Throws(->Data.Item[-1]);
+  Assert.Throws(->Data.Item[555]);
 end;
 
 method NodeTest.ChildCount;
 begin
-  Assert.CheckInt(1, Data.ChildCount);
-  Assert.CheckInt(11, Data.FirstChild.ChildCount);
+  Assert.AreEqual(Data.ChildCount, 1);
+  Assert.AreEqual(Data.FirstChild.ChildCount, 11);
 end;
 
 method NodeTest.ChildNodes;
 begin
   var Expected: array of String := ["title", "link", "link", "description", "lastBuildDate", "#comment", "language", "updatePeriod", "updateFrequency", "generator", "item"];
   var Actual := Data.FirstChild.ChildNodes;
-  Assert.CheckInt(11, length(Actual));
+  Assert.AreEqual(length(Actual), 11);
   for i: Integer := 0 to length(Actual) - 1 do
-    Assert.CheckString(Expected[i], Actual[i].LocalName);
+    Assert.AreEqual(Actual[i].LocalName, Expected[i]);
 end;
 
 end.

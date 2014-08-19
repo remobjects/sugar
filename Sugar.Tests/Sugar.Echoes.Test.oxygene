@@ -61,7 +61,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main\Echoes\Program.pas" />
-    <None Include="Printer\Printer.pas" />
     <Compile Include="Properties\AssemblyInfo.pas" />
     <Compile Include="Tests\AutoreleasePool.pas" />
     <Compile Include="Tests\Binary.pas" />
@@ -73,7 +72,7 @@
     <Compile Include="Tests\Extensions.pas" />
     <Compile Include="Tests\Guid.pas" />
     <Compile Include="Tests\HashSet.pas" />
-    <None Include="Tests\HTTP.pas" />
+    <Compile Include="Tests\HTTP.pas" />
     <Compile Include="Tests\IO\File.pas" />
     <Compile Include="Tests\IO\FileHandle.pas" />
     <Compile Include="Tests\IO\FileUtils.pas" />
@@ -92,16 +91,15 @@
     <Compile Include="Tests\UserSettings.pas" />
     <Compile Include="Tests\Xml\CharacterData.pas" />
     <Compile Include="Tests\Xml\Document.pas" />
-    <None Include="Tests\Xml\DocumentType.pas" />
-    <None Include="Tests\Xml\Element.pas" />
-    <None Include="Tests\Xml\Node.pas" />
+    <Compile Include="Tests\Xml\DocumentType.pas" />
+    <Compile Include="Tests\Xml\Element.pas" />
+    <Compile Include="Tests\Xml\Node.pas" />
     <Compile Include="Tests\Xml\ProcessingInstruction.pas" />
     <Compile Include="Tests\Xml\TestData.pas" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Main\" />
     <Folder Include="Main\Echoes\" />
-    <Folder Include="Printer\" />
     <Folder Include="Tests" />
     <Folder Include="Properties\" />
     <Folder Include="Tests\IO" />
