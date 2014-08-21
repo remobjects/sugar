@@ -52,9 +52,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
-    <Reference Include="RemObjects.Elements.EUnit">
-      <HintPath>C:\Program Files (x86)\RemObjects Software\Elements\EUnit\Echoes\RemObjects.Elements.EUnit.dll</HintPath>
-    </Reference>
+    <Reference Include="RemObjects.Elements.EUnit" />
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
