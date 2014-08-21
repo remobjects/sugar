@@ -40,11 +40,11 @@
     <Reference Include="com.remobjects.elements.rtl.jar">
       <Private>True</Private>
     </Reference>
+    <Reference Include="RemObjects.Elements.EUnit.jar" />
     <Reference Include="rt.jar" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main\Cooper\Program.pas" />
-    <Compile Include="Printer\Printer.pas" />
     <Compile Include="Tests\AutoreleasePool.pas" />
     <Compile Include="Tests\Binary.pas" />
     <Compile Include="Tests\Convert.pas" />
@@ -83,7 +83,6 @@
   <ItemGroup>
     <Folder Include="Main\" />
     <Folder Include="Main\Cooper\" />
-    <Folder Include="Printer\" />
     <Folder Include="Tests" />
     <Folder Include="Tests\Xml" />
     <Folder Include="Tests\IO" />
@@ -91,12 +90,6 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Sugar.TestFramework\Sugar.Cooper.TestFramework.oxygene">
-      <Name>Sugar.Cooper.TestFramework</Name>
-      <Project>{dba17ca8-59bc-4544-a0f5-c632737d5aa0}</Project>
-      <Private>True</Private>
-      <HintPath>..\Sugar.TestFramework\bin\Java\com.Sugar.testframework.jar</HintPath>
-    </ProjectReference>
     <ProjectReference Include="..\Sugar\Sugar.Cooper.oxygene">
       <Name>Sugar.Cooper</Name>
       <Project>{d1ee6c41-515b-4175-873f-ee188ac43450}</Project>
