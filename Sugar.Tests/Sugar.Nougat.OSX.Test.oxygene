@@ -37,6 +37,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Foundation.fx" />
+    <Reference Include="libEUnit.fx" />
     <Reference Include="libNougat.fx" />
     <Reference Include="libxml2.fx" />
     <Reference Include="rtl.fx" />
@@ -44,7 +45,6 @@
   <ItemGroup>
     <Compile Include="Main\OSX\Program.pas" />
     <None Include="Entitlements.entitlements" />
-    <Compile Include="Printer\Printer.pas" />
     <Compile Include="Tests\AutoreleasePool.pas" />
     <Compile Include="Tests\Binary.pas" />
     <Compile Include="Tests\Convert.pas" />
@@ -83,7 +83,6 @@
   <ItemGroup>
     <Folder Include="Main\" />
     <Folder Include="Main\OSX\" />
-    <Folder Include="Printer\" />
     <Folder Include="Tests" />
     <Folder Include="Properties\" />
     <Folder Include="Tests\Xml" />
@@ -91,12 +90,6 @@
     <Folder Include="Tests\Cryptography" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Sugar.TestFramework\Sugar.Nougat.OSX.TestFramework.oxygene">
-      <Name>Sugar.Nougat.OSX.TestFramework</Name>
-      <Project>{1d894b7c-0117-4154-a1f2-fd22691f0f13}</Project>
-      <Private>True</Private>
-      <HintPath>..\Sugar.TestFramework\bin\OS X\libSugarTestFramework.fx</HintPath>
-    </ProjectReference>
     <ProjectReference Include="..\Sugar\Sugar.Nougat.OSX.oxygene">
       <Name>Sugar.Nougat.OSX</Name>
       <Project>{ab7ab88b-2370-43bf-844b-54d015da9e57}</Project>
