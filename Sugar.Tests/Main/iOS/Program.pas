@@ -3,7 +3,7 @@
 interface
 
 uses
-  Sugar.TestFramework,
+  RemObjects.Elements.EUnit,
   UIKit;
 
 type
@@ -17,9 +17,13 @@ implementation
 method Program.Main(argc: Integer; argv: ^^AnsiChar): Int32;
 begin
   using autoreleasepool do begin
-    var results := TestRunner.RunAll;
-    var output := new StringPrinter(results);    
-    NSLog("%@", output.Result);
+    var Tested := Runner.Run(Discovery.FromModule);
+    var Writer := new StringWriter(Tested);
+
+    Writer.WriteFull;
+    Writer.WriteLine("====================================");
+    Writer.WriteSummary;
+    NSLog("%@", Writer.Output);
     //giving time for output to catch our log
     NSThread.sleepForTimeInterval(0.2);
     result := 0;
