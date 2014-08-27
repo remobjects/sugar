@@ -47,7 +47,6 @@
     <Folder Include="res\drawable-xhdpi\" />
     <Folder Include="res\values\" />
     <Folder Include="res\layout\" />
-    <Folder Include="Printer\" />
     <Folder Include="Tests" />
     <Folder Include="Tests\Xml" />
     <Folder Include="Tests\IO" />
@@ -81,10 +80,12 @@
     <Reference Include="com.remobjects.elements.rtl.jar">
       <Private>True</Private>
     </Reference>
+    <Reference Include="RemObjects.Elements.EUnit.jar">
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main\Android\MainActivity.pas" />
-    <Compile Include="Printer\Printer.pas" />
     <Compile Include="Tests\AutoreleasePool.pas" />
     <Compile Include="Tests\Binary.pas" />
     <Compile Include="Tests\Convert.pas" />
@@ -104,7 +105,7 @@
     <Compile Include="Tests\IO\Path.pas" />
     <Compile Include="Tests\List.pas" />
     <Compile Include="Tests\Math.pas" />
-    <None Include="Tests\MessageDigest.pas" />
+    <Compile Include="Tests\MessageDigest.pas" />
     <Compile Include="Tests\Queue.pas" />
     <Compile Include="Tests\Random.pas" />
     <Compile Include="Tests\Stack.pas" />
@@ -121,12 +122,6 @@
     <Compile Include="Tests\Xml\TestData.pas" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Sugar.TestFramework\Sugar.Android.TestFramework.oxygene">
-      <Name>Sugar.Android.TestFramework</Name>
-      <Project>{d4c017d4-e773-4138-872d-72adae69da3d}</Project>
-      <Private>True</Private>
-      <HintPath>..\Sugar.TestFramework\bin\Android\com.sugar.testframework.android.jar</HintPath>
-    </ProjectReference>
     <ProjectReference Include="..\Sugar\Sugar.Cooper.Android.oxygene">
       <Name>Sugar.Cooper.Android</Name>
       <Project>{8dac177a-64eb-4175-ac9c-e6b121b6f34b}</Project>
