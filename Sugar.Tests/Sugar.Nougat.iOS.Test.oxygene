@@ -26,7 +26,6 @@
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE;</DefineConstants>
     <CaptureConsoleOutput>False</CaptureConsoleOutput>
-    <SimulatorArchitectures>i386</SimulatorArchitectures>
     <XmlDocWarningLevel>WarningOnPublicMembers</XmlDocWarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
@@ -41,6 +40,9 @@
   <ItemGroup>
     <Reference Include="CoreGraphics.fx" />
     <Reference Include="Foundation.fx" />
+    <Reference Include="libEUnit.fx">
+      <HintPath>C:\Program Files (x86)\RemObjects Software\Elements\EUnit\Nougat\iOS\libEUnit.fx</HintPath>
+    </Reference>
     <Reference Include="libxml2.fx" />
     <Reference Include="UIKit.fx" />
     <Reference Include="rtl.fx" />
@@ -48,7 +50,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main\iOS\Program.pas" />
-    <Compile Include="Printer\Printer.pas" />
     <Compile Include="Tests\AutoreleasePool.pas" />
     <Compile Include="Tests\Binary.pas" />
     <Compile Include="Tests\Convert.pas" />
@@ -111,19 +112,12 @@
     <Folder Include="Main\iOS\Resources\" />
     <Folder Include="Main\iOS\Resources\App Icons\" />
     <Folder Include="Main\iOS\Resources\Launch Images\" />
-    <Folder Include="Printer\" />
     <Folder Include="Tests" />
     <Folder Include="Tests\Xml" />
     <Folder Include="Tests\IO" />
     <Folder Include="Tests\Cryptography" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Sugar.TestFramework\Sugar.Nougat.iOS.TestFramework.oxygene">
-      <Name>Sugar.Nougat.iOS.TestFramework</Name>
-      <Project>{e132a412-2431-41c6-9d98-63f942a32b8e}</Project>
-      <Private>True</Private>
-      <HintPath>..\Sugar.TestFramework\bin\iOS Simulator\libSugarTestFramework.fx</HintPath>
-    </ProjectReference>
     <ProjectReference Include="..\Sugar\Sugar.Nougat.iOS.oxygene">
       <Name>Sugar.Nougat.iOS</Name>
       <Project>{91b301fc-331e-48a7-803b-4cbe3fff6ed7}</Project>

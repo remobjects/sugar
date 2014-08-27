@@ -40,7 +40,9 @@
     <Reference Include="com.remobjects.elements.rtl.jar">
       <Private>True</Private>
     </Reference>
-    <Reference Include="RemObjects.Elements.EUnit.jar" />
+    <Reference Include="RemObjects.Elements.EUnit.jar">
+      <Private>True</Private>
+    </Reference>
     <Reference Include="rt.jar" />
   </ItemGroup>
   <ItemGroup>
