@@ -68,7 +68,7 @@ begin
   Assert.AreEqual(Data.Count, 3);
   Data.Add("Four");
   Assert.AreEqual(Data.Count, 4);
-  Assert.Contains("Four", Data);
+  Assert.Contains<String>("Four", Data);
 
   Data.Add("Four");
   Assert.AreEqual(Data.Count, 5);
