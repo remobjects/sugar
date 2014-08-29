@@ -17,7 +17,8 @@ uses
   Windows.UI.Xaml.Data,
   Windows.UI.Xaml.Input,
   Windows.UI.Xaml.Media,
-  Sugar.TestFramework,
+  System.Reflection,
+  RemObjects.Elements.EUnit,
   Windows.UI.Xaml.Navigation;
 
 // The Blank Application template is documented at http://go.microsoft.com/fwlink/?LinkId=234227
@@ -74,11 +75,15 @@ begin
      //TODO: Load state from previously suspended application
   end;
 
-  var Results := TestRunner.RunAll;
-  var Output := new Sugar.Test.StringPrinter(Results);
-  System.Diagnostics.Debug.WriteLine(Output.Result);
+  Runner.RunAsync(Discovery.FromAssembly(self.GetType.GetTypeInfo.Assembly), tested -> begin
+    var Writer := new StringWriter(Tested);
 
-  App.Current.Exit;
+      Writer.WriteFull;
+      Writer.WriteLine("====================================");
+      Writer.WriteSummary;
+      System.Diagnostics.Debug.WriteLine(Writer.Output);
+      App.Current.Exit;      
+  end);
 end;
 
 method App.OnSuspending(sender: System.Object; e: SuspendingEventArgs);
