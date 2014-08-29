@@ -99,6 +99,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="RemObjects.Elements.EUnit" />
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="App.xaml.pas">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
@@ -110,7 +113,6 @@
     <Compile Include="Resources\AppResources.Designer.pas">
       <DependentUpon>Resources\AppResources.resx</DependentUpon>
     </Compile>
-    <Compile Include="..\..\Printer\Printer.pas" />
     <Compile Include="..\..\Tests\AutoreleasePool.pas" />
     <Compile Include="..\..\Tests\Binary.pas" />
     <Compile Include="..\..\Tests\Convert.pas" />
@@ -200,12 +202,6 @@
     <Folder Include="..\..\Tests\Cryptography" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Sugar.TestFramework\Sugar.Echoes.WP8.TestFramework.oxygene">
-      <Name>Sugar.Echoes.WP8.TestFramework</Name>
-      <Project>{23f34f6e-c862-4f52-8c06-a63caff070a7}</Project>
-      <Private>True</Private>
-      <HintPath>..\..\..\Sugar.TestFramework\Bin\x86\Debug\WP8\Sugar.TestFramework.dll</HintPath>
-    </ProjectReference>
     <ProjectReference Include="..\..\..\Sugar\Sugar.Echoes.WP8.oxygene">
       <Name>Sugar.Echoes.WP8</Name>
       <Project>{bd5d51e2-b11a-4356-9450-64566f8cdc38}</Project>
