@@ -18,7 +18,7 @@ implementation
 
 method HTTPTest.DownloadAsString;
 begin
-  var Token := Assert.CreateToken;
+  var Token := TokenProvider.CreateAwaitToken;
   Http.DownloadStringAsync(new Url("http://example.com"), Encoding.UTF8, Responce -> begin
       Token.Run(->begin
         Assert.IsNotNil(Responce);
@@ -29,8 +29,8 @@ begin
       end)
     end);
 
-  Token.Wait;
-  Token := Assert.CreateToken;
+  Token.WaitFor;
+  Token := TokenProvider.CreateAwaitToken;
 
   Http.DownloadStringAsync(new Url("http://example.com/notexists"), Encoding.UTF8, Responce -> begin
       Token.Run(->begin
@@ -41,14 +41,14 @@ begin
       end)
     end);
 
-  Token.Wait;
+  Token.WaitFor;
   Assert.Throws(->Http.DownloadStringAsync(nil, Encoding.UTF8, x -> begin end));
   Assert.Throws(->Http.DownloadStringAsync(new Url("http://example.com"), Encoding.UTF8, nil));
 end;
 
 method HTTPTest.DownloadAsBinary;
 begin
-  var Token := Assert.CreateToken;
+  var Token := TokenProvider.CreateAwaitToken;
   Http.DownloadBinaryAsync(new Url("http://example.com"), Responce -> begin
       Token.Run(->begin
         Assert.IsNotNil(Responce);
@@ -60,12 +60,12 @@ begin
       end)
     end);
 
-  Token.Wait;
+  Token.WaitFor;
 end;
 
 method HTTPTest.DownloadAsXml;
 begin
-  var Token := Assert.CreateToken;
+  var Token := TokenProvider.CreateAwaitToken;
   Http.DownloadXmlAsync(new Url("http://images.apple.com/main/rss/hotnews/hotnews.rss"), Responce -> begin
       Token.Run(->begin
         Assert.IsNotNil(Responce);
@@ -78,7 +78,7 @@ begin
       end)
     end);
 
-  Token.Wait;
+  Token.WaitFor;
 end;
 
 end.
