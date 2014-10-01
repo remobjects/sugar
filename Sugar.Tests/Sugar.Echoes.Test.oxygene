@@ -64,6 +64,7 @@
     <Compile Include="Tests\Binary.pas" />
     <Compile Include="Tests\Convert.pas" />
     <Compile Include="Tests\Cryptography\Utils.pas" />
+    <Compile Include="Tests\Data\Json\JsonTokenizer.pas" />
     <Compile Include="Tests\DateTime.pas" />
     <Compile Include="Tests\Dictionary.pas" />
     <Compile Include="Tests\Encoding.pas" />
@@ -100,11 +101,19 @@
     <Folder Include="Main\Echoes\" />
     <Folder Include="Tests" />
     <Folder Include="Properties\" />
+    <Folder Include="Tests\Data\Json" />
     <Folder Include="Tests\IO" />
     <Folder Include="Tests\Cryptography" />
+    <Folder Include="Tests\Data" />
     <Folder Include="Tests\Xml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Sugar.Data\Sugar.Data.Echoes.oxygene">
+      <Name>Sugar.Data.Echoes</Name>
+      <Project>{77ba48da-3022-4e3c-ab2e-885ff84b5efe}</Project>
+      <Private>True</Private>
+      <HintPath>..\Sugar.Data\bin\.NET\Sugar.Data.dll</HintPath>
+    </ProjectReference>
     <ProjectReference Include="..\Sugar\Sugar.Echoes.oxygene">
       <Name>Sugar.Echoes</Name>
       <Project>{79301a0c-1f95-4fb0-9605-207e288c6171}</Project>
