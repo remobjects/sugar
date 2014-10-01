@@ -56,17 +56,14 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.6.0.5\lib\portable-net40+sl5+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="JSON\JsonArray.pas" />
-    <Compile Include="JSON\JsonObject.pas" />
+    <Compile Include="JSON\JsonTokenizer.pas" />
+    <Compile Include="JSON\JsonTokenKind.pas" />
     <Compile Include="Properties\AssemblyInfo.pas" />
   </ItemGroup>
   <ItemGroup>
