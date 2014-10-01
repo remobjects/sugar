@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>3ab69816-9882-4fa6-abe5-c146199f5279</ProjectGuid>
+    <ProjectGuid>{3ab69816-9882-4fa6-abe5-c146199f5279}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Sugar.Echoes.WinRT</RootNamespace>
