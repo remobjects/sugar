@@ -26,7 +26,7 @@ type
     method ParseString;
   public
     constructor (Json: String);
-    constructor (Json: String; IgnoreWhitespaces: Boolean);
+    constructor (Json: String; SkipWhitespaces: Boolean);
 
     method Next;
     method ExpectToken(aToken: JsonTokenKind);
@@ -45,9 +45,9 @@ begin
   constructor(Json, true);
 end;
 
-constructor JsonTokenizer(Json: String; IgnoreWhitespaces: Boolean);
+constructor JsonTokenizer(Json: String; SkipWhitespaces: Boolean);
 begin
-  self.IgnoreWhitespaces := IgnoreWhitespaces;
+  self.IgnoreWhitespaces := SkipWhitespaces;
   fData := (Json + #0#0#0#0).ToCharArray;
   Token := JsonTokenKind.Null;
   Next;
@@ -72,32 +72,39 @@ begin
       ' ', #9, #13, #10: ParseWhitespace;
       ',': begin
              fLength := 1;
+             Value := nil;
              Token := JsonTokenKind.ValueSeperator;
            end;
       '[': begin
              fLength := 1;
+             Value := nil;
              Token := JsonTokenKind.ArrayStart;
            end;
       ']': begin
              fLength := 1;
+             Value := nil;
              Token := JsonTokenKind.ArrayEnd;
            end;
       '{': begin
              fLength := 1;
+             Value := nil;
              Token := JsonTokenKind.ObjectStart;
            end;
       '}': begin
              fLength := 1;
+             Value := nil;
              Token := JsonTokenKind.ObjectEnd;
            end;
       ':': begin
              fLength := 1;
+             Value := nil;
              Token := JsonTokenKind.NameSeperator;
            end;
       '-', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.': ParseNumber;
       '"': ParseString;
       #0: begin
             fLength := 0;
+            Value := nil;
             Token := JsonTokenKind.EOF;
           end;
       else begin
@@ -159,6 +166,7 @@ begin
   end;
 
   fLength := lPosition - fPos;
+  Value := nil;
   Token := JsonTokenKind.Whitespace;
 end;
 
