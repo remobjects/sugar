@@ -8,6 +8,11 @@ uses
 
 type
   JsonTokenizerTest = public class (Test)
+  private    
+    Tokenizer: JsonTokenizer := nil;
+    method SkipTo(Token: JsonTokenKind);
+    method Expect(Expected: JsonTokenKind);
+    method Expect(ExpectedToken: JsonTokenKind; ExpectedValue: String);
   public
     method EmptyObject;
     method SimpleObjectStringValue;
@@ -25,299 +30,284 @@ type
     method UppercaseUnicodeText;
     method NonProtectedSlash;
     method SimpleObjectNullValue;
+    method SimpleObjectTrueValue;
+    method SimpleObjectFalseValue;
+    method SimpleObjectDoubleValue;
+    method MultiValuesObject;
+    method NestedObject;
   end;
 
 implementation
 
 method JsonTokenizerTest.EmptyObject;
 begin
-  var Tokenizer := new JsonTokenizer("{}");
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.ObjectStart);
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.ObjectEnd);
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.EOF);
+  Tokenizer := new JsonTokenizer("{}");
+  Expect(JsonTokenKind.ObjectStart);
+  Expect(JsonTokenKind.ObjectEnd);
+  Expect(JsonTokenKind.EOF);
 end;
 
 method JsonTokenizerTest.SimpleObjectStringValue;
 begin
-  var Tokenizer := new JsonTokenizer('{ "v":"1"}');
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.ObjectStart);
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.String);
-  Assert.AreEqual(Tokenizer.Value, "v");
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.NameSeperator);
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.String);
-  Assert.AreEqual(Tokenizer.Value, "1");
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.ObjectEnd);
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.EOF);
+  Tokenizer := new JsonTokenizer('{ "v":"1"}');
+  Expect(JsonTokenKind.ObjectStart);
+  Expect(JsonTokenKind.String, "v");
+  Expect(JsonTokenKind.NameSeperator);
+  Expect(JsonTokenKind.String, "1");
+  Expect(JsonTokenKind.ObjectEnd);
+  Expect(JsonTokenKind.EOF);
 end;
 
 method JsonTokenizerTest.SpaceTest;
 begin
-  var Tokenizer := new JsonTokenizer("{	""v""
+  Tokenizer := new JsonTokenizer("{	""v""
   :""1""
   }");
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.ObjectStart);
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.String);
-  Assert.AreEqual(Tokenizer.Value, "v");
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.NameSeperator);
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.String);
-  Assert.AreEqual(Tokenizer.Value, "1");
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.ObjectEnd);
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.EOF);
+  Expect(JsonTokenKind.ObjectStart);
+  Expect(JsonTokenKind.String, "v");
+  Expect(JsonTokenKind.NameSeperator);
+  Expect(JsonTokenKind.String, "1");
+  Expect(JsonTokenKind.ObjectEnd);
+  Expect(JsonTokenKind.EOF);
 end;
 
 method JsonTokenizerTest.SimpleObjectIntValue;
 begin
-  var Tokenizer := new JsonTokenizer('{"v":1}');
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.ObjectStart);
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.String);
-  Assert.AreEqual(Tokenizer.Value, "v");
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.NameSeperator);
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.Number);
-  Assert.AreEqual(Tokenizer.Value, "1");
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.ObjectEnd);
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.EOF);
+  Tokenizer := new JsonTokenizer('{"v":1}');
+  Expect(JsonTokenKind.ObjectStart);
+  Expect(JsonTokenKind.String, "v");
+  Expect(JsonTokenKind.NameSeperator);
+  Expect(JsonTokenKind.Number, "1");
+  Expect(JsonTokenKind.ObjectEnd);
+  Expect(JsonTokenKind.EOF);
 end;
 
 method JsonTokenizerTest.SimpleQuoteInString;
 begin
-  var Tokenizer := new JsonTokenizer('{ "v":"ab''c"}');
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.ObjectStart);
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.String);
-  Assert.AreEqual(Tokenizer.Value, "v");
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.NameSeperator);
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.String);
-  Assert.AreEqual(Tokenizer.Value, "ab'c");
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.ObjectEnd);
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.EOF);
+  Tokenizer := new JsonTokenizer('{ "v":"ab''c"}');
+  Expect(JsonTokenKind.ObjectStart);
+  Expect(JsonTokenKind.String, "v");
+  Expect(JsonTokenKind.NameSeperator);
+  Expect(JsonTokenKind.String, "ab'c");
+  Expect(JsonTokenKind.ObjectEnd);
+  Expect(JsonTokenKind.EOF);
 end;
 
 method JsonTokenizerTest.SimpleObjectFloatValue;
 begin
-  var Tokenizer := new JsonTokenizer('{ "PI":3.141E-10}');
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.ObjectStart);
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.String);
-  Assert.AreEqual(Tokenizer.Value, "PI");
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.NameSeperator);
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.Number);
-  Assert.AreEqual(Tokenizer.Value, "3.141E-10");
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.ObjectEnd);
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.EOF);
+  Tokenizer := new JsonTokenizer('{ "PI":3.141E-10}');
+  Expect(JsonTokenKind.ObjectStart);
+  Expect(JsonTokenKind.String, "PI");
+  Expect(JsonTokenKind.NameSeperator);
+  Expect(JsonTokenKind.Number, "3.141E-10");
+  Expect(JsonTokenKind.ObjectEnd);
+  Expect(JsonTokenKind.EOF);
 end;
 
 method JsonTokenizerTest.LowcaseFloatValue;
 begin
-  var Tokenizer := new JsonTokenizer('{ "PI":3.141e-10}');
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.ObjectStart);
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.String);
-  Assert.AreEqual(Tokenizer.Value, "PI");
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.NameSeperator);
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.Number);
-  Assert.AreEqual(Tokenizer.Value, "3.141e-10");
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.ObjectEnd);
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.EOF);
+  Tokenizer := new JsonTokenizer('{ "PI":3.141e-10}');
+  Expect(JsonTokenKind.ObjectStart);
+  Expect(JsonTokenKind.String, "PI");
+  Expect(JsonTokenKind.NameSeperator);
+  Expect(JsonTokenKind.Number, "3.141e-10");
+  Expect(JsonTokenKind.ObjectEnd);
+  Expect(JsonTokenKind.EOF);
 end;
 
 method JsonTokenizerTest.SimpleObjectLongValue;
 begin
-  var Tokenizer := new JsonTokenizer('{ "v":12345123456789}');
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.ObjectStart);
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.String);
-  Assert.AreEqual(Tokenizer.Value, "v");
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.NameSeperator);
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.Number);
-  Assert.AreEqual(Tokenizer.Value, "12345123456789");
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.ObjectEnd);
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.EOF);
+  Tokenizer := new JsonTokenizer('{ "v":12345123456789}');
+  Expect(JsonTokenKind.ObjectStart);
+  Expect(JsonTokenKind.String, "v");
+  Expect(JsonTokenKind.NameSeperator);
+  Expect(JsonTokenKind.Number, "12345123456789");
+  Expect(JsonTokenKind.ObjectEnd);
+  Expect(JsonTokenKind.EOF);
 end;
 
 method JsonTokenizerTest.SimpleObjectBigIntegerValue;
 begin
-  var Tokenizer := new JsonTokenizer('{ "v":123456789123456789123456789}');
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.ObjectStart);
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.String);
-  Assert.AreEqual(Tokenizer.Value, "v");
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.NameSeperator);
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.Number);
-  Assert.AreEqual(Tokenizer.Value, "123456789123456789123456789");
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.ObjectEnd);
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.EOF);
+  Tokenizer := new JsonTokenizer('{ "v":123456789123456789123456789}');
+  Expect(JsonTokenKind.ObjectStart);
+  Expect(JsonTokenKind.String, "v");
+  Expect(JsonTokenKind.NameSeperator);
+  Expect(JsonTokenKind.Number, "123456789123456789123456789");
+  Expect(JsonTokenKind.ObjectEnd);
+  Expect(JsonTokenKind.EOF);
 end;
 
 method JsonTokenizerTest.SimpleDigitArray;
 begin
-  var Tokenizer := new JsonTokenizer('[1,2,3,4]');
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.ArrayStart);
+  Tokenizer := new JsonTokenizer('[1,2,3,4]');
+  Expect(JsonTokenKind.ArrayStart);
 
   for i: Int32 := 1 to 4 do begin
-    Tokenizer.Next;
-    Assert.AreEqual(Tokenizer.Token, JsonTokenKind.Number);
-    Assert.AreEqual(Tokenizer.Value, i.ToString);
-    Tokenizer.Next;
+    Expect(JsonTokenKind.Number, i.ToString);
     if i < 4 then
-      Assert.AreEqual(Tokenizer.Token, JsonTokenKind.ValueSeperator);
+      Expect(JsonTokenKind.ValueSeperator);
   end;
 
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.ArrayEnd);
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.EOF);
+  Expect(JsonTokenKind.ArrayEnd);
+  Expect(JsonTokenKind.EOF);
 end;
 
 method JsonTokenizerTest.SimpleStringArray;
 begin
-  var Tokenizer := new JsonTokenizer('["1","2","3","4"]');
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.ArrayStart);
+  Tokenizer := new JsonTokenizer('["1","2","3","4"]');
+  Expect(JsonTokenKind.ArrayStart);
 
   for i: Int32 := 1 to 4 do begin
-    Tokenizer.Next;
-    Assert.AreEqual(Tokenizer.Token, JsonTokenKind.String);
-    Assert.AreEqual(Tokenizer.Value, i.ToString);
-    Tokenizer.Next;
+    Expect(JsonTokenKind.String, i.ToString);
     if i < 4 then
-      Assert.AreEqual(Tokenizer.Token, JsonTokenKind.ValueSeperator);
+      Expect(JsonTokenKind.ValueSeperator);
   end;
 
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.ArrayEnd);
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.EOF);
+  Expect(JsonTokenKind.ArrayEnd);
+  Expect(JsonTokenKind.EOF);
 end;
 
 method JsonTokenizerTest.ArrayOfEmptyObjects;
 begin
-  var Tokenizer := new JsonTokenizer('[ {}, {}, []]');
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.ArrayStart);
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.ObjectStart);
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.ObjectEnd);
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.ValueSeperator);
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.ObjectStart);
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.ObjectEnd);
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.ValueSeperator);
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.ArrayStart);
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.ArrayEnd);
-  Tokenizer.Next;  
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.ArrayEnd);
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.EOF);
+  Tokenizer := new JsonTokenizer('[ {}, {}, []]');
+  Expect(JsonTokenKind.ArrayStart);
+  Expect(JsonTokenKind.ObjectStart);
+  Expect(JsonTokenKind.ObjectEnd);
+  Expect(JsonTokenKind.ValueSeperator);
+  Expect(JsonTokenKind.ObjectStart);
+  Expect(JsonTokenKind.ObjectEnd);
+  Expect(JsonTokenKind.ValueSeperator);
+  Expect(JsonTokenKind.ArrayStart);
+  Expect(JsonTokenKind.ArrayEnd);
+  Expect(JsonTokenKind.ArrayEnd);
+  Expect(JsonTokenKind.EOF);
 end;
 
 method JsonTokenizerTest.LowercaseUnicodeText;
 begin
-  var Tokenizer := new JsonTokenizer('{ "v":"\u0275\u023e"}');
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.ObjectStart);
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.String);
-  Assert.AreEqual(Tokenizer.Value, "v");
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.NameSeperator);
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.String);
-  Assert.AreEqual(Tokenizer.Value, "ɵȾ");
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.ObjectEnd);
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.EOF);
+  Tokenizer := new JsonTokenizer('{ "v":"\u0275\u023e"}');
+  Expect(JsonTokenKind.ObjectStart);
+  Expect(JsonTokenKind.String, "v");
+  Expect(JsonTokenKind.NameSeperator);
+  Expect(JsonTokenKind.String, "ɵȾ");
+  Expect(JsonTokenKind.ObjectEnd);
+  Expect(JsonTokenKind.EOF);
 end;
 
 method JsonTokenizerTest.UppercaseUnicodeText;
 begin
-  var Tokenizer := new JsonTokenizer('{ "v":"\u0275\u023E"}');
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.ObjectStart);
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.String);
-  Assert.AreEqual(Tokenizer.Value, "v");
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.NameSeperator);
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.String);
-  Assert.AreEqual(Tokenizer.Value, "ɵȾ");
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.ObjectEnd);
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.EOF);
+  Tokenizer := new JsonTokenizer('{ "v":"\u0275\u023E"}');
+  Expect(JsonTokenKind.ObjectStart);
+  Expect(JsonTokenKind.String, "v");
+  Expect(JsonTokenKind.NameSeperator);
+  Expect(JsonTokenKind.String, "ɵȾ");
+  Expect(JsonTokenKind.ObjectEnd);
+  Expect(JsonTokenKind.EOF);
 end;
 
 method JsonTokenizerTest.NonProtectedSlash;
 begin
-  var Tokenizer := new JsonTokenizer('{ "v":"hp://foo"}');
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.ObjectStart);
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.String);
-  Assert.AreEqual(Tokenizer.Value, "v");
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.NameSeperator);
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.String);
-  Assert.AreEqual(Tokenizer.Value, "hp://foo");
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.ObjectEnd);
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.EOF);
+  Tokenizer := new JsonTokenizer('{ "v":"http://foo"}');
+  Expect(JsonTokenKind.ObjectStart);
+  Expect(JsonTokenKind.String, "v");
+  Expect(JsonTokenKind.NameSeperator);
+  Expect(JsonTokenKind.String, "http://foo");
+  Expect(JsonTokenKind.ObjectEnd);
+  Expect(JsonTokenKind.EOF);
 end;
 
 method JsonTokenizerTest.SimpleObjectNullValue;
 begin
-  var Tokenizer := new JsonTokenizer('{ "v": null}');
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.ObjectStart);
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.String);
-  Assert.AreEqual(Tokenizer.Value, "v");
-  Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.NameSeperator);
+  Tokenizer := new JsonTokenizer('{ "v": null}');
+  SkipTo(JsonTokenKind.NameSeperator);
   Tokenizer.Next;
   Assert.AreEqual(Tokenizer.Token, JsonTokenKind.Null);
+end;
+
+method JsonTokenizerTest.SimpleObjectTrueValue;
+begin
+  Tokenizer := new JsonTokenizer('{ "v": true}');
+  SkipTo(JsonTokenKind.NameSeperator);
   Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.ObjectEnd);
+  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.True);
+end;
+
+method JsonTokenizerTest.SimpleObjectFalseValue;
+begin
+  Tokenizer := new JsonTokenizer('{ "v": false}');
+  SkipTo(JsonTokenKind.NameSeperator);
   Tokenizer.Next;
-  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.EOF);
+  Assert.AreEqual(Tokenizer.Token, JsonTokenKind.False);
+end;
+
+method JsonTokenizerTest.SimpleObjectDoubleValue;
+begin
+  Tokenizer := new JsonTokenizer('{ "v":1.7976931348623157E308}');
+  SkipTo(JsonTokenKind.NameSeperator);
+  Tokenizer.Next;
+  Expect(JsonTokenKind.Number, "1.7976931348623157E308");
+end;
+
+method JsonTokenizerTest.MultiValuesObject;
+begin
+  Tokenizer := new JsonTokenizer('{ "a":1.7E308, "b": 42, "c": null, "d": "string"}');
+  Expect(JsonTokenKind.ObjectStart);
+  Expect(JsonTokenKind.String, "a");
+  Expect(JsonTokenKind.NameSeperator);
+  Expect(JsonTokenKind.Number, "1.7E308");
+  Expect(JsonTokenKind.ValueSeperator);
+  Expect(JsonTokenKind.String, "b");
+  Expect(JsonTokenKind.NameSeperator);
+  Expect(JsonTokenKind.Number, "42");
+  Expect(JsonTokenKind.ValueSeperator);
+  Expect(JsonTokenKind.String, "c");
+  Expect(JsonTokenKind.NameSeperator);
+  Expect(JsonTokenKind.Null);
+  Expect(JsonTokenKind.ValueSeperator);
+  Expect(JsonTokenKind.String, "d");
+  Expect(JsonTokenKind.NameSeperator);
+  Expect(JsonTokenKind.String, "string");
+  Expect(JsonTokenKind.ObjectEnd);
+  Expect(JsonTokenKind.EOF);
+end;
+
+method JsonTokenizerTest.SkipTo(Token: JsonTokenKind);
+begin
+  repeat
+    Tokenizer.Next;
+  until (Tokenizer.Token = Token) or (Tokenizer.Token = JsonTokenKind.EOF);
+end;
+
+method JsonTokenizerTest.NestedObject;
+begin
+  Tokenizer := new JsonTokenizer('{ "v": "abc", "a": { "v": "abc"}}');
+  Expect(JsonTokenKind.ObjectStart);
+  Expect(JsonTokenKind.String, "v");
+  Expect(JsonTokenKind.NameSeperator);
+  Expect(JsonTokenKind.String, "abc");
+  Expect(JsonTokenKind.ValueSeperator);
+  Expect(JsonTokenKind.String, "a");
+  Expect(JsonTokenKind.NameSeperator);
+  Expect(JsonTokenKind.ObjectStart);
+  Expect(JsonTokenKind.String, "v");
+  Expect(JsonTokenKind.NameSeperator);
+  Expect(JsonTokenKind.String, "abc");
+  Expect(JsonTokenKind.ObjectEnd);
+  Expect(JsonTokenKind.ObjectEnd);
+  Expect(JsonTokenKind.EOF);
+end;
+
+method JsonTokenizerTest.Expect(Expected: JsonTokenKind);
+begin
+  Assert.AreEqual(Tokenizer.Token, Expected);
+  Tokenizer.Next;
+end;
+
+method JsonTokenizerTest.Expect(ExpectedToken: JsonTokenKind; ExpectedValue: String);
+begin
+  Assert.AreEqual(Tokenizer.Token, ExpectedToken);
+  Assert.AreEqual(Tokenizer.Value, ExpectedValue);
+  Tokenizer.Next;
 end;
 
 end.
