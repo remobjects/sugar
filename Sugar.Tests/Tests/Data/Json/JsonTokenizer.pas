@@ -35,6 +35,11 @@ type
     method SimpleObjectDoubleValue;
     method MultiValuesObject;
     method NestedObject;
+    method SimpleArraySingleValue;
+    method MultiValuesArray;
+    method ArrayWithNestedObjects;
+    method NonProtectedKeys;
+    method NonProtectedString;
   end;
 
 implementation
@@ -297,6 +302,57 @@ begin
   Expect(JsonTokenKind.EOF);
 end;
 
+method JsonTokenizerTest.SimpleArraySingleValue;
+begin
+  Tokenizer := new JsonTokenizer('["a"]');
+  Expect(JsonTokenKind.ArrayStart);
+  Expect(JsonTokenKind.String, "a");
+  Expect(JsonTokenKind.ArrayEnd);
+  Expect(JsonTokenKind.EOF);
+end;
+
+method JsonTokenizerTest.MultiValuesArray;
+begin
+  Tokenizer := new JsonTokenizer('["a", 1, null, true]');
+  Expect(JsonTokenKind.ArrayStart);
+  Expect(JsonTokenKind.String, "a");
+  Expect(JsonTokenKind.ValueSeperator);
+  Expect(JsonTokenKind.Number, "1");
+  Expect(JsonTokenKind.ValueSeperator);
+  Expect(JsonTokenKind.Null);
+  Expect(JsonTokenKind.ValueSeperator);
+  Expect(JsonTokenKind.True);
+  Expect(JsonTokenKind.ArrayEnd);
+  Expect(JsonTokenKind.EOF);
+end;
+
+method JsonTokenizerTest.ArrayWithNestedObjects;
+begin
+  Tokenizer := new JsonTokenizer('[{"a": 1, "b": "abc"}, {"a": 2, "b": "bca"}]');
+  Expect(JsonTokenKind.ArrayStart);
+  Expect(JsonTokenKind.ObjectStart);
+  Expect(JsonTokenKind.String, "a");
+  Expect(JsonTokenKind.NameSeperator);
+  Expect(JsonTokenKind.Number, "1");
+  Expect(JsonTokenKind.ValueSeperator);
+  Expect(JsonTokenKind.String, "b");
+  Expect(JsonTokenKind.NameSeperator);
+  Expect(JsonTokenKind.String, "abc");
+  Expect(JsonTokenKind.ObjectEnd);
+  Expect(JsonTokenKind.ValueSeperator);
+  Expect(JsonTokenKind.ObjectStart);
+  Expect(JsonTokenKind.String, "a");
+  Expect(JsonTokenKind.NameSeperator);
+  Expect(JsonTokenKind.Number, "2");
+  Expect(JsonTokenKind.ValueSeperator);
+  Expect(JsonTokenKind.String, "b");
+  Expect(JsonTokenKind.NameSeperator);
+  Expect(JsonTokenKind.String, "bca");
+  Expect(JsonTokenKind.ObjectEnd);
+  Expect(JsonTokenKind.ArrayEnd);
+  Expect(JsonTokenKind.EOF);
+end;
+
 method JsonTokenizerTest.Expect(Expected: JsonTokenKind);
 begin
   Assert.AreEqual(Tokenizer.Token, Expected);
@@ -308,6 +364,28 @@ begin
   Assert.AreEqual(Tokenizer.Token, ExpectedToken);
   Assert.AreEqual(Tokenizer.Value, ExpectedValue);
   Tokenizer.Next;
+end;
+
+method JsonTokenizerTest.NonProtectedKeys;
+begin
+  Tokenizer := new JsonTokenizer('{a: 1}');
+  Expect(JsonTokenKind.ObjectStart);
+  Expect(JsonTokenKind.Identifier, "a");
+  Expect(JsonTokenKind.NameSeperator);
+  Expect(JsonTokenKind.Number, "1");
+  Expect(JsonTokenKind.ObjectEnd);
+  Expect(JsonTokenKind.EOF);
+end;
+
+method JsonTokenizerTest.NonProtectedString;
+begin
+  Tokenizer := new JsonTokenizer('{"a": abc}');
+  Expect(JsonTokenKind.ObjectStart);
+  Expect(JsonTokenKind.String, "a");
+  Expect(JsonTokenKind.NameSeperator);
+  Expect(JsonTokenKind.Identifier, "abc");
+  Expect(JsonTokenKind.ObjectEnd);
+  Expect(JsonTokenKind.EOF);
 end;
 
 end.
