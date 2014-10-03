@@ -251,13 +251,17 @@ begin
   fLength := lPosition - fPos;
   Value := new String(fData, fPos, fLength);
   {$WARNING #69867 case does not working with mapped string}
-  case Value of 
+  {case Value of 
     "null": Token := JsonTokenKind.Null;
     "true": Token := JsonTokenKind.True;    
     "false": Token := JsonTokenKind.False;
     else
       Token := JsonTokenKind.Identifier;
-  end;
+  end;}
+  if Value = "null" then Token := JsonTokenKind.Null
+  else if Value = "true" then Token := JsonTokenKind.True
+  else if Value = "false" then Token := JsonTokenKind.False
+  else Token := JsonTokenKind.Identifier;
 end;
 
 end.
