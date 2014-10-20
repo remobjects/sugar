@@ -251,7 +251,7 @@ begin
   exit mapped.IndexOf(anItem);
   {$ELSEIF NOUGAT}
   var lIndex := mapped.indexOfObject(NullHelper.ValueOf(anItem));
-  exit if lIndex = NSNotFound then -1 else lIndex;
+  exit if lIndex = NSNotFound then -1 else Integer(lIndex);
   {$ENDIF}
 end;
 
@@ -274,7 +274,7 @@ begin
   exit mapped.LastIndexOf(anItem);
   {$ELSEIF NOUGAT}
   var lIndex := mapped.indexOfObjectWithOptions(NSEnumerationOptions.NSEnumerationReverse) passingTest((x,y,z) -> x = id(NullHelper.ValueOf(anItem)));
-  exit if lIndex = NSNotFound then -1 else lIndex;
+  exit if lIndex = NSNotFound then -1 else Integer(lIndex);
   {$ENDIF}
 end;
 

@@ -292,7 +292,7 @@ begin
   exit mapped.IndexOf(Value);
   {$ELSEIF NOUGAT}
   var r := mapped.rangeOfString(Value);
-  exit if (r.location = NSNotFound) and (r.length = 0) then -1 else r.location;
+  exit if (r.location = NSNotFound) and (r.length = 0) then -1 else Int32(r.location);
   {$ENDIF}
 end;
 
@@ -308,7 +308,7 @@ begin
   exit mapped.LastIndexOf(Value);
   {$ELSEIF NOUGAT}
   var r := mapped.rangeOfString(Value) options(NSStringCompareOptions.NSBackwardsSearch);
-  exit if (r.location = NSNotFound) and (r.length = 0) then -1 else r.location;
+  exit if (r.location = NSNotFound) and (r.length = 0) then -1 else Int32(r.location);
   {$ENDIF}
 end;
 
