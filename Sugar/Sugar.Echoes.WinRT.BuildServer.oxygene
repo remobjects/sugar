@@ -171,6 +171,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Sugar\Microsoft.Windows.UI.Xaml.Oxygene.targets" />
   <PropertyGroup>
-    <PreBuildEvent>rmdir /s /q $(ProjectDir)\Obj</PreBuildEvent>
+    <PreBuildEvent Condition="'$(OS)' != 'Unix'">rmdir /s /q $(ProjectDir)\Obj</PreBuildEvent>
   </PropertyGroup>
 </Project>

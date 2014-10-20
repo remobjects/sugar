@@ -109,6 +109,6 @@
     </ItemGroup>
     <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Cooper.targets"/>
     <PropertyGroup>
-      <PreBuildEvent>rmdir /s /q $(ProjectDir)\Obj</PreBuildEvent>
+      <PreBuildEvent Condition="'$(OS)' != 'Unix'">rmdir /s /q $(ProjectDir)\Obj</PreBuildEvent>
     </PropertyGroup>
 </Project>

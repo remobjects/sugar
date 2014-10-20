@@ -108,6 +108,6 @@
     </ItemGroup>
     <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Cooper.Android.targets"/>
     <PropertyGroup>
-        <PreBuildEvent>rmdir /s /q $(ProjectDir)\Obj</PreBuildEvent>
+        <PreBuildEvent Condition="'$(OS)' != 'Unix'">rmdir /s /q $(ProjectDir)\Obj</PreBuildEvent>
     </PropertyGroup>
 </Project>
