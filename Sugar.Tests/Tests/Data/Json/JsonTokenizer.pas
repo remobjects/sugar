@@ -249,7 +249,6 @@ method JsonTokenizerTest.SimpleObjectDoubleValue;
 begin
   Tokenizer := new JsonTokenizer('{ "v":1.7976931348623157E308}');
   SkipTo(JsonTokenKind.NameSeperator);
-  Tokenizer.Next;
   Expect(JsonTokenKind.Number, "1.7976931348623157E308");
 end;
 
@@ -355,15 +354,15 @@ end;
 
 method JsonTokenizerTest.Expect(Expected: JsonTokenKind);
 begin
-  Assert.AreEqual(Tokenizer.Token, Expected);
   Tokenizer.Next;
+  Assert.AreEqual(Tokenizer.Token, Expected);  
 end;
 
 method JsonTokenizerTest.Expect(ExpectedToken: JsonTokenKind; ExpectedValue: String);
 begin
-  Assert.AreEqual(Tokenizer.Token, ExpectedToken);
-  Assert.AreEqual(Tokenizer.Value, ExpectedValue);
   Tokenizer.Next;
+  Assert.AreEqual(Tokenizer.Token, ExpectedToken);
+  Assert.AreEqual(Tokenizer.Value, ExpectedValue);  
 end;
 
 method JsonTokenizerTest.NonProtectedKeys;
