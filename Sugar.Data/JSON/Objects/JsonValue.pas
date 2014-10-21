@@ -9,7 +9,9 @@ type
   JsonValue = public class
   private
     method Validate(InvalidTokens: sequence of JsonValueKind);
+    class method GetValueKind(Value: Object): tuple of (Object, JsonValueKind);
   public
+    constructor(Value: Object);
     constructor(Value: Object; ValueKind: JsonValueKind);
 
     method ToInteger: Int64;
@@ -28,6 +30,12 @@ type
   JsonValueKind = public enum (Null, String, Integer, Double, Boolean, Object, Array);
 
 implementation
+
+constructor JsonValue(Value: Object);
+begin
+  var item := GetValueKind(Value);
+  constructor(item.Item1, item.Item2);
+end;
 
 constructor JsonValue(Value: Object; ValueKind: JsonValueKind);
 begin
@@ -117,6 +125,31 @@ begin
   for Item: JsonValueKind in InvalidTokens do
     if Kind = Item then
       raise new SugarInvalidOperationException("Unable to convert <{0}> value.", Object);
+end;
+
+class method JsonValue.GetValueKind(Value: Object): tuple of (Object, JsonValueKind);
+begin
+  if Value = nil then
+    exit (nil, JsonValueKind.Null);
+
+  case Value type of
+    JsonArray: exit (Value, JsonValueKind.Array);
+    JsonObject: exit (Value, JsonValueKind.Object);
+    Boolean: exit (Value, JsonValueKind.Boolean);
+    Double: exit (Value, JsonValueKind.Double);
+    Single: exit (Double(Single(Value)), JsonValueKind.Double);
+    String: exit (Value, JsonValueKind.String);
+    Byte: exit (Int64(Byte(Value)), JsonValueKind.Integer);
+    SByte: exit (Int64(SByte(Value)), JsonValueKind.Integer);
+    Int16: exit (Int64(Int16(Value)), JsonValueKind.Integer);
+    UInt16: exit (Int64(UInt16(Value)), JsonValueKind.Integer); 
+    Int32: exit (Int64(Int32(Value)), JsonValueKind.Integer);
+    UInt32: exit (Int64(UInt32(Value)), JsonValueKind.Integer);
+    Int64: exit (Value, JsonValueKind.Integer);
+    UInt64: exit (Int64(UInt64(Value)), JsonValueKind.Integer);    
+  end;
+
+  raise new Exception("Unsuported type");
 end;
 
 end.
