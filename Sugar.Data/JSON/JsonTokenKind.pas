@@ -4,6 +4,7 @@ interface
 
 type
   JsonTokenKind = public enum(
+    BOF,
     EOF, 
     Whitespace, 
     String, 
