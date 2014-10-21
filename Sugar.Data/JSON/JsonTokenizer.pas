@@ -28,8 +28,7 @@ type
     constructor (Json: String);
     constructor (Json: String; SkipWhitespaces: Boolean);
 
-    method Next;
-    method ExpectToken(aToken: JsonTokenKind);
+    method Next: Boolean;
 
     property Row: Integer read fLastRow + 1;
     property Col: Integer read fPos - fLastRowStart + 1;
@@ -49,8 +48,7 @@ constructor JsonTokenizer(Json: String; SkipWhitespaces: Boolean);
 begin
   self.IgnoreWhitespaces := SkipWhitespaces;
   fData := (Json + #0#0#0#0).ToCharArray;
-  Token := JsonTokenKind.Null;
-  Next;
+  Token := JsonTokenKind.BOF;
 end;
 
 method JsonTokenizer.CharIsIdentifier(C: Char): Boolean;
@@ -115,10 +113,10 @@ begin
   end;
 end;
 
-method JsonTokenizer.Next;
+method JsonTokenizer.Next: Boolean;
 begin
-  if (Token = JsonTokenKind.EOF) or (Token = JsonTokenKind.SyntaxError) then
-    exit;
+  if Token = JsonTokenKind.EOF then
+    exit false;
 
   while true do begin
     fPos := fPos + fLength;
@@ -127,19 +125,13 @@ begin
     Parse;
 
     if (Token = JsonTokenKind.EOF) or (Token = JsonTokenKind.SyntaxError) then
-     exit;
+     exit false;
 
     if IgnoreWhitespaces and (Token = JsonTokenKind.Whitespace) then
       continue;
 
-    exit;
+    exit true;
   end;
-end;
-
-method JsonTokenizer.ExpectToken(aToken: JsonTokenKind);
-begin
-  if Token <> aToken then
-    raise new SugarException("Unexpected token");
 end;
 
 method JsonTokenizer.ParseWhitespace;
