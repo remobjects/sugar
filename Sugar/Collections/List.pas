@@ -6,7 +6,7 @@ uses
   Sugar;
 
 type  
-  List<T> = public class {$IF NOUGAT}(sequence of T){$ENDIF} mapped to {$IF COOPER}java.util.ArrayList<T>{$ELSEIF ECHOES}System.Collections.Generic.List<T>{$ELSEIF NOUGAT}Foundation.NSMutableArray where T is class;{$ENDIF}
+  List<T> = public class (sequence of T) mapped to {$IF COOPER}java.util.ArrayList<T>{$ELSEIF ECHOES}System.Collections.Generic.List<T>{$ELSEIF NOUGAT}Foundation.NSMutableArray where T is class;{$ENDIF}
   private
     method SetItem(&Index: Integer; Value: T);
     method GetItem(&Index: Integer): T;
@@ -251,7 +251,7 @@ begin
   exit mapped.IndexOf(anItem);
   {$ELSEIF NOUGAT}
   var lIndex := mapped.indexOfObject(NullHelper.ValueOf(anItem));
-  exit if lIndex = NSNotFound then -1 else lIndex;
+  exit if lIndex = NSNotFound then -1 else Integer(lIndex);
   {$ENDIF}
 end;
 
@@ -274,7 +274,7 @@ begin
   exit mapped.LastIndexOf(anItem);
   {$ELSEIF NOUGAT}
   var lIndex := mapped.indexOfObjectWithOptions(NSEnumerationOptions.NSEnumerationReverse) passingTest((x,y,z) -> x = id(NullHelper.ValueOf(anItem)));
-  exit if lIndex = NSNotFound then -1 else lIndex;
+  exit if lIndex = NSNotFound then -1 else Integer(lIndex);
   {$ENDIF}
 end;
 
