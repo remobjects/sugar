@@ -139,6 +139,7 @@ begin
     Double: exit (Value, JsonValueKind.Double);
     Single: exit (Double(Single(Value)), JsonValueKind.Double);
     String: exit (Value, JsonValueKind.String);
+    Char: exit (String(Char(Value)), JsonValueKind.String);
     Byte: exit (Int64(Byte(Value)), JsonValueKind.Integer);
     SByte: exit (Int64(SByte(Value)), JsonValueKind.Integer);
     Int16: exit (Int64(Int16(Value)), JsonValueKind.Integer);
