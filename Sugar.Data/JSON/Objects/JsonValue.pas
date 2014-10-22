@@ -51,7 +51,7 @@ begin
     JsonValueKind.String: exit Convert.ToInt64(String(Object));
     JsonValueKind.Integer: exit Int64(Object);
     JsonValueKind.Double: exit Convert.ToInt64(Double(Object));
-    JsonValueKind.Boolean: exit Int64(Object);
+    JsonValueKind.Boolean: exit Convert.ToInt64(Boolean(Object));
   end;
 end;
 
@@ -63,7 +63,7 @@ begin
     JsonValueKind.String: exit Convert.ToDouble(String(Object));
     JsonValueKind.Integer: exit Convert.ToDouble(Int64(Object));
     JsonValueKind.Double: exit Double(Object);
-    JsonValueKind.Boolean: exit Double(Object);
+    JsonValueKind.Boolean: exit Convert.ToDouble(Boolean(Object));
   end;
 end;
 
