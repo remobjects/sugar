@@ -111,12 +111,30 @@ end;
 
 method JsonValueTest.ToArray;
 begin
+  var Obj := new JsonArray;
+  Assert.AreEqual(ValueOf(Obj).ToArray, Obj);
+  Assert.AreEqual(ValueOf(nil).ToArray, nil);
 
+  Assert.Throws(->ValueOf("abc").ToArray);
+  Assert.Throws(->ValueOf(1).ToArray);
+  Assert.Throws(->ValueOf(1.1).ToArray);
+  Assert.Throws(->ValueOf(true).ToArray);
+  Assert.Throws(->ValueOf(new JsonObject).ToArray);
 end;
 
 method JsonValueTest.ToBoolean;
 begin
+  Assert.AreEqual(ValueOf(true).ToBoolean, true);
+  Assert.AreEqual(ValueOf(false).ToBoolean, false);
+  Assert.AreEqual(ValueOf(Consts.TrueString).ToBoolean, true);
+  Assert.AreEqual(ValueOf(Consts.FalseString).ToBoolean, false);
+  Assert.AreEqual(ValueOf(0).ToBoolean, false);
+  Assert.AreEqual(ValueOf(1).ToBoolean, true);
 
+  Assert.Throws(->ValueOf("yes").ToBoolean);
+  Assert.Throws(->ValueOf(nil).ToBoolean);
+  Assert.Throws(->ValueOf(new JsonObject).ToBoolean);
+  Assert.Throws(->ValueOf(new JsonArray).ToObject);
 end;
 
 end.
