@@ -5,6 +5,7 @@ interface
 type
   Convert = public class {$IF COOPER}{$ELSEIF ECHOES}mapped to System.Convert{$ELSEIF NOUGAT}mapped to Object{$ENDIF}
   public
+    class method ToString(Value: Boolean): String;
     class method ToString(Value: Byte): String;
     class method ToString(Value: Int32): String;
     class method ToString(Value: Int64): String;
@@ -12,29 +13,34 @@ type
     class method ToString(Value: Char): String;
     class method ToString(Value: Object): String;
 
+    class method ToInt32(Value: Boolean): Int32;
     class method ToInt32(Value: Byte): Int32;
     class method ToInt32(Value: Int64): Int32;
     class method ToInt32(Value: Double): Int32;
     class method ToInt32(Value: Char): Int32;
     class method ToInt32(Value: String): Int32;
 
+    class method ToInt64(Value: Boolean): Int64;
     class method ToInt64(Value: Byte): Int64;
     class method ToInt64(Value: Int32): Int64;
     class method ToInt64(Value: Double): Int64;
     class method ToInt64(Value: Char): Int64;
     class method ToInt64(Value: String): Int64;
 
+    class method ToDouble(Value: Boolean): Double;
     class method ToDouble(Value: Byte): Double;
     class method ToDouble(Value: Int32): Double;
     class method ToDouble(Value: Int64): Double;
     class method ToDouble(Value: String): Double;
 
+    class method ToByte(Value: Boolean): Byte;
     class method ToByte(Value: Double): Byte;
     class method ToByte(Value: Int32): Byte;
     class method ToByte(Value: Int64): Byte;
     class method ToByte(Value: Char): Byte;
     class method ToByte(Value: String): Byte;
 
+    class method ToChar(Value: Boolean): Char;
     class method ToChar(Value: Int32): Char;
     class method ToChar(Value: Int64): Char;
     class method ToChar(Value: Byte): Char;
@@ -58,6 +64,11 @@ type
   {$ENDIF}
 
 implementation
+
+class method Convert.ToString(Value: Boolean): String;
+begin
+  result := if Value then Consts.TrueString else Consts.FalseString;
+end;
 
 class method Convert.ToString(Value: Byte): String;
 begin
@@ -134,6 +145,11 @@ begin
   exit Value.ToString;
 end;
 
+class method Convert.ToInt32(Value: Boolean): Int32;
+begin
+  result := if Value then 1 else 0; 
+end;
+
 class method Convert.ToInt32(Value: Byte): Int32;
 begin
   {$IF COOPER OR NOUGAT}
@@ -188,6 +204,11 @@ begin
   {$ENDIF}
 end;
 
+class method Convert.ToInt64(Value: Boolean): Int64;
+begin
+  result := if Value then 1 else 0;
+end;
+
 class method Convert.ToInt64(Value: Byte): Int64;
 begin
   {$IF COOPER OR NOUGAT}
@@ -235,6 +256,11 @@ begin
   {$ELSEIF NOUGAT}
   exit ConvertHelper.ParseInt64(Value);
   {$ENDIF}
+end;
+
+class method Convert.ToDouble(Value: Boolean): Double;
+begin
+  result := if Value then 1 else 0;
 end;
 
 class method Convert.ToDouble(Value: Byte): Double;
@@ -304,6 +330,11 @@ begin
   {$ENDIF}
 end;
 
+class method Convert.ToByte(Value: Boolean): Byte;
+begin
+  result := if Value then 1 else 0;
+end;
+
 class method Convert.ToByte(Value: Double): Byte;
 begin
   var Number := Math.Round(Value);
@@ -354,6 +385,11 @@ begin
   var Number: Int32 := ConvertHelper.ParseInt32(Value);
   exit ToByte(Number);
   {$ENDIF}
+end;
+
+class method Convert.ToChar(Value: Boolean): Char;
+begin
+  exit ToChar(ToInt32(Value));
 end;
 
 class method Convert.ToChar(Value: Int32): Char;
