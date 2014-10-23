@@ -20,6 +20,7 @@ type
     method ToObject;
     method ToArray;
     method ToBoolean;
+    method IsNull;
   end;
 
 implementation
@@ -135,6 +136,18 @@ begin
   Assert.Throws(->ValueOf(nil).ToBoolean);
   Assert.Throws(->ValueOf(new JsonObject).ToBoolean);
   Assert.Throws(->ValueOf(new JsonArray).ToObject);
+end;
+
+method JsonValueTest.IsNull;
+begin
+  Assert.AreEqual(ValueOf(nil).IsNull, true);
+  Assert.AreEqual(ValueOf(true).IsNull, false);
+  Assert.AreEqual(ValueOf(false).IsNull, false);
+  Assert.AreEqual(ValueOf("").IsNull, false);
+  Assert.AreEqual(ValueOf(0).IsNull, false);
+  Assert.AreEqual(ValueOf(1.1).IsNull, false);
+  Assert.AreEqual(ValueOf(new JsonArray).IsNull, false);
+  Assert.AreEqual(ValueOf(new JsonObject).IsNull, false);
 end;
 
 end.
