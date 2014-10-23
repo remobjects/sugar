@@ -47,7 +47,9 @@ end;
 constructor JsonTokenizer(Json: String; SkipWhitespaces: Boolean);
 begin
   self.IgnoreWhitespaces := SkipWhitespaces;
-  fData := (Json + #0#0#0#0).ToCharArray;
+  fData := new Char[Json.Length + 4];
+  Array.Copy(Json.ToCharArray, 0, fData, 0, Json.Length);
+  //fData := (Json + #0#0#0#0).ToCharArray;
   Token := JsonTokenKind.BOF;
 end;
 
