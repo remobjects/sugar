@@ -2,18 +2,19 @@
 
 interface
 
-uses
+uses  
   Sugar,
   Sugar.Collections;
 
 type
-  JsonObject = public class
+  JsonObject = public class (ISequence<KeyValue<String, JsonValue>>)
   private
     Items: Dictionary<String, JsonValue> := new Dictionary<String, JsonValue>;
 
     method GetItem(Key: String): JsonValue;
     method SetItem(Key: String; Value: JsonValue);
     method GetKeys: sequence of String;
+    method GetProperties: sequence of KeyValue<String, JsonValue>; iterator;
   public
     method &Add(Key: String; Value: Object);
     method AddValue(Key: String; Value: JsonValue);
@@ -23,12 +24,20 @@ type
 
     method ToJson: String;
     method {$IF NOUGAT}description: Foundation.NSString{$ELSEIF COOPER}ToString: java.lang.String{$ELSEIF ECHOES}ToString: System.String{$ENDIF}; override;
+    
+    {$IF COOPER}
+    {$ELSEIF ECHOES}
+    method GetEnumerator: System.Collections.IEnumerator;
+    method GetGenericEnumerator: System.Collections.Generic.IEnumerator<KeyValue<String, JsonValue>>; implements System.Collections.Generic.IEnumerable<KeyValue<String, JsonValue>>.GetEnumerator;
+    {$ELSEIF NOUGAT}
+    {$ENDIF}
 
     class method Load(JsonString: String): JsonObject;
 
     property Count: Integer read Items.Count;
     property Item[Key: String]: JsonValue read GetItem write SetItem; default;
     property Keys: sequence of String read GetKeys;
+    property Properties: sequence of KeyValue<String, JsonValue> read GetProperties;
   end;
 
 implementation
@@ -96,5 +105,26 @@ begin
   var Serializer := new JsonSerializer(new JsonValue(self));
   exit Serializer.Serialize;
 end;
+
+method JsonObject.GetProperties: sequence of KeyValue<String, JsonValue>;
+begin
+  for Key in Keys do
+    yield new KeyValue<String, JsonValue>(Key, Item[Key]);
+end;
+
+{$IF COOPER}
+{$ELSEIF ECHOES}
+method JsonObject.GetEnumerator: System.Collections.IEnumerator;
+begin
+  exit GetGenericEnumerator;
+end;
+
+method JsonObject.GetGenericEnumerator: System.Collections.Generic.IEnumerator<KeyValue<String, JsonValue>>;
+begin
+  var props := GetProperties;
+  exit props.GetEnumerator;
+end;
+{$ELSEIF NOUGAT}
+{$ENDIF}
 
 end.
