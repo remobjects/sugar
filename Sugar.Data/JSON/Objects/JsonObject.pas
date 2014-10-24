@@ -21,6 +21,7 @@ type
     method ContainsKey(Key: String): Boolean;
     method &Remove(Key: String): Boolean;
 
+    method ToJson: String;
     method {$IF NOUGAT}description: Foundation.NSString{$ELSEIF COOPER}ToString: java.lang.String{$ELSEIF ECHOES}ToString: System.String{$ENDIF}; override;
 
     class method Load(JsonString: String): JsonObject;
@@ -88,6 +89,12 @@ end;
 method JsonObject.GetKeys: sequence of String;
 begin
   exit Items.Keys;
+end;
+
+method JsonObject.ToJson: String;
+begin
+  var Serializer := new JsonSerializer(new JsonValue(self));
+  exit Serializer.Serialize;
 end;
 
 end.
