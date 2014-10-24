@@ -70,38 +70,38 @@ begin
   else begin
     case fData[fPos] of
       ' ', #9, #13, #10: ParseWhitespace;
-      ',': begin
+      JsonConsts.VALUE_SEPARATOR: begin
              fLength := 1;
              Value := nil;
              Token := JsonTokenKind.ValueSeperator;
            end;
-      '[': begin
+      JsonConsts.ARRAY_START: begin
              fLength := 1;
              Value := nil;
              Token := JsonTokenKind.ArrayStart;
            end;
-      ']': begin
+      JsonConsts.ARRAY_END: begin
              fLength := 1;
              Value := nil;
              Token := JsonTokenKind.ArrayEnd;
            end;
-      '{': begin
+      JsonConsts.OBJECT_START: begin
              fLength := 1;
              Value := nil;
              Token := JsonTokenKind.ObjectStart;
            end;
-      '}': begin
+      JsonConsts.OBJECT_END: begin
              fLength := 1;
              Value := nil;
              Token := JsonTokenKind.ObjectEnd;
            end;
-      ':': begin
+      JsonConsts.NAME_SEPARATOR: begin
              fLength := 1;
              Value := nil;
              Token := JsonTokenKind.NameSeperator;
            end;
       '-', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.': ParseNumber;
-      '"': ParseString;
+      JsonConsts.STRING_QUOTE: ParseString;
       #0: begin
             fLength := 0;
             Value := nil;
@@ -252,9 +252,9 @@ begin
     else
       Token := JsonTokenKind.Identifier;
   end;}
-  if Value = "null" then Token := JsonTokenKind.Null
-  else if Value = "true" then Token := JsonTokenKind.True
-  else if Value = "false" then Token := JsonTokenKind.False
+  if Value = JsonConsts.NULL_VALUE then Token := JsonTokenKind.Null
+  else if Value = JsonConsts.TRUE_VALUE then Token := JsonTokenKind.True
+  else if Value = JsonConsts.FALSE_VALUE then Token := JsonTokenKind.False
   else Token := JsonTokenKind.Identifier;
 end;
 
