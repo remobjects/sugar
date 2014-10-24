@@ -102,12 +102,11 @@ begin
   {$ELSEIF NOUGAT}
   result := mapped.objectForKey(Key);
 
-  if result <> nil then
-    exit NullHelper.ValueOf(result);
-  {$ENDIF}
-
   if result = nil then
     raise new SugarKeyNotFoundException;
+
+  exit NullHelper.ValueOf(result);
+  {$ENDIF}
 end;
 
 method Dictionary<T, U>.GetKeys: array of T;
