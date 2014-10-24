@@ -12,20 +12,20 @@ type
     Items: Dictionary<String, JsonValue> := new Dictionary<String, JsonValue>;
 
     method GetItem(Key: String): JsonValue;
+    method SetItem(Key: String; Value: JsonValue);
   public
-    method &Add(Key: String; Value: JsonValue);
-    method AddObject(Key: String; Value: Object);
+    method &Add(Key: String; Value: Object);
+    method AddValue(Key: String; Value: JsonValue);
     method Clear;
     method ContainsKey(Key: String): Boolean;
     method &Remove(Key: String): Boolean;
 
-    method ToJsonString: String; empty;
     method {$IF NOUGAT}description: Foundation.NSString{$ELSEIF COOPER}ToString: java.lang.String{$ELSEIF ECHOES}ToString: System.String{$ENDIF}; override;
 
     class method Load(JsonString: String): JsonObject;
 
     property Count: Integer read Items.Count;
-    property Item[Key: String]: JsonValue read GetItem write &Add; default;
+    property Item[Key: String]: JsonValue read GetItem write SetItem; default;
   end;
 
 implementation
@@ -35,14 +35,21 @@ begin
   exit Items[Key];
 end;
 
-method JsonObject.Add(Key: String; Value: JsonValue);
+method JsonObject.SetItem(Key: String; Value: JsonValue);
 begin
-  Items.Add(Key, Value);
+  SugarArgumentNullException.RaiseIfNil(Value, "Value");
+  Items[Key] := Value;
 end;
 
-method JsonObject.AddObject(Key: String; Value: Object);
+method JsonObject.Add(Key: String; Value: Object);
 begin
-  &Add(Key, new JsonValue(Value));
+  AddValue(Key, new JsonValue(Value));  
+end;
+
+method JsonObject.AddValue(Key: String; Value: JsonValue);
+begin
+  SugarArgumentNullException.RaiseIfNil(Value, "Value");
+  Items.Add(Key, Value);  
 end;
 
 method JsonObject.Clear;
