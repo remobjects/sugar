@@ -13,6 +13,7 @@ type
 
     method GetItem(Key: String): JsonValue;
     method SetItem(Key: String; Value: JsonValue);
+    method GetKeys: sequence of String;
   public
     method &Add(Key: String; Value: Object);
     method AddValue(Key: String; Value: JsonValue);
@@ -26,6 +27,7 @@ type
 
     property Count: Integer read Items.Count;
     property Item[Key: String]: JsonValue read GetItem write SetItem; default;
+    property Keys: sequence of String read GetKeys;
   end;
 
 implementation
@@ -81,6 +83,11 @@ begin
     raise new Exception("Not an object");
 
   exit Value.ToObject;
+end;
+
+method JsonObject.GetKeys: sequence of String;
+begin
+  exit Items.Keys;
 end;
 
 end.
