@@ -85,9 +85,7 @@ begin
   {$ELSEIF ECHOES}
   exit new System.Collections.Generic.List<T>(anArray);
   {$ELSEIF NOUGAT}
-  result := new Foundation.NSMutableArray;
-  for i: Integer := 0 to length(anArray) - 1 do
-    result.Add(anArray[i]);
+  result := Foundation.NSMutableArray.arrayWithObjects(^id(@anArray[0])) count(length(anArray));
   {$ENDIF}
 end;
 
