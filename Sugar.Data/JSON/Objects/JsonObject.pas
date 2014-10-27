@@ -27,8 +27,8 @@ type
     
     {$IF COOPER}
     {$ELSEIF ECHOES}
-    method GetEnumerator: System.Collections.IEnumerator;
-    method GetGenericEnumerator: System.Collections.Generic.IEnumerator<KeyValue<String, JsonValue>>; implements System.Collections.Generic.IEnumerable<KeyValue<String, JsonValue>>.GetEnumerator;
+    method GetNonGenericEnumerator: System.Collections.IEnumerator; implements System.Collections.IEnumerable.GetEnumerator;
+    method GetEnumerator: System.Collections.Generic.IEnumerator<KeyValue<String, JsonValue>>;
     {$ELSEIF NOUGAT}
     {$ENDIF}
 
@@ -114,12 +114,12 @@ end;
 
 {$IF COOPER}
 {$ELSEIF ECHOES}
-method JsonObject.GetEnumerator: System.Collections.IEnumerator;
+method JsonObject.GetNonGenericEnumerator: System.Collections.IEnumerator;
 begin
-  exit GetGenericEnumerator;
+  exit GetEnumerator;
 end;
 
-method JsonObject.GetGenericEnumerator: System.Collections.Generic.IEnumerator<KeyValue<String, JsonValue>>;
+method JsonObject.GetEnumerator: System.Collections.Generic.IEnumerator<KeyValue<String, JsonValue>>;
 begin
   var props := GetProperties;
   exit props.GetEnumerator;
