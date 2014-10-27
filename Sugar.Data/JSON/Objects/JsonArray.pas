@@ -14,10 +14,10 @@ type
     method GetItem(&Index: Integer): JsonValue;
     method SetItem(&Index: Integer; Value: JsonValue);
   public
-    method &Add(Value: JsonValue);
-    method AddObject(Value: Object);
-    method Insert(&Index: Integer; Value: JsonValue);
-    method InsertObject(&Index: Integer; Value: Object);
+    method &Add(Value: Object);
+    method AddValue(Value: JsonValue);
+    method Insert(&Index: Integer; Value: Object);
+    method InsertValue(&Index: Integer; Value: JsonValue);
     method Clear;
     method &RemoveAt(&Index: Integer);
 
@@ -46,27 +46,30 @@ end;
 
 method JsonArray.SetItem(&Index: Integer; Value: JsonValue);
 begin
+  SugarArgumentNullException.RaiseIfNil(Value, "Value");
   Items[&Index] := Value;
 end;
 
-method JsonArray.Add(Value: JsonValue);
+method JsonArray.Add(Value: Object);
 begin
+  AddValue(new JsonValue(Value));
+end;
+
+method JsonArray.AddValue(Value: JsonValue);
+begin
+  SugarArgumentNullException.RaiseIfNil(Value, "Value");
   Items.Add(Value);
 end;
 
-method JsonArray.AddObject(Value: Object);
+method JsonArray.Insert(&Index: Integer; Value: Object);
 begin
-  &Add(new JsonValue(Value));
+  InsertValue(&Index, new JsonValue(Value));  
 end;
 
-method JsonArray.Insert(&Index: Integer; Value: JsonValue);
+method JsonArray.InsertValue(&Index: Integer; Value: JsonValue);
 begin
-  Items.Insert(&Index, Value);
-end;
-
-method JsonArray.InsertObject(&Index: Integer; Value: Object);
-begin
-  Insert(&Index, new JsonValue(Value));
+  SugarArgumentNullException.RaiseIfNil(Value, "Value");
+  Items.Insert(&Index, Value);  
 end;
 
 method JsonArray.Clear;
