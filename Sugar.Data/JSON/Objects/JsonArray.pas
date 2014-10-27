@@ -7,7 +7,7 @@ uses
   Sugar.Collections;
 
 type
-  JsonArray = public class
+  JsonArray = public class (ISequence<JsonValue>)
   private
     Items: List<JsonValue> := new List<JsonValue>;
 
@@ -23,6 +23,13 @@ type
 
     method ToJsonString: String; empty;
     method {$IF NOUGAT}description: Foundation.NSString{$ELSEIF COOPER}ToString: java.lang.String{$ELSEIF ECHOES}ToString: System.String{$ENDIF}; override;
+
+    {$IF COOPER}
+    {$ELSEIF ECHOES}
+    method GetNonGenericEnumerator: System.Collections.IEnumerator; implements System.Collections.IEnumerable.GetEnumerator;
+    method GetEnumerator: System.Collections.Generic.IEnumerator<JsonValue>;
+    {$ELSEIF NOUGAT}
+    {$ENDIF}
 
     class method Load(JsonString: String): JsonArray;
 
@@ -87,5 +94,19 @@ begin
 
   exit Value.ToArray;
 end;
+
+{$IF COOPER}
+{$ELSEIF ECHOES}
+method JsonArray.GetNonGenericEnumerator: System.Collections.IEnumerator;
+begin
+  exit GetEnumerator;
+end;
+
+method JsonArray.GetEnumerator: System.Collections.Generic.IEnumerator<JsonValue>;
+begin  
+  exit System.Collections.Generic.IEnumerable<JsonValue>(Items).GetEnumerator;
+end;
+{$ELSEIF NOUGAT}
+{$ENDIF}
 
 end.
