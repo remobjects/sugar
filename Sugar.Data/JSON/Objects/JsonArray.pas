@@ -21,7 +21,7 @@ type
     method Clear;
     method &RemoveAt(&Index: Integer);
 
-    method ToJsonString: String; empty;
+    method ToJson: String;
     method {$IF NOUGAT}description: Foundation.NSString{$ELSEIF COOPER}ToString: java.lang.String{$ELSEIF ECHOES}ToString: System.String{$ENDIF}; override;
 
     {$IF COOPER}
@@ -96,6 +96,12 @@ begin
     raise new Exception("Not an object");
 
   exit Value.ToArray;
+end;
+
+method JsonArray.ToJson: String;
+begin
+  var Serializer := new JsonSerializer(new JsonValue(self));
+  exit Serializer.Serialize;
 end;
 
 {$IF COOPER}
