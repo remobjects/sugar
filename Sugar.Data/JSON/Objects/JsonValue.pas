@@ -20,7 +20,10 @@ type
     method {$IF NOUGAT}description: Foundation.NSString{$ELSEIF COOPER}ToString: java.lang.String{$ELSEIF ECHOES}ToString: System.String{$ENDIF}; override;
     method ToObject: JsonObject;
     method ToArray: JsonArray;
-    method ToBoolean: Boolean;    
+    method ToBoolean: Boolean;  
+  
+    method {$IF NOUGAT}isEqual(obj: id){$ELSE}&Equals(Obj: Object){$ENDIF}: Boolean; override;
+    method {$IF NOUGAT}hash: Foundation.NSUInteger{$ELSEIF COOPER}hashCode: Integer{$ELSEIF ECHOES}GetHashCode: Integer{$ENDIF}; override;
 
     property Object: Object read write; readonly;
     property Kind: JsonValueKind read write; readonly;
@@ -86,6 +89,19 @@ begin
     exit "(null)"
   else
     exit ToStr;
+end;
+
+method JsonValue.{$IF NOUGAT}isEqual(obj: id){$ELSE}&Equals(Obj: Object){$ENDIF}: Boolean;
+begin
+  if (obj = nil) or (not (obj is JsonValue)) then
+    exit false;
+  
+  exit self.Object.Equals(JsonValue(obj).Object);
+end;
+
+method JsonValue.{$IF NOUGAT}hash: Foundation.NSUInteger{$ELSEIF COOPER}hashCode: Integer{$ELSEIF ECHOES}GetHashCode: Integer{$ENDIF};
+begin
+  exit if self.Object = nil then -1 else self.Object.GetHashCode;
 end;
 
 method JsonValue.ToObject: JsonObject;
