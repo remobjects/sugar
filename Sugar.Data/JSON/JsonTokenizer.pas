@@ -46,6 +46,7 @@ end;
 
 constructor JsonTokenizer(Json: String; SkipWhitespaces: Boolean);
 begin
+  SugarArgumentNullException.RaiseIfNil(Json, "Json");
   self.IgnoreWhitespaces := SkipWhitespaces;
   fData := new Char[Json.Length + 4];
   Array.Copy(Json.ToCharArray, 0, fData, 0, Json.Length);
