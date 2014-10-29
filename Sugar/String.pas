@@ -29,7 +29,7 @@ type
     method CompareTo(Value: String): Integer;
     method CompareToIgnoreCase(Value: String): Integer;
     method &Equals(Value: String): Boolean;
-    method EqualsIngoreCase(Value: String): Boolean;
+    method EqualsIgnoreCase(Value: String): Boolean;
     method Contains(Value: String): Boolean;
     method IndexOf(Value: String): Int32;
     method LastIndexOf(Value: String): Int32;
@@ -257,7 +257,7 @@ begin
   {$ENDIF}
 end;
 
-method String.EqualsIngoreCase(Value: String): Boolean;
+method String.EqualsIgnoreCase(Value: String): Boolean;
 begin
   {$IF COOPER}
   exit mapped.equalsIgnoreCase(Value);
