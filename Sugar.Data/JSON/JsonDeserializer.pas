@@ -98,7 +98,7 @@ begin
   Expected(JsonTokenKind.String, JsonTokenKind.Identifier);
 
   if String.IsNullOrEmpty(Tokenizer.Value) then
-    raise new Exception("Invalid key");
+    raise new SugarException("Invalid key");
 
   result := Tokenizer.Value;
   Tokenizer.Next;

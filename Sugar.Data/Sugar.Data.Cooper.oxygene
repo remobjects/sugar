@@ -46,20 +46,23 @@
     <Reference Include="com.remobjects.elements.rtl.jar">
       <Private>True</Private>
     </Reference>
-    <Reference Include="json.jar">
-      <HintPath>..\packages\org.json\json.jar</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="rt.jar">
       <Private>True</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="JSON\JsonArray.pas" />
-    <Compile Include="JSON\JsonObject.pas" />
+    <Compile Include="JSON\JsonConsts.pas" />
+    <Compile Include="JSON\JsonDeserializer.pas" />
+    <Compile Include="JSON\JsonSerializer.pas" />
+    <Compile Include="JSON\JsonTokenizer.pas" />
+    <Compile Include="JSON\JsonTokenKind.pas" />
+    <Compile Include="JSON\Objects\JsonArray.pas" />
+    <Compile Include="JSON\Objects\JsonObject.pas" />
+    <Compile Include="JSON\Objects\JsonValue.pas" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="JSON\" />
+    <Folder Include="JSON" />
+    <Folder Include="JSON\Objects" />
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>

@@ -3,6 +3,7 @@
 interface
 
 uses
+  Sugar,
   Sugar.Data.Json,
   RemObjects.Elements.EUnit;
 
