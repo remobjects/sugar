@@ -47,7 +47,27 @@
     <Reference Include="rtl.fx" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="JSON\JsonConsts.pas" />
+    <Compile Include="JSON\JsonDeserializer.pas" />
+    <Compile Include="JSON\JsonSerializer.pas" />
+    <Compile Include="JSON\JsonTokenizer.pas" />
+    <Compile Include="JSON\JsonTokenKind.pas" />
+    <Compile Include="JSON\Objects\JsonArray.pas" />
+    <Compile Include="JSON\Objects\JsonObject.pas" />
+    <Compile Include="JSON\Objects\JsonValue.pas" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="JSON" />
+    <Folder Include="JSON\Objects" />
     <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Sugar\Sugar.Nougat.OSX.oxygene">
+      <Name>Sugar.Nougat.OSX</Name>
+      <Project>{ab7ab88b-2370-43bf-844b-54d015da9e57}</Project>
+      <Private>True</Private>
+      <HintPath>..\Sugar\bin\OS X\libSugar.fx</HintPath>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Nougat.targets" />
   <PropertyGroup>

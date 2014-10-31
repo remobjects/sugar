@@ -40,9 +40,7 @@
   <ItemGroup>
     <Reference Include="CoreGraphics.fx" />
     <Reference Include="Foundation.fx" />
-    <Reference Include="libEUnit.fx">
-      <HintPath>C:\Program Files (x86)\RemObjects Software\Elements\EUnit\Nougat\iOS\libEUnit.fx</HintPath>
-    </Reference>
+    <Reference Include="libEUnit.fx" />
     <Reference Include="libxml2.fx" />
     <Reference Include="UIKit.fx" />
     <Reference Include="rtl.fx" />
@@ -54,6 +52,11 @@
     <Compile Include="Tests\Binary.pas" />
     <Compile Include="Tests\Convert.pas" />
     <Compile Include="Tests\Cryptography\Utils.pas" />
+    <Compile Include="Tests\Data\Json\JsonArray.pas" />
+    <Compile Include="Tests\Data\Json\JsonObject.pas" />
+    <Compile Include="Tests\Data\Json\JsonObjectParser.pas" />
+    <Compile Include="Tests\Data\Json\JsonTokenizer.pas" />
+    <Compile Include="Tests\Data\Json\JsonValueTest.pas" />
     <Compile Include="Tests\DateTime.pas" />
     <Compile Include="Tests\Dictionary.pas" />
     <Compile Include="Tests\Encoding.pas" />
@@ -113,11 +116,19 @@
     <Folder Include="Main\iOS\Resources\App Icons\" />
     <Folder Include="Main\iOS\Resources\Launch Images\" />
     <Folder Include="Tests" />
+    <Folder Include="Tests\Data\" />
+    <Folder Include="Tests\Data\Json\" />
     <Folder Include="Tests\Xml" />
     <Folder Include="Tests\IO" />
     <Folder Include="Tests\Cryptography" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Sugar.Data\Sugar.Data.Nougat.iOS.oxygene">
+      <Name>Sugar.Data.Nougat.iOS</Name>
+      <Project>{15939baf-3d02-4074-a4f1-6adbd2a5f28d}</Project>
+      <Private>True</Private>
+      <HintPath>..\Sugar.Data\bin\iOS Simulator\libSugar.Data.fx</HintPath>
+    </ProjectReference>
     <ProjectReference Include="..\Sugar\Sugar.Nougat.iOS.oxygene">
       <Name>Sugar.Nougat.iOS</Name>
       <Project>{91b301fc-331e-48a7-803b-4cbe3fff6ed7}</Project>

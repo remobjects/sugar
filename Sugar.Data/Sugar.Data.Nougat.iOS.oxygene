@@ -47,7 +47,27 @@
     <Reference Include="UIKit.fx" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="JSON\JsonConsts.pas" />
+    <Compile Include="JSON\JsonDeserializer.pas" />
+    <Compile Include="JSON\JsonSerializer.pas" />
+    <Compile Include="JSON\JsonTokenizer.pas" />
+    <Compile Include="JSON\JsonTokenKind.pas" />
+    <Compile Include="JSON\Objects\JsonArray.pas" />
+    <Compile Include="JSON\Objects\JsonObject.pas" />
+    <Compile Include="JSON\Objects\JsonValue.pas" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="JSON" />
+    <Folder Include="JSON\Objects" />
     <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Sugar\Sugar.Nougat.iOS.oxygene">
+      <Name>Sugar.Nougat.iOS</Name>
+      <Project>{91b301fc-331e-48a7-803b-4cbe3fff6ed7}</Project>
+      <Private>True</Private>
+      <HintPath>..\Sugar\bin\iOS Simulator\libSugar.fx</HintPath>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Nougat.targets" />
   <PropertyGroup>

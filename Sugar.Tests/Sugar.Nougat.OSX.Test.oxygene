@@ -49,6 +49,11 @@
     <Compile Include="Tests\Binary.pas" />
     <Compile Include="Tests\Convert.pas" />
     <Compile Include="Tests\Cryptography\Utils.pas" />
+    <Compile Include="Tests\Data\Json\JsonArray.pas" />
+    <Compile Include="Tests\Data\Json\JsonObject.pas" />
+    <Compile Include="Tests\Data\Json\JsonObjectParser.pas" />
+    <Compile Include="Tests\Data\Json\JsonTokenizer.pas" />
+    <Compile Include="Tests\Data\Json\JsonValueTest.pas" />
     <Compile Include="Tests\DateTime.pas" />
     <Compile Include="Tests\Dictionary.pas" />
     <Compile Include="Tests\Encoding.pas" />
@@ -85,11 +90,19 @@
     <Folder Include="Main\OSX\" />
     <Folder Include="Tests" />
     <Folder Include="Properties\" />
+    <Folder Include="Tests\Data\" />
+    <Folder Include="Tests\Data\Json\" />
     <Folder Include="Tests\Xml" />
     <Folder Include="Tests\IO" />
     <Folder Include="Tests\Cryptography" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Sugar.Data\Sugar.Data.Nougat.OSX.oxygene">
+      <Name>Sugar.Data.Nougat.OSX</Name>
+      <Project>{0d5b253d-762b-42d9-bfd2-3c217e07cf52}</Project>
+      <Private>True</Private>
+      <HintPath>..\Sugar.Data\bin\OS X\libSugar.Data.fx</HintPath>
+    </ProjectReference>
     <ProjectReference Include="..\Sugar\Sugar.Nougat.OSX.oxygene">
       <Name>Sugar.Nougat.OSX</Name>
       <Project>{ab7ab88b-2370-43bf-844b-54d015da9e57}</Project>
