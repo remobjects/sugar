@@ -48,7 +48,27 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="JSON\JsonConsts.pas" />
+    <Compile Include="JSON\JsonDeserializer.pas" />
+    <Compile Include="JSON\JsonSerializer.pas" />
+    <Compile Include="JSON\JsonTokenizer.pas" />
+    <Compile Include="JSON\JsonTokenKind.pas" />
+    <Compile Include="JSON\Objects\JsonArray.pas" />
+    <Compile Include="JSON\Objects\JsonObject.pas" />
+    <Compile Include="JSON\Objects\JsonValue.pas" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="JSON" />
+    <Folder Include="JSON\Objects" />
     <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Sugar\Sugar.Cooper.Android.oxygene">
+      <Name>Sugar.Cooper.Android</Name>
+      <Project>{8dac177a-64eb-4175-ac9c-e6b121b6f34b}</Project>
+      <Private>True</Private>
+      <HintPath>..\Sugar\bin\Android\sugar.jar</HintPath>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Cooper.Android.targets" />
   <PropertyGroup>

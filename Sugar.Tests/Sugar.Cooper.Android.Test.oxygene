@@ -48,6 +48,8 @@
     <Folder Include="res\values\" />
     <Folder Include="res\layout\" />
     <Folder Include="Tests" />
+    <Folder Include="Tests\Data\" />
+    <Folder Include="Tests\Data\Json\" />
     <Folder Include="Tests\Xml" />
     <Folder Include="Tests\IO" />
     <Folder Include="Tests\Cryptography" />
@@ -90,6 +92,11 @@
     <Compile Include="Tests\Binary.pas" />
     <Compile Include="Tests\Convert.pas" />
     <Compile Include="Tests\Cryptography\Utils.pas" />
+    <Compile Include="Tests\Data\Json\JsonArray.pas" />
+    <Compile Include="Tests\Data\Json\JsonObject.pas" />
+    <Compile Include="Tests\Data\Json\JsonObjectParser.pas" />
+    <Compile Include="Tests\Data\Json\JsonTokenizer.pas" />
+    <Compile Include="Tests\Data\Json\JsonValueTest.pas" />
     <Compile Include="Tests\DateTime.pas" />
     <Compile Include="Tests\Dictionary.pas" />
     <Compile Include="Tests\Encoding.pas" />
@@ -122,6 +129,12 @@
     <Compile Include="Tests\Xml\TestData.pas" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Sugar.Data\Sugar.Data.Cooper.Android.oxygene">
+      <Name>Sugar.Data.Cooper.Android</Name>
+      <Project>{d5492a3d-13b2-4ef5-8835-81bc392b5a74}</Project>
+      <Private>True</Private>
+      <HintPath>..\Sugar.Data\bin\Android\sugar.data.jar</HintPath>
+    </ProjectReference>
     <ProjectReference Include="..\Sugar\Sugar.Cooper.Android.oxygene">
       <Name>Sugar.Cooper.Android</Name>
       <Project>{8dac177a-64eb-4175-ac9c-e6b121b6f34b}</Project>
