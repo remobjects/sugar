@@ -47,6 +47,7 @@
     <Reference Include="rtl.fx" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="JSON\Exceptions.pas" />
     <Compile Include="JSON\JsonConsts.pas" />
     <Compile Include="JSON\JsonDeserializer.pas" />
     <Compile Include="JSON\JsonSerializer.pas" />

@@ -140,7 +140,7 @@ method JsonValue.Validate(InvalidTokens: sequence of JsonValueKind);
 begin
   for Item: JsonValueKind in InvalidTokens do
     if Kind = Item then
-      raise new SugarInvalidOperationException("Unable to convert <{0}> value.", Object);
+      raise new SugarInvalidOperationException("Unable to convert <{0}>.", coalesce(Object, "null"));
 end;
 
 class method JsonValue.GetValueKind(Value: Object): tuple of (Object, JsonValueKind);
@@ -166,7 +166,7 @@ begin
     UInt64: exit (Int64(UInt64(Value)), JsonValueKind.Integer);    
   end;
 
-  raise new Exception("Unsuported type");
+  raise new SugarInvalidValueException("Can not convert value of type {0} to a JsonValue", [typeOf(Value)]);
 end;
 
 end.
