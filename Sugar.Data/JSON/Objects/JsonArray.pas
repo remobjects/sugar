@@ -24,7 +24,9 @@ type
     method ToJson: String;
     method {$IF NOUGAT}description: Foundation.NSString{$ELSEIF COOPER}ToString: java.lang.String{$ELSEIF ECHOES}ToString: System.String{$ENDIF}; override;
 
+     
     {$IF COOPER}
+    method &iterator: java.util.&Iterator<JsonValue>;
     {$ELSEIF ECHOES}
     method GetNonGenericEnumerator: System.Collections.IEnumerator; implements System.Collections.IEnumerable.GetEnumerator;
     method GetEnumerator: System.Collections.Generic.IEnumerator<JsonValue>;
@@ -93,7 +95,7 @@ begin
   var Value := Serializer.Deserialize;
 
   if Value.Kind <> JsonValueKind.Array then
-    raise new Exception("Not an object");
+    raise new SugarException("Not an object");
 
   exit Value.ToArray;
 end;
@@ -105,6 +107,10 @@ begin
 end;
 
 {$IF COOPER}
+method JsonArray.&iterator: java.util.Iterator<JsonValue>;
+begin
+  exit Iterable<JsonValue>(Items).iterator;
+end;
 {$ELSEIF ECHOES}
 method JsonArray.GetNonGenericEnumerator: System.Collections.IEnumerator;
 begin
