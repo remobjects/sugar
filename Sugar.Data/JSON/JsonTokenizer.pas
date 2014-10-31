@@ -48,9 +48,14 @@ constructor JsonTokenizer(Json: String; SkipWhitespaces: Boolean);
 begin
   SugarArgumentNullException.RaiseIfNil(Json, "Json");
   self.IgnoreWhitespaces := SkipWhitespaces;
-  fData := new Char[Json.Length + 4];
-  Array.Copy(Json.ToCharArray, 0, fData, 0, Json.Length);
-  //fData := (Json + #0#0#0#0).ToCharArray;
+  var CharData := Json.ToCharArray;
+  fData := new Char[CharData.Length + 4];
+  {$IF COOPER}
+  System.arraycopy(CharData, 0, fData, 0, CharData.Length);
+  {$ELSEIF ECHOES}
+  Array.Copy(CharData, 0, fData, 0, CharData.Length);
+  {$ELSEIF NOUGAT}
+  {$ENDIF} 
   Token := JsonTokenKind.BOF;
 end;
 
