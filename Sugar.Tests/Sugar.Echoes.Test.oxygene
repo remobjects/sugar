@@ -64,7 +64,11 @@
     <Compile Include="Tests\Binary.pas" />
     <Compile Include="Tests\Convert.pas" />
     <Compile Include="Tests\Cryptography\Utils.pas" />
+    <Compile Include="Tests\Data\Json\JsonArray.pas" />
+    <Compile Include="Tests\Data\Json\JsonObject.pas" />
+    <Compile Include="Tests\Data\Json\JsonObjectParser.pas" />
     <Compile Include="Tests\Data\Json\JsonTokenizer.pas" />
+    <Compile Include="Tests\Data\Json\JsonValueTest.pas" />
     <Compile Include="Tests\DateTime.pas" />
     <Compile Include="Tests\Dictionary.pas" />
     <Compile Include="Tests\Encoding.pas" />

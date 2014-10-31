@@ -62,12 +62,19 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="JSON\JsonConsts.pas" />
+    <Compile Include="JSON\JsonDeserializer.pas" />
+    <Compile Include="JSON\JsonSerializer.pas" />
     <Compile Include="JSON\JsonTokenizer.pas" />
     <Compile Include="JSON\JsonTokenKind.pas" />
+    <Compile Include="JSON\Objects\JsonArray.pas" />
+    <Compile Include="JSON\Objects\JsonObject.pas" />
+    <Compile Include="JSON\Objects\JsonValue.pas" />
     <Compile Include="Properties\AssemblyInfo.pas" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="JSON" />
+    <Folder Include="JSON\Objects" />
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
