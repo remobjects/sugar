@@ -117,7 +117,7 @@ method ListTest.Exists;
 begin
   Assert.CheckBool(true, Data.Exists(x -> x = "Two"));
   Assert.CheckBool(false, Data.Exists(x -> x = "tWo"));
-  Assert.CheckBool(true, Data.Exists(x -> x.EqualsIngoreCase("tWo")));
+  Assert.CheckBool(true, Data.Exists(x -> x.EqualsIgnoreCase("tWo")));
 end;
 
 method ListTest.FindIndex;

@@ -423,10 +423,10 @@ end;
 
 class method Convert.ToBoolean(Value: String): Boolean;
 begin  
-  if (Value = nil) or (Value.EqualsIngoreCase(Consts.FalseString)) then 
+  if (Value = nil) or (Value.EqualsIgnoreCase(Consts.FalseString)) then 
     exit false;
 
-  if Value.EqualsIngoreCase(Consts.TrueString) then
+  if Value.EqualsIgnoreCase(Consts.TrueString) then
     exit true;  
   
   raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);

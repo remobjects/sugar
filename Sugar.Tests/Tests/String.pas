@@ -24,7 +24,7 @@ type
     method CompareTo;
     method CompareToIgnoreCase;
     method &Equals;
-    method EqualsIngoreCase;
+    method EqualsIgnoreCase;
     method Contains;
     method IndexOf;
     method LastIndexOf;
@@ -183,12 +183,12 @@ begin
   Assert.CheckBool(false, Data.Equals(nil));
 end;
 
-method StringTest.EqualsIngoreCase;
+method StringTest.EqualsIgnoreCase;
 begin
-  Assert.CheckBool(true, Data.EqualsIngoreCase(Data));
-  Assert.CheckBool(true, Data.EqualsIngoreCase("Hello"));
-  Assert.CheckBool(true, Data.EqualsIngoreCase("hElLo"));
-  Assert.CheckBool(false, Data.EqualsIngoreCase(nil));
+  Assert.CheckBool(true, Data.EqualsIgnoreCase(Data));
+  Assert.CheckBool(true, Data.EqualsIgnoreCase("Hello"));
+  Assert.CheckBool(true, Data.EqualsIgnoreCase("hElLo"));
+  Assert.CheckBool(false, Data.EqualsIgnoreCase(nil));
 end;
 
 method StringTest.Contains;
