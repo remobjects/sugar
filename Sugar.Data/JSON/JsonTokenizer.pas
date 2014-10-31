@@ -55,6 +55,7 @@ begin
   {$ELSEIF ECHOES}
   Array.Copy(CharData, 0, fData, 0, CharData.Length);
   {$ELSEIF NOUGAT}
+  memcpy(fData, CharData, CharData.Length);
   {$ENDIF} 
   Token := JsonTokenKind.BOF;
 end;

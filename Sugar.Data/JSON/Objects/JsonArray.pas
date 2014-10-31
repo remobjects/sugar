@@ -31,6 +31,7 @@ type
     method GetNonGenericEnumerator: System.Collections.IEnumerator; implements System.Collections.IEnumerable.GetEnumerator;
     method GetEnumerator: System.Collections.Generic.IEnumerator<JsonValue>;
     {$ELSEIF NOUGAT}
+    method countByEnumeratingWithState(aState: ^NSFastEnumerationState) objects(stackbuf: ^JsonValue) count(len: NSUInteger): NSUInteger;
     {$ENDIF}
 
     class method Load(JsonString: String): JsonArray;
@@ -95,7 +96,7 @@ begin
   var Value := Serializer.Deserialize;
 
   if Value.Kind <> JsonValueKind.Array then
-    raise new SugarException("Not an object");
+    raise new SugarInvalidOperationException("String does not contains valid Json array");
 
   exit Value.ToArray;
 end;
@@ -122,6 +123,10 @@ begin
   exit System.Collections.Generic.IEnumerable<JsonValue>(Items).GetEnumerator;
 end;
 {$ELSEIF NOUGAT}
+method JsonArray.countByEnumeratingWithState(aState: ^NSFastEnumerationState) objects(stackbuf: ^JsonValue) count(len: NSUInteger): NSUInteger;
+begin
+  
+end;
 {$ENDIF}
 
 end.

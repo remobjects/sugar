@@ -48,7 +48,7 @@ begin
     if Tokenizer.Token = Item then
       exit;
 
-  raise new SugarInvalidOperationException("Unexpected token");
+  raise new SugarUnexpectedTokenException("Unexpected token");
 end;
 
 method JsonDeserializer.ReadObject: JsonObject;
@@ -98,7 +98,7 @@ begin
   Expected(JsonTokenKind.String, JsonTokenKind.Identifier);
 
   if String.IsNullOrEmpty(Tokenizer.Value) then
-    raise new SugarException("Invalid key");
+    raise new SugarInvalidTokenException("Invalid propery key. Key can not be empty.");
 
   result := Tokenizer.Value;
   Tokenizer.Next;
