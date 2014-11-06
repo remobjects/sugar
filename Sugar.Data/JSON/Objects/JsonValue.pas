@@ -148,6 +148,25 @@ begin
   if Value = nil then
     exit (nil, JsonValueKind.Null);
 
+  {$IF NOUGAT}
+  if Value is JsonArray then
+    exit (Value, JsonValueKind.Array);
+  if Value is JsonObject then
+    exit (Value, JsonValueKind.Object);
+  if Value is NSNumber then begin
+      var Number := NSNumber(Value);
+
+      if (Number.objCType^ = 'd') or (Number.objCType^ = 'f') then
+        exit (Number.doubleValue, JsonValueKind.Double);
+
+      if (Number.objCType^ = 'c') and (NSStringFromClass(Number.class) = "__NSCFBoolean") then
+        exit (Number.boolValue, JsonValueKind.Boolean);
+
+      exit (Number.longLongValue, JsonValueKind.Integer);
+    end;
+  if Value is String then
+    exit (Value, JsonValueKind.String);
+  {$ELSE}
   case Value type of
     JsonArray: exit (Value, JsonValueKind.Array);
     JsonObject: exit (Value, JsonValueKind.Object);
@@ -165,6 +184,7 @@ begin
     Int64: exit (Value, JsonValueKind.Integer);
     UInt64: exit (Int64(UInt64(Value)), JsonValueKind.Integer);    
   end;
+  {$ENDIF}
 
   raise new SugarInvalidValueException("Can not convert value of type {0} to a JsonValue", [typeOf(Value)]);
 end;
