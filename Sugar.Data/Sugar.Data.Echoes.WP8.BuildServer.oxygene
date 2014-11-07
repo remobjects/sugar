@@ -90,58 +90,21 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="AutoreleasePool.pas" />
-    <Compile Include="Binary.pas" />
-    <Compile Include="Collections\Dictionary.pas" />
-    <Compile Include="Collections\HashSet.pas" />
-    <Compile Include="Collections\KeyValue.pas" />
-    <Compile Include="Collections\List.pas" />
-    <Compile Include="Collections\Queue.pas" />
-    <Compile Include="Collections\Stack.pas" />
-    <Compile Include="Color.pas" />
-    <None Include="Cryptography\Cipher.pas" />
-    <Compile Include="Cryptography\MessageDigest.pas" />
-    <Compile Include="Cryptography\MD5Managed.pas" />
-    <Compile Include="Cryptography\SHA384Managed.pas" />
-    <Compile Include="Cryptography\SHA512Managed.pas" />
-    <Compile Include="Cryptography\Utils.pas" />
-    <Compile Include="Consts.pas" />
-    <Compile Include="Convert.pas" />
-    <Compile Include="DateTime.pas" />
-    <Compile Include="DateFormatter.pas" />
-    <Compile Include="Encoding.pas" />
-    <Compile Include="CustomEncodings.pas" />
-    <Compile Include="HTTP.pas" />
-    <Compile Include="IO\File.pas" />
-    <Compile Include="IO\FileHandle.pas" />
-    <Compile Include="IO\FileUtils.pas" />
-    <Compile Include="IO\Folder.pas" />
-    <Compile Include="IO\FolderUtils.pas" />
-    <Compile Include="IO\Path.pas" />
-    <Compile Include="Random.pas" />
-    <Compile Include="Environment.pas" />
-    <Compile Include="Exceptions.pas" />
-    <Compile Include="Extensions.pas" />
-    <Compile Include="Guid.pas" />
-    <None Include="Threading\AutoResetEvent.pas" />
-    <None Include="Threading\ManualResetEvent.pas" />
-    <None Include="Threading\Semaphore.pas" />
-    <None Include="Threading\Thread.pas" />
-    <None Include="Threading\ThreadPool.pas" />
-    <Compile Include="UserSettings.pas" />
-    <Compile Include="Math.pas" />
+    <Compile Include="JSON\Exceptions.pas" />
+    <Compile Include="JSON\JsonConsts.pas" />
+    <Compile Include="JSON\JsonDeserializer.pas" />
+    <Compile Include="JSON\JsonSerializer.pas" />
+    <Compile Include="JSON\JsonTokenizer.pas" />
+    <Compile Include="JSON\JsonTokenKind.pas" />
+    <Compile Include="JSON\Objects\JsonArray.pas" />
+    <Compile Include="JSON\Objects\JsonObject.pas" />
+    <Compile Include="JSON\Objects\JsonValue.pas" />
     <Compile Include="Properties\AssemblyInfo_WP8.pas" />
-    <Compile Include="String.pas" />
-    <Compile Include="StringBuilder.pas" />
-    <Compile Include="StringFormatter.pas" />
-    <Compile Include="Url.pas" />
-    <Compile Include="XML\XmlAttribute.pas" />
-    <Compile Include="XML\XmlCharacterData.pas" />
-    <Compile Include="XML\XmlDocument.pas" />
-    <Compile Include="XML\XmlDocumentType.pas" />
-    <Compile Include="XML\XmlElement.pas" />
-    <Compile Include="XML\XmlNode.pas" />
-    <Compile Include="XML\XmlProcessingInstruction.pas" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="JSON" />
+    <Folder Include="JSON\Objects" />
+    <Folder Include="Properties\" />
   </ItemGroup>
   <ProjectExtensions />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -163,12 +126,12 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Collections\" />
-    <Folder Include="Cryptography\" />
-    <Folder Include="IO\" />
-    <Folder Include="Properties\" />
-    <Folder Include="Threading\" />
-    <Folder Include="XML\" />
+    <ProjectReference Include="..\Sugar\Sugar.Echoes.WP8.BuildServer.oxygene">
+      <Name>Sugar.Echoes.WP8</Name>
+      <Project>{bd5d51e2-b11a-4356-9450-64566f8cdc38}</Project>
+      <Private>True</Private>
+      <HintPath>..\Sugar\bin\WP8\Sugar.dll</HintPath>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Echoes.targets" />
   <PropertyGroup>
