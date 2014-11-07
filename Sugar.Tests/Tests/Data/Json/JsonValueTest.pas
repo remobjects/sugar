@@ -32,7 +32,7 @@ begin
   Detect(UInt16(1), JsonValueKind.Integer);
   Detect(Int32(1), JsonValueKind.Integer);
   Detect(Single(1), JsonValueKind.Double);
-  Detect('c', JsonValueKind.String);
+  Detect('c', JsonValueKind.Integer);
   Detect("c", JsonValueKind.String);
   Detect(true, JsonValueKind.Boolean);
   Detect(false, JsonValueKind.Boolean);
