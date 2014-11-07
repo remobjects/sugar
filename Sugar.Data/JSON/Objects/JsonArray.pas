@@ -125,7 +125,7 @@ end;
 {$ELSEIF NOUGAT}
 method JsonArray.countByEnumeratingWithState(aState: ^NSFastEnumerationState) objects(stackbuf: ^JsonValue) count(len: NSUInteger): NSUInteger;
 begin
-  
+  exit NSArray(Items).countByEnumeratingWithState(aState) objects(^id(stackbuf)) count(len);
 end;
 {$ENDIF}
 
