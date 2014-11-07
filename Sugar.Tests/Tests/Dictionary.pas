@@ -23,6 +23,7 @@ type
     method Values;
     method Count;
     method ForEach;
+    method NilValue;
   end;
 
 implementation
@@ -153,10 +154,12 @@ begin
   var Item2 := new KeyValue<String, String>("Key", "Value");
   Assert.IsTrue(Item1.Equals(Item2));
 
+  Data.Add(new CodeClass(-1), nil);
   var Expected := new Sugar.Collections.List<KeyValue<CodeClass, String>>;
   Expected.Add(new KeyValue<CodeClass, String>(new CodeClass(1),"One"));
   Expected.Add(new KeyValue<CodeClass, String>(new CodeClass(2),"Two"));
   Expected.Add(new KeyValue<CodeClass, String>(new CodeClass(3),"Three"));
+  Expected.Add(new KeyValue<CodeClass, String>(new CodeClass(-1), nil));
 
   var &Index: Integer := 0;
 
@@ -165,7 +168,17 @@ begin
     &Index := &Index + 1;
   end);
 
-  Assert.AreEqual(&Index, 3);
+  Assert.AreEqual(&Index, 4);
+end;
+
+method DictionaryTest.NilValue;
+begin
+  Data.Add(new CodeClass(-1), nil);
+  Assert.IsTrue(Data.ContainsValue(nil));
+  Assert.IsNil(Data[new CodeClass(-1)]);
+  Assert.AreEqual(Data[new CodeClass(1)], "One");
+  Data[new CodeClass(1)] := nil;
+  Assert.AreEqual(Data.Item[new CodeClass(1)], nil);
 end;
 
 end.
