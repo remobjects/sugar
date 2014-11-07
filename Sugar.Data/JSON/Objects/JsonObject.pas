@@ -39,7 +39,7 @@ type
     property Count: Integer read Items.Count;
     property Item[Key: String]: JsonValue read GetItem write SetItem; default;
     property Keys: sequence of String read GetKeys;
-    property Properties: sequence of KeyValue<String, JsonValue> read GetProperties;
+    property Properties: sequence of KeyValue<String, JsonValue> read GetProperties; 
   end;
 
 implementation
@@ -133,7 +133,10 @@ end;
 {$ELSEIF NOUGAT}
 method JsonObject.countByEnumeratingWithState(aState: ^NSFastEnumerationState) objects(stackbuf: ^KeyValue<String,JsonValue>) count(len: NSUInteger): NSUInteger;
 begin
+  if aState^.state <> 0 then
+    exit 0;
 
+  exit GetProperties.countByEnumeratingWithState(aState) objects(stackbuf) count(len);
 end;
 {$ENDIF}
 
