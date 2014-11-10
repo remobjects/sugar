@@ -134,7 +134,7 @@ end;
 class method Convert.ToString(Value: Char): String;
 begin
   {$IF COOPER OR NOUGAT}
-  exit Value;
+  exit Sugar.String(Value);
   {$ELSEIF ECHOES}
   exit mapped.ToString(Value);
   {$ENDIF}
