@@ -3,7 +3,7 @@
 interface
 
 uses
-  sugar.testframework,
+  RemObjects.Elements.eunit,
   java.util;
 
 type
@@ -16,9 +16,13 @@ implementation
 
 class method ConsoleApp.Main(args: array of String);
 begin
-  var results := TestRunner.RunAll("sugar.test");
-  var output := new StringPrinter(results);
-  System.out.println(output.Result);
+  var Tested := Runner.Run(Discovery.FromPackage(Package.Package["sugar.test"]));
+  var Writer := new StringWriter(Tested);
+
+  Writer.WriteFull;
+  Writer.WriteLine("====================================");
+  Writer.WriteSummary;
+  System.out.println(Writer.Output);
 
   System.out.println("Press any key to continue");
   System.in.read();

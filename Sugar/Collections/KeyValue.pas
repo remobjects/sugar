@@ -24,9 +24,6 @@ begin
   if aKey = nil then
     raise new SugarArgumentNullException("Key");
 
-  if aValue = nil then
-    raise new SugarArgumentNullException("Value");
-
   Key := aKey;
   Value := aValue;  
 end;
@@ -40,12 +37,12 @@ begin
     exit false;
 
   var Item := KeyValue<T, U>(Obj);
-  exit Key.Equals(Item.Key) and Value.Equals(Item.Value);
+  exit Key.Equals(Item.Key) and ( ((Value = nil) and (Item.Value = nil)) or ((Value <> nil) and Value.Equals(Item.Value)));
 end;
 
 method KeyValue<T, U>.{$IF COOPER}hashCode: Integer{$ELSEIF ECHOES}GetHashCode: Integer{$ELSEIF NOUGAT}hash: Foundation.NSUInteger{$ENDIF};
 begin
-  exit Key.GetHashCode + Value.GetHashCode;
+  exit Key.GetHashCode + Value:GetHashCode;
 end;
 
 method KeyValue<T, U>.{$IF COOPER}ToString: java.lang.String{$ELSEIF ECHOES}ToString: System.String{$ELSEIF NOUGAT}description: Foundation.NSString{$ENDIF};

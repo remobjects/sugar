@@ -9,7 +9,7 @@ uses
   android.os,
   android.util,
   android.view,
-  sugar.testframework,
+  RemObjects.Elements.eunit,
   Sugar.Test,
   android.widget;
 
@@ -26,19 +26,24 @@ begin
   inherited;
   Sugar.Environment.ApplicationContext := self.ApplicationContext;
   ContentView := R.layout.main;
+  
+  Runner.RunAsync(Discovery.FromContext(self), tested -> begin
+    var Writer := new StringWriter(Tested);
 
-  var results := TestRunner.RunAll(self);
-  var output := new StringPrinter(results);
+      Writer.WriteFull;
+      Writer.WriteLine("====================================");
+      Writer.WriteSummary;
+      var MaxLogSize := 1000;
+      var Output := Writer.Output;
 
-  var MaxLogSize := 1000;
+      for i: Integer := 0 to Output.Length / MaxLogSize do begin
+        var Start := i * MaxLogSize;
+        var Count := if Start + MaxLogSize > Output.Length then Output.Length - Start else MaxLogSize;
+        Log.i("Sugar.Test", Output.Substring(Start, Count));
+      end;
 
-  for i: Integer := 0 to output.Result.Length / MaxLogSize do begin
-    var Start := i * MaxLogSize;
-    var Count := if Start + MaxLogSize > output.Result.Length then output.Result.Length - Start else MaxLogSize;
-    Log.i("Sugar.Test", output.Result.Substring(Start, Count));
-  end;
-
-  self.finish;
+      self.finish;
+  end);
 end;
 
 

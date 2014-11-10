@@ -4,10 +4,10 @@ interface
 
 uses
   Sugar,
-  Sugar.TestFramework;
+  RemObjects.Elements.EUnit;
 
 type
-  AutoreleasepoolTest = public class (Testcase)
+  AutoreleasepoolTest = public class (Test)
   public
     method Test;
   end;
@@ -17,7 +17,7 @@ implementation
 method AutoreleasepoolTest.Test;
 begin
   using {$IF NOUGAT}autoreleasepool{$ELSE}&autoreleasepool{$ENDIF} do begin
-    Assert.CheckBool(true, true);
+    Assert.IsTrue(true);
   end;
 end;
 

@@ -4,10 +4,10 @@ interface
 
 uses
   Sugar,
-  Sugar.TestFramework;
+  RemObjects.Elements.EUnit;
 
 type
-  ExtensionsTest = public class (Testcase)
+  ExtensionsTest = public class (Test)
   private
     Data: CodeClass;
   public
@@ -73,24 +73,24 @@ end;
 
 method ExtensionsTest.TestToString;
 begin
-  Assert.IsNotNull(Data.ToString);
-  Assert.CheckString("42", Data.ToString);
+  Assert.IsNotNil(Data.ToString);
+  Assert.AreEqual(Data.ToString, "42");
 end;
 
 method ExtensionsTest.TestEquals;
 begin
-  Assert.CheckBool(true, Data.Equals(Data));
-  Assert.CheckBool(true, Data.Equals(new CodeClass(42)));
-  Assert.CheckBool(false, Data.Equals(new CodeClass(1)));
-  Assert.CheckBool(false, Data.Equals(nil));
-  Assert.CheckBool(false, Data.Equals(""));
+  Assert.IsTrue(Data.Equals(Data));
+  Assert.IsTrue(Data.Equals(new CodeClass(42)));
+  Assert.IsFalse(Data.Equals(new CodeClass(1)));
+  Assert.IsFalse(Data.Equals(nil));
+  Assert.IsFalse(Data.Equals(""));
 end;
 
 method ExtensionsTest.TestHashCode;
 begin
-  Assert.CheckInt(42, Data.GetHashCode);
+  Assert.AreEqual(Data.GetHashCode, 42);
   Data.Code := 4;
-  Assert.CheckInt(4, Data.GetHashCode);
+  Assert.AreEqual(Data.GetHashCode, 4);
 end;
 
 end.

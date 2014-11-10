@@ -40,15 +40,22 @@
     <Reference Include="com.remobjects.elements.rtl.jar">
       <Private>True</Private>
     </Reference>
+    <Reference Include="RemObjects.Elements.EUnit.jar">
+      <Private>True</Private>
+    </Reference>
     <Reference Include="rt.jar" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main\Cooper\Program.pas" />
-    <Compile Include="Printer\Printer.pas" />
     <Compile Include="Tests\AutoreleasePool.pas" />
     <Compile Include="Tests\Binary.pas" />
     <Compile Include="Tests\Convert.pas" />
     <Compile Include="Tests\Cryptography\Utils.pas" />
+    <Compile Include="Tests\Data\Json\JsonArray.pas" />
+    <Compile Include="Tests\Data\Json\JsonObject.pas" />
+    <Compile Include="Tests\Data\Json\JsonObjectParser.pas" />
+    <Compile Include="Tests\Data\Json\JsonTokenizer.pas" />
+    <Compile Include="Tests\Data\Json\JsonValueTest.pas" />
     <Compile Include="Tests\DateTime.pas" />
     <Compile Include="Tests\Dictionary.pas" />
     <Compile Include="Tests\Encoding.pas" />
@@ -83,19 +90,20 @@
   <ItemGroup>
     <Folder Include="Main\" />
     <Folder Include="Main\Cooper\" />
-    <Folder Include="Printer\" />
     <Folder Include="Tests" />
+    <Folder Include="Tests\Data\" />
+    <Folder Include="Tests\Data\Json\" />
     <Folder Include="Tests\Xml" />
     <Folder Include="Tests\IO" />
     <Folder Include="Tests\Cryptography" />
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Sugar.TestFramework\Sugar.Cooper.TestFramework.oxygene">
-      <Name>Sugar.Cooper.TestFramework</Name>
-      <Project>{dba17ca8-59bc-4544-a0f5-c632737d5aa0}</Project>
+    <ProjectReference Include="..\Sugar.Data\Sugar.Data.Cooper.oxygene">
+      <Name>Sugar.Data.Cooper</Name>
+      <Project>{83e22c95-cbc5-4977-87f6-0b18b8181703}</Project>
       <Private>True</Private>
-      <HintPath>..\Sugar.TestFramework\bin\Java\com.Sugar.testframework.jar</HintPath>
+      <HintPath>..\Sugar.Data\bin\Java\sugar.data.jar</HintPath>
     </ProjectReference>
     <ProjectReference Include="..\Sugar\Sugar.Cooper.oxygene">
       <Name>Sugar.Cooper</Name>

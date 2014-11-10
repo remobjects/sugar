@@ -5,10 +5,10 @@ interface
 uses
   Sugar,
   Sugar.Xml,
-  Sugar.TestFramework;
+  RemObjects.Elements.EUnit;
 
 type
-  ProcessingInstructionTest = public class (Testcase)
+  ProcessingInstructionTest = public class (Test)
   private
     Doc: XmlDocument;
     Data: XmlProcessingInstruction;
@@ -25,47 +25,47 @@ implementation
 method ProcessingInstructionTest.Setup;
 begin
   Doc := XmlDocument.FromString(XmlTestData.PIXml);
-  Assert.IsNotNull(Doc);
+  Assert.IsNotNil(Doc);
   Data := Doc.ChildNodes[0] as XmlProcessingInstruction;
-  Assert.IsNotNull(Data);
+  Assert.IsNotNil(Data);
 end;
 
 method ProcessingInstructionTest.Value;
 begin
-  Assert.IsNotNull(Data.Value);
-  Assert.CheckString("type=""text/xsl"" href=""test""", Data.Value);
+  Assert.IsNotNil(Data.Value);
+  Assert.AreEqual(Data.Value, "type=""text/xsl"" href=""test""");
   Data.Value := "type=""text/xsl""";
-  Assert.CheckString("type=""text/xsl""", Data.Value);
-  Assert.IsException(->begin Data.Value := nil; end);
+  Assert.AreEqual(Data.Value, "type=""text/xsl""");
+  Assert.Throws(->begin Data.Value := nil; end);
 
   Data := Doc.ChildNodes[1] as XmlProcessingInstruction;
-  Assert.CheckString("", Data.Value);
+  Assert.AreEqual(Data.Value, "");
 end;
 
 method ProcessingInstructionTest.Target;
 begin
-  Assert.IsNotNull(Data.Target);
-  Assert.CheckString("xml-stylesheet", Data.Target);
+  Assert.IsNotNil(Data.Target);
+  Assert.AreEqual(Data.Target, "xml-stylesheet");
   Data := Doc.ChildNodes[1] as XmlProcessingInstruction;
-  Assert.CheckString("custom", Data.Target);
+  Assert.AreEqual(Data.Target, "custom");
 end;
 
 method ProcessingInstructionTest.TestData;
 begin
   //Data is the same thing as Value
-  Assert.IsNotNull(Data.Data);
-  Assert.CheckString("type=""text/xsl"" href=""test""", Data.Data);
+  Assert.IsNotNil(Data.Data);
+  Assert.AreEqual(Data.Data, "type=""text/xsl"" href=""test""");
   Data.Data := "type=""text/xsl""";
-  Assert.CheckString("type=""text/xsl""", Data.Data);
-  Assert.IsException(->begin Data.Data := nil; end);
+  Assert.AreEqual(Data.Data, "type=""text/xsl""");
+  Assert.Throws(->begin Data.Data := nil; end);
 
   Data := Doc.ChildNodes[1] as XmlProcessingInstruction;
-  Assert.CheckString("", Data.Data);
+  Assert.AreEqual(Data.Data, "");
 end;
 
 method ProcessingInstructionTest.NodeType;
 begin
-  Assert.CheckBool(true, Data.NodeType = XmlNodeType.ProcessingInstruction);
+  Assert.IsTrue(Data.NodeType = XmlNodeType.ProcessingInstruction);
 end;
 
 end.

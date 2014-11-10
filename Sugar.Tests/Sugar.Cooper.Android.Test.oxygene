@@ -47,8 +47,9 @@
     <Folder Include="res\drawable-xhdpi\" />
     <Folder Include="res\values\" />
     <Folder Include="res\layout\" />
-    <Folder Include="Printer\" />
     <Folder Include="Tests" />
+    <Folder Include="Tests\Data\" />
+    <Folder Include="Tests\Data\Json\" />
     <Folder Include="Tests\Xml" />
     <Folder Include="Tests\IO" />
     <Folder Include="Tests\Cryptography" />
@@ -81,14 +82,21 @@
     <Reference Include="com.remobjects.elements.rtl.jar">
       <Private>True</Private>
     </Reference>
+    <Reference Include="RemObjects.Elements.EUnit.jar">
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main\Android\MainActivity.pas" />
-    <Compile Include="Printer\Printer.pas" />
     <Compile Include="Tests\AutoreleasePool.pas" />
     <Compile Include="Tests\Binary.pas" />
     <Compile Include="Tests\Convert.pas" />
     <Compile Include="Tests\Cryptography\Utils.pas" />
+    <Compile Include="Tests\Data\Json\JsonArray.pas" />
+    <Compile Include="Tests\Data\Json\JsonObject.pas" />
+    <Compile Include="Tests\Data\Json\JsonObjectParser.pas" />
+    <Compile Include="Tests\Data\Json\JsonTokenizer.pas" />
+    <Compile Include="Tests\Data\Json\JsonValueTest.pas" />
     <Compile Include="Tests\DateTime.pas" />
     <Compile Include="Tests\Dictionary.pas" />
     <Compile Include="Tests\Encoding.pas" />
@@ -104,7 +112,7 @@
     <Compile Include="Tests\IO\Path.pas" />
     <Compile Include="Tests\List.pas" />
     <Compile Include="Tests\Math.pas" />
-    <None Include="Tests\MessageDigest.pas" />
+    <Compile Include="Tests\MessageDigest.pas" />
     <Compile Include="Tests\Queue.pas" />
     <Compile Include="Tests\Random.pas" />
     <Compile Include="Tests\Stack.pas" />
@@ -121,11 +129,11 @@
     <Compile Include="Tests\Xml\TestData.pas" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Sugar.TestFramework\Sugar.Android.TestFramework.oxygene">
-      <Name>Sugar.Android.TestFramework</Name>
-      <Project>{d4c017d4-e773-4138-872d-72adae69da3d}</Project>
+    <ProjectReference Include="..\Sugar.Data\Sugar.Data.Cooper.Android.oxygene">
+      <Name>Sugar.Data.Cooper.Android</Name>
+      <Project>{d5492a3d-13b2-4ef5-8835-81bc392b5a74}</Project>
       <Private>True</Private>
-      <HintPath>..\Sugar.TestFramework\bin\Android\com.sugar.testframework.android.jar</HintPath>
+      <HintPath>..\Sugar.Data\bin\Android\sugar.data.jar</HintPath>
     </ProjectReference>
     <ProjectReference Include="..\Sugar\Sugar.Cooper.Android.oxygene">
       <Name>Sugar.Cooper.Android</Name>

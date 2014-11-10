@@ -4,14 +4,14 @@ interface
 
 uses
   Sugar,
-  Sugar.TestFramework;
+  RemObjects.Elements.EUnit;
 
 type
-  BinaryTest = public class (Testcase)
+  BinaryTest = public class (Test)
   private
     Data: Binary;
     DataBytes: array of Byte := [72, 101, 108, 108, 111];
-    method AreEquals(Expected, Actual: array of Byte);
+    //method AreEquals(Expected, Actual: array of Byte);
   public
     method Setup; override;
     method TestAssign;
@@ -35,125 +35,127 @@ begin
   Data := new Binary(DataBytes);
 end;
 
-method BinaryTest.AreEquals(Expected: array of Byte; Actual: array of Byte);
+{method BinaryTest.AreEquals(Expected: array of Byte; Actual: array of Byte);
 begin
   Assert.CheckInt(length(Expected), length(Actual));
   for i: Int32 := 0 to length(Expected) - 1 do
     Assert.CheckInt(Expected[i], Actual[i]);
-end;
+end;}
 
 method BinaryTest.TestAssign;
 begin
   var Value := new Binary;
   Value.Assign(Data);
-  Assert.CheckInt(Data.Length, Value.Length);
+  Assert.AreEqual(Value.Length, Data.Length);
   Value.Assign(nil);
-  Assert.CheckInt(0, Value.Length);
+  Assert.AreEqual(Value.Length, 0);
 end;
 
 method BinaryTest.TestClear;
 begin
   Data.Clear;
-  Assert.CheckInt(0, Data.Length);
+  Assert.AreEqual(Data.Length, 0);
 end;
 
 method BinaryTest.TestReadRangeOfBytes;
 begin
   var Expected: array of Byte := [101, 108, 108];
-  AreEquals(Expected, Data.Read(Range.MakeRange(1, 3)));
-  AreEquals(DataBytes, Data.Read(Range.MakeRange(0, 5)));
+  Assert.AreEqual(Data.Read(Range.MakeRange(1, 3)), Expected);
+  Assert.AreEqual(Data.Read(Range.MakeRange(0, 5)), DataBytes);
 
-  AreEquals([], Data.Read(Range.MakeRange(5555, 0))); //empty
+  Assert.AreEqual(Data.Read(Range.MakeRange(5555, 0)), []); //empty
 
   //out of range
-  Assert.IsException(->Data.Read(Range.MakeRange(32, 1))); 
-  Assert.IsException(->Data.Read(Range.MakeRange(0, 32)));
+  Assert.Throws(->Data.Read(Range.MakeRange(32, 1))); 
+  Assert.Throws(->Data.Read(Range.MakeRange(0, 32)));
 end;
 
 method BinaryTest.TestReadBytes;
 begin
   var Expected: array of Byte := [72, 101, 108];
-  AreEquals(Expected, Data.Read(3));
-  AreEquals([], Data.Read(0));
-  AreEquals(DataBytes, Data.Read(88888)); //number of bytes copied is the Min(length, Data.Length)
+  Assert.AreEqual(Data.Read(3), Expected);
+  Assert.AreEqual(Data.Read(0), []);
+  Assert.AreEqual(Data.Read(88888), DataBytes); //number of bytes copied is the Min(length, Data.Length)
 end;
 
 method BinaryTest.TestSubdata;
 begin
   var Expected: array of Byte := [101, 108, 108];
   var Value := Data.Subdata(Range.MakeRange(1, 3));
-  Assert.IsNotNull(Value);
-  Assert.CheckInt(3, Value.Length);
-  AreEquals(Expected, Value.ToArray);
-  AreEquals(DataBytes, Data.Subdata(Range.MakeRange(0, Data.Length)).ToArray);
+  Assert.IsNotNil(Value);
+  Assert.AreEqual(Value.Length, 3);
+  Assert.AreEqual(Value.ToArray, Expected);
+  Assert.AreEqual(Data.Subdata(Range.MakeRange(0, Data.Length)).ToArray, DataBytes);
 
-  AreEquals([], Data.Subdata(Range.MakeRange(0,0)).ToArray);
-  Assert.IsException(->Data.Subdata(Range.MakeRange(0, 50)));
+  Assert.AreEqual(Data.Subdata(Range.MakeRange(0,0)).ToArray, []);
+  Assert.Throws(->Data.Subdata(Range.MakeRange(0, 50)));
 end;
 
 method BinaryTest.TestWriteBytes;
 begin
   Data.Write([], 0); //empty write
-  Assert.CheckInt(5, Data.Length);
+  Assert.AreEqual(Data.Length, 5);
 
   var BytesToWrite: array of Byte := [1, 2, 3];
   Data.Write(BytesToWrite, 3);
-  Assert.CheckInt(8, Data.Length);
-  AreEquals(BytesToWrite, Data.Read(Range.MakeRange(5, 3)));
+  Assert.AreEqual(Data.Length, 8);
+  Assert.AreEqual(Data.Read(Range.MakeRange(5, 3)), BytesToWrite);
 
-  Assert.IsException(->Data.Write(nil, 0)); //null
-  Assert.IsException(->Data.Write(BytesToWrite, 4)); //out of range
+  Assert.Throws(->Data.Write(nil, 0)); //null
+  Assert.Throws(->Data.Write(BytesToWrite, 4)); //out of range
 end;
 
 method BinaryTest.TestWriteData;
 begin  
   var Expected: Binary := new Binary([1,2,3]);
   Data.Write(Expected);
-  Assert.CheckInt(8, Data.Length);
-  AreEquals(Expected.ToArray, Data.Read(Range.MakeRange(5, 3)));
+  Assert.AreEqual(Data.Length, 8);
+  Assert.AreEqual(Data.Read(Range.MakeRange(5, 3)), Expected.ToArray);
 
   Expected := nil;
-  Assert.IsException(->Data.Write(Expected));
+  Assert.Throws(->Data.Write(Expected));
   Data.Write(new Binary([]));
-  Assert.CheckInt(8, Data.Length);
+  Assert.AreEqual(Data.Length, 8);
 end;
 
 method BinaryTest.TestToByteArray;
 begin
-  AreEquals(DataBytes, Data.ToArray);
-  AreEquals([], new Binary([]).ToArray);
+  Assert.AreEqual(Data.ToArray, DataBytes);
+  Assert.AreEqual(new Binary([]).ToArray, []);
 end;
 
 method BinaryTest.TestLength;
 begin
-  Assert.CheckInt(5, Data.Length);
-  Assert.CheckInt(0, new Binary([]).Length);
+  Assert.AreEqual(Data.Length, 5);
+  Data.Clear;
+  Assert.AreEqual(Data.Length, 0);
+  Assert.AreEqual(new Binary([]).Length, 0);
 end;
 
 method BinaryTest.TestFromArray;
 begin
   var Value := new Binary(DataBytes);
-  Assert.IsNotNull(Value);
-  Assert.CheckInt(5, Value.Length);
-  AreEquals(DataBytes, Value.ToArray);
+  Assert.IsNotNil(Value);
+  Assert.AreEqual(Value.Length, 5);
+  Assert.AreEqual(Value.ToArray, DataBytes);
 
-  //Assert.IsException(->new Binary(nil));
-  Assert.CheckInt(0, new Binary([]).Length);
+  //Assert.Throws(->new Binary(nil));
+  Assert.AreEqual(new Binary([]).Length, 0);
 end;
 
 method BinaryTest.TestFromBinary;
 begin
   var Value := new Binary(Data);
-  Assert.IsNotNull(Value);
-  Assert.CheckInt(5, Value.Length);
-  AreEquals(DataBytes, Value.ToArray);
+  Assert.IsNotNil(Value);
+  Assert.AreEqual(Value.Length, 5);
+  Assert.AreEqual(Value.ToArray, DataBytes);
 end;
 
 method BinaryTest.&Empty;
 begin
   var Value := new Binary;
-  Assert.IsNotNull(Value);
-  Assert.CheckInt(0, Value.Length);  
+  Assert.IsNotNil(Value);
+  Assert.AreEqual(Value.Length, 0);
 end;
 
 end.

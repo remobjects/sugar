@@ -5,10 +5,10 @@ interface
 uses
   Sugar,
   Sugar.IO,
-  Sugar.TestFramework;
+  RemObjects.Elements.EUnit;
 
 type
-  PathTest = public class (Testcase)
+  PathTest = public class (Test)
   private
     property FolderPath: String read Folder.UserLocal.Path;
   public
@@ -25,103 +25,103 @@ implementation
 
 method PathTest.ChangeExtension;
 begin
-  Assert.CheckString("1.jpg", Path.ChangeExtension("1.txt", "jpg"));
-  Assert.CheckString("1.txt.zip", Path.ChangeExtension("1.txt.jpg", "zip"));
-  Assert.CheckString("1.txt", Path.ChangeExtension("1", "txt"));
-  Assert.CheckString("1.txt", Path.ChangeExtension("1", ".txt"));
-  Assert.CheckString("1.txt", Path.ChangeExtension("1.", "txt"));
-  Assert.CheckString("1.txt", Path.ChangeExtension("1.", ".txt"));
-  Assert.CheckString(".txt", Path.ChangeExtension("", "txt"));
-  Assert.CheckString("1", Path.ChangeExtension("1", ""));
-  Assert.CheckString("1.", Path.ChangeExtension("1.", ""));
-  Assert.CheckString("1", Path.ChangeExtension("1.txt", nil));
-  Assert.CheckString(Path.Combine(FolderPath, "1.jpg"), Path.ChangeExtension(Path.Combine(FolderPath, "1.txt"), "jpg"));
+  Assert.AreEqual(Path.ChangeExtension("1.txt", "jpg"), "1.jpg");
+  Assert.AreEqual(Path.ChangeExtension("1.txt.jpg", "zip"), "1.txt.zip");
+  Assert.AreEqual(Path.ChangeExtension("1", "txt"), "1.txt");
+  Assert.AreEqual(Path.ChangeExtension("1", ".txt"), "1.txt");
+  Assert.AreEqual(Path.ChangeExtension("1.", "txt"), "1.txt");
+  Assert.AreEqual(Path.ChangeExtension("1.", ".txt"), "1.txt");
+  Assert.AreEqual(Path.ChangeExtension("", "txt"), ".txt");
+  Assert.AreEqual(Path.ChangeExtension("1", ""), "1");
+  Assert.AreEqual(Path.ChangeExtension("1.", ""), "1.");
+  Assert.AreEqual(Path.ChangeExtension("1.txt", nil), "1");
+  Assert.AreEqual(Path.ChangeExtension(Path.Combine(FolderPath, "1.txt"), "jpg"), Path.Combine(FolderPath, "1.jpg"));
 
-  Assert.IsException(->Path.ChangeExtension(nil, ""));
+  Assert.Throws(->Path.ChangeExtension(nil, ""));
 end;
 
 method PathTest.Combine;
 begin
-  Assert.CheckString("1.txt", Path.Combine("", "1.txt"));
-  Assert.CheckString("1.txt", Path.Combine(nil, "1.txt"));
-  Assert.CheckString(FolderPath + Folder.Separator + "1.txt", Path.Combine(FolderPath, "1.txt"));
-  Assert.CheckString(FolderPath + Folder.Separator + "1.txt", Path.Combine(FolderPath + Folder.Separator, "1.txt"));
-  Assert.CheckString(FolderPath + Folder.Separator + "Folder", Path.Combine(FolderPath, "Folder"));
-  Assert.CheckString(FolderPath, Path.Combine(FolderPath, ""));
-  Assert.CheckString(FolderPath, Path.Combine(FolderPath, nil));
+  Assert.AreEqual(Path.Combine("", "1.txt"), "1.txt");
+  Assert.AreEqual(Path.Combine(nil, "1.txt"), "1.txt");
+  Assert.AreEqual(Path.Combine(FolderPath, "1.txt"), FolderPath + Folder.Separator + "1.txt");
+  Assert.AreEqual(Path.Combine(FolderPath + Folder.Separator, "1.txt"), FolderPath + Folder.Separator + "1.txt");
+  Assert.AreEqual(Path.Combine(FolderPath, "Folder"), FolderPath + Folder.Separator + "Folder");
+  Assert.AreEqual(Path.Combine(FolderPath, ""), FolderPath);
+  Assert.AreEqual(Path.Combine(FolderPath, nil), FolderPath);
   
-  Assert.IsException(->Path.Combine(nil, nil));
-  Assert.IsException(->Path.Combine(nil, ""));
-  Assert.IsException(->Path.Combine("", ""));
-  Assert.IsException(->Path.Combine("", nil));
+  Assert.Throws(->Path.Combine(nil, nil));
+  Assert.Throws(->Path.Combine(nil, ""));
+  Assert.Throws(->Path.Combine("", ""));
+  Assert.Throws(->Path.Combine("", nil));
 
-  Assert.CheckString(FolderPath + Folder.Separator + "NewFolder" + Folder.Separator + "1.txt", Path.Combine(FolderPath, "NewFolder", "1.txt"));
+  Assert.AreEqual(Path.Combine(FolderPath, "NewFolder", "1.txt"), FolderPath + Folder.Separator + "NewFolder" + Folder.Separator + "1.txt");
 end;
 
 method PathTest.GetParentDirectory;
 begin
-  Assert.CheckString("root", Path.GetParentDirectory(Path.Combine("root", "1.txt")));
-  Assert.CheckString(Path.Combine("root", "folder1"), Path.GetParentDirectory(Path.Combine("root", "folder1", "folder2")));
-  Assert.CheckString("root", Path.GetParentDirectory(Path.Combine("root", "folder1")));
-  Assert.IsNull(Path.GetParentDirectory("root"));
-  Assert.IsNull(Path.GetParentDirectory("root" + Folder.Separator));
-  Assert.IsNull(Path.GetParentDirectory("1.txt"));
-  Assert.IsNull(Path.GetParentDirectory(""));
+  Assert.AreEqual(Path.GetParentDirectory(Path.Combine("root", "1.txt")), "root");
+  Assert.AreEqual(Path.GetParentDirectory(Path.Combine("root", "folder1", "folder2")), Path.Combine("root", "folder1"));
+  Assert.AreEqual(Path.GetParentDirectory(Path.Combine("root", "folder1")), "root");
+  Assert.IsNil(Path.GetParentDirectory("root"));
+  Assert.IsNil(Path.GetParentDirectory("root" + Folder.Separator));
+  Assert.IsNil(Path.GetParentDirectory("1.txt"));
+  Assert.IsNil(Path.GetParentDirectory(""));
 
-  Assert.IsException(->Path.GetParentDirectory(nil));
+  Assert.Throws(->Path.GetParentDirectory(nil));
 end;
 
 method PathTest.GetExtension;
 begin
-  Assert.CheckString(".txt", Path.GetExtension("1.txt"));
-  Assert.CheckString(".jpg", Path.GetExtension("1.txt.jpg"));
-  Assert.CheckString("", Path.GetExtension("1"));
-  Assert.CheckString("", Path.GetExtension("1."));
-  Assert.CheckString(".txt", Path.GetExtension(Path.Combine(FolderPath, "1.txt")));
+  Assert.AreEqual(Path.GetExtension("1.txt"), ".txt");
+  Assert.AreEqual(Path.GetExtension("1.txt.jpg"), ".jpg");
+  Assert.AreEqual(Path.GetExtension("1"), "");
+  Assert.AreEqual(Path.GetExtension("1."), "");
+  Assert.AreEqual(Path.GetExtension(Path.Combine(FolderPath, "1.txt")), ".txt");
 
-  Assert.IsException(->Path.GetExtension(nil));
+  Assert.Throws(->Path.GetExtension(nil));
 end;
 
 method PathTest.GetFileName;
 begin
-  Assert.CheckString("1.txt", Path.GetFileName("1.txt"));
-  Assert.CheckString("1.txt", Path.GetFileName(Folder.Separator + "1.txt"));
-  Assert.CheckString("1.txt.jpg", Path.GetFileName("1.txt.jpg"));
-  Assert.CheckString("", Path.GetFileName(""));
-  Assert.CheckString("", Path.GetFileName(Folder.Separator));
-  Assert.CheckString("folder2", Path.GetFileName(Path.Combine("root", "folder1", "folder2")));
-  Assert.CheckString("folder1", Path.GetFileName(Path.Combine("root", "folder1")));
-  Assert.CheckString("root", Path.GetFileName("root"));
-  Assert.CheckString("root", Path.GetFileName("root" + Folder.Separator));
+  Assert.AreEqual(Path.GetFileName("1.txt"), "1.txt");
+  Assert.AreEqual(Path.GetFileName(Folder.Separator + "1.txt"), "1.txt");
+  Assert.AreEqual(Path.GetFileName("1.txt.jpg"), "1.txt.jpg");
+  Assert.AreEqual(Path.GetFileName(""), "");
+  Assert.AreEqual(Path.GetFileName(Folder.Separator), "");
+  Assert.AreEqual(Path.GetFileName(Path.Combine("root", "folder1", "folder2")), "folder2");
+  Assert.AreEqual(Path.GetFileName(Path.Combine("root", "folder1")), "folder1");
+  Assert.AreEqual(Path.GetFileName("root"), "root");
+  Assert.AreEqual(Path.GetFileName("root" + Folder.Separator), "root");
 
-  Assert.CheckString("1.txt", Path.GetFileName(Path.Combine(FolderPath, "1.txt")));
+  Assert.AreEqual(Path.GetFileName(Path.Combine(FolderPath, "1.txt")), "1.txt");
 
-  Assert.IsException(->Path.GetFileName(nil));
+  Assert.Throws(->Path.GetFileName(nil));
 end;
 
 method PathTest.GetFileNameWithoutExtension;
 begin
-  Assert.CheckString("1", Path.GetFileNameWithoutExtension("1.txt"));
-  Assert.CheckString("1", Path.GetFileNameWithoutExtension(Folder.Separator + "1.txt"));
-  Assert.CheckString("1.txt", Path.GetFileNameWithoutExtension("1.txt.jpg"));
-  Assert.CheckString("", Path.GetFileNameWithoutExtension(""));
-  Assert.CheckString("", Path.GetFileNameWithoutExtension(Folder.Separator));
+  Assert.AreEqual(Path.GetFileNameWithoutExtension("1.txt"), "1");
+  Assert.AreEqual(Path.GetFileNameWithoutExtension(Folder.Separator + "1.txt"), "1");
+  Assert.AreEqual(Path.GetFileNameWithoutExtension("1.txt.jpg"), "1.txt");
+  Assert.AreEqual(Path.GetFileNameWithoutExtension(""), "");
+  Assert.AreEqual(Path.GetFileNameWithoutExtension(Folder.Separator), "");
 
-  Assert.CheckString("1", Path.GetFileNameWithoutExtension(Path.Combine(FolderPath, "1.txt")));
+  Assert.AreEqual(Path.GetFileNameWithoutExtension(Path.Combine(FolderPath, "1.txt")), "1");
 
-  Assert.IsException(->Path.GetFileNameWithoutExtension(nil));
+  Assert.Throws(->Path.GetFileNameWithoutExtension(nil));
 end;
 
 method PathTest.RemoveExtension;
 begin
-  Assert.CheckString("1", Path.RemoveExtension("1.txt"));
-  Assert.CheckString("1.txt", Path.RemoveExtension("1.txt.jpg"));
-  Assert.CheckString("1.1", Path.RemoveExtension("1.1.txt"));
-  Assert.CheckString("1", Path.RemoveExtension("1."));
-  Assert.CheckString("1", Path.RemoveExtension("1"));
-  Assert.CheckString("", Path.RemoveExtension(""));  
+  Assert.AreEqual(Path.RemoveExtension("1.txt"), "1");
+  Assert.AreEqual(Path.RemoveExtension("1.txt.jpg"), "1.txt");
+  Assert.AreEqual(Path.RemoveExtension("1.1.txt"), "1.1");
+  Assert.AreEqual(Path.RemoveExtension("1."), "1");
+  Assert.AreEqual(Path.RemoveExtension("1"), "1");
+  Assert.AreEqual(Path.RemoveExtension(""), "");
   
-  Assert.IsException(->Path.RemoveExtension(nil));
+  Assert.Throws(->Path.RemoveExtension(nil));
 end;
 
 end.

@@ -5,10 +5,10 @@ interface
 uses
   Sugar,
   Sugar.Xml,
-  Sugar.TestFramework;
+  RemObjects.Elements.EUnit;
 
 type
-  DocumentTypeTest = public class (Testcase)
+  DocumentTypeTest = public class (Test)
   private
     Doc: XmlDocument;
     Data: XmlDocumentType;
@@ -29,69 +29,69 @@ implementation
 method DocumentTypeTest.Setup;
 begin
   Doc := XmlDocument.FromString(XmlTestData.DTDXml);
-  Assert.IsNotNull(Doc);
+  Assert.IsNotNil(Doc);
   Data := Doc.FirstChild as XmlDocumentType;
-  Assert.IsNotNull(Data);
+  Assert.IsNotNil(Data);
 end;
 
 method DocumentTypeTest.PublicId;
 begin
-  Assert.IsNotNull(Data.PublicId);
-  Assert.CheckString("", Data.PublicId);
+  Assert.IsNotNil(Data.PublicId);
+  Assert.AreEqual(Data.PublicId, "");
 
   Doc := XmlDocument.FromString(XmlTestData.CharXml);
-  Assert.IsNotNull(Doc);
-  Assert.IsNotNull(Doc.DocumentType);
-  Assert.IsNotNull(Doc.DocumentType.PublicId);
-  Assert.CheckString("-//W3C//DTD XHTML 1.0 Transitional//EN", Doc.DocumentType.PublicId);
+  Assert.IsNotNil(Doc);
+  Assert.IsNotNil(Doc.DocumentType);
+  Assert.IsNotNil(Doc.DocumentType.PublicId);
+  Assert.AreEqual(Doc.DocumentType.PublicId, "-//W3C//DTD XHTML 1.0 Transitional//EN");
 end;
 
 method DocumentTypeTest.SystemId;
 begin
-  Assert.IsNotNull(Data.SystemId);
-  Assert.CheckString("", Data.SystemId);
+  Assert.IsNotNil(Data.SystemId);
+  Assert.AreEqual(Data.SystemId, "");
 
   Doc := XmlDocument.FromString(XmlTestData.CharXml);
-  Assert.IsNotNull(Doc);
-  Assert.IsNotNull(Doc.DocumentType);
-  Assert.IsNotNull(Doc.DocumentType.SystemId);
-  Assert.CheckString("http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd", Doc.DocumentType.SystemId);
+  Assert.IsNotNil(Doc);
+  Assert.IsNotNil(Doc.DocumentType);
+  Assert.IsNotNil(Doc.DocumentType.SystemId);
+  Assert.AreEqual(Doc.DocumentType.SystemId, "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd");
 end;
 
 method DocumentTypeTest.NodeType;
 begin
-  Assert.CheckBool(true, Data.NodeType = XmlNodeType.DocumentType);
+  Assert.AreEqual(Data.NodeType, XmlNodeType.DocumentType);
 end;
 
 method DocumentTypeTest.AccessFromDocument;
 begin
-  Assert.IsNotNull(Doc.DocumentType);
-  Assert.CheckBool(true, Doc.DocumentType.Equals(Data));
+  Assert.IsNotNil(Doc.DocumentType);
+  Assert.IsTrue(Doc.DocumentType.Equals(Data));
 end;
 
 method DocumentTypeTest.Name;
 begin
-  Assert.IsNotNull(Data.Name);
-  Assert.CheckString("note", Data.Name);
+  Assert.IsNotNil(Data.Name);
+  Assert.AreEqual(Data.Name, "note");
 end;
 
 method DocumentTypeTest.LocalName;
 begin
-  Assert.IsNotNull(Data.LocalName);
-  Assert.CheckString("note", Data.LocalName);
+  Assert.IsNotNil(Data.LocalName);
+  Assert.AreEqual(Data.LocalName, "note");
 end;
 
 method DocumentTypeTest.Childs;
 begin
-  Assert.CheckInt(0, Data.ChildCount);
-  Assert.IsNull(Data.FirstChild);
-  Assert.IsNull(Data.LastChild);
-  Assert.CheckInt(0, length(Data.ChildNodes));
+  Assert.AreEqual(Data.ChildCount, 0);
+  Assert.IsNil(Data.FirstChild);
+  Assert.IsNil(Data.LastChild);
+  Assert.AreEqual(length(Data.ChildNodes), 0);
 end;
 
 method DocumentTypeTest.Value;
 begin
-  Assert.IsNull(Data.Value);
+  Assert.IsNil(Data.Value);
 end;
 
 end.

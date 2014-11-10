@@ -5,10 +5,10 @@ interface
 uses
   Sugar,
   Sugar.Collections,
-  Sugar.TestFramework;
+  RemObjects.Elements.EUnit;
 
 type
-  DictionaryTest = public class (Testcase)
+  DictionaryTest = public class (Test)
   private
     Data: Dictionary<CodeClass, String>;
   public
@@ -23,6 +23,7 @@ type
     method Values;
     method Count;
     method ForEach;
+    method NilValue;
   end;
 
 implementation
@@ -37,76 +38,76 @@ end;
 
 method DictionaryTest.&Add;
 begin
-  Assert.CheckInt(3, Data.Count);
+  Assert.AreEqual(Data.Count, 3);
   Data.Add(new CodeClass(4), "Four");
-  Assert.CheckInt(4, Data.Count);
-  Assert.CheckBool(true, Data.ContainsKey(new CodeClass(4)));
-  Assert.CheckBool(true, Data.ContainsValue("Four"));
+  Assert.AreEqual(Data.Count, 4);
+  Assert.IsTrue(Data.ContainsKey(new CodeClass(4)));
+  Assert.IsTrue(Data.ContainsValue("Four"));
 
   Data.Add(new CodeClass(-1), nil);
-  Assert.CheckInt(5, Data.Count);
-  Assert.CheckBool(true, Data.ContainsKey(new CodeClass(-1)));
-  Assert.CheckBool(true, Data.ContainsValue(nil));
+  Assert.AreEqual(Data.Count, 5);
+  Assert.IsTrue(Data.ContainsKey(new CodeClass(-1)));
+  Assert.IsTrue(Data.ContainsValue(nil));
   
-  Assert.IsException(->Data.Add(new CodeClass(4), "")); //no duplicates
-  Assert.IsException(->Data.Add(nil, ""));
+  Assert.Throws(->Data.Add(new CodeClass(4), "")); //no duplicates
+  Assert.Throws(->Data.Add(nil, ""));
 end;
 
 method DictionaryTest.Clear;
 begin
-  Assert.CheckInt(3, Data.Count);
+  Assert.AreEqual(Data.Count, 3);
   Data.Clear;
-  Assert.CheckInt(0, Data.Count);
+  Assert.AreEqual(Data.Count, 0);
 end;
 
 method DictionaryTest.ContainsKey;
 begin
-  Assert.CheckBool(true, Data.ContainsKey(new CodeClass(1)));
-  Assert.CheckBool(true, Data.ContainsKey(new CodeClass(2)));
-  Assert.CheckBool(true, Data.ContainsKey(new CodeClass(3)));
-  Assert.CheckBool(false, Data.ContainsKey(new CodeClass(4)));
-  Assert.IsException(->Data.ContainsKey(nil));
+  Assert.IsTrue(Data.ContainsKey(new CodeClass(1)));
+  Assert.IsTrue(Data.ContainsKey(new CodeClass(2)));
+  Assert.IsTrue(Data.ContainsKey(new CodeClass(3)));
+  Assert.IsFalse(Data.ContainsKey(new CodeClass(4)));
+  Assert.Throws(->Data.ContainsKey(nil));
 end;
 
 method DictionaryTest.ContainsValue;
 begin
-  Assert.CheckBool(true, Data.ContainsValue("One"));
-  Assert.CheckBool(true, Data.ContainsValue("Two"));
-  Assert.CheckBool(true, Data.ContainsValue("Three"));
-  Assert.CheckBool(false, Data.ContainsValue("Four"));
-  Assert.CheckBool(false, Data.ContainsValue("one"));
-  Assert.CheckBool(false, Data.ContainsValue(nil));
+  Assert.IsTrue(Data.ContainsValue("One"));
+  Assert.IsTrue(Data.ContainsValue("Two"));
+  Assert.IsTrue(Data.ContainsValue("Three"));
+  Assert.IsFalse(Data.ContainsValue("Four"));
+  Assert.IsFalse(Data.ContainsValue("one"));
+  Assert.IsFalse(Data.ContainsValue(nil));
 end;
 
 method DictionaryTest.&Remove;
 begin
-  Assert.CheckBool(true, Data.Remove(new CodeClass(1)));
-  Assert.CheckBool(false, Data.ContainsKey(new CodeClass(1)));
-  Assert.CheckBool(false, Data.ContainsValue("One"));
-  Assert.CheckBool(false, Data.Remove(new CodeClass(1)));
-  Assert.IsException(->Data.Remove(nil));
+  Assert.IsTrue(Data.Remove(new CodeClass(1)));
+  Assert.IsFalse(Data.ContainsKey(new CodeClass(1)));
+  Assert.IsFalse(Data.ContainsValue("One"));
+  Assert.IsFalse(Data.Remove(new CodeClass(1)));
+  Assert.Throws(->Data.Remove(nil));
 end;
 
 method DictionaryTest.Item;
 begin  
   var C := new CodeClass(1);
-  Assert.IsNotNull(Data.Item[C]);
-  Assert.IsNotNull(Data[C]);
-  Assert.CheckString("One", Data.Item[C]);
-  Assert.CheckString("One", Data[C]);
-  Assert.IsException(->Data.Item[new CodeClass(55)]);
-  Assert.IsException(->Data.Item[nil]);
+  Assert.IsNotNil(Data.Item[C]);
+  Assert.IsNotNil(Data[C]);
+  Assert.AreEqual(Data.Item[C], "One");
+  Assert.AreEqual(Data[C], "One");
+  Assert.Throws(->Data.Item[new CodeClass(55)]);
+  Assert.Throws(->Data.Item[nil]);
 
   Data[C] := "First";
-  Assert.CheckString("First", Data.Item[C]);
+  Assert.AreEqual(Data.Item[C], "First");
 
   //if key doesn't exists it should be added
-  Assert.CheckInt(3, Data.Count);
+  Assert.AreEqual(Data.Count, 3);
   Data[new CodeClass(4)] := "Four";
-  Assert.CheckInt(4, Data.Count);
-  Assert.CheckBool(true, Data.ContainsKey(new CodeClass(4)));
-  Assert.CheckBool(true, Data.ContainsValue("Four"));
-  Assert.IsException(->begin Data[nil] := ""; end);  
+  Assert.AreEqual(Data.Count, 4);
+  Assert.IsTrue(Data.ContainsKey(new CodeClass(4)));
+  Assert.IsTrue(Data.ContainsValue("Four"));
+  Assert.Throws(->begin Data[nil] := ""; end);  
 end;
 
 method DictionaryTest.Keys;
@@ -117,10 +118,10 @@ begin
   Expected.Add(new CodeClass(3));
   var Actual := Data.Keys;
 
-  Assert.CheckInt(3, length(Actual));
+  Assert.AreEqual(length(Actual), 3);
   //elements order is not defined
   for i: Integer := 0 to length(Actual) - 1 do
-    Assert.CheckBool(true, Expected.Contains(Actual[i]));
+    Assert.IsTrue(Expected.Contains(Actual[i]));
 end;
 
 method DictionaryTest.Values;
@@ -131,41 +132,53 @@ begin
   Expected.Add("Three");
   var Actual := Data.Values;
 
-  Assert.CheckInt(3, length(Actual));
+  Assert.AreEqual(length(Actual), 3);
   for i: Integer := 0 to length(Actual) - 1 do
-    Assert.CheckBool(true, Expected.Contains(Actual[i]));
+    Assert.IsTrue(Expected.Contains(Actual[i]));
 end;
 
 method DictionaryTest.Count;
 begin
-  Assert.CheckInt(3, Data.Count);
-  Assert.CheckBool(true, Data.Remove(new CodeClass(1)));
-  Assert.CheckInt(2, Data.Count);
+  Assert.AreEqual(Data.Count, 3);
+  Assert.IsTrue(Data.Remove(new CodeClass(1)));
+  Assert.AreEqual(Data.Count, 2);
   Data.Add(new CodeClass(1), "One");
-  Assert.CheckInt(3, Data.Count);
+  Assert.AreEqual(Data.Count, 3);
   Data.Clear;
-  Assert.CheckInt(0, Data.Count);
+  Assert.AreEqual(Data.Count, 0);
 end;
 
 method DictionaryTest.ForEach;
 begin
   var Item1 := new KeyValue<String, String>("Key", "Value");
   var Item2 := new KeyValue<String, String>("Key", "Value");
-  Assert.CheckBool(true, Item1.Equals(Item2));
+  Assert.IsTrue(Item1.Equals(Item2));
 
+  Data.Add(new CodeClass(-1), nil);
   var Expected := new Sugar.Collections.List<KeyValue<CodeClass, String>>;
   Expected.Add(new KeyValue<CodeClass, String>(new CodeClass(1),"One"));
   Expected.Add(new KeyValue<CodeClass, String>(new CodeClass(2),"Two"));
   Expected.Add(new KeyValue<CodeClass, String>(new CodeClass(3),"Three"));
+  Expected.Add(new KeyValue<CodeClass, String>(new CodeClass(-1), nil));
 
   var &Index: Integer := 0;
 
   Data.ForEach(x -> begin
-    Assert.CheckBool(true, Expected.Contains(x));
+    Assert.IsTrue(Expected.Contains(x));
     &Index := &Index + 1;
   end);
 
-  Assert.CheckInt(3, &Index);
+  Assert.AreEqual(&Index, 4);
+end;
+
+method DictionaryTest.NilValue;
+begin
+  Data.Add(new CodeClass(-1), nil);
+  Assert.IsTrue(Data.ContainsValue(nil));
+  Assert.IsNil(Data[new CodeClass(-1)]);
+  Assert.AreEqual(Data[new CodeClass(1)], "One");
+  Data[new CodeClass(1)] := nil;
+  Assert.AreEqual(Data.Item[new CodeClass(1)], nil);
 end;
 
 end.

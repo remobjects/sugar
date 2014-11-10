@@ -52,18 +52,23 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
+    <Reference Include="RemObjects.Elements.EUnit" />
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main\Echoes\Program.pas" />
-    <Compile Include="Printer\Printer.pas" />
     <Compile Include="Properties\AssemblyInfo.pas" />
     <Compile Include="Tests\AutoreleasePool.pas" />
     <Compile Include="Tests\Binary.pas" />
     <Compile Include="Tests\Convert.pas" />
     <Compile Include="Tests\Cryptography\Utils.pas" />
+    <Compile Include="Tests\Data\Json\JsonArray.pas" />
+    <Compile Include="Tests\Data\Json\JsonObject.pas" />
+    <Compile Include="Tests\Data\Json\JsonObjectParser.pas" />
+    <Compile Include="Tests\Data\Json\JsonTokenizer.pas" />
+    <Compile Include="Tests\Data\Json\JsonValueTest.pas" />
     <Compile Include="Tests\DateTime.pas" />
     <Compile Include="Tests\Dictionary.pas" />
     <Compile Include="Tests\Encoding.pas" />
@@ -98,19 +103,20 @@
   <ItemGroup>
     <Folder Include="Main\" />
     <Folder Include="Main\Echoes\" />
-    <Folder Include="Printer\" />
     <Folder Include="Tests" />
     <Folder Include="Properties\" />
+    <Folder Include="Tests\Data\Json" />
     <Folder Include="Tests\IO" />
     <Folder Include="Tests\Cryptography" />
+    <Folder Include="Tests\Data" />
     <Folder Include="Tests\Xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Sugar.TestFramework\Sugar.Echoes.TestFramework.oxygene">
-      <Name>Sugar.Echoes.TestFramework</Name>
-      <Project>{532c6e08-1256-4168-8973-08c9d3d7b239}</Project>
+    <ProjectReference Include="..\Sugar.Data\Sugar.Data.Echoes.oxygene">
+      <Name>Sugar.Data.Echoes</Name>
+      <Project>{77ba48da-3022-4e3c-ab2e-885ff84b5efe}</Project>
       <Private>True</Private>
-      <HintPath>..\Sugar.TestFramework\bin\.NET\Sugar.TestFramework.dll</HintPath>
+      <HintPath>..\Sugar.Data\bin\.NET\Sugar.Data.dll</HintPath>
     </ProjectReference>
     <ProjectReference Include="..\Sugar\Sugar.Echoes.oxygene">
       <Name>Sugar.Echoes</Name>

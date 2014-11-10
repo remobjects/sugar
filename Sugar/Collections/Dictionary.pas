@@ -97,17 +97,21 @@ end;
 
 method Dictionary<T, U>.GetItem(Key: T): U;
 begin
-  {$IF COOPER OR ECHOES}
+  {$IF COOPER}
+  result := mapped[Key];
+
+  if (result = nil) and (not ContainsKey(Key)) then
+    raise new SugarKeyNotFoundException;
+  {$ELSEIF ECHOES}
   result := mapped[Key];
   {$ELSEIF NOUGAT}
   result := mapped.objectForKey(Key);
 
-  if result <> nil then
-    exit NullHelper.ValueOf(result);
-  {$ENDIF}
-
   if result = nil then
     raise new SugarKeyNotFoundException;
+
+  exit NullHelper.ValueOf(result);
+  {$ENDIF}
 end;
 
 method Dictionary<T, U>.GetKeys: array of T;

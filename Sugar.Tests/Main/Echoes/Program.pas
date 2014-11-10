@@ -3,7 +3,7 @@
 interface
 
 uses
-  Sugar.TestFramework,
+  RemObjects.Elements.EUnit,
   System;
 
 type
@@ -16,9 +16,13 @@ implementation
 
 class method ConsoleApp.Main(args: array of System.String);
 begin  
-  var results := TestRunner.RunAll();
-  var output := new StringPrinter(results);
-  System.Diagnostics.Debug.WriteLine(output.Result);
+  var Tested := Runner.Run(Discovery.FromAppDomain(AppDomain.CurrentDomain));
+  var Writer := new StringWriter(Tested);
+
+  Writer.WriteFull;
+  Writer.WriteLine("====================================");
+  Writer.WriteSummary;
+  System.Diagnostics.Debug.WriteLine(Writer.Output);
 end;
 
 end.

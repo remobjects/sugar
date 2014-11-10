@@ -5,10 +5,10 @@ interface
 uses
   Sugar,
   Sugar.Xml,
-  Sugar.TestFramework;
+  RemObjects.Elements.EUnit;
 
 type
-  DocumentTest = public class (Testcase)
+  DocumentTest = public class (Test)
   private
     Data: XmlDocument;
   public
@@ -40,182 +40,182 @@ implementation
 method DocumentTest.Setup;
 begin
   Data := XmlDocument.CreateDocument;
-  Assert.IsNotNull(Data);
+  Assert.IsNotNil(Data);
 end;
 
 method DocumentTest.AddChild;
 begin
-  Assert.IsNull(Data.DocumentElement);
-  Assert.CheckInt(0, Data.ChildCount);
+  Assert.IsNil(Data.DocumentElement);
+  Assert.AreEqual(Data.ChildCount, 0);
   Data.AddChild(Data.CreateElement("root"));
-  Assert.IsNotNull(Data.DocumentElement);
-  Assert.CheckInt(1, Data.ChildCount);
-  Assert.IsException(->Data.AddChild(Data.CreateElement("root"))); //only one root element
-  Assert.IsException(->Data.AddChild(nil));
-  Assert.IsException(->Data.AddChild(Data.CreateAttribute("id")));
-  Assert.IsException(->Data.AddChild(Data.CreateTextNode("Test")));
+  Assert.IsNotNil(Data.DocumentElement);
+  Assert.AreEqual(Data.ChildCount, 1);
+  Assert.Throws(->Data.AddChild(Data.CreateElement("root"))); //only one root element
+  Assert.Throws(->Data.AddChild(nil));
+  Assert.Throws(->Data.AddChild(Data.CreateAttribute("id")));
+  Assert.Throws(->Data.AddChild(Data.CreateTextNode("Test")));
   Data.AddChild(Data.CreateComment("Comment"));
-  Assert.CheckInt(2, Data.ChildCount);
+  Assert.AreEqual(Data.ChildCount, 2);
   Data.AddChild(Data.CreateProcessingInstruction("xml-stylesheet", "type=""text/xsl"" href=""style.xsl"""));
 end;
 
 method DocumentTest.CreateAttribute;
 begin
   var Item := Data.CreateElement("root");
-  Assert.IsNotNull(Item);
+  Assert.IsNotNil(Item);
   Data.AddChild(Item);
   Item.AddChild(Data.CreateXmlNs("cfg", "http://example.com/config/"));
-  Assert.CheckInt(1, length(Item.GetAttributes));
+  Assert.AreEqual(length(Item.GetAttributes), 1);
   Item := Data.CreateElement("item");
   Data.DocumentElement.AddChild(Item);  
 
   var Value := Data.CreateAttribute("id");
   Value.Value := "0";
-  Assert.IsNotNull(Value);
+  Assert.IsNotNil(Value);
   Item.SetAttributeNode(Value);
-  Assert.CheckInt(1, length(Item.GetAttributes));
-  Assert.CheckString("0", Item.GetAttribute("id"));
+  Assert.AreEqual(length(Item.GetAttributes), 1);
+  Assert.AreEqual(Item.GetAttribute("id"), "0");
 
   Value := Data.CreateAttribute("cfg:Saved", "http://example.com/config/");
   Value.Value := "true";
-  Assert.IsNotNull(Value);
+  Assert.IsNotNil(Value);
   Item.SetAttributeNode(Value);
-  Assert.CheckInt(2, length(Item.GetAttributes));
-  Assert.CheckString("true", Item.GetAttribute("Saved", "http://example.com/config/"));
+  Assert.AreEqual(length(Item.GetAttributes), 2);
+  Assert.AreEqual(Item.GetAttribute("Saved", "http://example.com/config/"), "true");
 
-  Assert.IsException(->Data.CreateAttribute(nil));
-  Assert.IsException(->Data.CreateAttribute("<xml>"));
-  Assert.IsException(->Data.CreateAttribute(nil, "http://example.com/config/"));
-  Assert.IsException(->Data.CreateAttribute("cfg:Saved", nil));
-  Assert.IsException(->Data.CreateAttribute("<abc>", "http://example.com/config/"));
+  Assert.Throws(->Data.CreateAttribute(nil));
+  Assert.Throws(->Data.CreateAttribute("<xml>"));
+  Assert.Throws(->Data.CreateAttribute(nil, "http://example.com/config/"));
+  Assert.Throws(->Data.CreateAttribute("cfg:Saved", nil));
+  Assert.Throws(->Data.CreateAttribute("<abc>", "http://example.com/config/"));
 end;
 
 method DocumentTest.CreateXmlNs;
 begin
   var Item := Data.CreateElement("root");
-  Assert.IsNotNull(Item);
+  Assert.IsNotNil(Item);
   Data.AddChild(Item);
   Item.AddChild(Data.CreateXmlNs("cfg", "http://example.com/config/"));
-  Assert.CheckInt(1, length(Item.GetAttributes));
-  Assert.IsException(->Data.CreateXmlNs(nil, "http://example.com/config/"));
-  Assert.IsException(->Data.CreateXmlNs("cfg", nil));
-  Assert.IsException(->Data.CreateXmlNs("<xml>", "http://example.com/config/"));
+  Assert.AreEqual(length(Item.GetAttributes), 1);
+  Assert.Throws(->Data.CreateXmlNs(nil, "http://example.com/config/"));
+  Assert.Throws(->Data.CreateXmlNs("cfg", nil));
+  Assert.Throws(->Data.CreateXmlNs("<xml>", "http://example.com/config/"));
 end;
 
 method DocumentTest.CreateCDataSection;
 begin
   var Item := Data.CreateElement("root");
-  Assert.IsNotNull(Item);
+  Assert.IsNotNil(Item);
   Data.AddChild(Item);
 
   var Value := Data.CreateCDataSection("Text");
-  Assert.IsNotNull(Value);
+  Assert.IsNotNil(Value);
   Item.AddChild(Value);
-  Assert.CheckInt(1, Item.ChildCount);
-  Assert.CheckBool(true, Item[0].NodeType = XmlNodeType.CDATA);
-  Assert.CheckString("Text", Item.ChildNodes[0].Value);  
+  Assert.AreEqual(Item.ChildCount, 1);
+  Assert.AreEqual(Item[0].NodeType, XmlNodeType.CDATA);
+  Assert.AreEqual(Item.ChildNodes[0].Value, "Text");
 end;
 
 method DocumentTest.CreateComment;
 begin
   var Item := Data.CreateElement("root");
-  Assert.IsNotNull(Item);
+  Assert.IsNotNil(Item);
   Data.AddChild(Item);
 
   var Value := Data.CreateComment("Comment");
-  Assert.IsNotNull(Value);
+  Assert.IsNotNil(Value);
   Item.AddChild(Value);
-  Assert.CheckInt(1, Item.ChildCount);
-  Assert.CheckBool(true, Item[0].NodeType = XmlNodeType.Comment);
-  Assert.CheckString("Comment", Item.ChildNodes[0].Value);
+  Assert.AreEqual(Item.ChildCount, 1);
+  Assert.AreEqual(Item[0].NodeType, XmlNodeType.Comment);
+  Assert.AreEqual(Item.ChildNodes[0].Value, "Comment");
 end;
 
 method DocumentTest.CreateDocument;
 begin
   var Item := XmlDocument.CreateDocument;
-  Assert.IsNotNull(Item);  
+  Assert.IsNotNil(Item);  
 end;
 
 method DocumentTest.CreateElement;
 begin
   var Item := Data.CreateElement("root");
-  Assert.IsNotNull(Item);
+  Assert.IsNotNil(Item);
   Data.AddChild(Item);
-  Assert.CheckInt(1, Data.ChildCount);
-  Assert.CheckBool(true, Data.Item[0].NodeType = XmlNodeType.Element);
-  Assert.CheckString("root", Data.Item[0].LocalName);
+  Assert.AreEqual(Data.ChildCount, 1);
+  Assert.AreEqual(Data.Item[0].NodeType, XmlNodeType.Element);
+  Assert.AreEqual(Data.Item[0].LocalName, "root");
 end;
 
 method DocumentTest.CreateProcessingInstruction;
 begin
   var Item := Data.CreateElement("root");
-  Assert.IsNotNull(Item);
+  Assert.IsNotNil(Item);
   Data.AddChild(Item);
 
   var Value := Data.CreateProcessingInstruction("Custom", "Save=""true""");
-  Assert.IsNotNull(Value);
+  Assert.IsNotNil(Value);
   Item.AddChild(Value);
-  Assert.CheckInt(1, Item.ChildCount);
-  Assert.CheckBool(true, Item[0].NodeType = XmlNodeType.ProcessingInstruction);
+  Assert.AreEqual(Item.ChildCount, 1);
+  Assert.AreEqual(Item[0].NodeType, XmlNodeType.ProcessingInstruction);
   Value := Item[0] as XmlProcessingInstruction;
-  Assert.CheckString("Custom", Value.Target);
-  Assert.CheckString("Save=""true""", Value.Data);  
+  Assert.AreEqual(Value.Target, "Custom");
+  Assert.AreEqual(Value.Data, "Save=""true""");
 end;
 
 method DocumentTest.CreateTextNode;
 begin
  var Item := Data.CreateElement("root");
-  Assert.IsNotNull(Item);
+  Assert.IsNotNil(Item);
   Data.AddChild(Item);
 
   var Value := Data.CreateTextNode("Text");
-  Assert.IsNotNull(Value);
+  Assert.IsNotNil(Value);
   Item.AddChild(Value);
-  Assert.CheckInt(1, Item.ChildCount);
-  Assert.CheckBool(true, Item[0].NodeType = XmlNodeType.Text);
-  Assert.CheckString("Text", Item.ChildNodes[0].Value);
+  Assert.AreEqual(Item.ChildCount, 1);
+  Assert.AreEqual(Item[0].NodeType, XmlNodeType.Text);
+  Assert.AreEqual(Item.ChildNodes[0].Value, "Text");
 end;
 
 method DocumentTest.DocumentElement;
 begin
-  Assert.IsNull(Data.DocumentElement);
-  Assert.CheckInt(0, Data.ChildCount);
+  Assert.IsNil(Data.DocumentElement);
+  Assert.AreEqual(Data.ChildCount, 0);
   var Value := Data.CreateElement("root");
-  Assert.IsNotNull(Value);
+  Assert.IsNotNil(Value);
   Data.AddChild(Value);
-  Assert.IsNotNull(Data.DocumentElement);
-  Assert.CheckInt(1, Data.ChildCount);
-  Assert.CheckBool(true, Data.DocumentElement.Equals(Value));
+  Assert.IsNotNil(Data.DocumentElement);
+  Assert.AreEqual(Data.ChildCount, 1);
+  Assert.IsTrue(Data.DocumentElement.Equals(Value));
 end;
 
 method DocumentTest.DocumentType;
 begin
-  Assert.IsNull(Data.DocumentType);
+  Assert.IsNil(Data.DocumentType);
   Data := XmlDocument.FromString(XmlTestData.CharXml);
-  Assert.IsNotNull(Data.DocumentType);
-  Assert.CheckString("-//W3C//DTD XHTML 1.0 Transitional//EN", Data.DocumentType.PublicId);
-  Assert.CheckString("http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd", Data.DocumentType.SystemId);
+  Assert.IsNotNil(Data.DocumentType);
+  Assert.AreEqual(Data.DocumentType.PublicId, "-//W3C//DTD XHTML 1.0 Transitional//EN");
+  Assert.AreEqual(Data.DocumentType.SystemId, "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd");
 end;
 
 method DocumentTest.Element;
 begin
   Data := XmlDocument.FromString(XmlTestData.PIXml);
-  Assert.IsNotNull(Data.Element["Root"]);
-  Assert.IsNotNull(Data["Readers"]);
+  Assert.IsNotNil(Data.Element["Root"]);
+  Assert.IsNotNil(Data["Readers"]);
   var Value := Data["User"];
-  Assert.IsNotNull(Value);
-  Assert.CheckString("First", Value.GetAttribute("Name"));
-  Assert.IsNull(Data[nil]);
+  Assert.IsNotNil(Value);
+  Assert.AreEqual(Value.GetAttribute("Name"), "First");
+  Assert.IsNil(Data[nil]);
 end;
 
 method DocumentTest.FromBinary;
 begin
   var Bin := new Binary(XmlTestData.PIXml.ToByteArray);
   Data := XmlDocument.FromBinary(Bin);
-  Assert.IsNotNull(Data);
-  Assert.CheckInt(3, Data.ChildCount);
-  Assert.IsNotNull(Data.Element["Root"]);
-  Assert.IsNotNull(Data["Readers"]);
+  Assert.IsNotNil(Data);
+  Assert.AreEqual(Data.ChildCount, 3);
+  Assert.IsNotNil(Data.Element["Root"]);
+  Assert.IsNotNil(Data["Readers"]);
 end;
 
 method DocumentTest.FromFile;
@@ -225,10 +225,10 @@ begin
     //File.WriteText(XmlTestData.PIXml);
     Sugar.IO.FileUtils.WriteText(File.Path, XmlTestData.PIXml);
     Data := XmlDocument.FromFile(File);
-    Assert.IsNotNull(Data);
-    Assert.CheckInt(3, Data.ChildCount);
-    Assert.IsNotNull(Data.Element["Root"]);
-    Assert.IsNotNull(Data["Readers"]);
+    Assert.IsNotNil(Data);
+    Assert.AreEqual(Data.ChildCount, 3);
+    Assert.IsNotNil(Data.Element["Root"]);
+    Assert.IsNotNil(Data["Readers"]);
   finally
     File.Delete;
   end;
@@ -237,10 +237,10 @@ end;
 method DocumentTest.FromString;
 begin
   Data := XmlDocument.FromString(XmlTestData.PIXml);
-  Assert.IsNotNull(Data);
-  Assert.CheckInt(3, Data.ChildCount);
-  Assert.IsNotNull(Data.Element["Root"]);
-  Assert.IsNotNull(Data["Readers"]);
+  Assert.IsNotNil(Data);
+  Assert.AreEqual(Data.ChildCount, 3);
+  Assert.IsNotNil(Data.Element["Root"]);
+  Assert.IsNotNil(Data["Readers"]);
 end;
 
 method DocumentTest.GetElementsByTagName;
@@ -254,51 +254,51 @@ begin
   Expected.Add("Third");
   Expected.Add("Admin");
 
-  Assert.CheckInt(4, length(Actual));
+  Assert.AreEqual(length(Actual), 4);
   for i: Integer := 0 to length(Actual) - 1 do begin
-    Assert.CheckBool(true, Actual[i].NodeType = XmlNodeType.Element);
-    Assert.CheckBool(true, Expected.Contains(Actual[i].GetAttribute("Name")));
+    Assert.AreEqual(Actual[i].NodeType, XmlNodeType.Element);
+    Assert.IsTrue(Expected.Contains(Actual[i].GetAttribute("Name")));
   end;
 
   Actual := Data.GetElementsByTagName("mail", "http://example.com/config/");
-  Assert.CheckInt(1, length(Actual));
-  Assert.CheckBool(true, Actual[0].NodeType = XmlNodeType.Element);
-  Assert.CheckString("first@example.com", Actual[0].Value);  
+  Assert.AreEqual(length(Actual), 1);
+  Assert.AreEqual(Actual[0].NodeType, XmlNodeType.Element);
+  Assert.AreEqual(Actual[0].Value, "first@example.com");
 end;
 
 method DocumentTest.NodeType;
 begin
-  Assert.CheckBool(true, Data.NodeType = XmlNodeType.Document);
+  Assert.AreEqual(Data.NodeType, XmlNodeType.Document);
 end;
 
 method DocumentTest.RemoveChild;
 begin
-  Assert.IsNull(Data.DocumentElement);
-  Assert.CheckInt(0, Data.ChildCount);
+  Assert.IsNil(Data.DocumentElement);
+  Assert.AreEqual(Data.ChildCount, 0);
   Data.AddChild(Data.CreateElement("root"));
-  Assert.IsNotNull(Data.DocumentElement);
-  Assert.CheckInt(1, Data.ChildCount);
+  Assert.IsNotNil(Data.DocumentElement);
+  Assert.AreEqual(Data.ChildCount, 1);
   Data.RemoveChild(Data.DocumentElement);
-  Assert.IsNull(Data.DocumentElement);
-  Assert.CheckInt(0, Data.ChildCount);
-  Assert.IsException(->Data.RemoveChild(nil));
+  Assert.IsNil(Data.DocumentElement);
+  Assert.AreEqual(Data.ChildCount, 0);
+  Assert.Throws(->Data.RemoveChild(nil));
 end;
 
 method DocumentTest.ReplaceChild;
 begin
-  Assert.IsNull(Data.DocumentElement);
-  Assert.CheckInt(0, Data.ChildCount);
+  Assert.IsNil(Data.DocumentElement);
+  Assert.AreEqual(Data.ChildCount, 0);
   Data.AddChild(Data.CreateElement("root"));
-  Assert.IsNotNull(Data.DocumentElement);
-  Assert.CheckInt(1, Data.ChildCount);
-  Assert.CheckString("root", Data.DocumentElement.LocalName);
+  Assert.IsNotNil(Data.DocumentElement);
+  Assert.AreEqual(Data.ChildCount, 1);
+  Assert.AreEqual(Data.DocumentElement.LocalName, "root");
   var Value := Data.CreateElement("items");
   Data.ReplaceChild(Data.DocumentElement, Value);
-  Assert.CheckInt(1, Data.ChildCount);
-  Assert.CheckString("items", Data.DocumentElement.LocalName);
-  Assert.IsException(->Data.ReplaceChild(nil, Data.DocumentElement));
-  Assert.IsException(->Data.ReplaceChild(Data.DocumentElement, nil));
-  Assert.IsException(->Data.ReplaceChild(Data.CreateElement("NotExisting"), Data.DocumentElement));
+  Assert.AreEqual(Data.ChildCount, 1);
+  Assert.AreEqual(Data.DocumentElement.LocalName, "items");
+  Assert.Throws(->Data.ReplaceChild(nil, Data.DocumentElement));
+  Assert.Throws(->Data.ReplaceChild(Data.DocumentElement, nil));
+  Assert.Throws(->Data.ReplaceChild(Data.CreateElement("NotExisting"), Data.DocumentElement));
 end;
 
 method DocumentTest.Save;
@@ -306,15 +306,15 @@ begin
   var File := Sugar.IO.Folder.UserLocal.CreateFile("sugartest.xml", false);
   try
     Data := XmlDocument.FromString(XmlTestData.CharXml);
-    Assert.IsNotNull(Data);
+    Assert.IsNotNil(Data);
     Data.Save(File);
 
     Data := XmlDocument.FromFile(File);
-    Assert.IsNotNull(Data);
-    Assert.IsNotNull(Data.DocumentType);
-    Assert.CheckString("-//W3C//DTD XHTML 1.0 Transitional//EN", Data.DocumentType.PublicId);
-    Assert.CheckString("http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd", Data.DocumentType.SystemId);
-    Assert.IsNotNull(Data["Book"]);
+    Assert.IsNotNil(Data);
+    Assert.IsNotNil(Data.DocumentType);
+    Assert.AreEqual(Data.DocumentType.PublicId, "-//W3C//DTD XHTML 1.0 Transitional//EN");
+    Assert.AreEqual(Data.DocumentType.SystemId, "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd");
+    Assert.IsNotNil(Data["Book"]);
 
     Data := XmlDocument.CreateDocument;
     Data.AddChild(Data.CreateElement("items"));
@@ -324,11 +324,11 @@ begin
     Data.Save(File, new XmlDocumentDeclaration("1.0", "UTF-8", true));
     
     Data := XmlDocument.FromFile(File);
-    Assert.IsNotNull(Data);
-    Assert.IsNull(Data.DocumentType);
-    Assert.IsNotNull(Data.DocumentElement);
-    Assert.CheckString("items", Data.DocumentElement.LocalName);
-    Assert.CheckInt(3, Data.DocumentElement.ChildCount);
+    Assert.IsNotNil(Data);
+    Assert.IsNil(Data.DocumentType);
+    Assert.IsNotNil(Data.DocumentElement);
+    Assert.AreEqual(Data.DocumentElement.LocalName, "items");
+    Assert.AreEqual(Data.DocumentElement.ChildCount, 3);
   finally
     File.Delete;
   end;

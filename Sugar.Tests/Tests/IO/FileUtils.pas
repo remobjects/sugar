@@ -5,10 +5,10 @@ interface
 uses
   Sugar,
   Sugar.IO,
-  Sugar.TestFramework;
+  RemObjects.Elements.EUnit;
 
 type
-  FileUtilsTest = public class (Testcase)
+  FileUtilsTest = public class (Test)
   private
     const NAME: String = "sugar.testcase.txt";
   private
@@ -54,183 +54,178 @@ end;
 
 method FileUtilsTest.CopyTest;
 begin
-  Assert.CheckBool(true, FileUtils.Exists(FileName));
-  Assert.CheckBool(false, FileUtils.Exists(CopyName));
+  Assert.IsTrue(FileUtils.Exists(FileName));
+  Assert.IsFalse(FileUtils.Exists(CopyName));
   FileUtils.Copy(FileName, CopyName);
-  Assert.CheckBool(true, FileUtils.Exists(FileName));
-  Assert.CheckBool(true, FileUtils.Exists(CopyName));
+  Assert.IsTrue(FileUtils.Exists(FileName));
+  Assert.IsTrue(FileUtils.Exists(CopyName));
   
-  Assert.IsException(->FileUtils.Copy(FileName, CopyName));
-  Assert.IsException(->FileUtils.Copy(nil, CopyName));
-  Assert.IsException(->FileUtils.Copy(FileName, nil));
-  Assert.IsException(->FileUtils.Copy(FileName+"doesnotexists", CopyName));
+  Assert.Throws(->FileUtils.Copy(FileName, CopyName));
+  Assert.Throws(->FileUtils.Copy(nil, CopyName));
+  Assert.Throws(->FileUtils.Copy(FileName, nil));
+  Assert.Throws(->FileUtils.Copy(FileName+"doesnotexists", CopyName));
 end;
 
 method FileUtilsTest.Create;
 begin
-  Assert.CheckBool(false, FileUtils.Exists(CopyName));
+  Assert.IsFalse(FileUtils.Exists(CopyName));
   FileUtils.Create(CopyName);
-  Assert.CheckBool(true, FileUtils.Exists(CopyName));
-  Assert.IsException(->FileUtils.Create(CopyName));
-  Assert.IsException(->FileUtils.Create(nil));
+  Assert.IsTrue(FileUtils.Exists(CopyName));
+  Assert.Throws(->FileUtils.Create(CopyName));
+  Assert.Throws(->FileUtils.Create(nil));
 end;
 
 method FileUtilsTest.Delete;
 begin
-  Assert.CheckBool(false, FileUtils.Exists(CopyName));
-  Assert.IsException(->FileUtils.Delete(CopyName));
-  Assert.IsException(->FileUtils.Delete(nil));  
+  Assert.IsFalse(FileUtils.Exists(CopyName));
+  Assert.Throws(->FileUtils.Delete(CopyName));
+  Assert.Throws(->FileUtils.Delete(nil));  
   
-  Assert.CheckBool(true, FileUtils.Exists(FileName));
+  Assert.IsTrue(FileUtils.Exists(FileName));
   FileUtils.Delete(FileName);
-  Assert.CheckBool(false, FileUtils.Exists(FileName));  
+  Assert.IsFalse(FileUtils.Exists(FileName));  
 end;
 
 method FileUtilsTest.Exists;
 begin
-  Assert.CheckBool(true, FileUtils.Exists(FileName));
-  Assert.CheckBool(false, FileUtils.Exists(CopyName));
+  Assert.IsTrue(FileUtils.Exists(FileName));
+  Assert.IsFalse(FileUtils.Exists(CopyName));
   FileUtils.Create(CopyName);
-  Assert.CheckBool(true, FileUtils.Exists(CopyName));
+  Assert.IsTrue(FileUtils.Exists(CopyName));
   FileUtils.Delete(FileName);
-  Assert.CheckBool(false, FileUtils.Exists(FileName));
+  Assert.IsFalse(FileUtils.Exists(FileName));
 end;
 
 method FileUtilsTest.Move;
 begin
-  Assert.CheckBool(true, FileUtils.Exists(FileName));
-  Assert.CheckBool(false, FileUtils.Exists(CopyName));
+  Assert.IsTrue(FileUtils.Exists(FileName));
+  Assert.IsFalse(FileUtils.Exists(CopyName));
   FileUtils.Move(FileName, CopyName);
-  Assert.CheckBool(false, FileUtils.Exists(FileName));
-  Assert.CheckBool(true, FileUtils.Exists(CopyName));
+  Assert.IsFalse(FileUtils.Exists(FileName));
+  Assert.IsTrue(FileUtils.Exists(CopyName));
   
-  Assert.IsException(->FileUtils.Move(CopyName, CopyName));
-  Assert.IsException(->FileUtils.Move(nil, CopyName));
-  Assert.IsException(->FileUtils.Move(FileName, nil));
-  Assert.IsException(->FileUtils.Move(CopyName+"doesnotexists", FileName));
+  Assert.Throws(->FileUtils.Move(CopyName, CopyName));
+  Assert.Throws(->FileUtils.Move(nil, CopyName));
+  Assert.Throws(->FileUtils.Move(FileName, nil));
+  Assert.Throws(->FileUtils.Move(CopyName+"doesnotexists", FileName));
 end;
 
 method FileUtilsTest.AppendText;
 begin
-  Assert.CheckString("", FileUtils.ReadText(FileName, Encoding.UTF8));
+  Assert.AreEqual(FileUtils.ReadText(FileName, Encoding.UTF8), "");
   FileUtils.AppendText(FileName, "Hello");
-  Assert.CheckString("Hello", FileUtils.ReadText(FileName, Encoding.UTF8));
+  Assert.AreEqual(FileUtils.ReadText(FileName, Encoding.UTF8), "Hello");
   FileUtils.AppendText(FileName, " World");
-  Assert.CheckString("Hello World", FileUtils.ReadText(FileName, Encoding.UTF8));
+  Assert.AreEqual(FileUtils.ReadText(FileName, Encoding.UTF8), "Hello World");
 
-  Assert.IsException(->FileUtils.AppendText(CopyName, ""));
-  Assert.IsException(->FileUtils.AppendText(FileName, nil));
-  Assert.IsException(->FileUtils.AppendText(nil, ""));
+  Assert.Throws(->FileUtils.AppendText(CopyName, ""));
+  Assert.Throws(->FileUtils.AppendText(FileName, nil));
+  Assert.Throws(->FileUtils.AppendText(nil, ""));
 end;
 
 method FileUtilsTest.AppendBytes;
 begin
-  Assert.CheckString("", FileUtils.ReadText(FileName, Encoding.UTF8));
+  Assert.AreEqual(FileUtils.ReadText(FileName, Encoding.UTF8), "");
   FileUtils.AppendBytes(FileName, String("Hello").ToByteArray);
-  Assert.CheckString("Hello", FileUtils.ReadText(FileName, Encoding.UTF8));
+  Assert.AreEqual(FileUtils.ReadText(FileName, Encoding.UTF8), "Hello");
   FileUtils.AppendBytes(FileName, String(" World").ToByteArray);
-  Assert.CheckString("Hello World", FileUtils.ReadText(FileName, Encoding.UTF8));
+  Assert.AreEqual(FileUtils.ReadText(FileName, Encoding.UTF8), "Hello World");
 
-  Assert.IsException(->FileUtils.AppendBytes(CopyName, []));
-  Assert.IsException(->FileUtils.AppendBytes(FileName, nil));
-  Assert.IsException(->FileUtils.AppendBytes(nil, []));
+  Assert.Throws(->FileUtils.AppendBytes(CopyName, []));
+  Assert.Throws(->FileUtils.AppendBytes(FileName, nil));
+  Assert.Throws(->FileUtils.AppendBytes(nil, []));
 end;
 
 method FileUtilsTest.AppendBinary;
 begin
-  Assert.CheckString("", FileUtils.ReadText(FileName, Encoding.UTF8));
+  Assert.AreEqual(FileUtils.ReadText(FileName, Encoding.UTF8), "");
   FileUtils.AppendBinary(FileName, new Binary(String("Hello").ToByteArray));
-  Assert.CheckString("Hello", FileUtils.ReadText(FileName, Encoding.UTF8));
+  Assert.AreEqual(FileUtils.ReadText(FileName, Encoding.UTF8), "Hello");
   FileUtils.AppendBinary(FileName, new Binary(String(" World").ToByteArray));
-  Assert.CheckString("Hello World", FileUtils.ReadText(FileName, Encoding.UTF8));
+  Assert.AreEqual(FileUtils.ReadText(FileName, Encoding.UTF8), "Hello World");
 
-  Assert.IsException(->FileUtils.AppendBinary(CopyName, new Binary));
-  Assert.IsException(->FileUtils.AppendBinary(FileName, nil));
-  Assert.IsException(->FileUtils.AppendBinary(nil, new Binary));
+  Assert.Throws(->FileUtils.AppendBinary(CopyName, new Binary));
+  Assert.Throws(->FileUtils.AppendBinary(FileName, nil));
+  Assert.Throws(->FileUtils.AppendBinary(nil, new Binary));
 end;
 
 method FileUtilsTest.ReadText;
 begin
-  Assert.CheckString("", FileUtils.ReadText(FileName, Encoding.UTF8));
+  Assert.AreEqual(FileUtils.ReadText(FileName, Encoding.UTF8), "");
   FileUtils.WriteText(FileName, "Hello");
-  Assert.CheckString("Hello", FileUtils.ReadText(FileName, Encoding.UTF8));
+  Assert.AreEqual(FileUtils.ReadText(FileName, Encoding.UTF8), "Hello");
 
-  Assert.IsException(->FileUtils.ReadText(nil, Encoding.UTF8));
-  Assert.IsException(->FileUtils.ReadText(CopyName, Encoding.UTF8));
+  Assert.Throws(->FileUtils.ReadText(nil, Encoding.UTF8));
+  Assert.Throws(->FileUtils.ReadText(CopyName, Encoding.UTF8));
 end;
 
 method FileUtilsTest.ReadBytes;
 begin
-  Assert.CheckInt(0, length(FileUtils.ReadBytes(FileName)));  
+  Assert.AreEqual(length(FileUtils.ReadBytes(FileName)), 0);
   var Expected: array of Byte := [4, 8, 15, 16, 23, 42];
   FileUtils.WriteBytes(FileName, Expected);
   var Actual := FileUtils.ReadBytes(FileName);
-  Assert.CheckBool(true, Actual <> nil);
-  Assert.CheckInt(length(Expected), length(Actual));
-
-  for i: Int32 := 0 to length(Expected) - 1 do
-    Assert.CheckInt(Expected[i], Actual[i]);
+  Assert.IsTrue(Actual <> nil);
+  Assert.AreEqual(length(Actual), length(Expected));
+  Assert.AreEqual(Actual, Expected);
   
-  Assert.IsException(->FileUtils.ReadBytes(nil));
-  Assert.IsException(->FileUtils.ReadBytes(CopyName));
+  Assert.Throws(->FileUtils.ReadBytes(nil));
+  Assert.Throws(->FileUtils.ReadBytes(CopyName));
 end;
 
 method FileUtilsTest.ReadBinary;
 begin
   var Actual: Binary := FileUtils.ReadBinary(FileName);
-  Assert.IsNotNull(Actual);
-  Assert.CheckInt(0, Actual.Length);
+  Assert.IsNotNil(Actual);
+  Assert.AreEqual(Actual.Length, 0);
   var Expected: array of Byte := [4, 8, 15, 16, 23, 42];
   FileUtils.WriteBytes(FileName, Expected);
   Actual := FileUtils.ReadBinary(FileName);
-  Assert.IsNotNull(Actual);
-  Assert.CheckInt(length(Expected), Actual.Length);
+  Assert.IsNotNil(Actual);
+  Assert.AreEqual(Actual.Length, length(Expected));
+  Assert.AreEqual(Actual.ToArray, Expected);
 
-  var Temp := Actual.ToArray;
-  for i: Int32 := 0 to length(Expected) - 1 do
-    Assert.CheckInt(Expected[i], Temp[i]);
-
-  Assert.IsException(->FileUtils.ReadBinary(nil));
-  Assert.IsException(->FileUtils.ReadBinary(CopyName));
+  Assert.Throws(->FileUtils.ReadBinary(nil));
+  Assert.Throws(->FileUtils.ReadBinary(CopyName));
 end;
 
 method FileUtilsTest.WriteBytes;
 begin
-  Assert.CheckString("", FileUtils.ReadText(FileName, Encoding.UTF8));
+  Assert.AreEqual(FileUtils.ReadText(FileName, Encoding.UTF8), "");
   FileUtils.WriteBytes(FileName, String("Hello").ToByteArray);
-  Assert.CheckString("Hello", FileUtils.ReadText(FileName, Encoding.UTF8));
+  Assert.AreEqual(FileUtils.ReadText(FileName, Encoding.UTF8), "Hello");
   FileUtils.WriteBytes(FileName, String("World").ToByteArray);
-  Assert.CheckString("World", FileUtils.ReadText(FileName, Encoding.UTF8));
+  Assert.AreEqual(FileUtils.ReadText(FileName, Encoding.UTF8), "World");
 
-  Assert.IsException(->FileUtils.WriteBytes(FileName, nil));
-  Assert.IsException(->FileUtils.WriteBytes(nil, []));
-  Assert.IsException(->FileUtils.WriteBytes(CopyName, []));
+  Assert.Throws(->FileUtils.WriteBytes(FileName, nil));
+  Assert.Throws(->FileUtils.WriteBytes(nil, []));
+  Assert.Throws(->FileUtils.WriteBytes(CopyName, []));
 end;
 
 method FileUtilsTest.WriteText;
 begin
-  Assert.CheckString("", FileUtils.ReadText(FileName, Encoding.UTF8));
+  Assert.AreEqual(FileUtils.ReadText(FileName, Encoding.UTF8), "");
   FileUtils.WriteText(FileName, "Hello");
-  Assert.CheckString("Hello", FileUtils.ReadText(FileName, Encoding.UTF8));
+  Assert.AreEqual(FileUtils.ReadText(FileName, Encoding.UTF8), "Hello");
   FileUtils.WriteText(FileName, "World");
-  Assert.CheckString("World", FileUtils.ReadText(FileName, Encoding.UTF8));
+  Assert.AreEqual(FileUtils.ReadText(FileName, Encoding.UTF8), "World");
 
-  Assert.IsException(->FileUtils.WriteText(FileName, nil));
-  Assert.IsException(->FileUtils.WriteText(nil, ""));
-  Assert.IsException(->FileUtils.WriteText(CopyName, ""));
+  Assert.Throws(->FileUtils.WriteText(FileName, nil));
+  Assert.Throws(->FileUtils.WriteText(nil, ""));
+  Assert.Throws(->FileUtils.WriteText(CopyName, ""));
 end;
 
 method FileUtilsTest.WriteBinary;
 begin
-  Assert.CheckString("", FileUtils.ReadText(FileName, Encoding.UTF8));
+  Assert.AreEqual(FileUtils.ReadText(FileName, Encoding.UTF8), "");
   FileUtils.WriteBinary(FileName, new Binary(String("Hello").ToByteArray));
-  Assert.CheckString("Hello", FileUtils.ReadText(FileName, Encoding.UTF8));
+  Assert.AreEqual(FileUtils.ReadText(FileName, Encoding.UTF8), "Hello");
   FileUtils.WriteBinary(FileName, new Binary(String("World").ToByteArray));
-  Assert.CheckString("World", FileUtils.ReadText(FileName, Encoding.UTF8));
+  Assert.AreEqual(FileUtils.ReadText(FileName, Encoding.UTF8), "World");
 
-  Assert.IsException(->FileUtils.WriteBinary(FileName, nil));
-  Assert.IsException(->FileUtils.WriteBinary(nil, new Binary));
-  Assert.IsException(->FileUtils.WriteBinary(CopyName, new Binary));
+  Assert.Throws(->FileUtils.WriteBinary(FileName, nil));
+  Assert.Throws(->FileUtils.WriteBinary(nil, new Binary));
+  Assert.Throws(->FileUtils.WriteBinary(CopyName, new Binary));
 end;
 
 end.

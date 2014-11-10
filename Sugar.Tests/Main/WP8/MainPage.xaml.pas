@@ -13,6 +13,7 @@ uses
   System.Windows.Navigation,
   Microsoft.Phone.Controls,
   Microsoft.Phone.Shell,
+  RemObjects.Elements.EUnit,
   Sugar.Echoes.WP8.Test.Resources;
 
 type
@@ -33,10 +34,15 @@ end;
 
 method MainPage.RunTests;
 begin
-  var Results := Sugar.TestFramework.TestRunner.RunAll;
-  var Output := new Sugar.Test.StringPrinter(Results);
-  System.Diagnostics.Debug.WriteLine(Output.Result);
-  Application.Current.Terminate;
+  Runner.RunAsync(Discovery.FromAppDomain(AppDomain.CurrentDomain), tested -> begin
+    var Writer := new StringWriter(Tested);
+
+      Writer.WriteFull;
+      Writer.WriteLine("====================================");
+      Writer.WriteSummary;
+      System.Diagnostics.Debug.WriteLine(Writer.Output);
+      Application.Current.Terminate;      
+  end);
 end;
 
 end.

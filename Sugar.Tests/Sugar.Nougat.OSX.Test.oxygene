@@ -37,6 +37,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Foundation.fx" />
+    <Reference Include="libEUnit.fx" />
     <Reference Include="libNougat.fx" />
     <Reference Include="libxml2.fx" />
     <Reference Include="rtl.fx" />
@@ -44,11 +45,15 @@
   <ItemGroup>
     <Compile Include="Main\OSX\Program.pas" />
     <None Include="Entitlements.entitlements" />
-    <Compile Include="Printer\Printer.pas" />
     <Compile Include="Tests\AutoreleasePool.pas" />
     <Compile Include="Tests\Binary.pas" />
     <Compile Include="Tests\Convert.pas" />
     <Compile Include="Tests\Cryptography\Utils.pas" />
+    <Compile Include="Tests\Data\Json\JsonArray.pas" />
+    <Compile Include="Tests\Data\Json\JsonObject.pas" />
+    <Compile Include="Tests\Data\Json\JsonObjectParser.pas" />
+    <Compile Include="Tests\Data\Json\JsonTokenizer.pas" />
+    <Compile Include="Tests\Data\Json\JsonValueTest.pas" />
     <Compile Include="Tests\DateTime.pas" />
     <Compile Include="Tests\Dictionary.pas" />
     <Compile Include="Tests\Encoding.pas" />
@@ -83,19 +88,20 @@
   <ItemGroup>
     <Folder Include="Main\" />
     <Folder Include="Main\OSX\" />
-    <Folder Include="Printer\" />
     <Folder Include="Tests" />
     <Folder Include="Properties\" />
+    <Folder Include="Tests\Data\" />
+    <Folder Include="Tests\Data\Json\" />
     <Folder Include="Tests\Xml" />
     <Folder Include="Tests\IO" />
     <Folder Include="Tests\Cryptography" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Sugar.TestFramework\Sugar.Nougat.OSX.TestFramework.oxygene">
-      <Name>Sugar.Nougat.OSX.TestFramework</Name>
-      <Project>{1d894b7c-0117-4154-a1f2-fd22691f0f13}</Project>
+    <ProjectReference Include="..\Sugar.Data\Sugar.Data.Nougat.OSX.oxygene">
+      <Name>Sugar.Data.Nougat.OSX</Name>
+      <Project>{0d5b253d-762b-42d9-bfd2-3c217e07cf52}</Project>
       <Private>True</Private>
-      <HintPath>..\Sugar.TestFramework\bin\OS X\libSugarTestFramework.fx</HintPath>
+      <HintPath>..\Sugar.Data\bin\OS X\libSugar.Data.fx</HintPath>
     </ProjectReference>
     <ProjectReference Include="..\Sugar\Sugar.Nougat.OSX.oxygene">
       <Name>Sugar.Nougat.OSX</Name>

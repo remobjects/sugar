@@ -95,7 +95,6 @@
     <Folder Include="Main\WinRT\Common\" />
     <Folder Include="Main\WinRT\Properties\" />
     <Folder Include="Properties\" />
-    <Folder Include="Printer\" />
     <Folder Include="Tests" />
     <Folder Include="Tests\Xml" />
     <Folder Include="Tests\IO" />
@@ -109,7 +108,6 @@
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Main\WinRT\Properties\AssemblyInfo.pas" />
-    <Compile Include="Printer\Printer.pas" />
     <Compile Include="Tests\AutoreleasePool.pas" />
     <Compile Include="Tests\Binary.pas" />
     <Compile Include="Tests\Convert.pas" />
@@ -184,19 +182,14 @@
   -->
   <ItemGroup>
     <Reference Include="mscorlib" />
+    <Reference Include="RemObjects.Elements.EUnit" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Sugar.TestFramework\Sugar.Echoes.TestFramework.oxygene">
-      <Name>Sugar.Echoes.TestFramework</Name>
-      <Project>{532c6e08-1256-4168-8973-08c9d3d7b239}</Project>
-      <Private>True</Private>
-      <HintPath>..\Sugar.TestFramework\bin\Debug\.NET\Sugar.TestFramework.dll</HintPath>
-    </ProjectReference>
     <ProjectReference Include="..\Sugar\Sugar.Echoes.WinRT.oxygene">
       <Name>Sugar.Echoes.WinRT</Name>
       <Project>{3ab69816-9882-4fa6-abe5-c146199f5279}</Project>
       <Private>True</Private>
-      <HintPath>..\Sugar\bin\Debug\WinRT\Sugar.dll</HintPath>
+      <HintPath>..\Sugar\bin\WinRT\Sugar.dll</HintPath>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
