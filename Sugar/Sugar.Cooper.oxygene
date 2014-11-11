@@ -52,5 +52,5 @@
     <PropertyGroup>
         <PreBuildEvent Condition="'$(OS)' != 'Unix'">rmdir /s /q $(ProjectDir)\Obj</PreBuildEvent>
     </PropertyGroup>
-    <Import Project="Sugar.Shared.projitems" Label="Sugar.Shared"/>
+    <Import Project="Sugar.Shared.projitems" Label="Shared"/>
 </Project>

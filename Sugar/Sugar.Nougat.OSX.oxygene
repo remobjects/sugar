@@ -45,12 +45,12 @@
         <Reference Include="libxml2.fx"/>
         <Reference Include="rtl.fx"/>
     </ItemGroup>
+    <ItemGroup>
+        <Compile Include="Cryptography\MessageDigests.pas"/>
+    </ItemGroup>
     <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Nougat.targets"/>
     <PropertyGroup>
         <PreBuildEvent/>
     </PropertyGroup>
-    <Import Project="Sugar.Shared.projitems" Label="Sugar.Shared"/>
-    <ItemGroup>
-        <Compile Include="Cryptography\MessageDigests.pas"/>
-    </ItemGroup>
+    <Import Project="Sugar.Shared.projitems" Label="Shared"/>
 </Project>
