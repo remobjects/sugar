@@ -195,6 +195,9 @@ begin
   if Value = nil then
     exit 0;
 
+  if String.IsNullOrWhiteSpace(Value) then
+    raise new SugarFormatException("Unable to convert string '{0}' to int32.", Value);
+
   {$IF COOPER}
   exit Integer.parseInt(Value);
   {$ELSEIF ECHOES}
@@ -249,6 +252,9 @@ begin
   if Value = nil then
     exit 0;
 
+  if String.IsNullOrWhiteSpace(Value) then
+    raise new SugarFormatException("Unable to convert string '{0}' to int64.", Value);
+
   {$IF COOPER}
   exit Long.parseLong(Value);
   {$ELSEIF ECHOES}
@@ -294,6 +300,9 @@ class method Convert.ToDouble(Value: String): Double;
 begin
   if Value = nil then
     exit 0.0;
+
+  if String.IsNullOrWhiteSpace(Value) then
+    raise new SugarFormatException("Unable to convert string '{0}' to double.", Value);
 
   {$IF COOPER}
   var DecFormat: java.text.DecimalFormat := java.text.DecimalFormat(java.text.DecimalFormat.getInstance(Sugar.Cooper.LocaleUtils.ForLanguageTag("en-US")));
@@ -377,6 +386,12 @@ end;
 
 class method Convert.ToByte(Value: String): Byte;
 begin
+  if Value = nil then
+    exit 0;
+
+  if String.IsNullOrWhiteSpace(Value) then
+    raise new SugarFormatException("Unable to convert string '{0}' to byte.", Value);
+
   {$IF COOPER}
   exit Byte.parseByte(Value);
   {$ELSEIF ECHOES}
