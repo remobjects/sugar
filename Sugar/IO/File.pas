@@ -1,4 +1,4 @@
-namespace Sugar.IO;
+﻿namespace Sugar.IO;
 
 interface
 
@@ -7,9 +7,6 @@ uses
   System.IO,
   Windows.Storage,
   {$ELSEIF COOPER}
-  Sugar.Cooper,
-  {$ELSEIF ECHOES}
-  {$ELSEIF NOUGAT}
   {$ENDIF}
   Sugar,
   Sugar.Collections;

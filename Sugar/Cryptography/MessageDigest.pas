@@ -9,7 +9,6 @@ uses
 {$ELSEIF ECHOES}
   System.Security.Cryptography;
 {$ELSEIF COOPER}
-  Sugar.Cooper,
   java.security;
 {$ELSEIF NOUGAT}
   rtl;

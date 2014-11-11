@@ -2,11 +2,6 @@
 
 interface
 
-{$IF COOPER}
-uses
-  Sugar.Cooper;
-{$ENDIF}
-
 type
   Range = public record {$IF NOUGAT}mapped to Foundation.NSRange{$ENDIF}
   public
