@@ -2,13 +2,13 @@
 
 interface
 
+{$IFNDEF COOPER}
+  {$ERROR This unit is intended for Cooper only}
+{$ENDIF}
+
 uses
   Sugar,
   java.util;
-
-{$IFNDEF COOPER}
-{$ERROR This file is meant to be built for Cooper only }
-{$ENDIF}
 
 type
   LocaleUtils = public static class

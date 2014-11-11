@@ -2,14 +2,13 @@
 
 interface
 
-{$IFDEF NOUGAT}
-  {ERROR This units is intended for Echoes and Cooper only}
-{$ENDIF}
-
+{$IFNDEF NOUGAT}
 method autoreleasepool: {$IF COOPER}java.io.Closeable{$ELSEIF ECHOES}IDisposable{$ENDIF};
+{$ENDIF}
 
 implementation
 
+{$IFNDEF NOUGAT}
 type
   DummyAutoreleasePool = class({$IF COOPER}java.io.Closeable{$ELSEIF ECHOES}IDisposable{$ENDIF})
   assembly
@@ -26,5 +25,6 @@ end;
 method DummyAutoreleasePool.{$IF COOPER}close{$ELSEIF ECHOES}Dispose{$ENDIF};
 begin
 end;
+{$ENDIF}
 
 end.
