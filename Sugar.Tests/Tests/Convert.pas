@@ -154,6 +154,7 @@ begin
   Assert.AreEqual(Convert.ToInt32("-42"), -42);
   Assert.AreEqual(Convert.ToInt32(nil), 0);
 
+  Assert.Throws(->Convert.ToInt32(""), typeOf(SugarFormatException));
   Assert.Throws(->Convert.ToInt32("9223372036854775807"));
   Assert.Throws(->Convert.ToInt32("4.2"));
   Assert.Throws(->Convert.ToInt32("1F"));
@@ -216,6 +217,7 @@ begin
   Assert.AreEqual(Convert.ToInt64("-9223372036854775808"), Consts.MinInt64);
   Assert.AreEqual(Convert.ToInt64(nil), 0);
 
+  Assert.Throws(->Convert.ToInt64(""), typeOf(SugarFormatException));
   Assert.Throws(->Convert.ToInt64("92233720368547758071"));
   Assert.Throws(->Convert.ToInt64("4.2"));
   Assert.Throws(->Convert.ToInt64("1F"));
@@ -247,6 +249,7 @@ begin
   Assert.AreEqual(Convert.ToDouble("-1.38e10"), -1.38e10);
   Assert.AreEqual(Convert.ToDouble(nil), 0.0);
   
+  Assert.Throws(->Convert.ToDouble(""), typeOf(SugarFormatException));
   Assert.Throws(->Convert.ToDouble("1.29e325"));
   Assert.Throws(->Convert.ToDouble("1F"));
   Assert.Throws(->Convert.ToDouble("1024.1,5"));
@@ -311,9 +314,11 @@ end;
 
 method ConvertTest.ToByteString;
 begin
+  Assert.AreEqual(Convert.ToByte(nil), 0);
   Assert.AreEqual(Convert.ToByte("0"), 0);
   Assert.AreEqual(Convert.ToByte("255"), 255);
   
+  Assert.Throws(->Convert.ToByte(""), typeOf(SugarFormatException));
   Assert.Throws(->Convert.ToByte("-1"));
   Assert.Throws(->Convert.ToByte("5.25"));
   Assert.Throws(->Convert.ToByte("FF"));
