@@ -156,9 +156,8 @@ begin
   if (First = nil) and (Second = nil) then
     exit true;
 
-  if First = nil then
+  if (First = nil) or (Second = nil) then
     exit false;
-
 
   exit {$IF COOPER}First.compareTo(Second){$ELSEIF ECHOES}First.CompareTo(Second){$ELSEIF NOUGAT}First.compare(Second){$ENDIF} = 0;  
 end;
