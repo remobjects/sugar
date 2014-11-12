@@ -39,6 +39,7 @@ type
     method Operators;
     method FromCharArray;
     method ToCharArray;
+    method NilComparison;
   end;
 
 implementation
@@ -189,10 +190,10 @@ end;
 
 method StringTest.EqualsIngoreCase;
 begin
-  Assert.IsTrue(Data.EqualsIngoreCase(Data));
-  Assert.IsTrue(Data.EqualsIngoreCase("Hello"));
-  Assert.IsTrue(Data.EqualsIngoreCase("hElLo"));
-  Assert.IsFalse(Data.EqualsIngoreCase(nil));
+  Assert.IsTrue(Data.EqualsIgnoreCase(Data));
+  Assert.IsTrue(Data.EqualsIgnoreCase("Hello"));
+  Assert.IsTrue(Data.EqualsIgnoreCase("hElLo"));
+  Assert.IsFalse(Data.EqualsIgnoreCase(nil));
 end;
 
 method StringTest.Contains;
@@ -368,8 +369,11 @@ begin
   Assert.IsFalse(NativeString = Data);
 
   SugarString := nil;
+  Assert.AreEqual(SugarString + SugarString, "");
   Assert.AreEqual(SugarString + nil, "");
   Assert.AreEqual(SugarString + "", "");
+  Assert.AreEqual(SugarString + "a", "a");
+  Assert.AreEqual(Data + SugarString, "A");
 end;
 
 method StringTest.FromCharArray;
@@ -395,6 +399,14 @@ begin
   Assert.AreEqual(Actual, Expected);
   Value := "";
   Assert.AreEqual(Value.ToCharArray.Length, 0);
+end;
+
+method StringTest.NilComparison;
+begin
+  Data := nil;
+  var S: Sugar.String := '';
+  Assert.IsFalse(S = Data);
+  Assert.IsFalse(Data = S);
 end;
 
 end.

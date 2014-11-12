@@ -119,7 +119,7 @@ method ListTest.Exists;
 begin
   Assert.IsTrue(Data.Exists(x -> x = "Two"));
   Assert.IsFalse(Data.Exists(x -> x = "tWo"));
-  Assert.IsTrue(Data.Exists(x -> x.EqualsIngoreCase("tWo")));
+  Assert.IsTrue(Data.Exists(x -> x.EqualsIgnoreCase("tWo")));
 end;
 
 method ListTest.FindIndex;
