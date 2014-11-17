@@ -105,12 +105,12 @@ begin
   {$ELSEIF ECHOES}
   result := mapped[Key];
   {$ELSEIF NOUGAT}
-  result := mapped.objectForKey(Key);
+  var lRes := mapped.objectForKey(Key);
 
-  if result = nil then
+  if lRes = nil then
     raise new SugarKeyNotFoundException;
 
-  exit NullHelper.ValueOf(result);
+  exit NullHelper.ValueOf(lRes);
   {$ENDIF}
 end;
 
