@@ -17,6 +17,7 @@ type
     constructor; mapped to constructor();
     method &Add(Key: T; Value: U);
     method Clear;
+    method TryGetValue(aKey: T; out aValue: U): Boolean;
     method ContainsKey(Key: T): Boolean;
     method ContainsValue(Value: U): Boolean;
     method &Remove(Key: T): Boolean;
@@ -175,5 +176,18 @@ begin
   exit Value.ToArray;
 end;
 {$ENDIF}
+
+method Dictionary<T, U>.TryGetValue(aKey: T; out aValue: U): Boolean;
+begin
+  {$IF ECHOES}
+  exit mapped.TryGetValue(aKey, out aValue);
+  {$ELSEIF COOPER}
+  aValue := mapped[aKey];
+  exit aValue <> nil;
+  {$ELSEIF NOUGAT}
+  aValue := mapped.objectForKey(aKey);
+  exit aValue <> nil;
+  {$ENDIF}
+end;
 
 end.
