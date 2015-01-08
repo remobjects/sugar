@@ -3,6 +3,11 @@
 interface
 
 uses
+  {$IF COOPER}
+  com.remobjects.elements.linq,
+  {$ELSEIF NOUGAT}
+  RemObjects.Elements.Linq,
+  {$ENDIF}
   Sugar;
 
 type  
