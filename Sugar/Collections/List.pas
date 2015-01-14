@@ -38,6 +38,8 @@ type
 
     method IndexOf(anItem: T): Integer; 
     method Insert(&Index: Integer; anItem: T);
+    method InsertRange(&Index: Integer; Items: List<T>);
+    method InsertRange(&Index: Integer; Items: array of T);
     method LastIndexOf(anItem: T): Integer;
 
     method &Remove(anItem: T): Boolean;
@@ -126,6 +128,8 @@ method List<T>.AddRange(Items: List<T>);
 begin
   if Items = nil then
     raise new SugarArgumentNullException("Items");
+  if Items.Count = 0 then
+    exit;
 
   {$IF COOPER}
   mapped.AddAll(Items);
@@ -267,6 +271,28 @@ begin
   {$ELSEIF NOUGAT}
   mapped.insertObject(NullHelper.ValueOf(anItem)) atIndex(&Index);
   {$ENDIF}
+end;
+
+method List<T>.InsertRange(&Index: Integer; Items: List<T>);
+begin
+  if Items = nil then
+    raise new SugarArgumentNullException("Items");
+  if Items.Count = 0 then
+    exit;
+
+  {$IF COOPER}
+  mapped.AddAll(&Index, Items);
+  {$ELSEIF ECHOES}
+  mapped.InsertRange(&Index, Items);
+  {$ELSEIF NOUGAT}
+  mapped.insertObjects(Items) atIndexes(new NSIndexSet withIndexesInRange(NSMakeRange(&Index, Items.Count)));
+  {$ENDIF}
+end;
+
+method List<T>.InsertRange(&Index: Integer; Items: array of T);
+begin
+  for i: Integer := length(Items) - 1 downto 0 do
+    Insert(&Index, Items[i]);
 end;
 
 method List<T>.LastIndexOf(anItem: T): Integer;
