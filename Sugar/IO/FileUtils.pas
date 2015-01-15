@@ -218,7 +218,7 @@ end;
 
 class method FileUtils.WriteBytes(FileName: String; Content: array of Byte);
 begin
-  var Handle := new FileHandle(FileName, FileOpenMode.ReadWrite);
+  var Handle := new FileHandle(FileName, FileOpenMode.Create);
   try
     Handle.Length := 0;
     Handle.Write(Content);
@@ -234,7 +234,7 @@ end;
 
 class method FileUtils.WriteBinary(FileName: String; Content: Binary);
 begin
-  var Handle := new FileHandle(FileName, FileOpenMode.ReadWrite);
+  var Handle := new FileHandle(FileName, FileOpenMode.Create);
   try
     Handle.Length := 0;
     Handle.Write(Content);

@@ -10,7 +10,7 @@ uses
   Sugar;
 
 type
-  FileOpenMode = public (&ReadOnly, ReadWrite);
+  FileOpenMode = public (&ReadOnly, &Create, ReadWrite);
   SeekOrigin = public (&Begin, Current, &End);
 
   FileHandle = public class mapped to {$IF COOPER}java.io.RandomAccessFile{$ELSEIF WINDOWS_PHONE OR NETFX_CORE}Stream{$ELSEIF ECHOES}System.IO.FileStream{$ELSEIF NOUGAT}NSFileHandle{$ENDIF}
@@ -55,8 +55,17 @@ begin
   var lMode: Windows.Storage.FileAccessMode := if Mode = FileOpenMode.ReadOnly then Windows.Storage.FileAccessMode.Read else Windows.Storage.FileAccessMode.ReadWrite;
   exit lFile.OpenAsync(lMode).Await.AsStream;
   {$ELSEIF ECHOES}
-  var lMode: System.IO.FileAccess := if Mode = FileOpenMode.ReadOnly then System.IO.FileAccess.Read else System.IO.FileAccess.ReadWrite;
-  exit new System.IO.FileStream(FileName, System.IO.FileMode.Open, lMode);
+  var lAccess: System.IO.FileAccess := case Mode of
+                                         FileOpenMode.ReadOnly: System.IO.FileAccess.Read;
+                                         FileOpenMode.Create: System.IO.FileAccess.Write;
+                                         else System.IO.FileAccess.ReadWrite;
+                                       end;
+  var lMode: System.IO.FileMode := case Mode of
+                                         FileOpenMode.ReadOnly: System.IO.FileMode.Open;
+                                         FileOpenMode.Create: System.IO.FileMode.Create;
+                                         else System.IO.FileMode.OpenOrCreate;
+                                       end;
+  exit new System.IO.FileStream(FileName, lMode, lAccess);
   {$ELSEIF NOUGAT}
   case Mode of
     FileOpenMode.ReadOnly: exit NSFileHandle.fileHandleForReadingAtPath(FileName);
