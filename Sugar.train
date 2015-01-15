@@ -32,35 +32,38 @@ msbuild["rebuild"]("Sugar/Sugar.Nougat.iOS.oxygene", 	{configuration: "Release",
 msbuild["rebuild"]("Sugar/Sugar.Nougat.iOS.oxygene", 	{configuration: "Release", destinationFolder: "./Bin", extraArgs: '"/p:CrossBox=Onyx;CrossBoxDeviceID=Generic iOS Device"'});
 
 //Build Sugar.Data
-msbuild["rebuild"]("Sugar.Data/Sugar.Data.Cooper.oxygene", {configuration: "Release"});
-cleanObj();
-file.copy("Sugar.Data/Bin/Java/sugar.data.jar", "./Bin", true);
+if (false)
+{
+	msbuild["rebuild"]("Sugar.Data/Sugar.Data.Cooper.oxygene", {configuration: "Release"});
+	cleanObj();
+	file.copy("Sugar.Data/Bin/Java/sugar.data.jar", "./Bin", true);
 
-msbuild["rebuild"]("Sugar.Data/Sugar.Data.Cooper.Android.oxygene", {configuration: "Release"});
-cleanObj();
-file.copy("Sugar.Data/Bin/Android/sugar.data.jar", "./Bin/Android", true);
+	msbuild["rebuild"]("Sugar.Data/Sugar.Data.Cooper.Android.oxygene", {configuration: "Release"});
+	cleanObj();
+	file.copy("Sugar.Data/Bin/Android/sugar.data.jar", "./Bin/Android", true);
 
-msbuild["rebuild"]("Sugar.Data/Sugar.Data.Echoes.oxygene", 		{configuration: "Release", destinationFolder: "./Bin" });
-cleanObj();
+	msbuild["rebuild"]("Sugar.Data/Sugar.Data.Echoes.oxygene", 		{configuration: "Release", destinationFolder: "./Bin" });
+	cleanObj();
 
-msbuild["rebuild"]("Sugar.Data/Sugar.Data.Echoes.WinRT.BuildServer.oxygene", 		{configuration: "Release", destinationFolder: "./Bin/WinRT" });
-cleanObj();
+	msbuild["rebuild"]("Sugar.Data/Sugar.Data.Echoes.WinRT.BuildServer.oxygene", 		{configuration: "Release", destinationFolder: "./Bin/WinRT" });
+	cleanObj();
 
-msbuild["rebuild"]("Sugar.Data/Sugar.Data.Echoes.WP8.BuildServer.oxygene", 		{configuration: "Release", destinationFolder: "./Bin/WP8" });
-cleanObj();
+	msbuild["rebuild"]("Sugar.Data/Sugar.Data.Echoes.WP8.BuildServer.oxygene", 		{configuration: "Release", destinationFolder: "./Bin/WP8" });
+	cleanObj();
 
-msbuild["rebuild"]("Sugar.Data/Sugar.Data.Nougat.OSX.oxygene", 	{configuration: "Release", destinationFolder: "./Bin", extraArgs: '"/p:CrossBox=Onyx;CrossBoxDeviceID=Mac"'});
-cleanObj();
+	msbuild["rebuild"]("Sugar.Data/Sugar.Data.Nougat.OSX.oxygene", 	{configuration: "Release", destinationFolder: "./Bin", extraArgs: '"/p:CrossBox=Onyx;CrossBoxDeviceID=Mac"'});
+	cleanObj();
 
-msbuild["rebuild"]("Sugar.Data/Sugar.Data.Nougat.iOS.oxygene", 	{configuration: "Release", destinationFolder: "./Bin", extraArgs: '"/p:CrossBox=Onyx;CrossBoxDeviceID=iOS Simulator (iPhone)"'});
-cleanObj();
+	msbuild["rebuild"]("Sugar.Data/Sugar.Data.Nougat.iOS.oxygene", 	{configuration: "Release", destinationFolder: "./Bin", extraArgs: '"/p:CrossBox=Onyx;CrossBoxDeviceID=iOS Simulator (iPhone)"'});
+	cleanObj();
 
-msbuild["rebuild"]("Sugar.Data/Sugar.Data.Nougat.iOS.oxygene", 	{configuration: "Release", destinationFolder: "./Bin", extraArgs: '"/p:CrossBox=Onyx;CrossBoxDeviceID=Generic iOS Device"'});
-cleanObj();
+	msbuild["rebuild"]("Sugar.Data/Sugar.Data.Nougat.iOS.oxygene", 	{configuration: "Release", destinationFolder: "./Bin", extraArgs: '"/p:CrossBox=Onyx;CrossBoxDeviceID=Generic iOS Device"'});
+	cleanObj();
+}
 
 function cleanObj()
 {
-  folder.remove("./Obj");  
+  folder.remove("./Obj");
   folder.remove("Sugar.Data/Obj");
   folder.remove("Sugar/Obj");
 }
