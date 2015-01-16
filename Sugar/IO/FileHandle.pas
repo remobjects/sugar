@@ -44,9 +44,6 @@ implementation
 
 constructor FileHandle(FileName: String; Mode: FileOpenMode);
 begin
-  if not FileUtils.Exists(FileName) then
-    raise new SugarFileNotFoundException(FileName);
-
   {$IF COOPER}
   var lMode: String := if Mode = FileOpenMode.ReadOnly then "r" else "rw";
   exit new java.io.RandomAccessFile(FileName, lMode);
