@@ -101,13 +101,14 @@
     </PropertyGroup>
     <ItemGroup>
         <Compile Include="AutoreleasePool.pas"/>
+        <Compile Include="Echoes\AssemblyInfo.pas"/>
     </ItemGroup>
     <ProjectExtensions/>
     <ItemGroup>
         <Reference Include="mscorlib"/>
     </ItemGroup>
-    <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets"/>
-    <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\RemObjects.Oxygene.Echoes.$(TargetFrameworkIdentifier).targets"/>
+    <Import Project="$(MSBuildExtensionsPath)/Microsoft/$(TargetFrameworkIdentifier)/$(TargetFrameworkVersion)/Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets"/>
+    <Import Project="$(MSBuildExtensionsPath)/RemObjects Software/Oxygene/$(TargetFrameworkIdentifier)/$(TargetFrameworkVersion)/RemObjects.Oxygene.Echoes.$(TargetFrameworkIdentifier).targets"/>
     <PropertyGroup>
         <PreBuildEvent Condition="'$(OS)' != 'Unix'">rmdir /s /q $(ProjectDir)\Obj</PreBuildEvent>
     </PropertyGroup>

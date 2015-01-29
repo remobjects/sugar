@@ -81,6 +81,7 @@
     </PropertyGroup>
     <ItemGroup>
         <Compile Include="AutoreleasePool.pas"/>
+        <Compile Include="Echoes\AssemblyInfo.pas"/>
     </ItemGroup>
     <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
         <VisualStudioVersion>11.0</VisualStudioVersion>
@@ -95,8 +96,8 @@
     <ItemGroup>
         <Reference Include="mscorlib"/>
     </ItemGroup>
-    <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')"/>
-    <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Echoes.WinRT.targets"/>
+    <Import Project="$(MSBuildExtensionsPath)/$(MSBuildToolsVersion)/Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')"/>
+    <Import Project="$(MSBuildExtensionsPath)/RemObjects Software/Oxygene/RemObjects.Oxygene.Echoes.WinRT.targets"/>
     <PropertyGroup>
         <PreBuildEvent Condition="'$(OS)' != 'Unix'">rmdir /s /q $(ProjectDir)\Obj</PreBuildEvent>
     </PropertyGroup>

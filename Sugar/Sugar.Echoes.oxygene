@@ -38,6 +38,7 @@
         <XmlDoc>False</XmlDoc>
         <XmlDocWarningLevel>WarningOnPublicMembers</XmlDocWarningLevel>
         <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
+        <DefineConstants>SIGN</DefineConstants>
     </PropertyGroup>
     <ItemGroup>
         <Reference Include="mscorlib"/>
@@ -58,8 +59,9 @@
     </ItemGroup>
     <ItemGroup>
         <Compile Include="AutoreleasePool.pas"/>
+        <Compile Include="Echoes\AssemblyInfo.pas"/>
     </ItemGroup>
-    <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Echoes.targets"/>
+    <Import Project="$(MSBuildExtensionsPath)/RemObjects Software/Oxygene/RemObjects.Oxygene.Echoes.targets"/>
     <PropertyGroup>
         <PreBuildEvent Condition="'$(OS)' != 'Unix'">rmdir /s /q $(ProjectDir)\Obj</PreBuildEvent>
     </PropertyGroup>
