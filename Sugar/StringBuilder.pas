@@ -55,7 +55,7 @@ end;
 method StringBuilder.Append(Value: String): StringBuilder;
 begin
   if Value = nil then
-    raise new SugarArgumentNullException("Value");
+    exit;
 
   {$IF COOPER OR ECHOES}
   exit mapped.Append(Value);
@@ -71,7 +71,7 @@ begin
     exit mapped;
 
   if Value = nil then
-    raise new SugarArgumentNullException("Value");
+    exit;
 
   if (StartIndex < 0) or (Count < 0) then
     raise new SugarArgumentOutOfRangeException(ErrorMessage.NEGATIVE_VALUE_ERROR, "Start index and count");
@@ -89,7 +89,7 @@ end;
 method StringBuilder.AppendLine(Value: String): StringBuilder;
 begin
   if Value = nil then
-    raise new SugarArgumentNullException("Value");
+    exit;
 
   {$IF COOPER}
   mapped.append(Value);
