@@ -3,7 +3,9 @@
 interface
 
 uses
-  {$IF COOPER}
+  {$IF ECHOES}
+  System.Linq,
+  {$ELSEIF COOPER}
   com.remobjects.elements.linq,
   {$ELSEIF NOUGAT}
   RemObjects.Elements.Linq,
@@ -53,7 +55,7 @@ type
     property Count: Integer read {$IF COOPER}mapped.Size{$ELSEIF ECHOES}mapped.Count{$ELSEIF NOUGAT}mapped.count{$ENDIF};
     property Item[i: Integer]: T read GetItem write SetItem; default;
   end;
-
+  
   Predicate<T> = public block (Obj: T): Boolean;
   Action<T> = public block (Obj: T);
   Comparison<T> = public block (x: T; y: T): Integer;
@@ -65,8 +67,18 @@ type
   end;
   {$ENDIF}
 
+{$IF ECHOES}
+extension method System.Collections.Generic.IEnumerable<T>.ToList:  System.Collections.Generic.List<T>;
+{$ENDIF}
 
 implementation
+
+{$IF ECHOES}
+extension method System.Collections.Generic.IEnumerable<T>.ToList: System.Collections.Generic.List<T>;
+begin
+  result := System.Linq.Enumerable.ToList(self);
+end;
+{$ENDIF}
 
 constructor List<T>(Items: List<T>);
 begin
