@@ -67,18 +67,7 @@ type
   end;
   {$ENDIF}
 
-{$IF ECHOES}
-extension method System.Collections.Generic.IEnumerable<T>.ToList:  System.Collections.Generic.List<T>;
-{$ENDIF}
-
 implementation
-
-{$IF ECHOES}
-extension method System.Collections.Generic.IEnumerable<T>.ToList: System.Collections.Generic.List<T>;
-begin
-  result := System.Linq.Enumerable.ToList(self);
-end;
-{$ENDIF}
 
 constructor List<T>(Items: List<T>);
 begin
