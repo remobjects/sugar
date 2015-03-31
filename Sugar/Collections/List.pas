@@ -51,6 +51,11 @@ type
     method Sort(Comparison: Comparison<T>);
 
     method ToArray: array of T;
+    
+    {$IF NOUGAT}
+    operator Implicit(aValue: NSMutableArray<T>): List<T>;
+    operator Implicit(aValue: List<T>): NSMutableArray<T>;
+    {$ENDIF}
 
     property Count: Integer read {$IF COOPER}mapped.Size{$ELSEIF ECHOES}mapped.Count{$ELSEIF NOUGAT}mapped.count{$ENDIF};
     property Item[i: Integer]: T read GetItem write SetItem; default;
@@ -378,6 +383,16 @@ begin
 end;
 
 {$IF NOUGAT}
+operator List<T>.Implicit(aValue: NSMutableArray<T>): List<T>;
+begin
+  result := aValue as List<T>;
+end;
+
+operator List<T>.Implicit(aValue: List<T>): NSMutableArray<T>;
+begin
+  result := aValue as NSMutableArray<T>;
+end;
+
 class method NullHelper.ValueOf(Value: id): id;
 begin
   exit if Value = NSNull.null then nil else if Value = nil then NSNull.null else Value;
