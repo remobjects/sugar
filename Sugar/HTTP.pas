@@ -7,34 +7,40 @@ uses
   Sugar.Xml;
 
 type
+  HttpRequest = public class
+  end
 
-  HttpResponse<T> = public class
+  HttpResponse = public class
   unit
-    constructor (aContent: T);
     constructor withException(anException: Exception);
 
   public
     property Exception: Exception read write; readonly;
-    property Content: T read write; readonly;
-    property IsFailed: Boolean read self.Exception <> nil;
+    property Failed: Boolean read self.Exception <> nil;
+    property Headers: ...; readonly;
+    
+    method GetContentAsString(contentCallback: HttpContentResponseBlock<String>);
+    method GetContentAsBinary(contentCallback: HttpContentResponseBlock<Binary>);
+    method GetContentAsXml(contentCallback: HttpContentResponseBlock<XmlDocument>);
+    method GetContentAsJson(contentCallback: HttpContentResponseBlock<JsonDocument>);
   end;
 
-  HttpResponseBlock<T> = public block (Response: HttpResponse<T>);
+  HttpResponseContent<T> = public class
+  public
+    property Content: T;
+    property Exception: Exception read write; readonly;
+    property Failed: Boolean read self.Exception <> nil;
+  end;
+
+  HttpResponseBlock = public block (Response: HttpResponse<T>);
+  HttpContentResponseBlock<T> = public block (ResponseContent: HttpResponseContent<T>);
 
   Http = public static class
-  private
-    {$IF WINDOWS_PHONE}
-    method InternalDownload(anUrl: Url): System.Threading.Tasks.Task<System.Net.HttpWebResponse>;
-    {$ENDIF}
-    method Download(anUrl: Url): HttpResponse<Binary>;
   public
-    method DownloadStringAsync(anUrl: Url; Encoding: Encoding; ResponseCallback: HttpResponseBlock<String>);
-    method DownloadBinaryAsync(anUrl: Url; ResponseCallback: HttpResponseBlock<Binary>);
-    method DownloadXmlAsync(anUrl: Url; ResponseCallback: HttpResponseBlock<XmlDocument>);
+    method ExecuteRequest(aRequest: HttpRequest; ResponseCallback: HttpResponseBlock<String>);
   end;
 
 implementation
-
 
 { HttpResponse }
 
