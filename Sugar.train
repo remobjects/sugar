@@ -2,7 +2,6 @@ include("$(Train)/ci2.train");
 
 var sugarVersion = getVersionNumberFromGlobalIni("Oxygene");
 export("CIVersionNumber", sugarVersion);
-saveVersionNumberToSharedIni("Sugar", sugarVersion);
 
 var lFiles =
 			["Sugar/Properties/AssemblyInfo.pas",
@@ -72,8 +71,7 @@ shell.exec("$(CIToolsBaseFolder)/Tools/HeaderParser/HeaderParser.exe", '-l:NET -
 
 zip.compress("$(CIReleaseFolder)/Sugar - $(sugarVersion).zip", "./Bin", "*Sugar*.*", true);
 
-file.copy("./Bin/*Sugar*.*", "$(CISharedFolder)/Bin/", true);
-
 var s3 = getSharedS3Bucket();
-zip.compress("./Sugar.zip", "./Bin", "*Sugar*.*", true);
-s3.uploadFiles("./Sugar.zip", "$(ciSharedPrefix)/", true);
+folder.create("./Shared", true)
+zip.compress("./Shared/Sugar.zip", "./Bin", "*Sugar*.*", true);
+s3.uploadFiles("./Shared/Sugar.zip", "$(ciSharedPrefix)/", true);
