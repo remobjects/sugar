@@ -75,5 +75,5 @@ zip.compress("$(CIReleaseFolder)/Sugar - $(sugarVersion).zip", "./Bin", "*Sugar*
 file.copy("./Bin/*Sugar*.*", "$(CISharedFolder)/Bin/", true);
 
 var s3 = getSharedS3Bucket();
-zip.compress("./Bin/Sugar.zip", "./Bin", "*Sugar*.*", true);
-s3.uploadFiles("./Bin/Sugar.zip", "$(ciSharedPrefix)/", true);
+zip.compress("./Sugar.zip", "./Bin", "*Sugar*.*", true);
+s3.uploadFiles("./Sugar.zip", "$(ciSharedPrefix)/", true);
