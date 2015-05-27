@@ -71,4 +71,9 @@ function cleanObj()
 shell.exec("$(CIToolsBaseFolder)/Tools/HeaderParser/HeaderParser.exe", '-l:NET -o:"$(CIReleaseFolder)\\DocHeaders\\SUGAR.xml" ".\\Bin\\Sugar.dll"');
 
 zip.compress("$(CIReleaseFolder)/Sugar - $(sugarVersion).zip", "./Bin", "*Sugar*.*", true);
+
 file.copy("./Bin/*Sugar*.*", "$(CISharedFolder)/Bin/", true);
+
+var s3 = getSharedS3Bucket();
+zip.compress("./Bin/Sugar.zip", "./Bin", "*Sugar*.*", true);
+s3.uploadFiles("./Bin/Sugar.zip", "$(ciSharedPrefix)/", true);
