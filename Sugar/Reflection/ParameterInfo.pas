@@ -19,7 +19,11 @@ type
     property Name: String read mapped.Name;
     property Position: Integer read mapped.Position;
     property ParameterType: Sugar.Reflection.Type read mapped.ParameterType;
+    {$IFDEF NETFX_CORE}
+    property CustomAttributes: array of Object read System.Linq.Enumerable.ToArray(mapped.GetCustomAttributes(false));
+    {$ELSE}
     property CustomAttributes: array of Object read mapped.GetCustomAttributes(false);
+    {$ENDIF}
     {$ENDIF}
     {$IF COOPER}
     property Name: String;

@@ -78,7 +78,7 @@ begin
   var Serializer := new JsonDeserializer(JsonString);
   var lValue := Serializer.Deserialize;
 
-  if lValue is not JsonObject then
+  if not (lValue is JsonObject) then
     raise new SugarInvalidOperationException("String does not contains valid Json object");
 
   result := lValue as JsonObject;

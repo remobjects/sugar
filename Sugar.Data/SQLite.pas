@@ -16,7 +16,8 @@ uses
 {$ENDIF}
 
 type
-  SQLiteConnection = public class {$IFDEF ANDROID}mapped to android.database.sqlite.SQLiteDatabase{$ENDIF}
+  SQLiteConnection = public {$IFDEF PUREJAVA}interface{$ELSE}class{$ENDIF} {$IFDEF ANDROID}mapped to android.database.sqlite.SQLiteDatabase{$ENDIF}
+  {$IFDEF PUREJAVA}mapped to java.sql.Connection{$ENDIF}
   private
     {$IFDEF ECHOES or COCOA}
     fHandle: IntPtr;
@@ -41,7 +42,9 @@ type
     method ExecuteQuery(aSQL: String; params aArgValues: array of Object): SQLiteQueryResult;
   end;
 
-  SQLiteQueryResult = public class {$IFDEF ANDROID}mapped to android.database.sqlite.SQLiteCursor{$ENDIF}
+  SQLiteQueryResult = public {$IFDEF JAVA}interface{$ELSE}class{$ENDIF}
+  {$IFDEF PUREJAVA}mapped to ResultSet{$ENDIF}
+  {$IFDEF ANDROID}mapped to android.database.Cursor{$ENDIF}
   private
     {$IFDEF ECHOES or COCOA}
     fDB: IntPtr;
@@ -78,6 +81,13 @@ type
   public
     class method ArgsToString(arr: array of Object): array of String;
     class method BindArgs(st: android.database.sqlite.SQLiteStatement; aArgs: array of Object);
+  end;
+  {$ENDIF}
+  {$IFDEF PUREJAVA}
+  SQLiteHelpers = class
+  public
+    class method SetParameters(st: java.sql.PreparedStatement; aValues: array of Object);
+    class method ExecuteAndGetLastInsertId(st: java.sql.PreparedStatement): Int64;
   end;
   {$ENDIF}
   {$IFDEF ECHOES or COCOA}
@@ -261,12 +271,21 @@ type
   {$IFDEF ANDROID}
   SQLiteException = public android.database.sqlite.SQLiteException;
   {$ENDIF}
+  {$IFDEF PUREJAVA}
+  SQLiteException = public java.sql.SQLException;
+  {$ENDIF}
 
 implementation
 
 constructor SQLiteConnection(aFilename: String; aReadOnly: Boolean := false; aCreateIfNeeded: Boolean := true);
 begin
-  {$IFDEF ANDROID}
+  {$IFDEF PUREJAVA}
+  &Class.forName('org.sqlite.JDBC');
+  var config := new java.util.Properties;
+  if aReadonly then
+    config.setProperty('open_mode', '1');
+  exit DriverManager.getConnection('jdbc:sqlite:' + aFilename, config);
+  {$ELSEIF ANDROID}
   exit android.database.sqlite.SQLiteDatabase.openDatabase(aFilename, nil, 
     ((if aReadOnly then android.database.sqlite.SQLiteDatabase.OPEN_READONLY else android.database.sqlite.SQLiteDatabase.OPEN_READWRITE) or
     (if aCreateIfNeeded then android.database.sqlite.SQLiteDatabase.CREATE_IF_NECESSARY else 0)));
@@ -287,7 +306,9 @@ end;
 
 method SQLiteConnection.BeginTransaction;
 begin
-  {$IFDEF ECHOES or COCOA}
+  {$IFDEF PUREJAVA}
+  mapped.setAutoCommit(false);
+  {$ELSEIF ECHOES or COCOA}
   if fInTrans then raise new SQLiteException('Already in transaction');
   fInTrans := true;
   Execute('begin transaction');
@@ -300,7 +321,9 @@ end;
 
 method SQLiteConnection.Commit;
 begin
-  {$IFDEF ECHOES or COCOA}
+  {$IFDEF PUREJAVA}
+  mapped.commit;
+  {$ELSEIF ECHOES or COCOA}
   if fInTrans then raise new SQLiteException('Not in an transaction');
   Execute('commit');
   fInTrans := false;
@@ -314,7 +337,9 @@ end;
 
 method SQLiteConnection.Rollback;
 begin
-  {$IFDEF ECHOES or COCOA}
+  {$IFDEF PUREJAVA}
+  mapped.rollback;
+  {$ELSEIF ECHOES or COCOA}
   if fInTrans then raise new SQLiteException('Not in an transaction');
   Execute('rollback');
   fInTrans := false;
@@ -376,10 +401,14 @@ end;
 
 method SQLiteConnection.ExecuteQuery(aSQL: String; params aArgValues: array of Object): SQLiteQueryResult;
 begin
-  {$IFDEF ECHOES or COCOA}
+  {$IFDEF PUREJAVA}
+  var st := mapped.prepareStatement(aSQL);
+  SQLiteHelpers.SetParameters(st, aArgValues);
+  exit st.executeQuery();
+  {$ELSEIF ECHOES or COCOA}
   exit new SQLiteQueryResult(fHandle, Prepare(aSQL, aArgValues));
   {$ELSEIF ANDROID}
-  mapped.rawQuery(aSQL, SQLiteHelpers.ArgsToString(aArgValues));
+  exit mapped.rawQuery(aSQL, SQLiteHelpers.ArgsToString(aArgValues));
   {$ELSE}
   {$ERROR Unsupported platform}
   {$ENDIF}
@@ -387,7 +416,11 @@ end;
 
 method SQLiteConnection.ExecuteInsert(aSQL: String; params aArgValues: array of Object): Int64;
 begin
-  {$IFDEF ECHOES or COCOA}
+  {$IFDEF PUREJAVA}
+  var st := mapped.prepareStatement(aSQL);
+  SQLiteHelpers.SetParameters(st, aArgValues);
+  exit st.executeUpdate();
+  {$ELSEIF ECHOES or COCOA}
   var res: IntPtr := Prepare(aSQL, aArgValues);
   var &step := {$IFDEF ECHOES}SQLiteHelpers.sqlite3_step(res){$ELSE}sqlite3_step(^sqlite3_stmt(res));{$ENDIF};
   if &step <> {$IFDEF ECHOES}SQLiteHelpers.{$ENDIF}SQLITE_DONE then begin
@@ -410,7 +443,11 @@ end;
 
 method SQLiteConnection.Execute(aSQL: String; params aArgValues: array of Object): Int64;
 begin
-  {$IFDEF ECHOES or COCOA}
+  {$IFDEF PUREJAVA}
+  var st := mapped.prepareStatement(aSQL);
+  SQLiteHelpers.SetParameters(st, aArgValues);
+  SQLiteHelpers.ExecuteAndGetLastInsertID(st);
+  {$ELSEIF ECHOES or COCOA}
   var res: IntPtr := Prepare(aSQL, aArgValues);
   var &step := {$IFDEF ECHOES}SQLiteHelpers.sqlite3_step(res){$ELSE}sqlite3_step(^sqlite3_stmt(res));{$ENDIF};
   if &step <> {$IFDEF ECHOES}SQLiteHelpers.{$ENDIF}SQLITE_DONE then begin
@@ -434,7 +471,9 @@ end;
 
 method SQLiteConnection.get_Intransaction: Boolean;
 begin
-  {$IFDEF ECHOES or COCOA}
+  {$IFDEF PUREJAVA}
+  exit not mapped.AutoCommit;
+  {$ELSEIF ECHOES or COCOA}
   exit fInTrans;
   {$ELSEIF ANDROID}
   exit mapped.inTransaction;
@@ -486,7 +525,9 @@ end;
 
 method SQLiteQueryResult.MoveNext: Boolean;
 begin
-  {$IFDEF ECHOES}
+  {$IFDEF PUREJAVA}
+  exit mapped.next;
+  {$ELSEIF ECHOES}
   var res := SQLiteHelpers.sqlite3_step(fRes);
   if res = SQLiteHelpers.SQLITE_ROW then exit true;
   if res = SQLiteHelpers.SQLITE_DONE then exit false;
@@ -510,7 +551,9 @@ end;
 
 method SQLiteQueryResult.GetInt(aIndex: Integer): nullable Integer;
 begin
-  {$IFDEF ECHOES}
+  {$IFDEF PUREJAVA}
+  exit if mapped.getObject(aIndex) = nil then nil else nullable Integer(mapped.getInt(aIndex));
+  {$ELSEIF ECHOES}
   if SQLiteHelpers.sqlite3_column_type(fRes, aIndex) = SQLiteHelpers.SQLITE_NULL then exit nil;
   exit SQLiteHelpers.sqlite3_column_int(fRes, aIndex);
   {$ELSEIF COCOA}
@@ -525,7 +568,9 @@ end;
 
 method SQLiteQueryResult.GetInt64(aIndex: Integer): nullable Int64;
 begin
-  {$IFDEF ECHOES}
+  {$IFDEF PUREJAVA}
+  exit if mapped.getObject(aIndex) = nil then nil else nullable Int64(mapped.getLong(aIndex));
+  {$ELSEIF ECHOES}
   if SQLiteHelpers.sqlite3_column_type(fRes, aIndex) = SQLiteHelpers.SQLITE_NULL then exit nil;
   exit SQLiteHelpers.sqlite3_column_int64(fRes, aIndex);
   {$ELSEIF COCOA}
@@ -540,7 +585,9 @@ end;
 
 method SQLiteQueryResult.GetDouble(aIndex: Integer): nullable Double;
 begin
-  {$IFDEF ECHOES}
+  {$IFDEF PUREJAVA}
+  exit if mapped.getObject(aIndex) = nil then nil else nullable Double(mapped.getDouble(aIndex));
+  {$ELSEIF ECHOES}
   if SQLiteHelpers.sqlite3_column_type(fRes, aIndex) = SQLiteHelpers.SQLITE_NULL then exit nil;
   exit SQLiteHelpers.sqlite3_column_double(fRes, aIndex);
   {$ELSEIF COCOA}
@@ -555,7 +602,9 @@ end;
 
 method SQLiteQueryResult.GetBytes(aIndex: Integer): array of {$IFDEF JAVA}SByte{$ELSE}Byte{$ENDIF};
 begin
-  {$IFDEF ECHOES}
+  {$IFDEF PUREJAVA}
+  exit mapped.getBytes(aIndex);
+  {$ELSEIF ECHOES}
   var data: IntPtr := SQLiteHelpers.sqlite3_column_blob(fRes, aIndex);
   if data = IntPtr.Zero then exit nil;
   var n: array of Byte := new Byte[SQLiteHelpers.sqlite3_column_bytes(fRes, aIndex)];
@@ -576,7 +625,9 @@ end;
 
 method SQLiteQueryResult.GetString(aIndex: Integer): String;
 begin
-  {$IFDEF ECHOES} 
+  {$IFDEF PUREJAVA}
+  exit mapped.getString(aIndex);
+  {$ELSEIF ECHOES}
   if SQLiteHelpers.sqlite3_column_type(fRes, aIndex) = SQLiteHelpers.SQLITE_NULL then exit nil;
 
   exit System.Runtime.InteropServices.Marshal.PtrToStringUni(SQLiteHelpers.sqlite3_column_text16(fRes, aIndex));
@@ -593,7 +644,9 @@ end;
 
 method SQLiteQueryResult.get_IsNull(aIndex: Integer): Boolean;
 begin
-  {$IFDEF ECHOES}
+  {$IFDEF PUREJAVA}
+  exit mapped.getObject(aIndex) = nil;
+  {$ELSEIF ECHOES}
   exit SQLiteHelpers.sqlite3_column_type(fRes, aIndex) = SQLiteHelpers.SQLITE_NULL;
   {$ELSEIF COCOA}
   exit sqlite3_column_type(^sqlite3_stmt(fRes), aIndex) = SQLITE_NULL;
@@ -607,7 +660,9 @@ end;
 
 method SQLiteQueryResult.get_ColumnCount: Integer;
 begin
-  {$IFDEF ECHOES}
+  {$IFDEF PUREJAVA}
+  exit mapped.getMetaData().ColumnCount;
+  {$ELSEIF ECHOES}
   exit SQLiteHelpers.sqlite3_column_count(fRes)
   {$ELSEIF COCOA}
   exit sqlite3_column_count(^sqlite3_stmt(fRes))
@@ -620,7 +675,9 @@ end;
 
 method SQLiteQueryResult.get_ColumnName(aIndex: Integer): String;
 begin
-  {$IFDEF ECHOES}
+  {$IFDEF PUREJAVA}
+  exit mapped.getMetaData().getColumnName(aIndex);
+  {$ELSEIF ECHOES}
   exit System.Runtime.InteropServices.Marshal.PtrToStringUni(SQLiteHelpers.sqlite3_column_name16(fRes, aIndex));
   {$ELSEIF COCOA}
   exit NSString.stringWithCString(^AnsiChar(sqlite3_column_name16(^sqlite3_stmt(fRes), aIndex)) ) encoding(NSStringEncoding.NSUTF16StringEncoding);
@@ -633,7 +690,9 @@ end;
 
 method SQLiteQueryResult.get_ColumnIndex(aName: String): Integer;
 begin
-  {$IFDEF ECHOES}
+  {$IFDEF PUREJAVA}
+  raise new SQLException('Column index not supported');
+  {$ELSEIF ECHOES}
   if fNames = nil then begin
     fNames := new System.Collections.Generic.Dictionary<String, Integer>;
     for i: Integer := 0 to ColumnCount -1 do
@@ -779,5 +838,17 @@ begin
 end;
 {$ENDIF}
 
+{$IFDEF PUREJAVA}
+class method SQLiteHelpers.SetParameters(st: PreparedStatement; aValues: array of Object);
+begin
+end;
 
+class method SQLiteHelpers.ExecuteAndGetLastInsertId(st: PreparedStatement): Int64;
+begin
+  st.executeUpdate;
+  var key := st.getGeneratedKeys;
+  if (key = nil) or (key.getMetaData.ColumnCount <> 1) then exit ;
+  exit  key.getLong(0)
+end;
+{$ENDIF}
 end.
