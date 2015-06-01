@@ -25,6 +25,8 @@ type
     class property UTF8: Encoding read GetEncoding("UTF-8");
     class property UTF16LE: Encoding read GetEncoding("UTF-16LE");
     class property UTF16BE: Encoding read GetEncoding("UTF-16BE");
+
+    class property &Default: Encoding read UTF8;
   end;
 
 implementation

@@ -59,5 +59,15 @@
         <Compile Include="XML\XmlElement.pas"/>
         <Compile Include="XML\XmlNode.pas"/>
         <Compile Include="XML\XmlProcessingInstruction.pas"/>
+        <Compile Include="$(MSBuildThisFileDirectory)JSON\JsonDocument.pas"/>
+        <Compile Include="$(MSBuildThisFileDirectory)JSON\Exceptions.pas"/>
+        <Compile Include="$(MSBuildThisFileDirectory)JSON\JsonArray.pas"/>
+        <Compile Include="$(MSBuildThisFileDirectory)JSON\JsonConsts.pas"/>
+        <Compile Include="$(MSBuildThisFileDirectory)JSON\JsonDeserializer.pas"/>
+        <Compile Include="$(MSBuildThisFileDirectory)JSON\JsonObject.pas"/>
+        <Compile Include="$(MSBuildThisFileDirectory)JSON\JsonSerializer.pas"/>
+        <Compile Include="$(MSBuildThisFileDirectory)JSON\JsonTokenizer.pas"/>
+        <Compile Include="$(MSBuildThisFileDirectory)JSON\JsonValue.pas"/>
     </ItemGroup>
+    <ItemGroup/>
 </Project>
