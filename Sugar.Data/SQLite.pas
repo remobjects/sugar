@@ -42,9 +42,9 @@ type
     method ExecuteQuery(aSQL: String; params aArgValues: array of Object): SQLiteQueryResult;
   end;
 
-  SQLiteQueryResult = public {$IFDEF JAVA}interface{$ELSE}class {$ENDIF}
+  SQLiteQueryResult = public {$IFDEF JAVA}interface{$ELSE}class{$ENDIF}
+  {$IFDEF PUREJAVA}mapped to ResultSet{$ENDIF}
   {$IFDEF ANDROID}mapped to android.database.Cursor{$ENDIF}
-  {$IFDEF JAVA}mapped to ResultSet{$ENDIF}
   private
     {$IFDEF ECHOES or COCOA}
     fDB: IntPtr;

@@ -82,7 +82,7 @@ begin
   var Serializer := new JsonDeserializer(JsonString);
   var lValue := Serializer.Deserialize;
 
-  if lValue is not JsonArray then
+  if not (lValue is JsonArray) then
     raise new SugarInvalidOperationException("String does not contains valid Json array");
 
   result := lValue as JsonArray;
