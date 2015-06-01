@@ -1,6 +1,6 @@
 namespace Sugar.Data;
 {
-  On .NET this requires sqlite.dll from the sqlite website
+  On .NET this requires sqlite3.dll from the sqlite website
   On OSX/iOS this uses the system sqlite
   On Android it uses the standard Android sqlite support
   On Java it uses JDBC and requires https://bitbucket.org/xerial/sqlite-jdbc/ to be installed.
@@ -8,11 +8,13 @@ namespace Sugar.Data;
 interface
 {$IFDEF PUREJAVA}
 uses
-  java.sql;
-{$ENDIF}
-{$IFDEF COCOA}
+  java.sql, Sugar;
+{$ELSEIF COCOA}
 uses
-  libsqlite3, Foundation;
+  libsqlite3, Foundation, Sugar;
+{$ELSE}
+uses
+  Sugar;
 {$ENDIF}
 
 type
@@ -84,7 +86,7 @@ type
   end;
   {$ENDIF}
   {$IFDEF PUREJAVA}
-  SQLiteHelpers = class
+  SQLiteHelpers = public class
   public
     class method SetParameters(st: java.sql.PreparedStatement; aValues: array of Object);
     class method ExecuteAndGetLastInsertId(st: java.sql.PreparedStatement): Int64;
@@ -204,6 +206,7 @@ type
     class const SQLITE_OPEN_WAL: Integer = 524288;
     /// SQLITE_IOCAP_ATOMIC -> 0x00000001
 
+    [System.Runtime.InteropServices.DllImport(DLLName,CallingConvention := System.Runtime.InteropServices.CallingConvention.&Cdecl, CharSet := System.Runtime.InteropServices.CharSet.Ansi)]
     class method sqlite3_close_v2(handle: IntPtr); external;
     [System.Runtime.InteropServices.DllImport(DLLName,CallingConvention := System.Runtime.InteropServices.CallingConvention.&Cdecl, CharSet := System.Runtime.InteropServices.CharSet.Ansi)]
     class method sqlite3_last_insert_rowid(handle: IntPtr): Int64; external;
@@ -295,7 +298,7 @@ begin
     (if aCreateIfNeeded then SQLiteHelpers.SQLITE_OPEN_CREATE else 0), nil);
   SQLiteHelpers.Throw(fHandle, lRes);
   {$ELSEIF COCOA}
-  var lRes:= sqlite3_open_v2(aFilename, ^^sqlite3_(@fHandle),
+  var lRes:= sqlite3_open_v2(NSString(aFilename), ^^sqlite3_(@fHandle),
     (if aReadOnly then SQLITE_OPEN_READONLY else SQLITE_OPEN_READWRITE) or
     (if aCreateIfNeeded then SQLITE_OPEN_CREATE else 0), nil);
   SQLiteHelpers.Throw(fHandle, lRes);
@@ -419,7 +422,7 @@ begin
   {$IFDEF PUREJAVA}
   var st := mapped.prepareStatement(aSQL);
   SQLiteHelpers.SetParameters(st, aArgValues);
-  exit st.executeUpdate();
+  exit  SQLiteHelpers.ExecuteAndGetLastInsertID(st);
   {$ELSEIF ECHOES or COCOA}
   var res: IntPtr := Prepare(aSQL, aArgValues);
   var &step := {$IFDEF ECHOES}SQLiteHelpers.sqlite3_step(res){$ELSE}sqlite3_step(^sqlite3_stmt(res));{$ENDIF};
@@ -446,7 +449,7 @@ begin
   {$IFDEF PUREJAVA}
   var st := mapped.prepareStatement(aSQL);
   SQLiteHelpers.SetParameters(st, aArgValues);
-  SQLiteHelpers.ExecuteAndGetLastInsertID(st);
+  exit st.executeUpdate;
   {$ELSEIF ECHOES or COCOA}
   var res: IntPtr := Prepare(aSQL, aArgValues);
   var &step := {$IFDEF ECHOES}SQLiteHelpers.sqlite3_step(res){$ELSE}sqlite3_step(^sqlite3_stmt(res));{$ENDIF};
@@ -552,7 +555,7 @@ end;
 method SQLiteQueryResult.GetInt(aIndex: Integer): nullable Integer;
 begin
   {$IFDEF PUREJAVA}
-  exit if mapped.getObject(aIndex) = nil then nil else nullable Integer(mapped.getInt(aIndex));
+  exit if mapped.getObject(1 + aIndex) = nil then nil else nullable Integer(mapped.getInt(1 + aIndex));
   {$ELSEIF ECHOES}
   if SQLiteHelpers.sqlite3_column_type(fRes, aIndex) = SQLiteHelpers.SQLITE_NULL then exit nil;
   exit SQLiteHelpers.sqlite3_column_int(fRes, aIndex);
@@ -569,7 +572,7 @@ end;
 method SQLiteQueryResult.GetInt64(aIndex: Integer): nullable Int64;
 begin
   {$IFDEF PUREJAVA}
-  exit if mapped.getObject(aIndex) = nil then nil else nullable Int64(mapped.getLong(aIndex));
+  exit if mapped.getObject(1 + aIndex) = nil then nil else nullable Int64(mapped.getLong(1 + aIndex));
   {$ELSEIF ECHOES}
   if SQLiteHelpers.sqlite3_column_type(fRes, aIndex) = SQLiteHelpers.SQLITE_NULL then exit nil;
   exit SQLiteHelpers.sqlite3_column_int64(fRes, aIndex);
@@ -586,7 +589,7 @@ end;
 method SQLiteQueryResult.GetDouble(aIndex: Integer): nullable Double;
 begin
   {$IFDEF PUREJAVA}
-  exit if mapped.getObject(aIndex) = nil then nil else nullable Double(mapped.getDouble(aIndex));
+  exit if mapped.getObject(1 + aIndex) = nil then nil else nullable Double(mapped.getDouble(1 + aIndex));
   {$ELSEIF ECHOES}
   if SQLiteHelpers.sqlite3_column_type(fRes, aIndex) = SQLiteHelpers.SQLITE_NULL then exit nil;
   exit SQLiteHelpers.sqlite3_column_double(fRes, aIndex);
@@ -603,7 +606,7 @@ end;
 method SQLiteQueryResult.GetBytes(aIndex: Integer): array of {$IFDEF JAVA}SByte{$ELSE}Byte{$ENDIF};
 begin
   {$IFDEF PUREJAVA}
-  exit mapped.getBytes(aIndex);
+  exit mapped.getBytes(1 + aIndex);
   {$ELSEIF ECHOES}
   var data: IntPtr := SQLiteHelpers.sqlite3_column_blob(fRes, aIndex);
   if data = IntPtr.Zero then exit nil;
@@ -626,15 +629,18 @@ end;
 method SQLiteQueryResult.GetString(aIndex: Integer): String;
 begin
   {$IFDEF PUREJAVA}
-  exit mapped.getString(aIndex);
+  exit mapped.getString(1 + aIndex);
   {$ELSEIF ECHOES}
   if SQLiteHelpers.sqlite3_column_type(fRes, aIndex) = SQLiteHelpers.SQLITE_NULL then exit nil;
 
   exit System.Runtime.InteropServices.Marshal.PtrToStringUni(SQLiteHelpers.sqlite3_column_text16(fRes, aIndex));
   {$ELSEIF COCOA}
   if sqlite3_column_type(^sqlite3_stmt(fRes), aIndex) = SQLITE_NULL then exit nil;
-
-  exit NSString.stringWithCString(^AnsiChar(sqlite3_column_text16(^sqlite3_stmt(fRes), aIndex)) ) encoding(NSStringEncoding.NSUTF16StringEncoding);
+  
+  var p: ^unichar := ^unichar(sqlite3_column_text16(^sqlite3_stmt(fRes), aIndex));
+  var plen := 0;
+  while p[plen] <> #0 do inc(plen);
+  exit new NSString withCharacters(p) length(plen);
   {$ELSEIF ANDROID}
   exit mapped.getString(aIndex);
   {$ELSE}
@@ -676,7 +682,7 @@ end;
 method SQLiteQueryResult.get_ColumnName(aIndex: Integer): String;
 begin
   {$IFDEF PUREJAVA}
-  exit mapped.getMetaData().getColumnName(aIndex);
+  exit mapped.getMetaData().getColumnName(1 + aIndex);
   {$ELSEIF ECHOES}
   exit System.Runtime.InteropServices.Marshal.PtrToStringUni(SQLiteHelpers.sqlite3_column_name16(fRes, aIndex));
   {$ELSEIF COCOA}
@@ -841,6 +847,8 @@ end;
 {$IFDEF PUREJAVA}
 class method SQLiteHelpers.SetParameters(st: PreparedStatement; aValues: array of Object);
 begin
+  for i: Integer := 0 to length(aValues) -1 do
+    st.setObject(i+1, aValues[i])
 end;
 
 class method SQLiteHelpers.ExecuteAndGetLastInsertId(st: PreparedStatement): Int64;
@@ -848,7 +856,7 @@ begin
   st.executeUpdate;
   var key := st.getGeneratedKeys;
   if (key = nil) or (key.getMetaData.ColumnCount <> 1) then exit ;
-  exit  key.getLong(0)
+  exit  key.getLong(1)
 end;
 {$ENDIF}
 end.
