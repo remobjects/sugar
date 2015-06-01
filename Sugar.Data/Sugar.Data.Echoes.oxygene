@@ -55,30 +55,6 @@
     <FutureHelperClassName />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="mscorlib" />
-    <Reference Include="System" />
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="JSON\Exceptions.pas" />
-    <Compile Include="JSON\JsonConsts.pas" />
-    <Compile Include="JSON\JsonDeserializer.pas" />
-    <Compile Include="JSON\JsonSerializer.pas" />
-    <Compile Include="JSON\JsonTokenizer.pas" />
-    <Compile Include="JSON\JsonTokenKind.pas" />
-    <Compile Include="JSON\Objects\JsonArray.pas" />
-    <Compile Include="JSON\Objects\JsonObject.pas" />
-    <Compile Include="JSON\Objects\JsonValue.pas" />
-    <Compile Include="Properties\AssemblyInfo.pas" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="JSON" />
-    <Folder Include="JSON\Objects" />
-    <Folder Include="Properties\" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Sugar\Sugar.Echoes.oxygene">
       <Name>Sugar.Echoes</Name>
       <Project>{79301a0c-1f95-4fb0-9605-207e288c6171}</Project>
@@ -86,7 +62,11 @@
       <HintPath>..\Sugar\bin\.NET\Sugar.dll</HintPath>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Echoes.targets" />
+  <Import Project="Sugar.Data.Shared.projitems" Label="Shared" />
   <PropertyGroup>
     <PreBuildEvent>rmdir /s /q $(ProjectDir)\Obj</PreBuildEvent>
   </PropertyGroup>

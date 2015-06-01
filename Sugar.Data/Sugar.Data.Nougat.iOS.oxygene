@@ -42,25 +42,12 @@
   <ItemGroup>
     <Reference Include="Foundation.fx" />
     <Reference Include="libNougat.fx" />
+    <Reference Include="libsqlite3.fx">
+      <HintPath>C:\Program Files (x86)\RemObjects Software\Elements\Nougat\Libraries\libsqlite3\iOS\libsqlite3.fx</HintPath>
+    </Reference>
     <Reference Include="libxml2.fx" />
     <Reference Include="rtl.fx" />
     <Reference Include="UIKit.fx" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="JSON\Exceptions.pas" />
-    <Compile Include="JSON\JsonConsts.pas" />
-    <Compile Include="JSON\JsonDeserializer.pas" />
-    <Compile Include="JSON\JsonSerializer.pas" />
-    <Compile Include="JSON\JsonTokenizer.pas" />
-    <Compile Include="JSON\JsonTokenKind.pas" />
-    <Compile Include="JSON\Objects\JsonArray.pas" />
-    <Compile Include="JSON\Objects\JsonObject.pas" />
-    <Compile Include="JSON\Objects\JsonValue.pas" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="JSON" />
-    <Folder Include="JSON\Objects" />
-    <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Sugar\Sugar.Nougat.iOS.oxygene">
@@ -70,7 +57,11 @@
       <HintPath>..\Sugar\bin\iOS Simulator\libSugar.fx</HintPath>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Nougat.targets" />
+  <Import Project="Sugar.Data.Shared.projitems" Label="Shared" />
   <PropertyGroup>
     <PreBuildEvent />
   </PropertyGroup>

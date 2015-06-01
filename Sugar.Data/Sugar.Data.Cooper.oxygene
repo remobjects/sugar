@@ -15,7 +15,7 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <Optimize>False</Optimize>
     <OutputPath>bin\Java\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;PUREJAVA</DefineConstants>
     <CaptureConsoleOutput>False</CaptureConsoleOutput>
     <StartMode>Project</StartMode>
     <RegisterForComInterop>False</RegisterForComInterop>
@@ -27,7 +27,6 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <OutputPath>bin\Java\</OutputPath>
-    <GenerateDebugInfo>True</GenerateDebugInfo>
     <EnableAsserts>False</EnableAsserts>
     <CaptureConsoleOutput>False</CaptureConsoleOutput>
     <StartMode>Project</StartMode>
@@ -37,10 +36,7 @@
     <XmlDoc>False</XmlDoc>
     <XmlDocWarningLevel>WarningOnPublicMembers</XmlDocWarningLevel>
     <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
-    <DefineConstants>
-    </DefineConstants>
-    <SuppressWarnings />
-    <FutureHelperClassName />
+    <DefineConstants>PUREJAVA</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="com.remobjects.elements.rtl.jar">
@@ -51,22 +47,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="JSON\Exceptions.pas" />
-    <Compile Include="JSON\JsonConsts.pas" />
-    <Compile Include="JSON\JsonDeserializer.pas" />
-    <Compile Include="JSON\JsonSerializer.pas" />
-    <Compile Include="JSON\JsonTokenizer.pas" />
-    <Compile Include="JSON\JsonTokenKind.pas" />
-    <Compile Include="JSON\Objects\JsonArray.pas" />
-    <Compile Include="JSON\Objects\JsonObject.pas" />
-    <Compile Include="JSON\Objects\JsonValue.pas" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="JSON" />
-    <Folder Include="JSON\Objects" />
-    <Folder Include="Properties\" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Sugar\Sugar.Cooper.oxygene">
       <Name>Sugar.Cooper</Name>
       <Project>{d1ee6c41-515b-4175-873f-ee188ac43450}</Project>
@@ -74,7 +54,11 @@
       <HintPath>..\Sugar\bin\Java\sugar.jar</HintPath>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Cooper.targets" />
+  <Import Project="Sugar.Data.Shared.projitems" Label="Shared" />
   <PropertyGroup>
     <PreBuildEvent>rmdir /s /q $(ProjectDir)\Obj</PreBuildEvent>
   </PropertyGroup>
