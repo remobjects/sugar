@@ -1,63 +1,93 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    <PropertyGroup>
-        <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
-        <HasSharedItems>true</HasSharedItems>
-        <SharedGUID>719BEFD9-F514-42FD-8DA1-172697C756D2</SharedGUID>
-    </PropertyGroup>
-    <PropertyGroup Label="Configuration">
-        <Import_RootNamespace>Sugar.Shared</Import_RootNamespace>
-    </PropertyGroup>
-    <ItemGroup>
-        <Compile Include="Binary.pas"/>
-        <Compile Include="Collections\Dictionary.pas"/>
-        <Compile Include="Collections\HashSet.pas"/>
-        <Compile Include="Collections\KeyValue.pas"/>
-        <Compile Include="Collections\LINQ.pas"/>
-        <Compile Include="Collections\List.pas"/>
-        <Compile Include="Collections\Queue.pas"/>
-        <Compile Include="Collections\Stack.pas"/>
-        <Compile Include="Color.pas"/>
-        <Compile Include="Consts.pas"/>
-        <Compile Include="Convert.pas"/>
-        <None Include="Cryptography\Cipher.pas"/>
-        <Compile Include="Cryptography\MessageDigest.pas"/>
-        <Compile Include="Cryptography\Utils.pas"/>
-        <Compile Include="DateFormatter.pas"/>
-        <Compile Include="DateTime.pas"/>
-        <Compile Include="Encoding.pas"/>
-        <Compile Include="Environment.pas"/>
-        <Compile Include="Exceptions.pas"/>
-        <Compile Include="Extensions.pas"/>
-        <Compile Include="Guid.pas"/>
-        <Compile Include="HTTP.pas"/>
-        <Compile Include="IO\File.pas"/>
-        <Compile Include="IO\FileHandle.pas"/>
-        <Compile Include="IO\FileUtils.pas"/>
-        <Compile Include="IO\Folder.pas"/>
-        <Compile Include="IO\FolderUtils.pas"/>
-        <Compile Include="IO\Path.pas"/>
-        <Compile Include="Math.pas"/>
-        <Compile Include="Random.pas"/>
-        <Compile Include="Reflection\MethodInfo.pas"/>
-        <Compile Include="Reflection\ParameterInfo.pas"/>
-        <Compile Include="Reflection\Type.pas"/>
-        <Compile Include="String.pas"/>
-        <Compile Include="StringBuilder.pas"/>
-        <Compile Include="StringFormatter.pas"/>
-        <Compile Include="Url.pas"/>
-        <Compile Include="UserSettings.pas"/>
-        <Compile Include="Threading\AutoResetEvent.pas"/>
-        <Compile Include="Threading\ManualResetEvent.pas"/>
-        <Compile Include="Threading\Semaphore.pas"/>
-        <Compile Include="Threading\Thread.pas"/>
-        <Compile Include="Threading\ThreadPool.pas"/>
-        <Compile Include="XML\XmlAttribute.pas"/>
-        <Compile Include="XML\XmlCharacterData.pas"/>
-        <Compile Include="XML\XmlDocument.pas"/>
-        <Compile Include="XML\XmlDocumentType.pas"/>
-        <Compile Include="XML\XmlElement.pas"/>
-        <Compile Include="XML\XmlNode.pas"/>
-        <Compile Include="XML\XmlProcessingInstruction.pas"/>
-    </ItemGroup>
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>719BEFD9-F514-42FD-8DA1-172697C756D2</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Sugar.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Cryptography\MD5Managed.pas">
+      <Conditional>WINDOWS_PHONE</Conditional>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Cryptography\MessageDigests.pas">
+      <Conditional>COCOA</Conditional>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Cryptography\SHA384Managed.pas">
+      <Conditional>WINDOWS_PHONE</Conditional>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Cryptography\SHA512Managed.pas">
+      <Conditional>WINDOWS_PHONE</Conditional>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)CustomEncodings.pas">
+      <Conditional>WINDOWS_PHONE</Conditional>
+    </Compile>
+    <Compile Include="Binary.pas" />
+    <Compile Include="Collections\Dictionary.pas" />
+    <Compile Include="Collections\HashSet.pas" />
+    <Compile Include="Collections\KeyValue.pas" />
+    <Compile Include="Collections\LINQ.pas" />
+    <Compile Include="Collections\List.pas" />
+    <Compile Include="Collections\Queue.pas" />
+    <Compile Include="Collections\Stack.pas" />
+    <Compile Include="Color.pas" />
+    <Compile Include="Consts.pas" />
+    <Compile Include="Convert.pas" />
+    <None Include="Cryptography\Cipher.pas" />
+    <Compile Include="Cryptography\MessageDigest.pas">
+      <Conditional>
+      </Conditional>
+    </Compile>
+    <Compile Include="Cryptography\Utils.pas" />
+    <Compile Include="DateFormatter.pas" />
+    <Compile Include="DateTime.pas" />
+    <Compile Include="Encoding.pas" />
+    <Compile Include="Environment.pas" />
+    <Compile Include="Exceptions.pas" />
+    <Compile Include="Extensions.pas" />
+    <Compile Include="Guid.pas" />
+    <Compile Include="HTTP.pas" />
+    <Compile Include="IO\File.pas" />
+    <Compile Include="IO\FileHandle.pas" />
+    <Compile Include="IO\FileUtils.pas" />
+    <Compile Include="IO\Folder.pas" />
+    <Compile Include="IO\FolderUtils.pas" />
+    <Compile Include="IO\Path.pas" />
+    <Compile Include="Math.pas" />
+    <Compile Include="Random.pas" />
+    <Compile Include="Reflection\MethodInfo.pas" />
+    <Compile Include="Reflection\ParameterInfo.pas" />
+    <Compile Include="Reflection\Type.pas" />
+    <Compile Include="String.pas" />
+    <Compile Include="StringBuilder.pas" />
+    <Compile Include="StringFormatter.pas" />
+    <Compile Include="Url.pas" />
+    <Compile Include="UserSettings.pas" />
+    <Compile Include="Threading\AutoResetEvent.pas" />
+    <Compile Include="Threading\ManualResetEvent.pas" />
+    <Compile Include="Threading\Semaphore.pas" />
+    <Compile Include="Threading\Thread.pas">
+      <Conditional>!NETFX_CORE</Conditional>
+    </Compile>
+    <Compile Include="Threading\ThreadPool.pas">
+      <Conditional>!NETFX_CORE</Conditional>
+    </Compile>
+    <Compile Include="XML\XmlAttribute.pas" />
+    <Compile Include="XML\XmlCharacterData.pas" />
+    <Compile Include="XML\XmlDocument.pas" />
+    <Compile Include="XML\XmlDocumentType.pas" />
+    <Compile Include="XML\XmlElement.pas" />
+    <Compile Include="XML\XmlNode.pas" />
+    <Compile Include="XML\XmlProcessingInstruction.pas" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Collections\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Cryptography\" />
+    <Folder Include="$(MSBuildThisFileDirectory)IO\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Reflection\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Threading\" />
+    <Folder Include="$(MSBuildThisFileDirectory)XML\" />
+  </ItemGroup>
 </Project>
