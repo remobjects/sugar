@@ -32,9 +32,12 @@ type
   protected
   public
     method ToJson: String; virtual; abstract;
+    method {$IF NOUGAT}description: Foundation.NSString{$ELSEIF COOPER}ToString: java.lang.String{$ELSEIF ECHOES}ToString: System.String{$ENDIF}; override;
   end;
 
 implementation
+
+{ JsonDocument }
 
 constructor JsonDocument(aRootObject: JsonObject);
 begin
@@ -65,6 +68,13 @@ end;
 method JsonDocument.ToJson: String;
 begin
   result := fRootObject.ToJson();
+end;
+
+{ JsonNode }
+
+method JsonNode.{$IF NOUGAT}description: Foundation.NSString{$ELSEIF COOPER}ToString: java.lang.String{$ELSEIF ECHOES}ToString: System.String{$ENDIF};
+begin
+  result := ToJson();
 end;
 
 end.

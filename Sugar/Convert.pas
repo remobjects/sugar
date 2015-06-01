@@ -20,6 +20,8 @@ type
     class method ToInt32(Value: Char): Int32;
     class method ToInt32(Value: String): Int32;
 
+    class method HexToInt32(Value: String): UInt32;
+
     class method ToInt64(Value: Boolean): Int64;
     class method ToInt64(Value: Byte): Int64;
     class method ToInt64(Value: Int32): Int64;
@@ -192,18 +194,24 @@ end;
 
 class method Convert.ToInt32(Value: String): Int32;
 begin
-  if Value = nil then
-    exit 0;
-
-  if String.IsNullOrWhiteSpace(Value) then
-    raise new SugarFormatException("Unable to convert string '{0}' to int32.", Value);
-
   {$IF COOPER}
   exit Integer.parseInt(Value);
   {$ELSEIF ECHOES}
   exit mapped.ToInt32(Value);
   {$ELSEIF NOUGAT}
   exit ConvertHelper.ParseInt32(Value);
+  {$ENDIF}
+end;
+
+class method Convert.HexToInt32(Value: String): UInt32;
+begin
+  {$IF COOPER}
+  exit Integer.parseInt(Value, 16);
+  {$ELSEIF ECHOES}
+  exit Int32.Parse(Value, System.Globalization.NumberStyles.HexNumber);
+  {$ELSEIF NOUGAT}
+  var scanner: NSScanner := NSScanner.scannerWithString(Value);
+  scanner.scanHexInt(var result);
   {$ENDIF}
 end;
 

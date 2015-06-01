@@ -223,15 +223,12 @@ begin
         'r': sb.Append(#13);
         'n': sb.Append(#10);
         't': sb.Append(#9);
-        'u': begin
-          {$WARNING TODO}
-               {if fData.Length > lPosition+4 then begin
-                 var lHex := fData.Substring(lPosition + 1, 4);
-                 var lValue := Int32.Parse(lHex, System.Globalization.NumberStyles.HexNumber);
-                 sb.Append(Char(lValue));
-                 lPosition := lPosition + 4;
-                end;}
-             end;
+        'u': if fData.Length > lPosition+4 then begin
+               var lHex := fData[lPosition+1]+fData[lPosition+2]+fData[lPosition+3]+fData[lPosition+4];
+               var lValue := Convert.HexToInt32(lHex);
+               sb.Append(Char(lValue));
+               lPosition := lPosition + 4;
+              end;
       end;
     end
     else 

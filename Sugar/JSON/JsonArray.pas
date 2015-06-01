@@ -21,8 +21,6 @@ type
     method &RemoveAt(&Index: Integer);
 
     method ToJson: String; override;
-    method {$IF NOUGAT}description: Foundation.NSString{$ELSEIF COOPER}ToString: java.lang.String{$ELSEIF ECHOES}ToString: System.String{$ENDIF}; override;
-
      
     {$IF COOPER}
     method &iterator: java.util.&Iterator<JsonNode>;
@@ -70,11 +68,6 @@ end;
 method JsonArray.RemoveAt(&Index: Integer);
 begin
   Items.RemoveAt(&Index);
-end;
-
-method JsonArray.{$IF NOUGAT}description: Foundation.NSString{$ELSEIF COOPER}ToString: java.lang.String{$ELSEIF ECHOES}ToString: System.String{$ENDIF};
-begin
-  exit String.Format("[array]: {0} items", Items.Count);
 end;
 
 class method JsonArray.Load(JsonString: String): JsonArray;
