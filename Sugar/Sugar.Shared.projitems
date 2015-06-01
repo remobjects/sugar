@@ -24,6 +24,19 @@
     <Compile Include="$(MSBuildThisFileDirectory)CustomEncodings.pas">
       <Conditional>WINDOWS_PHONE</Conditional>
     </Compile>
+
+    <Compile Include="AutoreleasePool.pas">
+      <Conditional>JAVA< | CLR/Conditional>
+    </Compile>
+    <Compile Include="Cooper\EnumerationSequence.pas">
+      <Conditional>JAVA</Conditional>
+    </Compile>
+    <Compile Include="Cooper\LocaleUtils.pas">
+      <Conditional>JAVA</Conditional>
+    </Compile>
+    <Compile Include="Echoes\AssemblyInfo.pas">
+      <Conditional>CLR</Conditional>
+    </Compile>
     <Compile Include="Binary.pas" />
     <Compile Include="Collections\Dictionary.pas" />
     <Compile Include="Collections\HashSet.pas" />
