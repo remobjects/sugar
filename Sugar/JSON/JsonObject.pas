@@ -22,7 +22,6 @@ type
     method &Remove(Key: String): Boolean;
 
     method ToJson: String; override;
-    method {$IF NOUGAT}description: Foundation.NSString{$ELSEIF COOPER}ToString: java.lang.String{$ELSEIF ECHOES}ToString: System.String{$ENDIF}; override;
     
     {$IF COOPER}
     method &iterator: java.util.&Iterator<KeyValue<String, JsonNode>>;
@@ -72,11 +71,6 @@ end;
 method JsonObject.Remove(Key: String): Boolean;
 begin
   exit Items.Remove(Key);
-end;
-
-method JsonObject.{$IF NOUGAT}description: Foundation.NSString{$ELSEIF COOPER}ToString: java.lang.String{$ELSEIF ECHOES}ToString: System.String{$ENDIF};
-begin
-  exit String.Format("[object]: {0} items", Items.Count);
 end;
 
 class method JsonObject.Load(JsonString: String): JsonObject;
