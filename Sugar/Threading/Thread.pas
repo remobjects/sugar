@@ -23,9 +23,9 @@ type
     method Start; mapped to Start;
     method &Join; {$IF COOPER OR ECHOES} mapped to &Join;{$ENDIF}
     method &Join(Timeout: Integer);  {$IF COOPER OR ECHOES}mapped to &Join(Timeout);{$ENDIF}
-    
+    {$HIDE W28}
     method Abort; mapped to {$IF ECHOES}Abort{$ELSEIF COOPER}stop{$ELSEIF NOUGAT}cancel{$ENDIF};
-
+    {$SHOW W28}
     class method Sleep(aTimeout: Integer); mapped to {$IF COOPER OR ECHOES}Sleep(aTimeout){$ELSEIF NOUGAT}sleepForTimeInterval(aTimeout){$ENDIF};
 
     //property State: ThreadState read GetState write SetState;

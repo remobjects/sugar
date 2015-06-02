@@ -79,23 +79,6 @@
     <CpuType>x86</CpuType>
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
-  <ItemGroup>
-    <Compile Include="JSON\Exceptions.pas" />
-    <Compile Include="JSON\JsonConsts.pas" />
-    <Compile Include="JSON\JsonDeserializer.pas" />
-    <Compile Include="JSON\JsonSerializer.pas" />
-    <Compile Include="JSON\JsonTokenizer.pas" />
-    <Compile Include="JSON\JsonTokenKind.pas" />
-    <Compile Include="JSON\Objects\JsonArray.pas" />
-    <Compile Include="JSON\Objects\JsonObject.pas" />
-    <Compile Include="JSON\Objects\JsonValue.pas" />
-    <Compile Include="Properties\AssemblyInfo_WinRT.pas" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="JSON" />
-    <Folder Include="JSON\Objects" />
-    <Folder Include="Properties\" />
-  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
     <VisualStudioVersion>11.0</VisualStudioVersion>
   </PropertyGroup>
@@ -117,8 +100,12 @@
       <HintPath>..\Sugar\bin\WinRT\Sugar.dll</HintPath>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Echoes.WinRT.targets" />
+  <Import Project="Sugar.Data.Shared.projitems" Label="Shared" />
   <PropertyGroup>
     <PreBuildEvent>rmdir /s /q $(ProjectDir)\Obj</PreBuildEvent>
   </PropertyGroup>

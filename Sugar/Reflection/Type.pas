@@ -1,6 +1,7 @@
 ﻿namespace Sugar.Reflection;
 
 interface
+{$IFDEF NETFX_CORE}uses System.Reflection;{$ENDIF}
 
 {$IF NOUGAT AND (TARGET_OS_IPHONE OR TARGET_IPHONESIMULATOR)} 
 type Protocol = id;
@@ -25,8 +26,17 @@ type
     method GetName: String;
     {$ENDIF}
   public
-    {$IF ECHOES}
-    method GetInterfaces: array of Sugar.Reflection.Type; mapped to GetInterfaces();
+    {$IFDEF NETFX_CORE} 
+    method GetInterfaces: array of Sugar.Reflection.Type; 
+    method GetMethods: array of Sugar.Reflection.MethodInfo; 
+    property BaseType: Sugar.Reflection.Type read mapped.GetTypeInfo().BaseType; 
+    property IsClass: Boolean read mapped.GetTypeInfo().IsClass;
+    property IsInterface: Boolean read mapped.GetTypeInfo().IsInterface;
+    property IsArray: Boolean read mapped.IsArray;
+    property IsEnum: Boolean read mapped.GetTypeInfo().IsEnum;
+    property IsValueType: Boolean read mapped.GetTypeInfo().IsValueType;
+    {$ELSEIF ECHOES}
+    method GetInterfaces: array of Sugar.Reflection.Type; mapped to  GetInterfaces();
     method GetMethods: array of Sugar.Reflection.MethodInfo; mapped to GetMethods();
     property BaseType: Sugar.Reflection.Type read mapped.BaseType; 
     property IsClass: Boolean read mapped.IsClass;
@@ -151,4 +161,16 @@ end;
 
 {$ENDIF}
 
+
+{$IF NETFX_CORE}
+method &Type.GetInterfaces: array of Sugar.Reflection.Type;
+begin
+  exit System.Linq.Enumerable.ToArray( mapped.GetTypeInfo().ImplementedInterfaces);
+end;
+
+method &Type.GetMethods: array of Sugar.Reflection.MethodInfo;
+begin
+  exit System.Linq.Enumerable.ToArray(System.Linq.Enumerable.OfType<MethodInfo>(mapped.GetTypeInfo().DeclaredMembers));
+end;
+{$ENDIF}
 end.

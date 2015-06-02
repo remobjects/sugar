@@ -1,4 +1,4 @@
-﻿namespace Sugar.Data.JSON;
+﻿namespace Sugar.Json;
 
 interface
 
@@ -14,15 +14,15 @@ type
 
     method ReadObject: JsonObject;
     method ReadArray: JsonArray;
-    method ReadProperties: sequence of KeyValue<String, JsonValue>;
-    method ReadPropery: KeyValue<String, JsonValue>;
+    method ReadProperties: sequence of KeyValue<String, JsonNode>;
+    method ReadPropery: KeyValue<String, JsonNode>;
     method ReadKey: String;
-    method ReadValues: sequence of JsonValue;
-    method ReadValue: JsonValue;
+    method ReadValues: sequence of JsonNode;
+    method ReadValue: JsonNode;
   public
     constructor (JsonString: String);
     
-    method Deserialize: JsonValue;    
+    method Deserialize: JsonNode;    
   end;
 
 implementation
@@ -32,13 +32,13 @@ begin
   Tokenizer := new JsonTokenizer(JsonString, true);
 end;
 
-method JsonDeserializer.Deserialize: JsonValue;
+method JsonDeserializer.Deserialize: JsonNode;
 begin
   Tokenizer.Next;
   Expected(JsonTokenKind.ObjectStart, JsonTokenKind.ArrayStart);
   case Tokenizer.Token of
-    JsonTokenKind.ObjectStart: exit new JsonValue(ReadObject, JsonValueKind.Object);
-    JsonTokenKind.ArrayStart: exit new JsonValue(ReadArray, JsonValueKind.Array);
+    JsonTokenKind.ObjectStart: exit ReadObject();
+    JsonTokenKind.ArrayStart: exit ReadArray();
   end;
 end;
 
@@ -66,12 +66,12 @@ begin
   Expected(JsonTokenKind.ObjectEnd);
   
   for Item in Properties do
-    result.AddValue(Item.Key, Item.Value);
+    result.Add(Item.Key, Item.Value);
 end;
 
-method JsonDeserializer.ReadProperties: sequence of KeyValue<String, JsonValue>;
+method JsonDeserializer.ReadProperties: sequence of KeyValue<String, JsonNode>;
 begin  
-  var List := new List<KeyValue<String, JsonValue>>;
+  var List := new List<KeyValue<String, JsonNode>>;
 
   repeat
     List.Add(ReadPropery);
@@ -85,12 +85,12 @@ begin
   exit List;
 end;
 
-method JsonDeserializer.ReadPropery: KeyValue<String, JsonValue>;
+method JsonDeserializer.ReadPropery: KeyValue<String, JsonNode>;
 begin
   var lKey := ReadKey;
   Expected(JsonTokenKind.NameSeperator);
   Tokenizer.Next;
-  result := new KeyValue<String,JsonValue>(lKey, ReadValue);
+  result := new KeyValue<String,JsonNode>(lKey, ReadValue);
 end;
 
 method JsonDeserializer.ReadKey: String;
@@ -104,9 +104,9 @@ begin
   Tokenizer.Next;
 end;
 
-method JsonDeserializer.ReadValues: sequence of JsonValue;
+method JsonDeserializer.ReadValues: sequence of JsonNode;
 begin
-  var List := new List<JsonValue>;
+  var List := new List<JsonNode>;
 
   repeat
     List.Add(ReadValue);
@@ -120,32 +120,32 @@ begin
   exit List;
 end;
 
-method JsonDeserializer.ReadValue: JsonValue;
+method JsonDeserializer.ReadValue: JsonNode;
 begin
   Expected(JsonTokenKind.String, JsonTokenKind.Number, JsonTokenKind.Null, JsonTokenKind.True, JsonTokenKind.False, JsonTokenKind.ArrayStart, JsonTokenKind.ObjectStart, JsonTokenKind.Identifier);
 
   case Tokenizer.Token of
-    JsonTokenKind.String: result := new JsonValue(Tokenizer.Value, JsonValueKind.String);
+    JsonTokenKind.String: result := new JsonStringValue(Tokenizer.Value);
     JsonTokenKind.Number: begin
       var lValue := Convert.ToDouble(Tokenizer.Value);
     
       if (not Consts.IsInfinity(lValue)) and (not Consts.IsNaN(lValue)) and (Math.Floor(lValue) = lValue) then begin
         if lValue > Consts.MaxInt64 then
-          result := new JsonValue(lValue, JsonValueKind.Double)
+          result := new JsonFloatValue(lValue)
         else if lValue > Consts.MinInteger then
-          result := new JsonValue(Convert.ToInt64(lValue), JsonValueKind.Integer)
+          result := new JsonIntegerValue(Convert.ToInt64(lValue))
         else
-          result := new JsonValue(Convert.ToInt64(lValue), JsonValueKind.Integer)
+          result := new JsonIntegerValue(Convert.ToInt64(lValue))
       end
       else 
-        result := new JsonValue(lValue, JsonValueKind.Double);
+        result := new JsonFloatValue(lValue);
     end;
-    JsonTokenKind.Null: result := new JsonValue(nil, JsonValueKind.Null);
-    JsonTokenKind.True: result := new JsonValue(true, JsonValueKind.Boolean);
-    JsonTokenKind.False: result := new JsonValue(false, JsonValueKind.Boolean);
-    JsonTokenKind.ArrayStart: result := new JsonValue(ReadArray, JsonValueKind.Array);
-    JsonTokenKind.ObjectStart: result := new JsonValue(ReadObject, JsonValueKind.Object);
-    JsonTokenKind.Identifier: result := new JsonValue(Tokenizer.Value, JsonValueKind.String);
+    JsonTokenKind.Null: result := nil;
+    JsonTokenKind.True: result := new JsonBooleanValue(true);
+    JsonTokenKind.False: result := new JsonBooleanValue(false);
+    JsonTokenKind.ArrayStart: result := ReadArray();
+    JsonTokenKind.ObjectStart: result := ReadObject();
+    JsonTokenKind.Identifier: result := new JsonStringValue(Tokenizer.Value);
   end;
 
   Tokenizer.Next;
@@ -166,7 +166,7 @@ begin
   Expected(JsonTokenKind.ArrayEnd);
   
   for Item in Values do
-    result.AddValue(Item);
+    result.Add(Item);
 end;
 
 end.

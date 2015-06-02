@@ -1,4 +1,4 @@
-﻿namespace Sugar.Data.JSON;
+﻿namespace Sugar.Json;
 
 interface
 

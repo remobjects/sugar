@@ -1,4 +1,4 @@
-﻿namespace Sugar.Data.JSON;
+﻿namespace Sugar.Json;
 
 interface
 
@@ -223,17 +223,16 @@ begin
         'r': sb.Append(#13);
         'n': sb.Append(#10);
         't': sb.Append(#9);
-        'u': begin
-               {$WARNING Missing unicode processing}
-               sb.Append(new String(fData, lPosition + 1, 4));
+        'u': if fData.Length > lPosition+4 then begin
+               var lHex := fData[lPosition+1]+fData[lPosition+2]+fData[lPosition+3]+fData[lPosition+4];
+               var lValue := Convert.HexToInt32(lHex);
+               sb.Append(Char(lValue));
                lPosition := lPosition + 4;
-        {fSB.Append((char)Int32.Parse(new String(fData, lPosition + 1, 4), System.Globalization.NumberStyles.HexNumber));}
-             end;
+              end;
       end;
     end
     else 
       sb.Append(fData[lPosition]);
-
 
     inc(lPosition);
   end;
@@ -252,18 +251,12 @@ begin
 
   fLength := lPosition - fPos;
   Value := new String(fData, fPos, fLength);
-  {$WARNING #69867 case does not working with mapped string}
-  {case Value of 
-    "null": Token := JsonTokenKind.Null;
-    "true": Token := JsonTokenKind.True;    
-    "false": Token := JsonTokenKind.False;
-    else
-      Token := JsonTokenKind.Identifier;
-  end;}
-  if Value = JsonConsts.NULL_VALUE then Token := JsonTokenKind.Null
-  else if Value = JsonConsts.TRUE_VALUE then Token := JsonTokenKind.True
-  else if Value = JsonConsts.FALSE_VALUE then Token := JsonTokenKind.False
-  else Token := JsonTokenKind.Identifier;
+  case Value of 
+    JsonConsts.NULL_VALUE: Token := JsonTokenKind.Null;
+    JsonConsts.TRUE_VALUE: Token := JsonTokenKind.True;    
+    JsonConsts.FALSE_VALUE: Token := JsonTokenKind.False;
+    else Token := JsonTokenKind.Identifier;
+  end;
 end;
 
 end.

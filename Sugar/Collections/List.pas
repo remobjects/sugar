@@ -385,12 +385,12 @@ end;
 {$IF NOUGAT}
 operator List<T>.Implicit(aValue: NSMutableArray<T>): List<T>;
 begin
-  result := aValue as List<T>;
+  result := (aValue as NSMutableArray) as List<T>;
 end;
 
 operator List<T>.Implicit(aValue: List<T>): NSMutableArray<T>;
 begin
-  result := aValue as NSMutableArray<T>;
+  result := (aValue as NSMutableArray) as NSMutableArray<T>;
 end;
 
 class method NullHelper.ValueOf(Value: id): id;

@@ -1,8 +1,9 @@
-﻿namespace Sugar.Data.JSON;
+﻿namespace Sugar.Json;
 
 interface
 
 type
+
   JsonConsts = assembly static class
   public
     const VALUE_SEPARATOR: Char = ',';
@@ -16,6 +17,24 @@ type
     const FALSE_VALUE: String = "false";
     const NULL_VALUE: String = "null";
   end;
+
+  JsonTokenKind = public enum(
+    BOF,
+    EOF, 
+    Whitespace, 
+    String, 
+    Number, 
+    Null, 
+    &True, 
+    &False, 
+    ArrayStart, 
+    ArrayEnd, 
+    ObjectStart, 
+    ObjectEnd, 
+    NameSeperator, 
+    ValueSeperator, 
+    Identifier, 
+    SyntaxError);
 
 implementation
 end.

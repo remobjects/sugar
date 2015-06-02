@@ -99,23 +99,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <ItemGroup>
-    <Compile Include="JSON\Exceptions.pas" />
-    <Compile Include="JSON\JsonConsts.pas" />
-    <Compile Include="JSON\JsonDeserializer.pas" />
-    <Compile Include="JSON\JsonSerializer.pas" />
-    <Compile Include="JSON\JsonTokenizer.pas" />
-    <Compile Include="JSON\JsonTokenKind.pas" />
-    <Compile Include="JSON\Objects\JsonArray.pas" />
-    <Compile Include="JSON\Objects\JsonObject.pas" />
-    <Compile Include="JSON\Objects\JsonValue.pas" />
-    <Compile Include="Properties\AssemblyInfo_WP8.pas" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="JSON" />
-    <Folder Include="JSON\Objects" />
-    <Folder Include="Properties\" />
-  </ItemGroup>
   <ProjectExtensions />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
@@ -135,8 +118,12 @@
       <HintPath>..\Sugar\bin\WP8\Sugar.dll</HintPath>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\RemObjects.Oxygene.Echoes.$(TargetFrameworkIdentifier).targets" />
+  <Import Project="Sugar.Data.Shared.projitems" Label="Shared" />
   <PropertyGroup>
     <PreBuildEvent>rmdir /s /q $(ProjectDir)\Obj</PreBuildEvent>
   </PropertyGroup>

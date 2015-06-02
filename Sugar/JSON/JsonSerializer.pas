@@ -1,4 +1,4 @@
-﻿namespace Sugar.Data.JSON;
+﻿namespace Sugar.Json;
 
 interface
 
@@ -10,7 +10,7 @@ type
   JsonSerializer = assembly class
   private
     Builder: StringBuilder := new StringBuilder();
-    JValue: JsonValue;
+    JValue: JsonNode;
     Offset: Integer;
 
     method IncOffset;
@@ -19,21 +19,22 @@ type
 
     method VisitObject(Value: JsonObject);
     method VisitArray(Value: JsonArray);
-    method VisitString(Value: String);
-    method VisitNumber(Value: JsonValue);
-    method VisitBoolean(Value: Boolean);
-    method VisitNull(Value: JsonValue);
+    method VisitString(Value: JsonStringValue);
+    method VisitInteger(Value: JsonIntegerValue);
+    method VisitFloat(Value: JsonFloatValue);
+    method VisitBoolean(Value: JsonBooleanValue);
+    method VisitNull(Value: JsonNode);
     method VisitName(Value: String);
-    method Visit(Value: JsonValue);
+    method Visit(Value: JsonNode);
   public
-    constructor (Value: JsonValue);
+    constructor (Value: JsonNode);
     
     method Serialize: String;    
   end;
 
 implementation
 
-constructor JsonSerializer(Value: JsonValue);
+constructor JsonSerializer(Value: JsonNode);
 begin
   SugarArgumentNullException.RaiseIfNil(Value, "Value");
   JValue := Value;
@@ -87,22 +88,27 @@ begin
   Builder.Append(JsonConsts.ARRAY_END);
 end;
 
-method JsonSerializer.VisitString(Value: String);
+method JsonSerializer.VisitString(Value: JsonStringValue);
 begin
-  Builder.Append(JsonConsts.STRING_QUOTE).Append(Value).Append(JsonConsts.STRING_QUOTE);
+  Builder.Append(Value.ToJson);
 end;
 
-method JsonSerializer.VisitNumber(Value: JsonValue);
+method JsonSerializer.VisitInteger(Value: JsonIntegerValue);
 begin
-  Builder.Append(Value.ToStr);
+  Builder.Append(Value.ToJson);
 end;
 
-method JsonSerializer.VisitBoolean(Value: Boolean);
+method JsonSerializer.VisitFloat(Value: JsonFLoatValue);
 begin
-  Builder.Append(if Value then JsonConsts.TRUE_VALUE else JsonConsts.FALSE_VALUE);
+  Builder.Append(Value.ToJson);
 end;
 
-method JsonSerializer.VisitNull(Value: JsonValue);
+method JsonSerializer.VisitBoolean(Value: JsonBooleanValue);
+begin
+  Builder.Append(Value.ToJson);
+end;
+
+method JsonSerializer.VisitNull(Value: JsonNode);
 begin
   Builder.Append(JsonConsts.NULL_VALUE);
 end;
@@ -110,21 +116,33 @@ end;
 method JsonSerializer.VisitName(Value: String);
 begin
   AppendOffset;
-  VisitString(Value);
+  Builder.Append(JsonConsts.STRING_QUOTE).Append(Value).Append(JsonConsts.STRING_QUOTE);
   Builder.Append(JsonConsts.NAME_SEPARATOR).Append(" ");
 end;
 
-method JsonSerializer.Visit(Value: JsonValue);
+method JsonSerializer.Visit(Value: JsonNode);
 begin
-  case Value.Kind of
-    JsonValueKind.Null: VisitNull(Value);
-    JsonValueKind.String: VisitString(Value.ToStr);
-    JsonValueKind.Integer: VisitNumber(Value);
-    JsonValueKind.Double: VisitNumber(Value);
-    JsonValueKind.Boolean: VisitBoolean(Value.ToBoolean);
-    JsonValueKind.Object: VisitObject(Value.ToObject);
-    JsonValueKind.Array: VisitArray(Value.ToArray);
-  end;
+  if assigned(Value) then begin
+    
+    //72162: Echoes: Case Type Of is not working
+    if Value is JsonObject then VisitObject(Value as JsonObject)
+    else if Value is JsonArray then VisitArray(Value as JsonArray)
+    else if Value is JsonStringValue then VisitString(Value as JsonStringValue)
+    else if Value is JsonIntegerValue then VisitInteger(Value as JsonIntegerValue)
+    else if Value is JsonFloatValue then VisitFloat(Value as JsonFLoatValue)
+    else if Value is JsonBooleanValue then VisitBoolean(Value as JsonBooleanValue);
+    
+    {case typeOf(Value) type of
+      JsonStringValue: VisitString(Value as JsonStringValue);
+      JsonIntegerValue: VisitInteger(Value as JsonIntegerValue);
+      JsonFloatValue: VisitFloat(Value as JsonFLoatValue);
+      JsonBooleanValue: VisitBoolean(Value as JsonBooleanValue);
+      JsonArray: VisitArray(Value as JsonArray);
+      JsonObject: VisitObject(Value as JsonObject);
+    end;}
+  end
+  else
+    VisitNull(Value);
 end;
 
 method JsonSerializer.IncOffset;
