@@ -13,10 +13,12 @@ type
   public
     property Mode: HttpRequestMode := HttpRequestMode.Get; 
     property Headers: not nullable Dictionary<String,String> := new Dictionary<String,String>; readonly;
-    property Content: HtttRequestContent;
+    property Content: HttpRequestContent;
     property Url: Url;
+    property FollowRedirects: Boolean := true;
     
     constructor(aUrl: Url; aMode: HttpRequestMode := HttpRequestMode.Get);
+    operator Implicit(aUrl: Url): HttpRequest;
   end;
   
   HttpRequestMode = public enum (Get, Post);
@@ -25,10 +27,13 @@ type
     method GetContentAsBinary(): Binary;
   end;
 
-  HtttRequestContent = public class
+  HttpRequestContent = public class
+  public
+    operator Implicit(aBinary: Binary): HttpRequestContent;
+    operator Implicit(aString: String): HttpRequestContent;
   end;
   
-  HttpBinaryRequestContent = public class(HtttRequestContent, IHttpRequestContent)
+  HttpBinaryRequestContent = public class(HttpRequestContent, IHttpRequestContent)
   unit
     property Binary: Binary; readonly;
     method GetContentAsBinary: Binary;
@@ -54,7 +59,7 @@ type
     property Headers: not nullable Dictionary<String,String>; readonly; //todo: list itself should be read-only
     property Code: Int32; readonly;
     property Success: Boolean read self.Exception = nil;
-    property Exception: Exception read write; readonly;
+    property Exception: Exception public read assembly write; // should be "unit
     
     method GetContentAsString(aEncoding: Encoding := nil; contentCallback: HttpContentResponseBlock<String>);
     method GetContentAsBinary(contentCallback: HttpContentResponseBlock<Binary>);
@@ -73,9 +78,16 @@ type
   HttpContentResponseBlock<T> = public block (ResponseContent: HttpResponseContent<T>);
 
   Http = public static class
+  private
+    const SUGAR_USER_AGENT = "RemObjects Sugar/8.0 http://www.elementscompiler.com/elements/sugar";
   public
     method ExecuteRequest(aUrl: Url; ResponseCallback: HttpResponseBlock);
     method ExecuteRequest(aRequest: HttpRequest; ResponseCallback: HttpResponseBlock);
+
+    method ExecuteRequestAsString(aRequest: HttpRequest; contentCallback: HttpContentResponseBlock<String>);
+    //method ExecuteRequestAsBinary(aRequest: HttpRequest; contentCallback: HttpContentResponseBlock<Binary>);
+    //method ExecuteRequestAsXml(aRequest: HttpRequest; contentCallback: HttpContentResponseBlock<XmlDocument>);
+    method ExecuteRequestAsJson(aRequest: HttpRequest; contentCallback: HttpContentResponseBlock<JsonDocument>);
   end;
 
 implementation
@@ -90,6 +102,23 @@ constructor HttpRequest(aUrl: Url; aMode: HttpRequestMode := HttpRequestMode.Get
 begin
   Url := aUrl;
   Mode := aMode;
+end;
+
+operator HttpRequest.Implicit(aUrl: Url): HttpRequest;
+begin
+  result := new HttpRequest(aUrl);
+end;
+
+{ HttpRequestContent }
+
+operator HttpRequestContent.Implicit(aBinary: Binary): HttpRequestContent;
+begin
+  result := new HttpBinaryRequestContent(aBinary);
+end;
+
+operator HttpRequestContent.Implicit(aString: String): HttpRequestContent;
+begin
+  result := new HttpBinaryRequestContent(aString, Encoding.UTF8);
 end;
 
 { HttpBinaryRequestContent }
@@ -160,6 +189,11 @@ method HttpResponse.GetContentAsBinary(contentCallback: HttpContentResponseBlock
 begin
   {$IF COOPER}
   {$ELSEIF ECHOES}
+  async begin
+    var allData := new System.IO.MemoryStream();
+    Response.GetResponseStream().CopyTo(allData);
+    contentCallback(new HttpResponseContent<Binary>(Content := allData));
+  end;
   {$ELSEIF NOUGAT}
   contentCallback(new HttpResponseContent<Binary>(Content := Data.mutableCopy));
   {$ENDIF}
@@ -184,8 +218,11 @@ end;
 
 method HttpResponse.GetContentAsJson(contentCallback: HttpContentResponseBlock<JsonDocument>);
 begin
+      writeln("A");
   GetContentAsBinary((content) -> begin
+      writeln("B");
     if content.Success then begin
+      writeln("C");
       try
         var document := JsonDocument.FromBinary(content.Content);
         contentCallback(new HttpResponseContent<JsonDocument>(Content := document));
@@ -194,17 +231,13 @@ begin
           contentCallback(new HttpResponseContent<JsonDocument>(Exception := E));
       end;
     end else begin
+      writeln("D");
       contentCallback(new HttpResponseContent<JsonDocument>(Exception := content.Exception));
     end;
   end);
 end;
 
 { Http }
-
-method Http.ExecuteRequest(aUrl: Url; ResponseCallback: HttpResponseBlock);
-begin
-  ExecuteRequest(new HttpRequest(aUrl, HttpRequestMode.Get), responseCallback);
-end;
 
 method Http.ExecuteRequest(aRequest: HttpRequest; ResponseCallback: HttpResponseBlock);
 begin
@@ -213,6 +246,9 @@ begin
   
   {$ELSEIF ECHOES}
   using webRequest := System.Net.WebRequest.CreateHttp(aRequest.Url) as HttpWebRequest do begin
+    
+    webRequest.AllowAutoRedirect := aRequest.FollowRedirects;
+    webRequest.UserAgent := SUGAR_USER_AGENT;
     
     case aRequest.Mode of
       HttpRequestMode.Get: webRequest.Method := "GET";
@@ -223,14 +259,13 @@ begin
       using stream := webRequest.GetRequestStream() do begin
         var data := (aRequest.Content as IHttpRequestContent).GetContentAsBinary().ToArray();
         stream.Write(data, 0, data.Length);
-        writeLn(data.length+" bytes of data");
+        stream.Flush();
+        //webRequest.ContentLength := data.Length;
       end;
-
     end;
     
     webRequest.BeginGetResponse( (ar) -> begin
 
-      writeLn("response");
       try
         var webResponse := webRequest.EndGetResponse(ar) as HttpWebResponse;
         var response := new HttpResponse(webResponse);
@@ -245,6 +280,9 @@ begin
   
   {$ELSEIF NOUGAT}
   var nsUrlRequest := new NSURLRequest withURL(aRequest.Url) cachePolicy(0) timeoutInterval(30);
+
+  //nsUrlRequest.AllowAutoRedirect := aRequest.FollowRedirects;
+
   NSURLConnection.sendAsynchronousRequest(nsUrlRequest) queue(nil) completionHandler( (nsUrlResponse, data, error) -> begin
 
     var nsHttpUrlResponse := NSHTTPURLResponse(nsUrlResponse);
@@ -267,6 +305,39 @@ begin
   
  {$ENDIF}
 end;
+
+
+method Http.ExecuteRequest(aUrl: Url; ResponseCallback: HttpResponseBlock);
+begin
+  ExecuteRequest(new HttpRequest(aUrl, HttpRequestMode.Get), responseCallback);
+end;
+
+method Http.ExecuteRequestAsString(aRequest: HttpRequest; contentCallback: HttpContentResponseBlock<String>);
+begin
+  Http.ExecuteRequest(aRequest, (response) -> begin
+    if response.Success then begin
+      response.GetContentAsString( (content) -> begin
+        contentCallback(content)
+      end);
+    end else begin
+      contentCallback(new HttpResponseContent<String>(Exception := response.Exception));
+    end;
+  end);
+end;
+
+method Http.ExecuteRequestAsJson(aRequest: HttpRequest; contentCallback: HttpContentResponseBlock<JsonDocument>);
+begin
+  Http.ExecuteRequest(aRequest, (response) -> begin
+    if response.Success then begin
+      response.GetContentAsJson( (content) -> begin
+        contentCallback(content)
+      end);
+    end else begin
+      contentCallback(new HttpResponseContent<JsonDocument>(Exception := response.Exception));
+    end;
+  end);
+end;
+
 
 (*
 

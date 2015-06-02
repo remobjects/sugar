@@ -15,7 +15,6 @@ type
     property QueryString: String read mapped.Query;
     property Fragment: String read mapped.toURI.Fragment;    
     property UserInfo: String read mapped.UserInfo;
-  end;
   {$ELSEIF ECHOES}
   Url = public class mapped to System.Uri
   private
@@ -33,7 +32,6 @@ type
     property QueryString: String read GetQueryString;
     property Fragment: String read GetFragment;
     property UserInfo: String read GetUserInfo;
-  end;
   {$ELSEIF NOUGAT}
   Url = public class mapped to Foundation.NSURL
   private
@@ -51,9 +49,11 @@ type
     property UserInfo: String read GetUserInfo;
     
     method description: NSString; override;
-  end;
   {$ENDIF}
 
+    class method UrlEncodeString(aString: String): String;
+  end;
+    
 implementation
 
 {$IF NOUGAT}
@@ -138,6 +138,17 @@ begin
     raise new SugarArgumentException("Url was not in correct format");
 
   exit Value;
+  {$ENDIF}
+end;
+
+class method Url.UrlEncodeString(aString: String): String;
+begin
+  {$IF COOPER}
+  {$WARNING missing implementation}
+  {$ELSEIF ECHOES}
+  result := System.Web.HttpUtility.UrlEncode(aString);
+  {$ELSEIF NOUGAT}
+  result := aString.stringByAddingPercentEscapesUsingEncoding(NSStringEncoding.NSUTF8StringEncoding) 
   {$ENDIF}
 end;
 
