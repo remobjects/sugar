@@ -123,23 +123,14 @@ end;
 method JsonSerializer.Visit(Value: JsonNode);
 begin
   if assigned(Value) then begin
-    
-    //72162: Echoes: Case Type Of is not working
-    if Value is JsonObject then VisitObject(Value as JsonObject)
-    else if Value is JsonArray then VisitArray(Value as JsonArray)
-    else if Value is JsonStringValue then VisitString(Value as JsonStringValue)
-    else if Value is JsonIntegerValue then VisitInteger(Value as JsonIntegerValue)
-    else if Value is JsonFloatValue then VisitFloat(Value as JsonFLoatValue)
-    else if Value is JsonBooleanValue then VisitBoolean(Value as JsonBooleanValue);
-    
-    {case typeOf(Value) type of
+    case Value type of
       JsonStringValue: VisitString(Value as JsonStringValue);
       JsonIntegerValue: VisitInteger(Value as JsonIntegerValue);
       JsonFloatValue: VisitFloat(Value as JsonFLoatValue);
       JsonBooleanValue: VisitBoolean(Value as JsonBooleanValue);
       JsonArray: VisitArray(Value as JsonArray);
       JsonObject: VisitObject(Value as JsonObject);
-    end;}
+    end;
   end
   else
     VisitNull(Value);
