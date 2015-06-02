@@ -13,7 +13,7 @@ type
   public
     property Mode: HttpRequestMode := HttpRequestMode.Get; 
     property Headers: not nullable Dictionary<String,String> := new Dictionary<String,String>; readonly;
-    property Content: IHttpRequestContent;
+    property Content: HtttRequestContent;
     property Url: Url;
     
     constructor(aUrl: Url; aMode: HttpRequestMode := HttpRequestMode.Get);
@@ -21,8 +21,20 @@ type
   
   HttpRequestMode = public enum (Get, Post);
   
-  IHttpRequestContent = public interface
-    //method ContentStream();
+  IHttpRequestContent = assembly interface
+    method GetContentAsBinary(): Binary;
+  end;
+
+  HtttRequestContent = public class
+  end;
+  
+  HttpBinaryRequestContent = public class(HtttRequestContent, IHttpRequestContent)
+  unit
+    property Binary: Binary; readonly;
+    method GetContentAsBinary: Binary;
+  public
+    constructor(aBinary: Binary);
+    constructor(aString: String; aEncoding: Encoding);
   end;
 
   HttpResponse = public class
@@ -30,13 +42,12 @@ type
     //constructor;
     constructor withException(anException: Exception);
 
-    {$IF NOUGAT}
-    var Data: NSData?
-    constructor(aData: NSData, aResponse: NSHTTPURLResponse);{
-      Code = response.statusCode
-      Headers = response.allHeaderFields as! Dictionary<String,String> // why is this cast needed?
-      Data = data;
-    }
+    {$IF ECHOES}
+    var Response: HttpWebResponse;
+    constructor(aResponse: HttpWebResponse);
+    {$ELSE NOUGAT}
+    var Data: NSData;
+    constructor(aData: NSData; aResponse: NSHTTPURLResponse);
     {$ENDIF}
 
   public
@@ -45,7 +56,7 @@ type
     property Success: Boolean read self.Exception = nil;
     property Exception: Exception read write; readonly;
     
-    method GetContentAsString(contentCallback: HttpContentResponseBlock<String>);
+    method GetContentAsString(aEncoding: Encoding := nil; contentCallback: HttpContentResponseBlock<String>);
     method GetContentAsBinary(contentCallback: HttpContentResponseBlock<Binary>);
     method GetContentAsXml(contentCallback: HttpContentResponseBlock<XmlDocument>);
     method GetContentAsJson(contentCallback: HttpContentResponseBlock<JsonDocument>);
@@ -53,9 +64,9 @@ type
   
   HttpResponseContent<T> = public class
   public
-    property Content: T;
+    property Content: T public read assembly write; // should be "unit"
     property Success: Boolean read self.Exception = nil;
-    property Exception: Exception read write; readonly;
+    property Exception: Exception public read assembly write; // should be "unit
   end;
   
   HttpResponseBlock = public block (Response: HttpResponse);
@@ -69,12 +80,34 @@ type
 
 implementation
 
+{$IF ECHOES}
+uses System.Net;
+{$ENDIF}
+
 { HttpRequest }
 
 constructor HttpRequest(aUrl: Url; aMode: HttpRequestMode := HttpRequestMode.Get);
 begin
   Url := aUrl;
   Mode := aMode;
+end;
+
+{ HttpBinaryRequestContent }
+
+constructor HttpBinaryRequestContent(aBinary: Binary);
+begin
+  Binary := aBinary;
+end;
+
+constructor HttpBinaryRequestContent(aString: String; aEncoding: Encoding);
+begin
+  if aEncoding = nil then aEncoding := Encoding.Default;
+  Binary := new Binary(aString.ToByteArray(aEncoding));
+end;
+
+method HttpBinaryRequestContent.GetContentAsBinary(): Binary;
+begin
+  result := Binary;
 end;
 
 { HttpResponse }
@@ -86,6 +119,87 @@ end;}
 constructor HttpResponse withException(anException: Exception);
 begin
   self.Exception := anException;
+  Headers := new Dictionary<String,String>();
+end;
+
+{$IF ECHOES}
+constructor HttpResponse(aResponse: HttpWebResponse);
+begin
+  Response := aResponse;
+  Headers := new Dictionary<String,String>();
+  for each k: String in aResponse.Headers.Keys do
+    Headers[k.ToString] := aResponse.Headers[k];
+end;
+
+{$ELSEIF NOUGAT}
+constructor HttpResponse(aData: NSData; aResponse: NSHTTPURLResponse);
+begin
+  Code := aResponse.statusCode;
+  Headers := aResponse.allHeaderFields as Dictionary<String,String>; // why is this cast needed?
+  Data := aData;
+end;
+{$ENDIF}
+
+method HttpResponse.GetContentAsString(aEncoding: Encoding := nil; contentCallback: HttpContentResponseBlock<String>);
+begin
+  {$IF COOPER}
+  {$ELSEIF ECHOES}
+
+  async
+    using responseString := new System.IO.StreamReader(Response.GetResponseStream()).ReadToEnd() do
+      contentCallback(new HttpResponseContent<String>(Content := responseString))
+
+  {$ELSEIF NOUGAT}
+  if aEncoding = nil then aEncoding := Encoding.Default;
+  var s := new Foundation.NSString withData(Data) encoding(aEncoding as NSStringEncoding); // todo: test this
+  if assigned(s) then
+    contentCallback(new HttpResponseContent<String>(Content := s))
+  else
+    contentCallback(new HttpResponseContent<String>(Exception := new SugarException("Invalid Encoding")));
+  {$ENDIF}
+end;
+
+method HttpResponse.GetContentAsBinary(contentCallback: HttpContentResponseBlock<Binary>);
+begin
+  {$IF COOPER}
+  {$ELSEIF ECHOES}
+  {$ELSEIF NOUGAT}
+  contentCallback(new HttpResponseContent<Binary>(Content := Data.mutableCopy));
+  {$ENDIF}
+end;
+
+method HttpResponse.GetContentAsXml(contentCallback: HttpContentResponseBlock<XmlDocument>);
+begin
+  GetContentAsBinary((content) -> begin
+    if content.Success then begin
+      try
+        var document := XmlDocument.FromBinary(content.Content);
+        contentCallback(new HttpResponseContent<XmlDocument>(Content := document));
+      except
+        on E: Exception do
+          contentCallback(new HttpResponseContent<XmlDocument>(Exception := E));
+      end;
+    end else begin
+      contentCallback(new HttpResponseContent<XmlDocument>(Exception := content.Exception));
+    end;
+  end);
+end;
+
+method HttpResponse.GetContentAsJson(contentCallback: HttpContentResponseBlock<JsonDocument>);
+begin
+  GetContentAsBinary((content) -> begin
+    if content.Success then begin
+      try
+        var document := JsonDocument.FromBinary(content.Content);
+        contentCallback(new HttpResponseContent<JsonDocument>(Content := document));
+      except
+        on E: Exception do
+          contentCallback(new HttpResponseContent<JsonDocument>(Exception := E));
+      end;
+    end else begin
+      contentCallback(new HttpResponseContent<JsonDocument>(Exception := content.Exception));
+    end;
+  end);
 end;
 
 { Http }
@@ -97,23 +211,58 @@ end;
 
 method Http.ExecuteRequest(aRequest: HttpRequest; ResponseCallback: HttpResponseBlock);
 begin
-  {$IF NOUGAT}
-  var nsUrlRequest := NSURLRequest withURL(request.Url) cachePolicy(0) timeoutInterval(30);
-  NSURLConnection.sendAsynchronousRequest(nsUrlRequest queue(nil) callback( (nsUrlResponse, data, error) => begin
+  
+  {$IF COOPER}
+  
+  {$ELSEIF ECHOES}
+  using webRequest := System.Net.WebRequest.CreateHttp(aRequest.Url) as HttpWebRequest do begin
+    
+    case aRequest.Mode of
+      HttpRequestMode.Get: webRequest.Method := "GET";
+      HttpRequestMode.Post: webRequest.Method := "POST";
+    end;
+    
+    if assigned(aRequest.Content) then begin
+      using stream := webRequest.GetRequestStream() do begin
+        var data := (aRequest.Content as IHttpRequestContent).GetContentAsBinary().ToArray();
+        stream.Write(data, 0, data.Length);
+        writeLn(data.length+" bytes of data");
+      end;
 
-    var nsHttpUrlResponse := NSHTTPURLResponse(nsUrlResponse)
+    end;
+    
+    webRequest.BeginGetResponse( (ar) -> begin
+
+      writeLn("response");
+      try
+        var webResponse := webRequest.EndGetResponse(ar) as HttpWebResponse;
+        var response := new HttpResponse(webResponse);
+        responseCallback(response);
+      except
+        on E: Exception do
+          responseCallback(new HttpResponse(E));
+      end;
+    
+    end, nil);
+  end;
+  
+  {$ELSEIF NOUGAT}
+  var nsUrlRequest := new NSURLRequest withURL(aRequest.Url) cachePolicy(0) timeoutInterval(30);
+  NSURLConnection.sendAsynchronousRequest(nsUrlRequest) queue(nil) completionHandler( (nsUrlResponse, data, error) -> begin
+
+    var nsHttpUrlResponse := NSHTTPURLResponse(nsUrlResponse);
     if assigned(data) and assigned(nsHttpUrlResponse) and not assigned(error) then begin
       
-      var response := HttpResponse(data, nsHttpUrlResponse);
+      var response := new HttpResponse(data, nsHttpUrlResponse);
       responseCallback(response);
 
     end else if assigned(error) then begin
       
-      var response := HttpResponse(new SugarException withError(error));
+      var response := new HttpResponse(new SugarException withError(error));
       responseCallback(response);
       
     end else begin
-      var response := HttpResponse(new SugarException("Request failed without providing an error."));
+      var response := new HttpResponse(new SugarException("Request failed without providing an error."));
       responseCallback(response);
     end;
     
@@ -147,7 +296,7 @@ begin
 end;
 {$ENDIF}
 
-
+(*
 class method Http.Download(anUrl: Url): HttpResponse<Binary>;
 begin
   try
@@ -283,5 +432,7 @@ begin
       ResponseCallback(new HttpResponse<XmlDocument>(XmlDocument.FromBinary(Data.Content)));
   end;
 end;
+
+*)
 
 end.

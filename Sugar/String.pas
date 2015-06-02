@@ -43,6 +43,7 @@ type
     method StartsWith(Value: String): Boolean;
     method EndsWith(Value: String): Boolean;
     method ToByteArray: array of Byte;
+    method ToByteArray(aEncoding: {not nullable} Encoding): array of Byte;
     method ToCharArray: array of Char;
 
     property Length: Int32 read mapped.Length;
@@ -440,6 +441,18 @@ begin
   exit System.Text.Encoding.UTF8.GetBytes(mapped);
   {$ELSEIF NOUGAT}
   var Data := Binary(mapped.dataUsingEncoding(NSStringEncoding.NSUTF8StringEncoding));
+  exit Data.ToArray;
+  {$ENDIF}
+end;
+
+method String.ToByteArray(aEncoding: {not nullable} Encoding): array of Byte;
+begin
+  {$IF COOPER}
+  exit mapped.getBytes(aEncoding);
+  {$ELSEIF ECHOES}
+  exit aEncoding.GetBytes(mapped);
+  {$ELSEIF NOUGAT}
+  var Data := Binary(mapped.dataUsingEncoding(aEncoding as NSStringEncoding)); // todo: test
   exit Data.ToArray;
   {$ENDIF}
 end;
