@@ -10,6 +10,7 @@ type
   public
     constructor(aValue: T);
 
+    method {$IF NOUGAT}description: Foundation.NSString{$ELSEIF COOPER}ToString: java.lang.String{$ELSEIF ECHOES}ToString: System.String{$ENDIF}; override;
     method {$IF NOUGAT}isEqual(obj: id){$ELSE}&Equals(Obj: Object){$ENDIF}: Boolean; override;
     method {$IF NOUGAT}hash: Foundation.NSUInteger{$ELSEIF COOPER}hashCode: Integer{$ELSEIF ECHOES}GetHashCode: Integer{$ENDIF}; override;
 
@@ -50,6 +51,11 @@ begin
   Value := aValue;
 end;
 
+method JsonValue<T>.{$IF NOUGAT}description: Foundation.NSString{$ELSEIF COOPER}ToString: java.lang.String{$ELSEIF ECHOES}ToString: System.String{$ENDIF};
+begin
+  result := Value.{$IF NOUGAT}description{$ELSEIF COOPER}ToString{$ELSEIF ECHOES}ToString{$ENDIF};
+end;
+
 method JsonValue<T>.{$IF NOUGAT}isEqual(obj: id){$ELSE}&Equals(Obj: Object){$ENDIF}: Boolean;
 begin
   if (obj = nil) or (not (obj is JsonValue<T>)) then
@@ -67,6 +73,11 @@ operator JsonValue<T>.Implicit(aValue: JsonValue<T>): T;
 begin
   result := aValue:Value;
 end;
+
+{operator JsonValue<T>.Explicit(aValue: JsonValue<T>): T;
+begin
+  result := aValue:Value;
+end;}
 
 { JsonStringValue }
 
