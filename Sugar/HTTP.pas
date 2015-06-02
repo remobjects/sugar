@@ -3,52 +3,125 @@
 interface
 
 uses
+  Sugar.Collections,
   Sugar.IO,
+  Sugar.Json,
   Sugar.Xml;
 
 type
-
-  HttpResponse<T> = public class
-  unit
-    constructor (aContent: T);
-    constructor withException(anException: Exception);
-
+  HttpRequest = public class
   public
-    property Exception: Exception read write; readonly;
-    property Content: T read write; readonly;
-    property IsFailed: Boolean read self.Exception <> nil;
+    property Mode: HttpRequestMode := HttpRequestMode.Get; 
+    property Headers: not nullable Dictionary<String,String> := new Dictionary<String,String>; readonly;
+    property Content: IHttpRequestContent;
+    property Url: Url;
+    
+    constructor(aUrl: Url; aMode: HttpRequestMode := HttpRequestMode.Get);
+  end;
+  
+  HttpRequestMode = public enum (Get, Post);
+  
+  IHttpRequestContent = public interface
+    //method ContentStream();
   end;
 
-  HttpResponseBlock<T> = public block (Response: HttpResponse<T>);
+  HttpResponse = public class
+  unit
+    //constructor;
+    constructor withException(anException: Exception);
+
+    {$IF NOUGAT}
+    var Data: NSData?
+    constructor(aData: NSData, aResponse: NSHTTPURLResponse);{
+      Code = response.statusCode
+      Headers = response.allHeaderFields as! Dictionary<String,String> // why is this cast needed?
+      Data = data;
+    }
+    {$ENDIF}
+
+  public
+    property Headers: not nullable Dictionary<String,String>; readonly; //todo: list itself should be read-only
+    property Code: Int32; readonly;
+    property Success: Boolean read self.Exception = nil;
+    property Exception: Exception read write; readonly;
+    
+    method GetContentAsString(contentCallback: HttpContentResponseBlock<String>);
+    method GetContentAsBinary(contentCallback: HttpContentResponseBlock<Binary>);
+    method GetContentAsXml(contentCallback: HttpContentResponseBlock<XmlDocument>);
+    method GetContentAsJson(contentCallback: HttpContentResponseBlock<JsonDocument>);
+  end;
+  
+  HttpResponseContent<T> = public class
+  public
+    property Content: T;
+    property Success: Boolean read self.Exception = nil;
+    property Exception: Exception read write; readonly;
+  end;
+  
+  HttpResponseBlock = public block (Response: HttpResponse);
+  HttpContentResponseBlock<T> = public block (ResponseContent: HttpResponseContent<T>);
 
   Http = public static class
-  private
-    {$IF WINDOWS_PHONE}
-    method InternalDownload(anUrl: Url): System.Threading.Tasks.Task<System.Net.HttpWebResponse>;
-    {$ENDIF}
-    method Download(anUrl: Url): HttpResponse<Binary>;
   public
-    method DownloadStringAsync(anUrl: Url; Encoding: Encoding; ResponseCallback: HttpResponseBlock<String>);
-    method DownloadBinaryAsync(anUrl: Url; ResponseCallback: HttpResponseBlock<Binary>);
-    method DownloadXmlAsync(anUrl: Url; ResponseCallback: HttpResponseBlock<XmlDocument>);
+    method ExecuteRequest(aUrl: Url; ResponseCallback: HttpResponseBlock);
+    method ExecuteRequest(aRequest: HttpRequest; ResponseCallback: HttpResponseBlock);
   end;
 
 implementation
 
+{ HttpRequest }
+
+constructor HttpRequest(aUrl: Url; aMode: HttpRequestMode := HttpRequestMode.Get);
+begin
+  Url := aUrl;
+  Mode := aMode;
+end;
 
 { HttpResponse }
 
-constructor HttpResponse<T>(aContent: T);
+{constructor HttpResponse;
 begin
-  self.Content := aContent;
-end;
+end;}
 
-constructor HttpResponse<T> withException(anException: Exception);
+constructor HttpResponse withException(anException: Exception);
 begin
   self.Exception := anException;
 end;
 
 { Http }
+
+method Http.ExecuteRequest(aUrl: Url; ResponseCallback: HttpResponseBlock);
+begin
+  ExecuteRequest(new HttpRequest(aUrl, HttpRequestMode.Get), responseCallback);
+end;
+
+method Http.ExecuteRequest(aRequest: HttpRequest; ResponseCallback: HttpResponseBlock);
+begin
+  {$IF NOUGAT}
+  var nsUrlRequest := NSURLRequest withURL(request.Url) cachePolicy(0) timeoutInterval(30);
+  NSURLConnection.sendAsynchronousRequest(nsUrlRequest queue(nil) callback( (nsUrlResponse, data, error) => begin
+
+    var nsHttpUrlResponse := NSHTTPURLResponse(nsUrlResponse)
+    if assigned(data) and assigned(nsHttpUrlResponse) and not assigned(error) then begin
+      
+      var response := HttpResponse(data, nsHttpUrlResponse);
+      responseCallback(response);
+
+    end else if assigned(error) then begin
+      
+      var response := HttpResponse(new SugarException withError(error));
+      responseCallback(response);
+      
+    end else begin
+      var response := HttpResponse(new SugarException("Request failed without providing an error."));
+      responseCallback(response);
+    end;
+    
+  end);
+  
+ {$ENDIF}
+end;
+
 
 {$IF WINDOWS_PHONE}
 class method Http.InternalDownload(anUrl: Url): System.Threading.Tasks.Task<System.Net.HttpWebResponse>;
@@ -73,6 +146,7 @@ begin
   exit TaskComplete.Task;
 end;
 {$ENDIF}
+
 
 class method Http.Download(anUrl: Url): HttpResponse<Binary>;
 begin
