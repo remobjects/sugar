@@ -130,7 +130,6 @@ begin
   for each k: String in aResponse.Headers.Keys do
     Headers[k.ToString] := aResponse.Headers[k];
 end;
-
 {$ELSEIF NOUGAT}
 constructor HttpResponse(aData: NSData; aResponse: NSHTTPURLResponse);
 begin
@@ -144,11 +143,9 @@ method HttpResponse.GetContentAsString(aEncoding: Encoding := nil; contentCallba
 begin
   {$IF COOPER}
   {$ELSEIF ECHOES}
-
   async
     using responseString := new System.IO.StreamReader(Response.GetResponseStream()).ReadToEnd() do
       contentCallback(new HttpResponseContent<String>(Content := responseString))
-
   {$ELSEIF NOUGAT}
   if aEncoding = nil then aEncoding := Encoding.Default;
   var s := new Foundation.NSString withData(Data) encoding(aEncoding as NSStringEncoding); // todo: test this
@@ -271,6 +268,7 @@ begin
  {$ENDIF}
 end;
 
+(*
 
 {$IF WINDOWS_PHONE}
 class method Http.InternalDownload(anUrl: Url): System.Threading.Tasks.Task<System.Net.HttpWebResponse>;
@@ -296,7 +294,6 @@ begin
 end;
 {$ENDIF}
 
-(*
 class method Http.Download(anUrl: Url): HttpResponse<Binary>;
 begin
   try
