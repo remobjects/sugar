@@ -65,6 +65,7 @@ type
     method GetContentAsBinary(contentCallback: HttpContentResponseBlock<Binary>);
     method GetContentAsXml(contentCallback: HttpContentResponseBlock<XmlDocument>);
     method GetContentAsJson(contentCallback: HttpContentResponseBlock<JsonDocument>);
+    method SaveContentAsFile(aTargetFile: File; contentCallback: HttpContentResponseBlock<File>);
   end;
   
   HttpResponseContent<T> = public class
@@ -88,6 +89,7 @@ type
     //method ExecuteRequestAsBinary(aRequest: HttpRequest; contentCallback: HttpContentResponseBlock<Binary>);
     //method ExecuteRequestAsXml(aRequest: HttpRequest; contentCallback: HttpContentResponseBlock<XmlDocument>);
     method ExecuteRequestAsJson(aRequest: HttpRequest; contentCallback: HttpContentResponseBlock<JsonDocument>);
+    method ExecuteRequestAndSaveAsFile(aRequest: HttpRequest; aTargetFile: File; contentCallback: HttpContentResponseBlock<File>);
   end;
 
 implementation
@@ -155,6 +157,7 @@ end;
 constructor HttpResponse(aResponse: HttpWebResponse);
 begin
   Response := aResponse;
+  Code := aResponse.StatusCode;
   Headers := new Dictionary<String,String>();
   for each k: String in aResponse.Headers.Keys do
     Headers[k.ToString] := aResponse.Headers[k];
@@ -162,9 +165,9 @@ end;
 {$ELSEIF NOUGAT}
 constructor HttpResponse(aData: NSData; aResponse: NSHTTPURLResponse);
 begin
+  Data := aData;
   Code := aResponse.statusCode;
   Headers := aResponse.allHeaderFields as Dictionary<String,String>; // why is this cast needed?
-  Data := aData;
 end;
 {$ENDIF}
 
@@ -218,11 +221,8 @@ end;
 
 method HttpResponse.GetContentAsJson(contentCallback: HttpContentResponseBlock<JsonDocument>);
 begin
-      writeln("A");
   GetContentAsBinary((content) -> begin
-      writeln("B");
     if content.Success then begin
-      writeln("C");
       try
         var document := JsonDocument.FromBinary(content.Content);
         contentCallback(new HttpResponseContent<JsonDocument>(Content := document));
@@ -235,6 +235,32 @@ begin
       contentCallback(new HttpResponseContent<JsonDocument>(Exception := content.Exception));
     end;
   end);
+end;
+
+method HttpResponse.SaveContentAsFile(aTargetFile: File; contentCallback: HttpContentResponseBlock<File>);
+begin
+  {$IF COOPER}
+  {$ELSEIF ECHOES}
+  async begin
+    try
+      using responseStream := Response.GetResponseStream() do
+        using fileStream := System.IO.File.OpenWrite(aTargetFile) do
+          responseStream.CopyTo(fileStream);
+      contentCallback(new HttpResponseContent<File>(Content := aTargetFile));
+    except
+      on E: Exception do
+        contentCallback(new HttpResponseContent<File>(Exception := E));
+    end;
+  end;
+  {$ELSEIF NOUGAT}
+  async begin
+    var error: NSError;
+    if Data.writeToFile(aTargetFile) options(NSDataWritingOptions.NSDataWritingAtomic) error(var error) then
+      contentCallback(new HttpResponseContent<File>(Content := aTargetFile))
+    else
+      contentCallback(new HttpResponseContent<File>(Exception := new SugarException withError(error)));
+  end;
+  {$ENDIF}
 end;
 
 { Http }
@@ -338,6 +364,18 @@ begin
   end);
 end;
 
+method Http.ExecuteRequestAndSaveAsFile(aRequest: HttpRequest; aTargetFile: File; contentCallback: HttpContentResponseBlock<File>);
+begin
+  Http.ExecuteRequest(aRequest, (response) -> begin
+    if response.Success then begin
+      response.SaveContentAsFile(aTargetFile, (content) -> begin
+        contentCallback(content)
+      end);
+    end else begin
+      contentCallback(new HttpResponseContent<File>(Exception := response.Exception));
+    end;
+  end);
+end;
 
 (*
 
