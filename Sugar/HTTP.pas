@@ -7,6 +7,8 @@ uses
   Sugar.IO,
   Sugar.Json,
   Sugar.Xml;
+  
+{ Handy test URLs: http://httpbin.org, http://requestb.in }
 
 type
   HttpRequest = public class
