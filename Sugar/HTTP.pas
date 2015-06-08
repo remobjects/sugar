@@ -205,7 +205,7 @@ begin
   end);
   {$ELSEIF ECHOES}
   async begin
-    var responseString := new System.IO.StreamReader(Response.GetResponseStream(), aEncoding).ReadToEnd() do
+    var responseString := new System.IO.StreamReader(Response.GetResponseStream(), aEncoding).ReadToEnd();
     contentCallback(new HttpResponseContent<String>(Content := responseString))
   end;
   {$ELSEIF NOUGAT}
