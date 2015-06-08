@@ -327,7 +327,7 @@ begin
     responseCallback(lResponse);
   end;
   {$ELSEIF ECHOES}
-  using webRequest := System.Net.WebRequest.CreateHttp(aRequest.Url) as HttpWebRequest do begin
+  using webRequest := System.Net.WebRequest.Create(aRequest.Url) as HttpWebRequest do begin
     
     webRequest.AllowAutoRedirect := aRequest.FollowRedirects;
     webRequest.UserAgent := SUGAR_USER_AGENT;
