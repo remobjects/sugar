@@ -726,8 +726,6 @@ finalizer XmlDocument;
 begin
   if Doc <> nil then
     libxml.xmlFreeDoc(libxml.xmlDocPtr(Doc));
-
-  inherited;
 end;
 {$ENDIF}
 
