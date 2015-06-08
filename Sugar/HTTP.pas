@@ -19,7 +19,8 @@ type
     property Url: Url;
     property FollowRedirects: Boolean := true;
     
-    constructor(aUrl: Url; aMode: HttpRequestMode := HttpRequestMode.Get);
+    constructor(aUrl: Url); // log
+    constructor(aUrl: Url; aMode: HttpRequestMode); // log  := HttpRequestMode.Ge
     operator Implicit(aUrl: Url): HttpRequest;
   end;
   
@@ -46,13 +47,15 @@ type
 
   HttpResponse = public class
   unit
-    //constructor;
     constructor withException(anException: Exception);
 
-    {$IF ECHOES}
+    {$IF COOPER}
+    var Connection: java.net.HttpURLConnection;
+    constructor(aConnection: java.net.HttpURLConnection);
+    {$ELSEIF ECHOES}
     var Response: HttpWebResponse;
     constructor(aResponse: HttpWebResponse);
-    {$ELSE NOUGAT}
+    {$ELSEIF NOUGAT}
     var Data: NSData;
     constructor(aData: NSData; aResponse: NSHTTPURLResponse);
     {$ENDIF}
@@ -102,7 +105,13 @@ uses System.Net;
 
 { HttpRequest }
 
-constructor HttpRequest(aUrl: Url; aMode: HttpRequestMode := HttpRequestMode.Get);
+constructor HttpRequest(aUrl: Url);
+begin
+  Url := aUrl;
+  Mode := HttpRequestMode.Get;
+end;
+
+constructor HttpRequest(aUrl: Url; aMode: HttpRequestMode);
 begin
   Url := aUrl;
   Mode := aMode;
@@ -110,7 +119,7 @@ end;
 
 operator HttpRequest.Implicit(aUrl: Url): HttpRequest;
 begin
-  result := new HttpRequest(aUrl);
+  result := new HttpRequest(aUrl, HttpRequestMode.Get);
 end;
 
 { HttpRequestContent }
@@ -145,17 +154,28 @@ end;
 
 { HttpResponse }
 
-{constructor HttpResponse;
-begin
-end;}
-
 constructor HttpResponse withException(anException: Exception);
 begin
   self.Exception := anException;
   Headers := new Dictionary<String,String>();
 end;
 
-{$IF ECHOES}
+{$IF COOPER}
+constructor HttpResponse(aConnection: java.net.HttpURLConnection);
+begin
+  Connection := aConnection;
+  Code := Connection.getResponseCode;
+  Headers := new Dictionary<String,String>();
+  var i := 0;
+  loop begin
+    var lKey := Connection.getHeaderFieldKey(i);
+    if not assigned(lKey) then break;
+    var lValue := Connection.getHeaderField(i);
+    Headers[lKey] := lValue;
+    inc(i);
+  end;
+end;
+{$ELSEIF ECHOES}
 constructor HttpResponse(aResponse: HttpWebResponse);
 begin
   Response := aResponse;
@@ -175,13 +195,20 @@ end;
 
 method HttpResponse.GetContentAsString(aEncoding: Encoding := nil; contentCallback: HttpContentResponseBlock<String>);
 begin
-  {$IF COOPER}
-  {$ELSEIF ECHOES}
-  async
-    using responseString := new System.IO.StreamReader(Response.GetResponseStream()).ReadToEnd() do
-      contentCallback(new HttpResponseContent<String>(Content := responseString))
-  {$ELSEIF NOUGAT}
   if aEncoding = nil then aEncoding := Encoding.Default;
+  {$IF COOPER}
+  GetContentAsBinary( (content) -> begin
+    if content.Success then
+      contentCallback(new HttpResponseContent<String>(Content := new String(content.Content.ToArray, aEncoding)))
+    else
+      contentCallback(new HttpResponseContent<String>(Exception := content.Exception))
+  end);
+  {$ELSEIF ECHOES}
+  async begin
+    var responseString := new System.IO.StreamReader(Response.GetResponseStream(), aEncoding).ReadToEnd() do
+    contentCallback(new HttpResponseContent<String>(Content := responseString))
+  end;
+  {$ELSEIF NOUGAT}
   var s := new Foundation.NSString withData(Data) encoding(aEncoding as NSStringEncoding); // todo: test this
   if assigned(s) then
     contentCallback(new HttpResponseContent<String>(Content := s))
@@ -193,6 +220,17 @@ end;
 method HttpResponse.GetContentAsBinary(contentCallback: HttpContentResponseBlock<Binary>);
 begin
   {$IF COOPER}
+  async begin
+    var allData := new Binary;
+    var stream := Connection.InputStream;
+    var data := new Byte[4096]; 
+    var len := stream.read(data);
+    while len > 0 do begin
+      allData.Write(data, len);
+      len := stream.read(data);
+    end;
+    contentCallback(new HttpResponseContent<Binary>(Content := allData));
+  end;
   {$ELSEIF ECHOES}
   async begin
     var allData := new System.IO.MemoryStream();
@@ -242,6 +280,17 @@ end;
 method HttpResponse.SaveContentAsFile(aTargetFile: File; contentCallback: HttpContentResponseBlock<File>);
 begin
   {$IF COOPER}
+  async begin
+    var allData := new java.io.FileOutputStream(aTargetFile);
+    var stream := Connection.InputStream;
+    var data := new Byte[4096]; 
+    var len := stream.read(data);
+    while len > 0 do begin
+      allData.write(data, 0, len);
+      len := stream.read(data);
+    end;
+    contentCallback(new HttpResponseContent<File>(Content := aTargetFile));
+  end;
   {$ELSEIF ECHOES}
   async begin
     try
@@ -271,7 +320,12 @@ method Http.ExecuteRequest(aRequest: HttpRequest; ResponseCallback: HttpResponse
 begin
   
   {$IF COOPER}
-  
+  async begin
+    var lConnection := java.net.URL(aRequest.URL).openConnection as java.net.HttpURLConnection;
+    lConnection.addRequestProperty("User-Agent", SUGAR_USER_AGENT);
+    var lResponse := new HttpResponse(lConnection);
+    responseCallback(lResponse);
+  end;
   {$ELSEIF ECHOES}
   using webRequest := System.Net.WebRequest.CreateHttp(aRequest.Url) as HttpWebRequest do begin
     
@@ -305,12 +359,9 @@ begin
     
     end, nil);
   end;
-  
   {$ELSEIF NOUGAT}
   var nsUrlRequest := new NSURLRequest withURL(aRequest.Url) cachePolicy(0) timeoutInterval(30);
-
   //nsUrlRequest.AllowAutoRedirect := aRequest.FollowRedirects;
-
   NSURLConnection.sendAsynchronousRequest(nsUrlRequest) queue(nil) completionHandler( (nsUrlResponse, data, error) -> begin
 
     var nsHttpUrlResponse := NSHTTPURLResponse(nsUrlResponse);
@@ -330,10 +381,8 @@ begin
     end;
     
   end);
-  
- {$ENDIF}
+  {$ENDIF}
 end;
-
 
 method Http.ExecuteRequest(aUrl: Url; ResponseCallback: HttpResponseBlock);
 begin
@@ -409,22 +458,6 @@ class method Http.Download(anUrl: Url): HttpResponse<Binary>;
 begin
   try
   {$IF COOPER}
-    var Content := new Binary;
-    var Connection := java.net.URL(anUrl).openConnection;
-    Connection.addRequestProperty("User-Agent", "Mozilla/4.76");
-    var stream := Connection.InputStream;
-    var data := new SByte[4096]; 
-    var len := stream.read(data);
-
-    while len > 0 do begin
-      Content.Write(data, len);
-      len := stream.read(data);
-    end;
-
-    if Content.Length = 0 then
-      exit new HttpResponse<Binary> withException(new SugarException("Content is empty"));
-
-    exit new HttpResponse<Binary>(Content); 
   {$ELSEIF WINDOWS_PHONE}
     var Response := InternalDownload(anUrl).Result;
     
@@ -502,45 +535,6 @@ begin
     end;
   end;
 end;
-
-class method Http.DownloadStringAsync(anUrl: Url; Encoding: Encoding; ResponseCallback: HttpResponseBlock<String>);
-begin
-  SugarArgumentNullException.RaiseIfNil(anUrl, "Url");
-  if ResponseCallback = nil then
-    raise new SugarArgumentNullException("ResponseCallback");
-  async begin
-    var Data := Download(anUrl);
-    if Data.IsFailed then
-      ResponseCallback(new HttpResponse<String> withException(Data.Exception))
-    else
-      ResponseCallback(new HttpResponse<String>(new String(Data.Content.ToArray, Encoding)));
-  end;
-end;
-
-class method Http.DownloadBinaryAsync(anUrl: Url; ResponseCallback: HttpResponseBlock<Binary>);
-begin
-  SugarArgumentNullException.RaiseIfNil(anUrl, "Url");
-  if ResponseCallback = nil then
-    raise new SugarArgumentNullException("ResponseCallback");
-  async begin
-    ResponseCallback(Download(anUrl));
-  end;
-end;
-
-class method Http.DownloadXmlAsync(anUrl: Url; ResponseCallback: HttpResponseBlock<XmlDocument>);
-begin
-  SugarArgumentNullException.RaiseIfNil(anUrl, "Url");
-  if ResponseCallback = nil then
-    raise new SugarArgumentNullException("ResponseCallback");
-  async begin
-    var Data := Download(anUrl);
-    if Data.IsFailed then
-      ResponseCallback(new HttpResponse<XmlDocument> withException(Data.Exception))
-    else
-      ResponseCallback(new HttpResponse<XmlDocument>(XmlDocument.FromBinary(Data.Content)));
-  end;
-end;
-
 *)
 
 end.
