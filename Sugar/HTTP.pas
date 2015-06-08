@@ -28,6 +28,7 @@ type
   
   IHttpRequestContent = assembly interface
     method GetContentAsBinary(): Binary;
+    method GetContentAsArray(): array of Byte;
   end;
 
   HttpRequestContent = public class
@@ -38,10 +39,13 @@ type
   
   HttpBinaryRequestContent = public class(HttpRequestContent, IHttpRequestContent)
   unit
-    property Binary: Binary; readonly;
+    property Binary: Binary unit read private write;
+    property &Array: array of Byte unit read private write;
     method GetContentAsBinary: Binary;
+    method GetContentAsArray(): array of Byte;
   public
     constructor(aBinary: Binary);
+    constructor(aArray: array of Byte);
     constructor(aString: String; aEncoding: Encoding);
   end;
 
@@ -64,7 +68,7 @@ type
     property Headers: not nullable Dictionary<String,String>; readonly; //todo: list itself should be read-only
     property Code: Int32; readonly;
     property Success: Boolean read self.Exception = nil;
-    property Exception: Exception public read assembly write; // should be "unit
+    property Exception: Exception public read unit write;
     
     method GetContentAsString(aEncoding: Encoding := nil; contentCallback: HttpContentResponseBlock<String>);
     method GetContentAsBinary(contentCallback: HttpContentResponseBlock<Binary>);
@@ -75,9 +79,9 @@ type
   
   HttpResponseContent<T> = public class
   public
-    property Content: T public read assembly write; // should be "unit"
+    property Content: T public read unit write;
     property Success: Boolean read self.Exception = nil;
-    property Exception: Exception public read assembly write; // should be "unit
+    property Exception: Exception public read unit write;
   end;
   
   HttpResponseBlock = public block (Response: HttpResponse);
@@ -141,15 +145,34 @@ begin
   Binary := aBinary;
 end;
 
+constructor HttpBinaryRequestContent(aArray: array of Byte);
+begin
+  &Array := aArray;
+end;
+
 constructor HttpBinaryRequestContent(aString: String; aEncoding: Encoding);
 begin
   if aEncoding = nil then aEncoding := Encoding.Default;
-  Binary := new Binary(aString.ToByteArray(aEncoding));
+  Array := aString.ToByteArray(aEncoding);
 end;
 
 method HttpBinaryRequestContent.GetContentAsBinary(): Binary;
 begin
-  result := Binary;
+  if assigned(Binary) then begin
+    result := Binary;
+  end
+  else if assigned(&Array) then begin
+    Binary := new Binary(&Array);
+    result := Binary;
+  end;
+end;
+
+method HttpBinaryRequestContent.GetContentAsArray: array of Byte;
+begin
+  if assigned(&Array) then 
+    result := &Array
+  else if assigned(Binary) then
+    result := Binary.ToArray();
 end;
 
 { HttpResponse }
@@ -323,6 +346,12 @@ begin
   async begin
     var lConnection := java.net.URL(aRequest.URL).openConnection as java.net.HttpURLConnection;
     lConnection.addRequestProperty("User-Agent", SUGAR_USER_AGENT);
+
+    if assigned(aRequest.Content) then begin
+      lConnection.getOutputStream().write((aRequest.Content as IHttpRequestContent).GetContentAsArray());
+      lConnection.getOutputStream().flush();
+    end;
+
     var lResponse := new HttpResponse(lConnection);
     responseCallback(lResponse);
   end;
@@ -333,13 +362,13 @@ begin
     webRequest.UserAgent := SUGAR_USER_AGENT;
     
     case aRequest.Mode of
-      HttpRequestMode.Get: webRequest.Method := "GET";
-      HttpRequestMode.Post: webRequest.Method := "POST";
+      HttpRequestMode.Get: webRequest.Method := 'GET';
+      HttpRequestMode.Post: webRequest.Method := 'POST';
     end;
     
     if assigned(aRequest.Content) then begin
       using stream := webRequest.GetRequestStream() do begin
-        var data := (aRequest.Content as IHttpRequestContent).GetContentAsBinary().ToArray();
+        var data := (aRequest.Content as IHttpRequestContent).GetContentAsArray();
         stream.Write(data, 0, data.Length);
         stream.Flush();
         //webRequest.ContentLength := data.Length;
@@ -360,8 +389,21 @@ begin
     end, nil);
   end;
   {$ELSEIF NOUGAT}
-  var nsUrlRequest := new NSURLRequest withURL(aRequest.Url) cachePolicy(0) timeoutInterval(30);
+  var nsUrlRequest := new NSMutableURLRequest withURL(aRequest.Url) cachePolicy(0) timeoutInterval(30);
+
   //nsUrlRequest.AllowAutoRedirect := aRequest.FollowRedirects;
+  nsUrlRequest.setValue(SUGAR_USER_AGENT) forHTTPHeaderField("User-Agent");
+  //nsUrlRequest.allowsCellularAccess =
+  
+  case aRequest.Mode of
+    HttpRequestMode.Get: nsUrlRequest.HTTPMethod := 'GET';
+    HttpRequestMode.Post: nsUrlRequest.HTTPMethod := 'POST';
+  end;
+
+  if assigned(aRequest.Content) then begin
+    nsUrlRequest.HTTPBody := (aRequest.Content as IHttpRequestContent).GetContentAsBinary();
+  end;
+
   NSURLConnection.sendAsynchronousRequest(nsUrlRequest) queue(nil) completionHandler( (nsUrlResponse, data, error) -> begin
 
     var nsHttpUrlResponse := NSHTTPURLResponse(nsUrlResponse);
