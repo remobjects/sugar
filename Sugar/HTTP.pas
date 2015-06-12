@@ -16,12 +16,12 @@ type
     property Mode: HttpRequestMode := HttpRequestMode.Get; 
     property Headers: not nullable Dictionary<String,String> := new Dictionary<String,String>; readonly;
     property Content: HttpRequestContent;
-    property Url: Url;
+    property Url: not nullable Url;
     property FollowRedirects: Boolean := true;
     
-    constructor(aUrl: Url); // log
-    constructor(aUrl: Url; aMode: HttpRequestMode); // log  := HttpRequestMode.Ge
-    operator Implicit(aUrl: Url): HttpRequest;
+    constructor(aUrl: not nullable Url); // log
+    constructor(aUrl: not nullable Url; aMode: HttpRequestMode); // log  := HttpRequestMode.Ge
+    operator Implicit(aUrl: not nullable Url): HttpRequest;
   end;
   
   HttpRequestMode = public enum (Get, Post);
@@ -33,8 +33,8 @@ type
 
   HttpRequestContent = public class
   public
-    operator Implicit(aBinary: Binary): HttpRequestContent;
-    operator Implicit(aString: String): HttpRequestContent;
+    operator Implicit(aBinary: not nullable Binary): HttpRequestContent;
+    operator Implicit(aString: not nullable String): HttpRequestContent;
   end;
   
   HttpBinaryRequestContent = public class(HttpRequestContent, IHttpRequestContent)
@@ -44,9 +44,9 @@ type
     method GetContentAsBinary: Binary;
     method GetContentAsArray(): array of Byte;
   public
-    constructor(aBinary: Binary);
-    constructor(aArray: array of Byte);
-    constructor(aString: String; aEncoding: Encoding);
+    constructor(aBinary: not nullable Binary);
+    constructor(aArray: not nullable array of Byte);
+    constructor(aString: not nullable String; aEncoding: Encoding);
   end;
 
   HttpResponse = public class
@@ -70,11 +70,11 @@ type
     property Success: Boolean read self.Exception = nil;
     property Exception: Exception public read unit write;
     
-    method GetContentAsString(aEncoding: Encoding := nil; contentCallback: HttpContentResponseBlock<String>);
-    method GetContentAsBinary(contentCallback: HttpContentResponseBlock<Binary>);
-    method GetContentAsXml(contentCallback: HttpContentResponseBlock<XmlDocument>);
-    method GetContentAsJson(contentCallback: HttpContentResponseBlock<JsonDocument>);
-    method SaveContentAsFile(aTargetFile: File; contentCallback: HttpContentResponseBlock<File>);
+    method GetContentAsString(aEncoding: Encoding := nil; contentCallback: not nullable HttpContentResponseBlock<String>);
+    method GetContentAsBinary(contentCallback: not nullable HttpContentResponseBlock<Binary>);
+    method GetContentAsXml(contentCallback: not nullable HttpContentResponseBlock<XmlDocument>);
+    method GetContentAsJson(contentCallback: not nullable HttpContentResponseBlock<JsonDocument>);
+    method SaveContentAsFile(aTargetFile: File; contentCallback: not nullable HttpContentResponseBlock<File>);
   end;
   
   HttpResponseContent<T> = public class
@@ -91,14 +91,14 @@ type
   private
     const SUGAR_USER_AGENT = "RemObjects Sugar/8.0 http://www.elementscompiler.com/elements/sugar";
   public
-    method ExecuteRequest(aUrl: Url; ResponseCallback: HttpResponseBlock);
-    method ExecuteRequest(aRequest: HttpRequest; ResponseCallback: HttpResponseBlock);
+    method ExecuteRequest(aUrl: not nullable Url; ResponseCallback: not nullable HttpResponseBlock);
+    method ExecuteRequest(aRequest: not nullable HttpRequest; ResponseCallback: not nullable HttpResponseBlock);
 
-    method ExecuteRequestAsString(aRequest: HttpRequest; contentCallback: HttpContentResponseBlock<String>);
-    //method ExecuteRequestAsBinary(aRequest: HttpRequest; contentCallback: HttpContentResponseBlock<Binary>);
-    //method ExecuteRequestAsXml(aRequest: HttpRequest; contentCallback: HttpContentResponseBlock<XmlDocument>);
-    method ExecuteRequestAsJson(aRequest: HttpRequest; contentCallback: HttpContentResponseBlock<JsonDocument>);
-    method ExecuteRequestAndSaveAsFile(aRequest: HttpRequest; aTargetFile: File; contentCallback: HttpContentResponseBlock<File>);
+    method ExecuteRequestAsString(aRequest: not nullable HttpRequest; contentCallback: not nullable HttpContentResponseBlock<String>);
+    //method ExecuteRequestAsBinary(aRequest: not nullable HttpRequest; contentCallback: not nullable HttpContentResponseBlock<Binary>);
+    //method ExecuteRequestAsXml(aRequest: not nullable HttpRequest; contentCallback: not nullable HttpContentResponseBlock<XmlDocument>);
+    method ExecuteRequestAsJson(aRequest: not nullable HttpRequest; contentCallback: not nullable HttpContentResponseBlock<JsonDocument>);
+    method ExecuteRequestAndSaveAsFile(aRequest: not nullable HttpRequest; aTargetFile: File; contentCallback: not nullable HttpContentResponseBlock<File>);
   end;
 
 implementation
@@ -109,48 +109,48 @@ uses System.Net;
 
 { HttpRequest }
 
-constructor HttpRequest(aUrl: Url);
+constructor HttpRequest(aUrl: not nullable Url);
 begin
   Url := aUrl;
   Mode := HttpRequestMode.Get;
 end;
 
-constructor HttpRequest(aUrl: Url; aMode: HttpRequestMode);
+constructor HttpRequest(aUrl: not nullable Url; aMode: HttpRequestMode);
 begin
   Url := aUrl;
   Mode := aMode;
 end;
 
-operator HttpRequest.Implicit(aUrl: Url): HttpRequest;
+operator HttpRequest.Implicit(aUrl: not nullable Url): HttpRequest;
 begin
   result := new HttpRequest(aUrl, HttpRequestMode.Get);
 end;
 
 { HttpRequestContent }
 
-operator HttpRequestContent.Implicit(aBinary: Binary): HttpRequestContent;
+operator HttpRequestContent.Implicit(aBinary: not nullable Binary): HttpRequestContent;
 begin
   result := new HttpBinaryRequestContent(aBinary);
 end;
 
-operator HttpRequestContent.Implicit(aString: String): HttpRequestContent;
+operator HttpRequestContent.Implicit(aString: not nullable String): HttpRequestContent;
 begin
   result := new HttpBinaryRequestContent(aString, Encoding.UTF8);
 end;
 
 { HttpBinaryRequestContent }
 
-constructor HttpBinaryRequestContent(aBinary: Binary);
+constructor HttpBinaryRequestContent(aBinary: not nullable Binary);
 begin
   Binary := aBinary;
 end;
 
-constructor HttpBinaryRequestContent(aArray: array of Byte);
+constructor HttpBinaryRequestContent(aArray: not nullable array of Byte);
 begin
   &Array := aArray;
 end;
 
-constructor HttpBinaryRequestContent(aString: String; aEncoding: Encoding);
+constructor HttpBinaryRequestContent(aString: not nullable String; aEncoding: Encoding);
 begin
   if aEncoding = nil then aEncoding := Encoding.Default;
   Array := aString.ToByteArray(aEncoding);
@@ -216,7 +216,7 @@ begin
 end;
 {$ENDIF}
 
-method HttpResponse.GetContentAsString(aEncoding: Encoding := nil; contentCallback: HttpContentResponseBlock<String>);
+method HttpResponse.GetContentAsString(aEncoding: Encoding := nil; contentCallback: not nullable HttpContentResponseBlock<String>);
 begin
   if aEncoding = nil then aEncoding := Encoding.Default;
   {$IF COOPER}
@@ -240,7 +240,7 @@ begin
   {$ENDIF}
 end;
 
-method HttpResponse.GetContentAsBinary(contentCallback: HttpContentResponseBlock<Binary>);
+method HttpResponse.GetContentAsBinary(contentCallback: not nullable HttpContentResponseBlock<Binary>);
 begin
   {$IF COOPER}
   async begin
@@ -265,7 +265,7 @@ begin
   {$ENDIF}
 end;
 
-method HttpResponse.GetContentAsXml(contentCallback: HttpContentResponseBlock<XmlDocument>);
+method HttpResponse.GetContentAsXml(contentCallback: not nullable HttpContentResponseBlock<XmlDocument>);
 begin
   GetContentAsBinary((content) -> begin
     if content.Success then begin
@@ -282,7 +282,7 @@ begin
   end);
 end;
 
-method HttpResponse.GetContentAsJson(contentCallback: HttpContentResponseBlock<JsonDocument>);
+method HttpResponse.GetContentAsJson(contentCallback: not nullable HttpContentResponseBlock<JsonDocument>);
 begin
   GetContentAsBinary((content) -> begin
     if content.Success then begin
@@ -300,7 +300,7 @@ begin
   end);
 end;
 
-method HttpResponse.SaveContentAsFile(aTargetFile: File; contentCallback: HttpContentResponseBlock<File>);
+method HttpResponse.SaveContentAsFile(aTargetFile: File; contentCallback: not nullable HttpContentResponseBlock<File>);
 begin
   {$IF COOPER}
   async begin
@@ -339,7 +339,7 @@ end;
 
 { Http }
 
-method Http.ExecuteRequest(aRequest: HttpRequest; ResponseCallback: HttpResponseBlock);
+method Http.ExecuteRequest(aRequest: not nullable HttpRequest; ResponseCallback: not nullable HttpResponseBlock);
 begin
   
   {$IF COOPER}
@@ -426,12 +426,12 @@ begin
   {$ENDIF}
 end;
 
-method Http.ExecuteRequest(aUrl: Url; ResponseCallback: HttpResponseBlock);
+method Http.ExecuteRequest(aUrl: not nullable Url; ResponseCallback: not nullable HttpResponseBlock);
 begin
   ExecuteRequest(new HttpRequest(aUrl, HttpRequestMode.Get), responseCallback);
 end;
 
-method Http.ExecuteRequestAsString(aRequest: HttpRequest; contentCallback: HttpContentResponseBlock<String>);
+method Http.ExecuteRequestAsString(aRequest: not nullable HttpRequest; contentCallback: not nullable HttpContentResponseBlock<String>);
 begin
   Http.ExecuteRequest(aRequest, (response) -> begin
     if response.Success then begin
@@ -444,7 +444,7 @@ begin
   end);
 end;
 
-method Http.ExecuteRequestAsJson(aRequest: HttpRequest; contentCallback: HttpContentResponseBlock<JsonDocument>);
+method Http.ExecuteRequestAsJson(aRequest: not nullable HttpRequest; contentCallback: not nullable HttpContentResponseBlock<JsonDocument>);
 begin
   Http.ExecuteRequest(aRequest, (response) -> begin
     if response.Success then begin
@@ -457,7 +457,7 @@ begin
   end);
 end;
 
-method Http.ExecuteRequestAndSaveAsFile(aRequest: HttpRequest; aTargetFile: File; contentCallback: HttpContentResponseBlock<File>);
+method Http.ExecuteRequestAndSaveAsFile(aRequest: not nullable HttpRequest; aTargetFile: File; contentCallback: not nullable HttpContentResponseBlock<File>);
 begin
   Http.ExecuteRequest(aRequest, (response) -> begin
     if response.Success then begin
