@@ -9,10 +9,11 @@ type
     constructor(aMessage: String);
     constructor(aFormat: String; params aParams: array of Object);
   {$IF NOUGAT}
+    constructor withError(aError: NSError);
     property Message: String read reason;
   {$ENDIF}
   end;
-
+  
   SugarNotImplementedException = public class(SugarException);
 
   SugarNotSupportedException = public class (SugarException);
@@ -106,6 +107,13 @@ begin
   inherited constructor(aMessage);
   {$ENDIF}
 end;
+
+{$IF NOUGAT}
+constructor SugarException withError(aError: NSError);
+begin
+  inherited initWithName('SugarException') reason(aError.description) userInfo(nil);
+end;
+{$ENDIF}
 
 constructor SugarException(aFormat: String; params aParams: array of Object);
 begin

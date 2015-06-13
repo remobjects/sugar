@@ -1,60 +1,495 @@
-﻿namespace Sugar;
+namespace Sugar;
 
 interface
 
 uses
+  Sugar.Collections,
   Sugar.IO,
+  Sugar.Json,
   Sugar.Xml;
+  
+{ Handy test URLs: http://httpbin.org, http://requestb.in }
 
 type
   HttpRequest = public class
-  end
+  public
+    property Mode: HttpRequestMode := HttpRequestMode.Get; 
+    property Headers: not nullable Dictionary<String,String> := new Dictionary<String,String>; readonly;
+    property Content: nullable HttpRequestContent;
+    property Url: not nullable Url;
+    property FollowRedirects: Boolean := true;
+    
+    constructor(aUrl: not nullable Url); // log
+    constructor(aUrl: not nullable Url; aMode: HttpRequestMode); // log  := HttpRequestMode.Ge
+    operator Implicit(aUrl: not nullable Url): HttpRequest;
+  end;
+  
+  HttpRequestMode = public enum (Get, Post);
+  
+  IHttpRequestContent = assembly interface
+    method GetContentAsBinary(): Binary;
+    method GetContentAsArray(): array of Byte;
+  end;
+
+  HttpRequestContent = public class
+  public
+    operator Implicit(aBinary: not nullable Binary): HttpRequestContent;
+    operator Implicit(aString: not nullable String): HttpRequestContent;
+  end;
+  
+  HttpBinaryRequestContent = public class(HttpRequestContent, IHttpRequestContent)
+  unit
+    property Binary: Binary unit read private write;
+    property &Array: array of Byte unit read private write;
+    method GetContentAsBinary: Binary;
+    method GetContentAsArray(): array of Byte;
+  public
+    constructor(aBinary: not nullable Binary);
+    constructor(aArray: not nullable array of Byte);
+    constructor(aString: not nullable String; aEncoding: Encoding);
+  end;
 
   HttpResponse = public class
   unit
     constructor withException(anException: Exception);
 
-  public
-    property Exception: Exception read write; readonly;
-    property Failed: Boolean read self.Exception <> nil;
-    property Headers: ...; readonly;
-    
-    method GetContentAsString(contentCallback: HttpContentResponseBlock<String>);
-    method GetContentAsBinary(contentCallback: HttpContentResponseBlock<Binary>);
-    method GetContentAsXml(contentCallback: HttpContentResponseBlock<XmlDocument>);
-    method GetContentAsJson(contentCallback: HttpContentResponseBlock<JsonDocument>);
-  end;
+    {$IF COOPER}
+    var Connection: java.net.HttpURLConnection;
+    constructor(aConnection: java.net.HttpURLConnection);
+    {$ELSEIF ECHOES}
+    var Response: HttpWebResponse;
+    constructor(aResponse: HttpWebResponse);
+    {$ELSEIF NOUGAT}
+    var Data: NSData;
+    constructor(aData: NSData; aResponse: NSHTTPURLResponse);
+    {$ENDIF}
 
+  public
+    property Headers: not nullable Dictionary<String,String>; readonly; //todo: list itself should be read-only
+    property Code: Int32; readonly;
+    property Success: Boolean read self.Exception = nil;
+    property Exception: Exception public read unit write;
+    
+    method GetContentAsString(aEncoding: Encoding := nil; contentCallback: not nullable HttpContentResponseBlock<String>);
+    method GetContentAsBinary(contentCallback: not nullable HttpContentResponseBlock<Binary>);
+    method GetContentAsXml(contentCallback: not nullable HttpContentResponseBlock<XmlDocument>);
+    method GetContentAsJson(contentCallback: not nullable HttpContentResponseBlock<JsonDocument>);
+    method SaveContentAsFile(aTargetFile: File; contentCallback: not nullable HttpContentResponseBlock<File>);
+  end;
+  
   HttpResponseContent<T> = public class
   public
-    property Content: T;
-    property Exception: Exception read write; readonly;
-    property Failed: Boolean read self.Exception <> nil;
+    property Content: T public read unit write;
+    property Success: Boolean read self.Exception = nil;
+    property Exception: Exception public read unit write;
   end;
-
-  HttpResponseBlock = public block (Response: HttpResponse<T>);
+  
+  HttpResponseBlock = public block (Response: HttpResponse);
   HttpContentResponseBlock<T> = public block (ResponseContent: HttpResponseContent<T>);
 
   Http = public static class
+  private
+    const SUGAR_USER_AGENT = "RemObjects Sugar/8.0 http://www.elementscompiler.com/elements/sugar";
   public
-    method ExecuteRequest(aRequest: HttpRequest; ResponseCallback: HttpResponseBlock<String>);
+    //method ExecuteRequest(aUrl: not nullable Url; ResponseCallback: not nullable HttpResponseBlock);
+    method ExecuteRequest(aRequest: not nullable HttpRequest; ResponseCallback: not nullable HttpResponseBlock);
+
+    method ExecuteRequestAsString(aRequest: not nullable HttpRequest; contentCallback: not nullable HttpContentResponseBlock<String>);
+    method ExecuteRequestAsBinary(aRequest: not nullable HttpRequest; contentCallback: not nullable HttpContentResponseBlock<Binary>);
+    method ExecuteRequestAsXml(aRequest: not nullable HttpRequest; contentCallback: not nullable HttpContentResponseBlock<XmlDocument>);
+    method ExecuteRequestAsJson(aRequest: not nullable HttpRequest; contentCallback: not nullable HttpContentResponseBlock<JsonDocument>);
+    method ExecuteRequestAndSaveAsFile(aRequest: not nullable HttpRequest; aTargetFile: not nullable File; contentCallback: not nullable HttpContentResponseBlock<File>);
   end;
 
 implementation
 
-{ HttpResponse }
+{$IF ECHOES}
+uses System.Net;
+{$ENDIF}
 
-constructor HttpResponse<T>(aContent: T);
+{ HttpRequest }
+
+constructor HttpRequest(aUrl: not nullable Url);
 begin
-  self.Content := aContent;
+  Url := aUrl;
+  Mode := HttpRequestMode.Get;
 end;
 
-constructor HttpResponse<T> withException(anException: Exception);
+constructor HttpRequest(aUrl: not nullable Url; aMode: HttpRequestMode);
+begin
+  Url := aUrl;
+  Mode := aMode;
+end;
+
+operator HttpRequest.Implicit(aUrl: not nullable Url): HttpRequest;
+begin
+  result := new HttpRequest(aUrl, HttpRequestMode.Get);
+end;
+
+{ HttpRequestContent }
+
+operator HttpRequestContent.Implicit(aBinary: not nullable Binary): HttpRequestContent;
+begin
+  result := new HttpBinaryRequestContent(aBinary);
+end;
+
+operator HttpRequestContent.Implicit(aString: not nullable String): HttpRequestContent;
+begin
+  result := new HttpBinaryRequestContent(aString, Encoding.UTF8);
+end;
+
+{ HttpBinaryRequestContent }
+
+constructor HttpBinaryRequestContent(aBinary: not nullable Binary);
+begin
+  Binary := aBinary;
+end;
+
+constructor HttpBinaryRequestContent(aArray: not nullable array of Byte);
+begin
+  &Array := aArray;
+end;
+
+constructor HttpBinaryRequestContent(aString: not nullable String; aEncoding: Encoding);
+begin
+  if aEncoding = nil then aEncoding := Encoding.Default;
+  Array := aString.ToByteArray(aEncoding);
+end;
+
+method HttpBinaryRequestContent.GetContentAsBinary(): Binary;
+begin
+  if assigned(Binary) then begin
+    result := Binary;
+  end
+  else if assigned(&Array) then begin
+    Binary := new Binary(&Array);
+    result := Binary;
+  end;
+end;
+
+method HttpBinaryRequestContent.GetContentAsArray: array of Byte;
+begin
+  if assigned(&Array) then 
+    result := &Array
+  else if assigned(Binary) then
+    result := Binary.ToArray();
+end;
+
+{ HttpResponse }
+
+constructor HttpResponse withException(anException: Exception);
 begin
   self.Exception := anException;
+  Headers := new Dictionary<String,String>();
+end;
+
+{$IF COOPER}
+constructor HttpResponse(aConnection: java.net.HttpURLConnection);
+begin
+  Connection := aConnection;
+  Code := Connection.getResponseCode;
+  Headers := new Dictionary<String,String>();
+  var i := 0;
+  loop begin
+    var lKey := Connection.getHeaderFieldKey(i);
+    if not assigned(lKey) then break;
+    var lValue := Connection.getHeaderField(i);
+    Headers[lKey] := lValue;
+    inc(i);
+  end;
+end;
+{$ELSEIF ECHOES}
+constructor HttpResponse(aResponse: HttpWebResponse);
+begin
+  Response := aResponse;
+  Code := aResponse.StatusCode;
+  Headers := new Dictionary<String,String>();
+  for each k: String in aResponse.Headers.Keys do
+    Headers[k.ToString] := aResponse.Headers[k];
+end;
+{$ELSEIF NOUGAT}
+constructor HttpResponse(aData: NSData; aResponse: NSHTTPURLResponse);
+begin
+  Data := aData;
+  Code := aResponse.statusCode;
+  Headers := aResponse.allHeaderFields as Dictionary<String,String>; // why is this cast needed?
+end;
+{$ENDIF}
+
+method HttpResponse.GetContentAsString(aEncoding: Encoding := nil; contentCallback: not nullable HttpContentResponseBlock<String>);
+begin
+  if aEncoding = nil then aEncoding := Encoding.Default;
+  {$IF COOPER}
+  GetContentAsBinary( (content) -> begin
+    if content.Success then
+      contentCallback(new HttpResponseContent<String>(Content := new String(content.Content.ToArray, aEncoding)))
+    else
+      contentCallback(new HttpResponseContent<String>(Exception := content.Exception))
+  end);
+  {$ELSEIF ECHOES}
+  async begin
+    var responseString := new System.IO.StreamReader(Response.GetResponseStream(), aEncoding).ReadToEnd();
+    contentCallback(new HttpResponseContent<String>(Content := responseString))
+  end;
+  {$ELSEIF NOUGAT}
+  var s := new Foundation.NSString withData(Data) encoding(aEncoding as NSStringEncoding); // todo: test this
+  if assigned(s) then
+    contentCallback(new HttpResponseContent<String>(Content := s))
+  else
+    contentCallback(new HttpResponseContent<String>(Exception := new SugarException("Invalid Encoding")));
+  {$ENDIF}
+end;
+
+method HttpResponse.GetContentAsBinary(contentCallback: not nullable HttpContentResponseBlock<Binary>);
+begin
+  {$IF COOPER}
+  async begin
+    var allData := new Binary;
+    var stream := Connection.InputStream;
+    var data := new Byte[4096]; 
+    var len := stream.read(data);
+    while len > 0 do begin
+      allData.Write(data, len);
+      len := stream.read(data);
+    end;
+    contentCallback(new HttpResponseContent<Binary>(Content := allData));
+  end;
+  {$ELSEIF ECHOES}
+  async begin
+    var allData := new System.IO.MemoryStream();
+    Response.GetResponseStream().CopyTo(allData);
+    contentCallback(new HttpResponseContent<Binary>(Content := allData));
+  end;
+  {$ELSEIF NOUGAT}
+  contentCallback(new HttpResponseContent<Binary>(Content := Data.mutableCopy));
+  {$ENDIF}
+end;
+
+method HttpResponse.GetContentAsXml(contentCallback: not nullable HttpContentResponseBlock<XmlDocument>);
+begin
+  GetContentAsBinary((content) -> begin
+    if content.Success then begin
+      try
+        var document := XmlDocument.FromBinary(content.Content);
+        contentCallback(new HttpResponseContent<XmlDocument>(Content := document));
+      except
+        on E: Exception do
+          contentCallback(new HttpResponseContent<XmlDocument>(Exception := E));
+      end;
+    end else begin
+      contentCallback(new HttpResponseContent<XmlDocument>(Exception := content.Exception));
+    end;
+  end);
+end;
+
+method HttpResponse.GetContentAsJson(contentCallback: not nullable HttpContentResponseBlock<JsonDocument>);
+begin
+  GetContentAsBinary((content) -> begin
+    if content.Success then begin
+      try
+        var document := JsonDocument.FromBinary(content.Content);
+        contentCallback(new HttpResponseContent<JsonDocument>(Content := document));
+      except
+        on E: Exception do
+          contentCallback(new HttpResponseContent<JsonDocument>(Exception := E));
+      end;
+    end else begin
+      contentCallback(new HttpResponseContent<JsonDocument>(Exception := content.Exception));
+    end;
+  end);
+end;
+
+method HttpResponse.SaveContentAsFile(aTargetFile: File; contentCallback: not nullable HttpContentResponseBlock<File>);
+begin
+  {$IF COOPER}
+  async begin
+    var allData := new java.io.FileOutputStream(aTargetFile);
+    var stream := Connection.InputStream;
+    var data := new Byte[4096]; 
+    var len := stream.read(data);
+    while len > 0 do begin
+      allData.write(data, 0, len);
+      len := stream.read(data);
+    end;
+    contentCallback(new HttpResponseContent<File>(Content := aTargetFile));
+  end;
+  {$ELSEIF ECHOES}
+  async begin
+    try
+      using responseStream := Response.GetResponseStream() do
+        using fileStream := System.IO.File.OpenWrite(aTargetFile) do
+          responseStream.CopyTo(fileStream);
+      contentCallback(new HttpResponseContent<File>(Content := aTargetFile));
+    except
+      on E: Exception do
+        contentCallback(new HttpResponseContent<File>(Exception := E));
+    end;
+  end;
+  {$ELSEIF NOUGAT}
+  async begin
+    var error: NSError;
+    if Data.writeToFile(aTargetFile) options(NSDataWritingOptions.NSDataWritingAtomic) error(var error) then
+      contentCallback(new HttpResponseContent<File>(Content := aTargetFile))
+    else
+      contentCallback(new HttpResponseContent<File>(Exception := new SugarException withError(error)));
+  end;
+  {$ENDIF}
 end;
 
 { Http }
+
+method Http.ExecuteRequest(aRequest: not nullable HttpRequest; ResponseCallback: not nullable HttpResponseBlock);
+begin
+  {$IF COOPER}
+  async begin
+    var lConnection := java.net.URL(aRequest.URL).openConnection as java.net.HttpURLConnection;
+    lConnection.addRequestProperty("User-Agent", SUGAR_USER_AGENT);
+
+    if assigned(aRequest.Content) then begin
+      lConnection.getOutputStream().write((aRequest.Content as IHttpRequestContent).GetContentAsArray());
+      lConnection.getOutputStream().flush();
+    end;
+
+    var lResponse := new HttpResponse(lConnection);
+    responseCallback(lResponse);
+  end;
+  {$ELSEIF ECHOES}
+  using webRequest := System.Net.WebRequest.Create(aRequest.Url) as HttpWebRequest do begin
+    
+    webRequest.AllowAutoRedirect := aRequest.FollowRedirects;
+    webRequest.UserAgent := SUGAR_USER_AGENT;
+    
+    case aRequest.Mode of
+      HttpRequestMode.Get: webRequest.Method := 'GET';
+      HttpRequestMode.Post: webRequest.Method := 'POST';
+    end;
+    
+    if assigned(aRequest.Content) then begin
+      using stream := webRequest.GetRequestStream() do begin
+        var data := (aRequest.Content as IHttpRequestContent).GetContentAsArray();
+        stream.Write(data, 0, data.Length);
+        stream.Flush();
+      end;
+    end;
+    
+    webRequest.BeginGetResponse( (ar) -> begin
+
+      try
+        var webResponse := webRequest.EndGetResponse(ar) as HttpWebResponse;
+        var response := new HttpResponse(webResponse);
+        responseCallback(response);
+      except
+        on E: Exception do
+          responseCallback(new HttpResponse(E));
+      end;
+    
+    end, nil);
+  end;
+  {$ELSEIF NOUGAT}
+  var nsUrlRequest := new NSMutableURLRequest withURL(aRequest.Url) cachePolicy(0) timeoutInterval(30);
+
+  //nsUrlRequest.AllowAutoRedirect := aRequest.FollowRedirects;
+  nsUrlRequest.setValue(SUGAR_USER_AGENT) forHTTPHeaderField("User-Agent");
+  //nsUrlRequest.allowsCellularAccess =
+  
+  case aRequest.Mode of
+    HttpRequestMode.Get: nsUrlRequest.HTTPMethod := 'GET';
+    HttpRequestMode.Post: nsUrlRequest.HTTPMethod := 'POST';
+  end;
+
+  if assigned(aRequest.Content) then begin
+    nsUrlRequest.HTTPBody := (aRequest.Content as IHttpRequestContent).GetContentAsBinary();
+  end;
+
+  NSURLConnection.sendAsynchronousRequest(nsUrlRequest) queue(nil) completionHandler( (nsUrlResponse, data, error) -> begin
+
+    var nsHttpUrlResponse := NSHTTPURLResponse(nsUrlResponse);
+    if assigned(data) and assigned(nsHttpUrlResponse) and not assigned(error) then begin
+      var response := new HttpResponse(data, nsHttpUrlResponse);
+      responseCallback(response);
+    end else if assigned(error) then begin
+      var response := new HttpResponse(new SugarException withError(error));
+      responseCallback(response);
+    end else begin
+      var response := new HttpResponse(new SugarException("Request failed without providing an error."));
+      responseCallback(response);
+    end;
+    
+  end);
+  {$ENDIF}
+end;
+
+{method Http.ExecuteRequest(aUrl: not nullable Url; ResponseCallback: not nullable HttpResponseBlock);
+begin
+  ExecuteRequest(new HttpRequest(aUrl, HttpRequestMode.Get), responseCallback);
+end;}
+
+method Http.ExecuteRequestAsString(aRequest: not nullable HttpRequest; contentCallback: not nullable HttpContentResponseBlock<String>);
+begin
+  Http.ExecuteRequest(aRequest, (response) -> begin
+    if response.Success then begin
+      response.GetContentAsString( (content) -> begin
+        contentCallback(content)
+      end);
+    end else begin
+      contentCallback(new HttpResponseContent<String>(Exception := response.Exception));
+    end;
+  end);
+end;
+
+method Http.ExecuteRequestAsBinary(aRequest: not nullable HttpRequest; contentCallback: not nullable HttpContentResponseBlock<Binary>);
+begin
+  Http.ExecuteRequest(aRequest, (response) -> begin
+    if response.Success then begin
+      response.GetContentAsBinary( (content) -> begin
+        contentCallback(content)
+      end);
+    end else begin
+      contentCallback(new HttpResponseContent<Binary>(Exception := response.Exception));
+    end;
+  end);
+end;
+
+method Http.ExecuteRequestAsXml(aRequest: not nullable HttpRequest; contentCallback: not nullable HttpContentResponseBlock<XmlDocument>);
+begin
+  Http.ExecuteRequest(aRequest, (response) -> begin
+    if response.Success then begin
+      response.GetContentAsXml( (content) -> begin
+        contentCallback(content)
+      end);
+    end else begin
+      contentCallback(new HttpResponseContent<XmlDocument>(Exception := response.Exception));
+    end;
+  end);
+end;
+
+method Http.ExecuteRequestAsJson(aRequest: not nullable HttpRequest; contentCallback: not nullable HttpContentResponseBlock<JsonDocument>);
+begin
+  Http.ExecuteRequest(aRequest, (response) -> begin
+    if response.Success then begin
+      response.GetContentAsJson( (content) -> begin
+        contentCallback(content)
+      end);
+    end else begin
+      contentCallback(new HttpResponseContent<JsonDocument>(Exception := response.Exception));
+    end;
+  end);
+end;
+
+method Http.ExecuteRequestAndSaveAsFile(aRequest: not nullable HttpRequest; aTargetFile: not nullable File; contentCallback: not nullable HttpContentResponseBlock<File>);
+begin
+  Http.ExecuteRequest(aRequest, (response) -> begin
+    if response.Success then begin
+      response.SaveContentAsFile(aTargetFile, (content) -> begin
+        contentCallback(content)
+      end);
+    end else begin
+      contentCallback(new HttpResponseContent<File>(Exception := response.Exception));
+    end;
+  end);
+end;
+
+(*
 
 {$IF WINDOWS_PHONE}
 class method Http.InternalDownload(anUrl: Url): System.Threading.Tasks.Task<System.Net.HttpWebResponse>;
@@ -84,22 +519,6 @@ class method Http.Download(anUrl: Url): HttpResponse<Binary>;
 begin
   try
   {$IF COOPER}
-    var Content := new Binary;
-    var Connection := java.net.URL(anUrl).openConnection;
-    Connection.addRequestProperty("User-Agent", "Mozilla/4.76");
-    var stream := Connection.InputStream;
-    var data := new SByte[4096]; 
-    var len := stream.read(data);
-
-    while len > 0 do begin
-      Content.Write(data, len);
-      len := stream.read(data);
-    end;
-
-    if Content.Length = 0 then
-      exit new HttpResponse<Binary> withException(new SugarException("Content is empty"));
-
-    exit new HttpResponse<Binary>(Content); 
   {$ELSEIF WINDOWS_PHONE}
     var Response := InternalDownload(anUrl).Result;
     
@@ -177,43 +596,6 @@ begin
     end;
   end;
 end;
-
-class method Http.DownloadStringAsync(anUrl: Url; Encoding: Encoding; ResponseCallback: HttpResponseBlock<String>);
-begin
-  SugarArgumentNullException.RaiseIfNil(anUrl, "Url");
-  if ResponseCallback = nil then
-    raise new SugarArgumentNullException("ResponseCallback");
-  async begin
-    var Data := Download(anUrl);
-    if Data.IsFailed then
-      ResponseCallback(new HttpResponse<String> withException(Data.Exception))
-    else
-      ResponseCallback(new HttpResponse<String>(new String(Data.Content.ToArray, Encoding)));
-  end;
-end;
-
-class method Http.DownloadBinaryAsync(anUrl: Url; ResponseCallback: HttpResponseBlock<Binary>);
-begin
-  SugarArgumentNullException.RaiseIfNil(anUrl, "Url");
-  if ResponseCallback = nil then
-    raise new SugarArgumentNullException("ResponseCallback");
-  async begin
-    ResponseCallback(Download(anUrl));
-  end;
-end;
-
-class method Http.DownloadXmlAsync(anUrl: Url; ResponseCallback: HttpResponseBlock<XmlDocument>);
-begin
-  SugarArgumentNullException.RaiseIfNil(anUrl, "Url");
-  if ResponseCallback = nil then
-    raise new SugarArgumentNullException("ResponseCallback");
-  async begin
-    var Data := Download(anUrl);
-    if Data.IsFailed then
-      ResponseCallback(new HttpResponse<XmlDocument> withException(Data.Exception))
-    else
-      ResponseCallback(new HttpResponse<XmlDocument>(XmlDocument.FromBinary(Data.Content)));
-  end;
-end;
+*)
 
 end.
