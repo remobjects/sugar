@@ -437,7 +437,6 @@ begin
   end);
 end;
 
-
 method Http.ExecuteRequestAsBinary(aRequest: not nullable HttpRequest; contentCallback: not nullable HttpContentResponseBlock<Binary>);
 begin
   Http.ExecuteRequest(aRequest, (response) -> begin
