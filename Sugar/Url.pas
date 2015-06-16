@@ -146,7 +146,13 @@ begin
   {$IF COOPER}
   {$WARNING missing implementation}
   {$ELSEIF ECHOES}
+  {$IF WINDOWS_PHONE}
+  result := System.Net.HttpUtility.UrlEncode(aString);
+  {$ELSEIF NETFX_CORE}
+  result := System.Net.WebUtility.UrlEncode(aString);
+  {$ELSE}
   result := System.Web.HttpUtility.UrlEncode(aString);
+  {$ENDIF}
   {$ELSEIF NOUGAT}
   result := aString.stringByAddingPercentEscapesUsingEncoding(NSStringEncoding.NSUTF8StringEncoding) 
   {$ENDIF}
