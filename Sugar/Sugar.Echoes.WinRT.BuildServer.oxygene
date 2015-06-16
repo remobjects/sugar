@@ -137,6 +137,15 @@
     <Compile Include="XML\XmlElement.pas" />
     <Compile Include="XML\XmlNode.pas" />
     <Compile Include="XML\XmlProcessingInstruction.pas" />
+    <Compile Include="JSON\JsonDocument.pas" />
+    <Compile Include="JSON\Exceptions.pas" />
+    <Compile Include="JSON\JsonArray.pas" />
+    <Compile Include="JSON\JsonConsts.pas" />
+    <Compile Include="JSON\JsonDeserializer.pas" />
+    <Compile Include="JSON\JsonObject.pas" />
+    <Compile Include="JSON\JsonSerializer.pas" />
+    <Compile Include="JSON\JsonTokenizer.pas" />
+    <Compile Include="JSON\JsonValue.pas" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
     <VisualStudioVersion>11.0</VisualStudioVersion>
