@@ -79,65 +79,6 @@
     <CpuType>x86</CpuType>
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
-  <ItemGroup>
-    <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
-    <Folder Include="Collections\" />
-    <Folder Include="Cryptography\" />
-    <Folder Include="IO\" />
-    <Folder Include="Properties\" />
-    <Folder Include="Threading\" />
-    <Folder Include="XML\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="AutoreleasePool.pas" />
-    <Compile Include="Binary.pas" />
-    <Compile Include="Collections\Dictionary.pas" />
-    <Compile Include="Collections\HashSet.pas" />
-    <Compile Include="Collections\KeyValue.pas" />
-    <Compile Include="Collections\List.pas" />
-    <Compile Include="Collections\Queue.pas" />
-    <Compile Include="Collections\Stack.pas" />
-    <Compile Include="Color.pas" />
-    <None Include="Cryptography\Cipher.pas" />
-    <Compile Include="Cryptography\MessageDigest.pas" />
-    <Compile Include="Cryptography\Utils.pas" />
-    <Compile Include="Consts.pas" />
-    <Compile Include="Convert.pas" />
-    <Compile Include="DateTime.pas" />
-    <Compile Include="DateFormatter.pas" />
-    <Compile Include="Encoding.pas" />
-    <Compile Include="HTTP.pas" />
-    <Compile Include="IO\File.pas" />
-    <Compile Include="IO\FileHandle.pas" />
-    <Compile Include="IO\FileUtils.pas" />
-    <Compile Include="IO\Folder.pas" />
-    <Compile Include="IO\FolderUtils.pas" />
-    <Compile Include="IO\Path.pas" />
-    <Compile Include="Random.pas" />
-    <Compile Include="Environment.pas" />
-    <Compile Include="Exceptions.pas" />
-    <Compile Include="Extensions.pas" />
-    <Compile Include="Guid.pas" />
-    <None Include="Threading\AutoResetEvent.pas" />
-    <None Include="Threading\ManualResetEvent.pas" />
-    <None Include="Threading\Semaphore.pas" />
-    <None Include="Threading\Thread.pas" />
-    <None Include="Threading\ThreadPool.pas" />
-    <Compile Include="UserSettings.pas" />
-    <Compile Include="Math.pas" />
-    <Compile Include="Properties\AssemblyInfo_WinRT.pas" />
-    <Compile Include="String.pas" />
-    <Compile Include="StringBuilder.pas" />
-    <Compile Include="StringFormatter.pas" />
-    <Compile Include="Url.pas" />
-    <Compile Include="XML\XmlAttribute.pas" />
-    <Compile Include="XML\XmlCharacterData.pas" />
-    <Compile Include="XML\XmlDocument.pas" />
-    <Compile Include="XML\XmlDocumentType.pas" />
-    <Compile Include="XML\XmlElement.pas" />
-    <Compile Include="XML\XmlNode.pas" />
-    <Compile Include="XML\XmlProcessingInstruction.pas" />
-  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
     <VisualStudioVersion>11.0</VisualStudioVersion>
   </PropertyGroup>
@@ -173,4 +114,5 @@
   <PropertyGroup>
     <PreBuildEvent Condition="'$(OS)' != 'Unix'">rmdir /s /q $(ProjectDir)\Obj</PreBuildEvent>
   </PropertyGroup>
+  <Import Project="Sugar.Shared.projitems" Label="Shared" />
 </Project>
