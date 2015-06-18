@@ -155,6 +155,7 @@
     <Reference Include="mscorlib" />
     <Reference Include="System" />
     <Reference Include="System.Net" />
+	<Reference Include="System.Net.Requests" />
     <Reference Include="Windows" />
     <Reference Include="System.Core" />
     <Reference Include="System.Windows" />

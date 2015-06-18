@@ -161,6 +161,7 @@
     <Reference Include="mscorlib" />
     <Reference Include="Windows" />
     <Reference Include="System.Net.Http" />
+	<Reference Include="System.Net.Requests" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Xml.ReaderWriter" />
