@@ -26,6 +26,7 @@ type
     property ApplicationContext: {$IF ANDROID}android.content.Context{$ELSE}Object{$ENDIF} read write;
 
     method GetEnvironmentVariable(Name: String): String;
+    method CurrentDirectory: String;
   end;
 
 implementation
@@ -149,6 +150,20 @@ begin
   {$ELSEIF IOS}
   "Cocoa Touch"
   {$ENDIF};
+end;
+
+
+class method Environment.CurrentDirectory: String;
+begin
+  {$IF COOPER}
+  exit System.getProperty("user.dir");
+  {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
+  exit System.Environment.CurrentDirectory;
+  {$ELSEIF ECHOES}
+  exit System.Environment.CurrentDirectory;
+  {$ELSEIF NOUGAT}
+  exit Foundation.NSFileManager.defaultManager().currentDirectoryPath;
+  {$ENDIF}
 end;
 
 end.
