@@ -140,7 +140,9 @@ class method Path.GetFullPath(RelativePath: String): String;
 begin
   {$IF COOPER}
   exit new java.io.File(RelativePath).getAbsolutePath();  
-  {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
+  {$ELSEIF NETFX_CORE}
+  exit RelativePath; //api has no such function
+  {$ELSEIF WINDOWS_PHONE}
   exit System.IO.Path.GetFullPath(RelativePath);
   {$ELSEIF ECHOES}
   exit System.IO.Path.GetFullPath(RelativePath);

@@ -152,13 +152,14 @@ begin
   {$ENDIF};
 end;
 
-
 class method Environment.CurrentDirectory: String;
 begin
   {$IF COOPER}
   exit System.getProperty("user.dir");
+  {$ELSEIF NETFX_CORE}
+  exit ApplicationData.LocalFolder.InstalledLocation;
   {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
-  exit System.Environment.CurrentDirectory;
+  exit System.Environment.CurrentDirectory; 
   {$ELSEIF ECHOES}
   exit System.Environment.CurrentDirectory;
   {$ELSEIF NOUGAT}
