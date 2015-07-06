@@ -5,13 +5,13 @@
     <OutputType>StaticLibrary</OutputType>
     <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
     <AllowLegacyCreate>False</AllowLegacyCreate>
-    <Name>Sugar.Data (iOS)</Name>
+    <Name>Sugar.Data (watchOS)</Name>
     <RootNamespace>Sugar</RootNamespace>
-    <SDK>iOS</SDK>
-    <ProjectGuid>{15939baf-3d02-4074-a4f1-6adbd2a5f28d}</ProjectGuid>
+    <SDK>watcOS</SDK>
+    <ProjectGuid>{0EAE8082-C9A4-4A4C-B52B-BD4E1FDEA19A}</ProjectGuid>
     <AssemblyName>Sugar.Data</AssemblyName>
     <DefaultUses>Foundation</DefaultUses>
-    <DeploymentTargetVersion>6.0</DeploymentTargetVersion>
+    <DeploymentTargetVersion>2.0</DeploymentTargetVersion>
     <AllowLegacyOutParams>False</AllowLegacyOutParams>
     <CreateHeaderFile>False</CreateHeaderFile>
   </PropertyGroup>

@@ -5,13 +5,13 @@
     <OutputType>StaticLibrary</OutputType>
     <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
     <AllowLegacyCreate>False</AllowLegacyCreate>
-    <Name>Sugar.Data (iOS)</Name>
+    <Name>Sugar (watchOS)</Name>
     <RootNamespace>Sugar</RootNamespace>
-    <SDK>iOS</SDK>
-    <ProjectGuid>{15939baf-3d02-4074-a4f1-6adbd2a5f28d}</ProjectGuid>
-    <AssemblyName>Sugar.Data</AssemblyName>
+    <SDK>watchOS</SDK>
+    <ProjectGuid>{A0CD6BB4-9336-4E25-9084-D1C63C03BF78}</ProjectGuid>
+    <AssemblyName>Sugar</AssemblyName>
     <DefaultUses>Foundation</DefaultUses>
-    <DeploymentTargetVersion>6.0</DeploymentTargetVersion>
+    <DeploymentTargetVersion>2.0</DeploymentTargetVersion>
     <AllowLegacyOutParams>False</AllowLegacyOutParams>
     <CreateHeaderFile>False</CreateHeaderFile>
   </PropertyGroup>
@@ -42,27 +42,17 @@
   <ItemGroup>
     <Reference Include="Foundation.fx" />
     <Reference Include="libNougat.fx" />
-    <Reference Include="libsqlite3.fx">
-      <HintPath>C:\Program Files (x86)\RemObjects Software\Elements\Nougat\Libraries\libsqlite3\iOS\libsqlite3.fx</HintPath>
-    </Reference>
     <Reference Include="libxml2.fx" />
     <Reference Include="rtl.fx" />
     <Reference Include="UIKit.fx" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Sugar\Sugar.Nougat.iOS.oxygene">
-      <Name>Sugar.Nougat.iOS</Name>
-      <Project>{91b301fc-331e-48a7-803b-4cbe3fff6ed7}</Project>
-      <Private>True</Private>
-      <HintPath>..\Sugar\bin\iOS Simulator\libSugar.fx</HintPath>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
+    <Folder Include="Cryptography\" />
     <Folder Include="Properties\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Nougat.targets" />
-  <Import Project="Sugar.Data.Shared.projitems" Label="Shared" />
   <PropertyGroup>
     <PreBuildEvent />
   </PropertyGroup>
+  <Import Project="Sugar.Shared.projitems" Label="Shared" />
 </Project>
