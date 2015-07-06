@@ -201,7 +201,7 @@ end;
 constructor HttpResponse(aResponse: HttpWebResponse);
 begin
   Response := aResponse;
-  Code := aResponse.StatusCode;
+  Code := Int32(aResponse.StatusCode);
   Headers := new Dictionary<String,String>();
   {$IF WINDOWS_PHONE OR NETFX_CORE}
   for each k: String in aResponse.Headers.AllKeys do
