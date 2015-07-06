@@ -3,6 +3,19 @@ include("$(Train)/ci2.train");
 var sugarVersion = getVersionNumberFromGlobalIni("Oxygene");
 export("CIVersionNumber", sugarVersion);
 
+if (typeof ciCrossBox === "undefined")
+{
+	ciCrossBox = env["CICrossBoxServerName"];
+  	if (typeof ciCrossBox === "undefined")
+		ciCrossBox = "Onyx";
+}
+
+
+var optionSetups = ciOptions.contains("SETUPS") || ciOptions.contains("SETUP") ;
+var optionSkipSetups = ciOptions.contains("SKIPSETUPS");
+var optionSkipHelp = ciOptions.contains("SKIPHELP");
+var optionShell = ciOptions.contains("SHELL") || ciOptions.contains("ISO") || ciOptions.contains("ISOS");
+
 var lFiles =
 			["Sugar/Properties/AssemblyInfo.pas",
 			"Sugar/Properties/AssemblyInfo_WinRT.pas",
@@ -26,11 +39,11 @@ cleanObj();
 msbuild["rebuild"]("Sugar/Sugar.Echoes.WP8.BuildServer.oxygene", 	{configuration: "Release", destinationFolder: "./Bin/WP8" });
 cleanObj();
 
-msbuild["rebuild"]("Sugar/Sugar.Nougat.OSX.oxygene", 		{configuration: "Release", destinationFolder: "./Bin", extraArgs: '"/p:CrossBox=Onyx;CrossBoxDeviceID=Mac"'});
-msbuild["rebuild"]("Sugar/Sugar.Nougat.iOS.oxygene", 		{configuration: "Release", destinationFolder: "./Bin", extraArgs: '"/p:CrossBox=Onyx;CrossBoxDeviceID=iOS Simulator (iPhone)"'});
-msbuild["rebuild"]("Sugar/Sugar.Nougat.iOS.oxygene", 		{configuration: "Release", destinationFolder: "./Bin", extraArgs: '"/p:CrossBox=Onyx;CrossBoxDeviceID=Generic iOS Device"'});
-msbuild["rebuild"]("Sugar/Sugar.Nougat.watchOS.oxygene", 	{configuration: "Release", destinationFolder: "./Bin", extraArgs: '"/p:CrossBox=Onyx;CrossBoxDeviceID=watchOS Simulator (82mm)"'});
-msbuild["rebuild"]("Sugar/Sugar.Nougat.watchOS.oxygene", 	{configuration: "Release", destinationFolder: "./Bin", extraArgs: '"/p:CrossBox=Onyx;CrossBoxDeviceID=Generic watchOS Device"'});
+msbuild["rebuild"]("Sugar/Sugar.Nougat.OSX.oxygene", 		{configuration: "Release", destinationFolder: "./Bin", extraArgs: '"/p:CrossBox=$(ciCrossBox);CrossBoxDeviceID=Mac"'});
+msbuild["rebuild"]("Sugar/Sugar.Nougat.iOS.oxygene", 		{configuration: "Release", destinationFolder: "./Bin", extraArgs: '"/p:CrossBox=$(ciCrossBox);CrossBoxDeviceID=iOS Simulator (iPhone)"'});
+msbuild["rebuild"]("Sugar/Sugar.Nougat.iOS.oxygene", 		{configuration: "Release", destinationFolder: "./Bin", extraArgs: '"/p:CrossBox=$(ciCrossBox);CrossBoxDeviceID=Generic iOS Device"'});
+msbuild["rebuild"]("Sugar/Sugar.Nougat.watchOS.oxygene", 	{configuration: "Release", destinationFolder: "./Bin", extraArgs: '"/p:CrossBox=$(ciCrossBox);CrossBoxDeviceID=watchOS Simulator (82mm)"'});
+msbuild["rebuild"]("Sugar/Sugar.Nougat.watchOS.oxygene", 	{configuration: "Release", destinationFolder: "./Bin", extraArgs: '"/p:CrossBox=$(ciCrossBox);CrossBoxDeviceID=Generic watchOS Device"'});
 
 //Build Sugar.Data
 if (false)
@@ -52,13 +65,13 @@ if (false)
 	msbuild["rebuild"]("Sugar.Data/Sugar.Data.Echoes.WP8.BuildServer.oxygene", 		{configuration: "Release", destinationFolder: "./Bin/WP8" });
 	cleanObj();
 
-	msbuild["rebuild"]("Sugar.Data/Sugar.Data.Nougat.OSX.oxygene", 	{configuration: "Release", destinationFolder: "./Bin", extraArgs: '"/p:CrossBox=Onyx;CrossBoxDeviceID=Mac"'});
+	msbuild["rebuild"]("Sugar.Data/Sugar.Data.Nougat.OSX.oxygene", 	{configuration: "Release", destinationFolder: "./Bin", extraArgs: '"/p:CrossBox=$(ciCrossBox);CrossBoxDeviceID=Mac"'});
 	cleanObj();
 
-	msbuild["rebuild"]("Sugar.Data/Sugar.Data.Nougat.iOS.oxygene", 	{configuration: "Release", destinationFolder: "./Bin", extraArgs: '"/p:CrossBox=Onyx;CrossBoxDeviceID=iOS Simulator (iPhone)"'});
+	msbuild["rebuild"]("Sugar.Data/Sugar.Data.Nougat.iOS.oxygene", 	{configuration: "Release", destinationFolder: "./Bin", extraArgs: '"/p:CrossBox=$(ciCrossBox);CrossBoxDeviceID=iOS Simulator (iPhone)"'});
 	cleanObj();
 
-	msbuild["rebuild"]("Sugar.Data/Sugar.Data.Nougat.iOS.oxygene", 	{configuration: "Release", destinationFolder: "./Bin", extraArgs: '"/p:CrossBox=Onyx;CrossBoxDeviceID=Generic iOS Device"'});
+	msbuild["rebuild"]("Sugar.Data/Sugar.Data.Nougat.iOS.oxygene", 	{configuration: "Release", destinationFolder: "./Bin", extraArgs: '"/p:CrossBox=$(ciCrossBox);CrossBoxDeviceID=Generic iOS Device"'});
 	cleanObj();
 }
 
