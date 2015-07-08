@@ -20,7 +20,7 @@
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
         <Optimize>False</Optimize>
         <OutputPath>bin\</OutputPath>
-        <DefineConstants>DEBUG;TRACE;IOS</DefineConstants>
+        <DefineConstants>DEBUG;TRACE;WATCHOS</DefineConstants>
         <CaptureConsoleOutput>False</CaptureConsoleOutput>
         <StartMode>Project</StartMode>
         <XmlDoc>False</XmlDoc>
@@ -37,7 +37,7 @@
         <XmlDoc>False</XmlDoc>
         <XmlDocWarningLevel>WarningOnPublicMembers</XmlDocWarningLevel>
         <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
-        <DefineConstants>IOS</DefineConstants>
+        <DefineConstants>WATCHOS</DefineConstants>
     </PropertyGroup>
     <ItemGroup>
         <Reference Include="Foundation.fx"/>
