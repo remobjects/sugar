@@ -137,6 +137,15 @@
     <Compile Include="XML\XmlElement.pas" />
     <Compile Include="XML\XmlNode.pas" />
     <Compile Include="XML\XmlProcessingInstruction.pas" />
+    <Compile Include="JSON\JsonDocument.pas" />
+    <Compile Include="JSON\Exceptions.pas" />
+    <Compile Include="JSON\JsonArray.pas" />
+    <Compile Include="JSON\JsonConsts.pas" />
+    <Compile Include="JSON\JsonDeserializer.pas" />
+    <Compile Include="JSON\JsonObject.pas" />
+    <Compile Include="JSON\JsonSerializer.pas" />
+    <Compile Include="JSON\JsonTokenizer.pas" />
+    <Compile Include="JSON\JsonValue.pas" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
     <VisualStudioVersion>11.0</VisualStudioVersion>
@@ -150,24 +159,26 @@
   -->
   <ItemGroup>
     <Reference Include="mscorlib" />
-    <Reference Include="Windows" />
+    <Reference Include="System.Collections" />
+    <Reference Include="System.Globalization" />
+    <Reference Include="System.Diagnostics.Debug" />
+    <Reference Include="System.IO" />
+    <Reference Include="System.Linq" />
     <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Primitives" />
+    <Reference Include="System.Net.Requests" />
+    <Reference Include="System.Reflection" />
+    <Reference Include="System.Runtime" />
+    <Reference Include="System.Runtime.Extensions" />
+    <Reference Include="System.Runtime.InteropServices" />
+    <Reference Include="System.Runtime.WindowsRuntime" />
+    <Reference Include="System.Text.Encoding" />
+    <Reference Include="System.Threading" />
+    <Reference Include="System.Threading.Tasks" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Xml.ReaderWriter" />
-    <Reference Include="System.Reflection" />
-    <Reference Include="System.Runtime" />
-    <Reference Include="System.Runtime.InteropServices" />
-    <Reference Include="System.Globalization" />
-    <Reference Include="System.Runtime.WindowsRuntime" />
-    <Reference Include="System.Threading" />
-    <Reference Include="System.Threading.Tasks" />
-    <Reference Include="System.IO" />
-    <Reference Include="System.Linq" />
-    <Reference Include="System.Collections" />
-    <Reference Include="System.Text.Encoding" />
-    <Reference Include="System.Diagnostics.Debug" />
-    <Reference Include="System.Runtime.Extensions" />
+    <Reference Include="Windows" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Sugar\Microsoft.Windows.UI.Xaml.Oxygene.targets" />
   <PropertyGroup>

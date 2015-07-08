@@ -142,6 +142,15 @@
     <Compile Include="XML\XmlElement.pas" />
     <Compile Include="XML\XmlNode.pas" />
     <Compile Include="XML\XmlProcessingInstruction.pas" />
+    <Compile Include="JSON\JsonDocument.pas" />
+    <Compile Include="JSON\Exceptions.pas" />
+    <Compile Include="JSON\JsonArray.pas" />
+    <Compile Include="JSON\JsonConsts.pas" />
+    <Compile Include="JSON\JsonDeserializer.pas" />
+    <Compile Include="JSON\JsonObject.pas" />
+    <Compile Include="JSON\JsonSerializer.pas" />
+    <Compile Include="JSON\JsonTokenizer.pas" />
+    <Compile Include="JSON\JsonValue.pas" />
   </ItemGroup>
   <ProjectExtensions />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -155,6 +164,7 @@
     <Reference Include="mscorlib" />
     <Reference Include="System" />
     <Reference Include="System.Net" />
+	<Reference Include="System.Net.Requests" />
     <Reference Include="Windows" />
     <Reference Include="System.Core" />
     <Reference Include="System.Windows" />

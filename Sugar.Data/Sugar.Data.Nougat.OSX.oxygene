@@ -5,7 +5,7 @@
     <OutputType>StaticLibrary</OutputType>
     <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
     <AllowLegacyCreate>False</AllowLegacyCreate>
-    <Name>Sugar.Data.Nougat.OSX</Name>
+    <Name>Sugar.Data (OS X)</Name>
     <RootNamespace>Sugar</RootNamespace>
     <SDK>OS X</SDK>
     <ProjectGuid>{0d5b253d-762b-42d9-bfd2-3c217e07cf52}</ProjectGuid>

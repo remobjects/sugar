@@ -17,13 +17,19 @@ type
   end;
   {$ELSE NOUGAT}
     
-    {$IF TARGET_OS_IPHONE}
+    {$IF IOS}
     Color = public class mapped to UIKit.UIColor
     public
       class method colorWithRGBAPercentage(aRed, aGreen, aBlue, aAlpha: Single): Color; mapped to colorWithRed(aRed) green(aGreen) blue(aBlue) alpha(aAlpha);
       class method colorWithRGBA256(aRed, aGreen, aBlue, aAlpha: Byte): Color; mapped to colorWithRed(aRed/256.0) green(aGreen/256.0) blue(aBlue/256.0) alpha(aAlpha/256.0);
     end;
-    {$ELSEIF TARGET_OS_MAC}
+    {$ELSEIF WATCHOS}
+    Color = public class mapped to UIKit.UIColor
+    public
+      //class method colorWithRGBAPercentage(aRed, aGreen, aBlue, aAlpha: Single): Color; mapped to colorWithRed(aRed) green(aGreen) blue(aBlue) alpha(aAlpha);
+      //class method colorWithRGBA256(aRed, aGreen, aBlue, aAlpha: Byte): Color; mapped to colorWithRed(aRed/256.0) green(aGreen/256.0) blue(aBlue/256.0) alpha(aAlpha/256.0);
+    end;
+    {$ELSEIF OSX}
     Color = public class mapped to AppKit.NSColor
     public
       class method colorWithRGBAPercentage(aRed, aGreen, aBlue, aAlpha: Single): Color; mapped to colorWithCalibratedRed(aRed) green(aGreen) blue(aBlue) alpha(aAlpha);

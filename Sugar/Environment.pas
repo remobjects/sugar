@@ -6,7 +6,7 @@ uses
   Sugar.IO;
 
 type
-  TargetPlatform = public enum(Net, Java, OSX, iOS, Android, WinRT, WindowsPhone);
+  TargetPlatform = public enum(Net, Java, OSX, iOS, watchOS, Android, WinRT, WindowsPhone);
 
   Environment = public static class
   private
@@ -79,6 +79,8 @@ begin
   exit Foundation.NSUserName;
   {$ELSEIF IOS}
   exit UIKit.UIDevice.currentDevice.name;
+  {$ELSEIF WATCHOS}
+  exit "Apple Watch"; {$HINT solve this better?}
   {$ENDIF}
 end;
 
@@ -93,9 +95,11 @@ begin
   {$ELSEIF ECHOES}
   exit System.Environment.OSVersion.Platform.ToString();
   {$ELSEIF OSX}
-  exit "OSX";
+  exit "OS X";
   {$ELSEIF IOS}
   exit "iOS";
+  {$ELSEIF WATCHOS}
+  exit "watchOS";
   {$ENDIF}
 end;
 
@@ -130,6 +134,8 @@ begin
   TargetPlatform.OSX
   {$ELSEIF IOS}
   TargetPlatform.iOS
+  {$ELSEIF WATCHOS}
+  TargetPlatform.watchOS
   {$ENDIF};
 end;
 
@@ -147,7 +153,7 @@ begin
   ".NET"
   {$ELSEIF OSX}
   "Cocoa"
-  {$ELSEIF IOS}
+  {$ELSEIF IOS or WATCHIOS}
   "Cocoa Touch"
   {$ENDIF};
 end;
