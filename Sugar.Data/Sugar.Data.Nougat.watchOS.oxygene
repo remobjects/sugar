@@ -15,6 +15,7 @@
         <AllowLegacyOutParams>False</AllowLegacyOutParams>
         <CreateHeaderFile>False</CreateHeaderFile>
         <Architecture>armv7k</Architecture>
+        <SimulatorArchitectures>i386</SimulatorArchitectures>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
         <Optimize>False</Optimize>
@@ -25,7 +26,6 @@
         <XmlDoc>False</XmlDoc>
         <XmlDocWarningLevel>WarningOnPublicMembers</XmlDocWarningLevel>
         <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
-        <SimulatorArchitectures>i386;x86_64</SimulatorArchitectures>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
         <Optimize>True</Optimize>
@@ -38,7 +38,6 @@
         <XmlDocWarningLevel>WarningOnPublicMembers</XmlDocWarningLevel>
         <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
         <DefineConstants>IOS</DefineConstants>
-        <SimulatorArchitectures>i386;x86_64</SimulatorArchitectures>
     </PropertyGroup>
     <ItemGroup>
         <Reference Include="Foundation.fx"/>
