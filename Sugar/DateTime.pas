@@ -4,6 +4,7 @@ interface
 
 {$IF COOPER}
 uses
+  java.nio,
   java.util;
 {$ELSEIF NOUGAT}
 uses
@@ -12,23 +13,11 @@ uses
 
 type
   {$IF ECHOES}[System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Auto, Size := 1)]{$ENDIF}
-  DateTime = public {$IF COOPER}record{$ELSEIF ECHOES}record mapped to System.DateTime{$ELSEIF NOUGAT}class{$ENDIF}
+  DateTime = public {$IF COOPER}class mapped to java.util.Calendar{$ELSEIF ECHOES}record mapped to System.DateTime{$ELSEIF NOUGAT}class mapped to NSDate{$ENDIF}
   private
-  {$IF COOPER}
-    fDate: Date; readonly;
-    fCalendar: Calendar := Calendar.Instance; readonly;
-
-    method InternalGetDate: DateTime;
-    method AddComponent(Component: Integer; Value: Integer): Calendar;
-    constructor(aDate: Date);
-  {$ELSEIF NOUGAT}
-    fDate: NSDate;
-    fCalendar: NSCalendar := NSCalendar.currentCalendar;  readonly;
-
-    method InternalGetDate: DateTime;
+  {$IF NOUGAT}
     method GetComponent(Component: NSCalendarUnit): Integer;
     method AdjustDate(Component: NSCalendarUnit; Value: Integer): DateTime;
-    constructor(aDate: NSDate);
   {$ENDIF}
   private
     const DEFAULT_FORMAT = "{dd}/{MM}/{yyyy} {hh}:{mm}:{ss}";
@@ -57,16 +46,16 @@ type
     method description: NSString; override;
     {$ENDIF}    
     
-    property Hour: Integer read {$IF COOPER}fCalendar.get(Calendar.HOUR_OF_DAY){$ELSEIF ECHOES}mapped.Hour{$ELSEIF NOUGAT}GetComponent(NSCalendarUnit.NSHourCalendarUnit){$ENDIF};
-    property Minute: Integer read {$IF COOPER}fCalendar.get(Calendar.MINUTE){$ELSEIF ECHOES}mapped.Minute{$ELSEIF NOUGAT}GetComponent(NSCalendarUnit.NSMinuteCalendarUnit){$ENDIF};
-    property Second: Integer read {$IF COOPER}fCalendar.get(Calendar.SECOND){$ELSEIF ECHOES}mapped.Second{$ELSEIF NOUGAT}GetComponent(NSCalendarUnit.NSSecondCalendarUnit){$ENDIF};
-    property Year: Integer read {$IF COOPER}fCalendar.get(Calendar.YEAR){$ELSEIF ECHOES}mapped.Year{$ELSEIF NOUGAT}GetComponent(NSCalendarUnit.NSYearCalendarUnit){$ENDIF};
-    property Month: Integer read {$IF COOPER}fCalendar.get(Calendar.MONTH)+1{$ELSEIF ECHOES}mapped.Month{$ELSEIF NOUGAT}GetComponent(NSCalendarUnit.NSMonthCalendarUnit){$ENDIF};    
-    property Day: Integer read {$IF COOPER}fCalendar.get(Calendar.DAY_OF_MONTH){$ELSEIF ECHOES}mapped.Day{$ELSEIF NOUGAT}GetComponent(NSCalendarUnit.NSDayCalendarUnit){$ENDIF};
-    property Date: DateTime read {$IF COOPER}InternalGetDate{$ELSEIF ECHOES}mapped.Date{$ELSEIF NOUGAT}InternalGetDate{$ENDIF};  
+    property Hour: Integer read {$IF COOPER}mapped.get(Calendar.HOUR){$ELSEIF ECHOES}mapped.Hour{$ELSEIF NOUGAT}GetComponent(NSCalendarUnit.NSHourCalendarUnit){$ENDIF};
+    property Minute: Integer read {$IF COOPER}mapped.get(Calendar.MINUTE){$ELSEIF ECHOES}mapped.Minute{$ELSEIF NOUGAT}GetComponent(NSCalendarUnit.NSMinuteCalendarUnit){$ENDIF};
+    property Second: Integer read {$IF COOPER}mapped.get(Calendar.SECOND){$ELSEIF ECHOES}mapped.Second{$ELSEIF NOUGAT}GetComponent(NSCalendarUnit.NSSecondCalendarUnit){$ENDIF};
+    property Year: Integer read {$IF COOPER}mapped.get(Calendar.YEAR){$ELSEIF ECHOES}mapped.Year{$ELSEIF NOUGAT}GetComponent(NSCalendarUnit.NSYearCalendarUnit){$ENDIF};
+    property Month: Integer read {$IF COOPER}mapped.get(Calendar.MONTH)+1{$ELSEIF ECHOES}mapped.Month{$ELSEIF NOUGAT}GetComponent(NSCalendarUnit.NSMonthCalendarUnit){$ENDIF};    
+    property Day: Integer read {$IF COOPER}mapped.get(Calendar.DAY_OF_MONTH){$ELSEIF ECHOES}mapped.Day{$ELSEIF NOUGAT}GetComponent(NSCalendarUnit.NSDayCalendarUnit){$ENDIF};
+    property Date: DateTime read {$IF COOPER OR NOUGAT}new DateTime(self.Year, self.Month, self.Day, 0, 0, 0){$ELSEIF ECHOES}mapped.Date{$ENDIF};  
     
-    class property Today: DateTime read {$IF COOPER}Now.Date{$ELSEIF ECHOES}mapped.Today{$ELSEIF NOUGAT}Now.Date{$ENDIF};
-    class property Now: DateTime read {$IF COOPER}new DateTime{$ELSEIF ECHOES}mapped.Now{$ELSEIF NOUGAT}new DateTime{$ENDIF};    
+    class property Today: DateTime read {$IF COOPER OR NOUGAT}Now.Date{$ELSEIF ECHOES}mapped.Today{$ENDIF};
+    class property Now: DateTime read {$IF COOPER OR NOUGAT}new DateTime(){$ELSEIF ECHOES}mapped.Now{$ENDIF};    
   end;
 
 implementation
@@ -74,11 +63,11 @@ implementation
 constructor DateTime;
 begin
   {$IF COOPER}
-  constructor(new Date);
+  exit Calendar.Instance;
   {$ELSEIF ECHOES}
   exit new System.DateTime;
   {$ELSEIF NOUGAT}
-  constructor(new NSDate);
+  exit new NSDate;
   {$ENDIF}
 end;
 
@@ -112,7 +101,7 @@ begin
   lCalendar.set(Calendar.MINUTE, aMinute);
   lCalendar.set(Calendar.SECOND, aSecond);
   lCalendar.set(Calendar.MILLISECOND, 0);
-  constructor(lCalendar.Time);
+  exit lCalendar;
   {$ELSEIF ECHOES}
   exit new System.DateTime(aYear, aMonth, aDay, anHour, aMinute, aSecond);
   {$ELSEIF NOUGAT}
@@ -123,14 +112,16 @@ begin
   Components.setHour(anHour);
   Components.setMinute(aMinute);
   Components.setSecond(aSecond);
-  exit new DateTime(fCalendar.dateFromComponents(Components));
+  var lCalendar := NSCalendar.currentCalendar();
+  exit lCalendar.dateFromComponents(Components);
   {$ENDIF}
 end;
 
 method DateTime.AddDays(Value: Integer): DateTime;
 begin
   {$IF COOPER}
-  exit new DateTime(AddComponent(Calendar.DATE, Value).Time);
+  mapped.add(Calendar.DATE, Value);
+  exit mapped;
   {$ELSEIF ECHOES}
   exit mapped.AddDays(Value);
   {$ELSEIF NOUGAT}
@@ -141,7 +132,8 @@ end;
 method DateTime.AddHours(Value: Integer): DateTime;
 begin
   {$IF COOPER}
-  exit new DateTime(AddComponent(Calendar.HOUR_OF_DAY, Value).Time);
+  mapped.add(Calendar.HOUR, Value);
+  exit mapped;
   {$ELSEIF ECHOES}
   exit mapped.AddHours(Value);
   {$ELSEIF NOUGAT}
@@ -152,7 +144,8 @@ end;
 method DateTime.AddMinutes(Value: Integer): DateTime;
 begin
   {$IF COOPER}
-  exit new DateTime(AddComponent(Calendar.MINUTE, Value).Time);
+  mapped.add(Calendar.MINUTE, Value);
+  exit mapped;
   {$ELSEIF ECHOES}
   exit mapped.AddMinutes(Value);
   {$ELSEIF NOUGAT}
@@ -163,7 +156,8 @@ end;
 method DateTime.AddMonths(Value: Integer): DateTime;
 begin
   {$IF COOPER}
-  exit new DateTime(AddComponent(Calendar.MONTH, Value).Time);
+  mapped.add(Calendar.MONTH, Value);
+  exit mapped;
   {$ELSEIF ECHOES}
   exit mapped.AddMonths(Value);
   {$ELSEIF NOUGAT}
@@ -174,7 +168,8 @@ end;
 method DateTime.AddSeconds(Value: Integer): DateTime;
 begin
   {$IF COOPER}
-  exit new DateTime(AddComponent(Calendar.SECOND, Value).Time);
+  mapped.add(Calendar.SECOND, Value);
+  exit mapped;
   {$ELSEIF ECHOES}
   exit mapped.AddSeconds(Value);
   {$ELSEIF NOUGAT}
@@ -185,7 +180,8 @@ end;
 method DateTime.AddYears(Value: Integer): DateTime;
 begin
   {$IF COOPER}
-  exit new DateTime(AddComponent(Calendar.YEAR, Value).Time);
+  mapped.add(Calendar.YEAR, Value);
+  exit mapped;
   {$ELSEIF ECHOES}
   exit mapped.AddYears(Value);
   {$ELSEIF NOUGAT}
@@ -196,11 +192,11 @@ end;
 method DateTime.CompareTo(Value: DateTime): Integer;
 begin
   {$IF COOPER}
-  exit fDate.compareTo(Value.fDate);
+  exit mapped.compareTo(new DateTime(Value.Year, Value.Month, Value.Day, Value.Hour, Value.Minute, Value.Second));
   {$ELSEIF ECHOES}
   exit mapped.CompareTo(Value);
   {$ELSEIF NOUGAT}
-  exit fDate.compare(Value.fDate);
+  exit mapped.compare(new DateTime(Value.Year, Value.Month, Value.Day, Value.Hour, Value.Minute, Value.Second));
   {$ENDIF}
 end;
 
@@ -219,7 +215,7 @@ begin
   else    
     Formatter := new java.text.SimpleDateFormat(DateFormatter.Format(Format), Sugar.Cooper.LocaleUtils.ForLanguageTag(Culture));
     
-  exit Formatter.format(fDate);
+  exit Formatter.format(mapped);
   {$ELSEIF ECHOES}
   if Format = "" then
     exit "";
@@ -237,35 +233,11 @@ begin
   end;
 
   Formatter.setDateFormat(DateFormatter.Format(Format));
-  exit Formatter.stringFromDate(fDate);
+  exit Formatter.stringFromDate(mapped);
   {$ENDIF}
 end;
 
 {$IF COOPER}
-constructor DateTime(aDate: Date);
-begin
-  fDate := aDate;
-  fCalendar.Time := fDate;
-end;
-
-method DateTime.AddComponent(Component: Integer; Value: Integer): Calendar;
-begin
-  result := Calendar.Instance;
-  result.Time := fDate;
-  result.add(Component, Value);
-end;
-
-method DateTime.InternalGetDate: DateTime;
-begin
-  var lCalendar := Calendar.Instance;
-  lCalendar.Time := fDate;
-  lCalendar.set(Calendar.HOUR_OF_DAY, 0);
-  lCalendar.set(Calendar.MINUTE, 0);
-  lCalendar.set(Calendar.SECOND, 0);
-  lCalendar.set(Calendar.MILLISECOND, 0);
-  exit new DateTime(lCalendar.Time);
-end;
-
 method DateTime.ToString: java.lang.String;
 begin
   exit ToString(DEFAULT_FORMAT);
@@ -276,11 +248,6 @@ begin
   exit ToString(DEFAULT_FORMAT);
 end;
 {$ELSEIF NOUGAT}
-constructor DateTime(aDate: NSDate);
-begin
-  fDate := aDate;
-end;
-
 method DateTime.AdjustDate(Component: NSCalendarUnit; Value: Integer): DateTime;
 begin
   var Components: NSDateComponents := new NSDateComponents();  
@@ -294,7 +261,8 @@ begin
     NSCalendarUnit.NSYearCalendarUnit: Components.setYear(Value);
   end;
   
-  exit new DateTime(fCalendar.dateByAddingComponents(Components) toDate(fDate) options(0));  
+  var lCalendar := NSCalendar.currentCalendar();
+  exit lCalendar.dateByAddingComponents(Components) toDate(mapped) options(0);  
 end;
 
 method DateTime.description: NSString;
@@ -304,7 +272,7 @@ end;
 
 method DateTime.GetComponent(Component: NSCalendarUnit): Integer;
 begin
-  var lComponents := fCalendar.components(Component) fromDate(fDate);
+  var lComponents := NSCalendar.currentCalendar().components(Component) fromDate(mapped);
   case Component of
     NSCalendarUnit.NSDayCalendarUnit: exit lComponents.day;
     NSCalendarUnit.NSHourCalendarUnit: exit lComponents.hour;
@@ -313,11 +281,6 @@ begin
     NSCalendarUnit.NSSecondCalendarUnit: exit lComponents.second;
     NSCalendarUnit.NSYearCalendarUnit: exit lComponents.year;
   end;
-end;
-
-method DateTime.InternalGetDate: DateTime;
-begin
-  exit new DateTime(Year, Month, Day, 0, 0, 0);
 end;
 {$ENDIF}
 

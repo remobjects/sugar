@@ -6,7 +6,7 @@ uses
   Sugar.IO;
 
 type
-  TargetPlatform = public enum(Net, Java, OSX, iOS, Android, WinRT, WindowsPhone);
+  TargetPlatform = public enum(Net, Java, OSX, iOS, watchOS, Android, WinRT, WindowsPhone);
 
   Environment = public static class
   private
@@ -26,6 +26,7 @@ type
     property ApplicationContext: {$IF ANDROID}android.content.Context{$ELSE}Object{$ENDIF} read write;
 
     method GetEnvironmentVariable(Name: String): String;
+    method CurrentDirectory: String;
   end;
 
 implementation
@@ -78,6 +79,8 @@ begin
   exit Foundation.NSUserName;
   {$ELSEIF IOS}
   exit UIKit.UIDevice.currentDevice.name;
+  {$ELSEIF WATCHOS}
+  exit "Apple Watch"; {$HINT solve this better?}
   {$ENDIF}
 end;
 
@@ -92,9 +95,11 @@ begin
   {$ELSEIF ECHOES}
   exit System.Environment.OSVersion.Platform.ToString();
   {$ELSEIF OSX}
-  exit "OSX";
+  exit "OS X";
   {$ELSEIF IOS}
   exit "iOS";
+  {$ELSEIF WATCHOS}
+  exit "watchOS";
   {$ENDIF}
 end;
 
@@ -129,6 +134,8 @@ begin
   TargetPlatform.OSX
   {$ELSEIF IOS}
   TargetPlatform.iOS
+  {$ELSEIF WATCHOS}
+  TargetPlatform.watchOS
   {$ENDIF};
 end;
 
@@ -146,9 +153,24 @@ begin
   ".NET"
   {$ELSEIF OSX}
   "Cocoa"
-  {$ELSEIF IOS}
+  {$ELSEIF IOS or WATCHIOS}
   "Cocoa Touch"
   {$ENDIF};
+end;
+
+class method Environment.CurrentDirectory(): String;
+begin
+  {$IF COOPER}
+  exit System.getProperty("user.dir");
+  {$ELSEIF NETFX_CORE}
+  exit Windows.Storage.ApplicationData.Current.LocalFolder.Path;
+  {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
+  exit System.Environment.CurrentDirectory; 
+  {$ELSEIF ECHOES}
+  exit System.Environment.CurrentDirectory;
+  {$ELSEIF NOUGAT}
+  exit Foundation.NSFileManager.defaultManager().currentDirectoryPath;
+  {$ENDIF}
 end;
 
 end.

@@ -16,6 +16,7 @@ type
     method GetFileName(FileName: String): String;
     method GetFileNameWithoutExtension(FileName: String): String;
     method RemoveExtension(FileName: String): String;
+    method GetFullPath(RelativePath: String): String;
   end;
 
 implementation
@@ -133,6 +134,21 @@ begin
     exit FileName.Substring(0, lIndex);
 
   exit FileName;
+end;
+
+class method Path.GetFullPath(RelativePath: String): String;
+begin
+  {$IF COOPER}
+  exit new java.io.File(RelativePath).getAbsolutePath();  
+  {$ELSEIF NETFX_CORE}
+  exit RelativePath; //api has no such function
+  {$ELSEIF WINDOWS_PHONE}
+  exit System.IO.Path.GetFullPath(RelativePath);
+  {$ELSEIF ECHOES}
+  exit System.IO.Path.GetFullPath(RelativePath);
+  {$ELSEIF NOUGAT}
+  exit RelativePath.stringByStandardizingPath;
+  {$ENDIF}
 end;
 
 end.

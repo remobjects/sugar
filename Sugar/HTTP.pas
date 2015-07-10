@@ -1,4 +1,4 @@
-namespace Sugar;
+﻿namespace Sugar;
 
 interface
 
@@ -7,7 +7,6 @@ uses
   Sugar.IO,
   Sugar.Json,
   Sugar.Xml;
-  
 { Handy test URLs: http://httpbin.org, http://requestb.in }
 
 type
@@ -202,10 +201,15 @@ end;
 constructor HttpResponse(aResponse: HttpWebResponse);
 begin
   Response := aResponse;
-  Code := aResponse.StatusCode;
+  Code := Int32(aResponse.StatusCode);
   Headers := new Dictionary<String,String>();
+  {$IF WINDOWS_PHONE OR NETFX_CORE}
+  for each k: String in aResponse.Headers.AllKeys do
+    Headers[k.ToString] := aResponse.Headers[k];
+  {$ELSE}
   for each k: String in aResponse.Headers.Keys do
     Headers[k.ToString] := aResponse.Headers[k];
+  {$ENDIF}
 end;
 {$ELSEIF NOUGAT}
 constructor HttpResponse(aData: NSData; aResponse: NSHTTPURLResponse);
@@ -314,6 +318,19 @@ begin
     contentCallback(new HttpResponseContent<File>(Content := aTargetFile));
   end;
   {$ELSEIF ECHOES}
+  {$IF WINDOWS_PHONE OR NETFX_CORE}
+  try
+    using responseStream := Response.GetResponseStream() do begin
+      using fileStream := await System.IO.WindowsRuntimeStorageExtensions.OpenStreamForWriteAsync(aTargetFile) do begin
+        await responseStream.CopyToAsync(fileStream);
+      end;
+    end;
+    contentCallback(new HttpResponseContent<File>(Content := aTargetFile));
+  except
+    on E: Exception do
+      contentCallback(new HttpResponseContent<File>(Exception := E));
+  end;
+  {$ELSE}
   async begin
     try
       using responseStream := Response.GetResponseStream() do
@@ -325,6 +342,7 @@ begin
         contentCallback(new HttpResponseContent<File>(Exception := E));
     end;
   end;
+  {$ENDIF}
   {$ELSEIF NOUGAT}
   async begin
     var error: NSError;
@@ -355,23 +373,33 @@ begin
   end;
   {$ELSEIF ECHOES}
   using webRequest := System.Net.WebRequest.Create(aRequest.Url) as HttpWebRequest do begin
-    
+    {$IF NOT NETFX_CORE}
     webRequest.AllowAutoRedirect := aRequest.FollowRedirects;
     webRequest.UserAgent := SUGAR_USER_AGENT;
-    
+    {$ENDIF}
     case aRequest.Mode of
       HttpRequestMode.Get: webRequest.Method := 'GET';
       HttpRequestMode.Post: webRequest.Method := 'POST';
     end;
-    
+
     if assigned(aRequest.Content) then begin
+    {$IF WINDOWS_PHONE}
+      // I don't want to mess with BeginGetRequestStream/EndGetRequestStream methods here
+      // HttpWebRequest.GetRequestStreamAsync() is not available in WP 8.0
+      var getRequestStreamTask := System.Threading.Tasks.Task<System.IO.Stream>.Factory.FromAsync(@webRequest.BeginGetRequestStream, @webRequest.EndGetRequestStream, nil);
+      using stream := await getRequestStreamTask do begin
+    {$ELSEIF NETFX_CORE}
+      using stream := await webRequest.GetRequestStreamAsync() do begin
+    {$ELSE}
       using stream := webRequest.GetRequestStream() do begin
+    {$ENDIF}
         var data := (aRequest.Content as IHttpRequestContent).GetContentAsArray();
         stream.Write(data, 0, data.Length);
         stream.Flush();
+        //webRequest.ContentLength := data.Length;
       end;
     end;
-    
+
     webRequest.BeginGetResponse( (ar) -> begin
 
       try
