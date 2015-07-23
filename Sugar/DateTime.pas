@@ -215,7 +215,7 @@ begin
   else    
     Formatter := new java.text.SimpleDateFormat(DateFormatter.Format(Format), Sugar.Cooper.LocaleUtils.ForLanguageTag(Culture));
     
-  exit Formatter.format(mapped);
+  exit Formatter.format(mapped.Time);
   {$ELSEIF ECHOES}
   if Format = "" then
     exit "";
