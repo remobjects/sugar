@@ -74,6 +74,14 @@ type
     method GetContentAsXml(contentCallback: not nullable HttpContentResponseBlock<XmlDocument>);
     method GetContentAsJson(contentCallback: not nullable HttpContentResponseBlock<JsonDocument>);
     method SaveContentAsFile(aTargetFile: File; contentCallback: not nullable HttpContentResponseBlock<File>);
+
+  unit
+    {$IF NOT ECHOES OR (NOT WINDOWS_PHONE AND NOT NETFX_CORE)}
+    method GetContentAsStringSynchronous(aEncoding: Encoding := nil): not nullable String;
+    method GetContentAsBinarySynchronous: not nullable Binary;
+    method GetContentAsXmlSynchronous: not nullable XmlDocument;
+    method GetContentAsJsonSynchronous: not nullable JsonDocument;
+    {$ENDIF}
   end;
   
   HttpResponseContent<T> = public class
@@ -92,12 +100,21 @@ type
   public
     //method ExecuteRequest(aUrl: not nullable Url; ResponseCallback: not nullable HttpResponseBlock);
     method ExecuteRequest(aRequest: not nullable HttpRequest; ResponseCallback: not nullable HttpResponseBlock);
+    method ExecuteRequestSynchronous(aRequest: not nullable HttpRequest): not nullable HttpResponse;
 
-    method ExecuteRequestAsString(aRequest: not nullable HttpRequest; contentCallback: not nullable HttpContentResponseBlock<String>);
+    method ExecuteRequestAsString(aEncoding: Encoding := nil; aRequest: not nullable HttpRequest; contentCallback: not nullable HttpContentResponseBlock<String>);
     method ExecuteRequestAsBinary(aRequest: not nullable HttpRequest; contentCallback: not nullable HttpContentResponseBlock<Binary>);
     method ExecuteRequestAsXml(aRequest: not nullable HttpRequest; contentCallback: not nullable HttpContentResponseBlock<XmlDocument>);
     method ExecuteRequestAsJson(aRequest: not nullable HttpRequest; contentCallback: not nullable HttpContentResponseBlock<JsonDocument>);
     method ExecuteRequestAndSaveAsFile(aRequest: not nullable HttpRequest; aTargetFile: not nullable File; contentCallback: not nullable HttpContentResponseBlock<File>);
+
+    {$IF NOT ECHOES OR (NOT WINDOWS_PHONE AND NOT NETFX_CORE)}
+    method GetString(aEncoding: Encoding := nil; aRequest: not nullable HttpRequest): not nullable String;
+    method GetBinary(aRequest: not nullable HttpRequest): not nullable Binary;
+    method GetXml(aRequest: not nullable HttpRequest): not nullable XmlDocument;
+    method GetJson(aRequest: not nullable HttpRequest): not nullable JsonDocument;
+    //todo: method GetAndSaveAsFile(...);
+    {$ENDIF}
   end;
 
 implementation
@@ -246,6 +263,7 @@ end;
 
 method HttpResponse.GetContentAsBinary(contentCallback: not nullable HttpContentResponseBlock<Binary>);
 begin
+  // maybe delegsate to GetContentAsBinarySynchronous?
   {$IF COOPER}
   async begin
     var allData := new Binary;
@@ -354,6 +372,55 @@ begin
   {$ENDIF}
 end;
 
+{$IF NOT ECHOES OR (NOT WINDOWS_PHONE AND NOT NETFX_CORE)}
+method HttpResponse.GetContentAsStringSynchronous(aEncoding: Encoding := nil): not nullable String;
+begin
+  if aEncoding = nil then aEncoding := Encoding.Default;
+  {$IF COOPER}
+  result := new String(GetContentAsBinarySynchronous().ToArray, aEncoding);
+  {$ELSEIF ECHOES}
+  result := new System.IO.StreamReader(Response.GetResponseStream(), aEncoding).ReadToEnd();
+  {$ELSEIF NOUGAT}
+  var s := new Foundation.NSString withData(Data) encoding(aEncoding as NSStringEncoding); // todo: test this
+  if assigned(s) then
+    exit s
+  else
+    raise new SugarException("Invalid Encoding");
+  {$ENDIF}
+end;
+
+method HttpResponse.GetContentAsBinarySynchronous: not nullable Binary;
+begin
+  {$IF COOPER}
+  var allData := new Binary;
+  var stream := Connection.InputStream;
+  var data := new Byte[4096]; 
+  var len := stream.read(data);
+  while len > 0 do begin
+    allData.Write(data, len);
+    len := stream.read(data);
+  end;
+  result := allData;
+  {$ELSEIF ECHOES}
+  var allData := new System.IO.MemoryStream();
+  Response.GetResponseStream().CopyTo(allData);
+  result := allData;
+  {$ELSEIF NOUGAT}
+  result := Data.mutableCopy;
+  {$ENDIF}
+end;
+
+method HttpResponse.GetContentAsXmlSynchronous: not nullable XmlDocument;
+begin
+  result := XmlDocument.FromBinary(GetContentAsBinarySynchronous());
+end;
+
+method HttpResponse.GetContentAsJsonSynchronous: not nullable JsonDocument;
+begin
+  result := JsonDocument.FromBinary(GetContentAsBinarySynchronous());
+end;
+{$ENDIF}
+
 { Http }
 
 method Http.ExecuteRequest(aRequest: not nullable HttpRequest; ResponseCallback: not nullable HttpResponseBlock);
@@ -447,16 +514,81 @@ begin
   {$ENDIF}
 end;
 
+method Http.ExecuteRequestSynchronous(aRequest: not nullable HttpRequest): not nullable HttpResponse;
+begin
+  {$IF COOPER}
+  var lConnection := java.net.URL(aRequest.URL).openConnection as java.net.HttpURLConnection;
+  lConnection.addRequestProperty("User-Agent", SUGAR_USER_AGENT);
+
+  if assigned(aRequest.Content) then begin
+    lConnection.getOutputStream().write((aRequest.Content as IHttpRequestContent).GetContentAsArray());
+    lConnection.getOutputStream().flush();
+  end;
+  result := new HttpResponse(lConnection);
+  {$ELSEIF ECHOES}
+  using webRequest := System.Net.WebRequest.Create(aRequest.Url) as HttpWebRequest do begin
+    {$IF NOT NETFX_CORE}
+    webRequest.AllowAutoRedirect := aRequest.FollowRedirects;
+    webRequest.UserAgent := SUGAR_USER_AGENT;
+    {$ENDIF}
+    case aRequest.Mode of
+      HttpRequestMode.Get: webRequest.Method := 'GET';
+      HttpRequestMode.Post: webRequest.Method := 'POST';
+    end;
+
+    if assigned(aRequest.Content) then begin
+      using stream := webRequest.GetRequestStream() do begin
+        var data := (aRequest.Content as IHttpRequestContent).GetContentAsArray();
+        stream.Write(data, 0, data.Length);
+        stream.Flush();
+      end;
+    end;
+
+    var webResponse := webRequest.GetResponse() as HttpWebResponse;
+    exit new HttpResponse(webResponse);
+  end;
+  {$ELSEIF NOUGAT}
+  var nsUrlRequest := new NSMutableURLRequest withURL(aRequest.Url) cachePolicy(0) timeoutInterval(30);
+
+  //nsUrlRequest.AllowAutoRedirect := aRequest.FollowRedirects;
+  nsUrlRequest.setValue(SUGAR_USER_AGENT) forHTTPHeaderField("User-Agent");
+  //nsUrlRequest.allowsCellularAccess =
+  
+  case aRequest.Mode of
+    HttpRequestMode.Get: nsUrlRequest.HTTPMethod := 'GET';
+    HttpRequestMode.Post: nsUrlRequest.HTTPMethod := 'POST';
+  end;
+
+  if assigned(aRequest.Content) then begin
+    nsUrlRequest.HTTPBody := (aRequest.Content as IHttpRequestContent).GetContentAsBinary();
+  end;
+
+  var nsUrlResponse: NSURLResponse;
+  var error: NSError;
+  var data := NSURLConnection.sendSynchronousRequest(nsUrlRequest) returningResponse(var nsUrlResponse) error(var error);
+
+  var nsHttpUrlResponse := NSHTTPURLResponse(nsUrlResponse);
+  if assigned(data) and assigned(nsHttpUrlResponse) and not assigned(error) then begin
+    exit new HttpResponse(data, nsHttpUrlResponse);
+  end else if assigned(error) then begin
+    raise new SugarException withError(error)
+  end else begin
+    raise new SugarException("Request failed without providing an error.");
+  end;
+  {$ENDIF}
+end;
+
+
 {method Http.ExecuteRequest(aUrl: not nullable Url; ResponseCallback: not nullable HttpResponseBlock);
 begin
   ExecuteRequest(new HttpRequest(aUrl, HttpRequestMode.Get), responseCallback);
 end;}
 
-method Http.ExecuteRequestAsString(aRequest: not nullable HttpRequest; contentCallback: not nullable HttpContentResponseBlock<String>);
+method Http.ExecuteRequestAsString(aEncoding: Encoding := nil; aRequest: not nullable HttpRequest; contentCallback: not nullable HttpContentResponseBlock<String>);
 begin
   Http.ExecuteRequest(aRequest, (response) -> begin
     if response.Success then begin
-      response.GetContentAsString( (content) -> begin
+      response.GetContentAsString(aEncoding, (content) -> begin
         contentCallback(content)
       end);
     end else begin
@@ -516,6 +648,28 @@ begin
     end;
   end);
 end;
+
+{$IF NOT ECHOES OR (NOT WINDOWS_PHONE AND NOT NETFX_CORE)}
+method Http.GetString(aEncoding: Encoding := nil; aRequest: not nullable HttpRequest): not nullable String;
+begin
+  result := ExecuteRequestSynchronous(aRequest).GetContentAsStringSynchronous(aEncoding);
+end;
+
+method Http.GetBinary(aRequest: not nullable HttpRequest): not nullable Binary;
+begin
+  result := ExecuteRequestSynchronous(aRequest).GetContentAsBinarySynchronous;
+end;
+
+method Http.GetXml(aRequest: not nullable HttpRequest): not nullable XmlDocument;
+begin
+  result := ExecuteRequestSynchronous(aRequest).GetContentAsXmlSynchronous;
+end;
+
+method Http.GetJson(aRequest: not nullable HttpRequest): not nullable JsonDocument;
+begin
+  result := ExecuteRequestSynchronous(aRequest).GetContentAsJsonSynchronous;
+end;
+{$ENDIF}
 
 (*
 
