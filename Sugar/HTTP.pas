@@ -100,7 +100,9 @@ type
   public
     //method ExecuteRequest(aUrl: not nullable Url; ResponseCallback: not nullable HttpResponseBlock);
     method ExecuteRequest(aRequest: not nullable HttpRequest; ResponseCallback: not nullable HttpResponseBlock);
+    {$IF NOT ECHOES OR (NOT WINDOWS_PHONE AND NOT NETFX_CORE)}
     method ExecuteRequestSynchronous(aRequest: not nullable HttpRequest): not nullable HttpResponse;
+    {$ENDIF}
 
     method ExecuteRequestAsString(aEncoding: Encoding := nil; aRequest: not nullable HttpRequest; contentCallback: not nullable HttpContentResponseBlock<String>);
     method ExecuteRequestAsBinary(aRequest: not nullable HttpRequest; contentCallback: not nullable HttpContentResponseBlock<Binary>);
@@ -514,6 +516,7 @@ begin
   {$ENDIF}
 end;
 
+{$IF NOT ECHOES OR (NOT WINDOWS_PHONE AND NOT NETFX_CORE)}
 method Http.ExecuteRequestSynchronous(aRequest: not nullable HttpRequest): not nullable HttpResponse;
 begin
   {$IF COOPER}
@@ -577,7 +580,7 @@ begin
   end;
   {$ENDIF}
 end;
-
+{$ENDIF}
 
 {method Http.ExecuteRequest(aUrl: not nullable Url; ResponseCallback: not nullable HttpResponseBlock);
 begin
