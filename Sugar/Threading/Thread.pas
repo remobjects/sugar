@@ -26,7 +26,7 @@ type
     {$HIDE W28}
     method Abort; mapped to {$IF ECHOES}Abort{$ELSEIF COOPER}stop{$ELSEIF NOUGAT}cancel{$ENDIF};
     {$SHOW W28}
-    class method Sleep(aTimeout: Integer); mapped to {$IF COOPER OR ECHOES}Sleep(aTimeout){$ELSEIF NOUGAT}sleepForTimeInterval(aTimeout){$ENDIF};
+    class method Sleep(aTimeout: Integer); mapped to {$IF COOPER OR ECHOES}Sleep(aTimeout){$ELSEIF NOUGAT}sleepForTimeInterval(aTimeout / 1000){$ENDIF};
 
     //property State: ThreadState read GetState write SetState;
     property IsAlive: Boolean read {$IF COOPER OR ECHOES}mapped.IsAlive{$ELSEIF NOUGAT}mapped.isExecuting{$ENDIF};
