@@ -50,11 +50,10 @@
         <Reference Include="UIKit.fx"/>
     </ItemGroup>
     <ItemGroup>
-        <ProjectReference Include="..\Sugar\Sugar.Nougat.iOS.oxygene">
-            <Name>Sugar.Nougat.iOS</Name>
-            <Project>{91b301fc-331e-48a7-803b-4cbe3fff6ed7}</Project>
-            <Private>True</Private>
-            <HintPath>..\Sugar\bin\iOS Simulator\libSugar.fx</HintPath>
+        <ProjectReference Include="..\Sugar\Sugar.Nougat.watchOS.oxygene">
+            <Name>Sugar.Nougat.watchOS</Name>
+            <HintPath>..\Sugar\bin\watchOS\libSugar.fx</HintPath>
+            <Project>{A0CD6BB4-9336-4E25-9084-D1C63C03BF78}</Project>
         </ProjectReference>
     </ItemGroup>
     <ItemGroup>
