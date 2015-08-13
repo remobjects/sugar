@@ -498,7 +498,7 @@ begin
     nsUrlRequest.HTTPBody := (aRequest.Content as IHttpRequestContent).GetContentAsBinary();
   end;
 
-  NSURLConnection.sendAsynchronousRequest(nsUrlRequest) queue(nil) completionHandler( (nsUrlResponse, data, error) -> begin
+  NSURLConnection.sendAsynchronousRequest(nsUrlRequest) queue(NSOperationQueue.mainQueue) completionHandler( (nsUrlResponse, data, error) -> begin
 
     var nsHttpUrlResponse := NSHTTPURLResponse(nsUrlResponse);
     if assigned(data) and assigned(nsHttpUrlResponse) and not assigned(error) then begin
