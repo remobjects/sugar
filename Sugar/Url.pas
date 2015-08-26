@@ -154,7 +154,7 @@ begin
   result := System.Web.HttpUtility.UrlEncode(aString);
   {$ENDIF}
   {$ELSEIF NOUGAT}
-  result := aString.stringByAddingPercentEscapesUsingEncoding(NSStringEncoding.NSUTF8StringEncoding) 
+  result := NSString(aString).stringByAddingPercentEscapesUsingEncoding(NSStringEncoding.NSUTF8StringEncoding) 
   {$ENDIF}
 end;
 
