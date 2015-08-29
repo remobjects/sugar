@@ -14,8 +14,6 @@
         <DeploymentTargetVersion>2.0</DeploymentTargetVersion>
         <AllowLegacyOutParams>False</AllowLegacyOutParams>
         <CreateHeaderFile>False</CreateHeaderFile>
-        <Architecture>armv7k</Architecture>
-        <SimulatorArchitectures>i386</SimulatorArchitectures>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
         <Optimize>False</Optimize>
