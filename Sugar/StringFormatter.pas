@@ -46,12 +46,12 @@ type
     class method ParseDecimal(aString: String; var ptr: Int32): Int32;
     class method ParseFormatSpecifier(aString: String; var ptr: Int32; out n: Int32; out width: Int32; out left_align: Boolean; out aFormat: String);
   public
-    class method FormatString(aFormat: String; params args: array of Object): String;
+    class method FormatString(aFormat: String; params args: array of Object): not nullable String;
   end;
 
 implementation
 
-class method StringFormatter.FormatString(aFormat: String; params args: array of Object): String;
+class method StringFormatter.FormatString(aFormat: String; params args: array of Object): not nullable String;
 begin
   if aFormat = nil then raise new SugarArgumentNullException('aFormat');
   if args = nil then raise new SugarArgumentNullException('args');
@@ -109,7 +109,7 @@ begin
     end;
   end;
   if start < aFormat.Length then sb.Append(aFormat, start, aFormat.Length - start);
-  exit sb.ToString();
+  exit sb.ToString() as not nullable;
 end;
 
 class method StringFormatter.ParseFormatSpecifier(aString: String; var ptr: Int32; out n: Int32; out width: Int32; out left_align: Boolean; out aFormat: String);

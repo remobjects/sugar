@@ -12,7 +12,7 @@ type
     constructor(Value: array of Char);
     constructor(Value: array of Char; Offset: Integer; Count: Integer);
 
-    class operator Add(Value1: String; Value2: String): String;
+    class operator Add(Value1: String; Value2: String): not nullable String;
     class operator Implicit(Value: Char): String;
     class operator Greater(Value1, Value2: String): Boolean;
     class operator Less(Value1, Value2: String): Boolean;
@@ -21,7 +21,7 @@ type
     class operator Equal(Value1, Value2: String): Boolean;
     class operator NotEqual(Value1, Value2: String): Boolean;
 
-    class method Format(aFormat: String; params aParams: array of Object): String;    
+    class method Format(aFormat: String; params aParams: array of Object): not nullable String;    
     class method CharacterIsWhiteSpace(Value: Char): Boolean;
     class method IsNullOrEmpty(Value: String): Boolean;
     class method IsNullOrWhiteSpace(Value: String): Boolean;
@@ -33,10 +33,10 @@ type
     method Contains(Value: String): Boolean;
     method IndexOf(Value: String): Int32;
     method LastIndexOf(Value: String): Int32;
-    method Substring(StartIndex: Int32): String;
-    method Substring(StartIndex: Int32; aLength: Int32): String;
+    method Substring(StartIndex: Int32): not nullable String;
+    method Substring(StartIndex: Int32; aLength: Int32): not nullable String;
     method Split(Separator: String): array of String;
-    method Replace(OldValue, NewValue: String): String;
+    method Replace(OldValue, NewValue: String): not nullable String;
     method ToLower: String;
     method ToUpper: String;
     method Trim: String;
@@ -107,12 +107,12 @@ begin
   {$ENDIF}
 end;
 
-class operator String.Add(Value1: String; Value2: String): String;
+class operator String.Add(Value1: String; Value2: String): not nullable String;
 begin
   {$IF COOPER}
-  result := java.lang.String(Value1)+java.lang.String(Value2);
+  result := (java.lang.String(Value1)+java.lang.String(Value2)) as not nullable;
   {$ELSEIF ECHOES}
-  result := System.String(Value1)+System.String(Value2);
+  result := (System.String(Value1)+System.String(Value2)) as not nullable;
   {$ELSEIF NOUGAT}
   result := Foundation.NSString(Value1).stringByAppendingString(Value2);
   {$ENDIF}
@@ -126,9 +126,9 @@ begin
   exit new System.String(Value, 1);
   {$ELSEIF NOUGAT}
   if Value = #0 then
-    exit NSString.stringWithFormat(#0);
+    exit NSString.stringWithFormat(#0) as not nullable;
 
-  exit NSString.stringWithFormat("%c", Value);
+  exit NSString.stringWithFormat("%c", Value) as not nullable;
   {$ENDIF}
 end;
 
@@ -188,7 +188,7 @@ begin
   exit Compare(Value1, Value2) <= 0;
 end;
 
-class method String.Format(aFormat: String; params aParams: array of Object): String;
+class method String.Format(aFormat: String; params aParams: array of Object): not nullable String;
 begin
   exit StringFormatter.FormatString(aFormat, aParams);
 end;
@@ -312,24 +312,24 @@ begin
   {$ENDIF}
 end;
 
-method String.Substring(StartIndex: Int32): String;
+method String.Substring(StartIndex: Int32): not nullable String;
 begin
   {$IF COOPER OR ECHOES}
-  exit mapped.Substring(StartIndex);
+  exit mapped.Substring(StartIndex) as not nullable;
   {$ELSEIF NOUGAT}
-  exit mapped.substringFromIndex(StartIndex);
+  exit mapped.substringFromIndex(StartIndex) as not nullable;
   {$ENDIF}
 end;
 
-method String.Substring(StartIndex: Int32; aLength: Int32): String;
+method String.Substring(StartIndex: Int32; aLength: Int32): not nullable String;
 begin
   if (StartIndex < 0) or (aLength < 0) then
     raise new SugarArgumentOutOfRangeException(ErrorMessage.NEGATIVE_VALUE_ERROR, "StartIndex and Length");
 
   {$IF COOPER}
-  exit mapped.substring(StartIndex, StartIndex + aLength);
+  exit mapped.substring(StartIndex, StartIndex + aLength) as not nullable;
   {$ELSEIF ECHOES}
-  exit mapped.Substring(StartIndex, aLength);
+  exit mapped.Substring(StartIndex, aLength) as not nullable;
   {$ELSEIF NOUGAT}
   result := mapped.substringWithRange(Foundation.NSMakeRange(StartIndex, aLength));
   {$ENDIF}
@@ -352,7 +352,7 @@ begin
   {$ENDIF}
 end;
 
-method String.Replace(OldValue: String; NewValue: String): String;
+method String.Replace(OldValue: String; NewValue: String): not nullable String;
 begin
   if IsNullOrEmpty(OldValue) then
     raise new SugarArgumentNullException("OldValue");
@@ -360,7 +360,7 @@ begin
   if NewValue = nil then
     NewValue := "";
   {$IF COOPER OR ECHOES}
-  exit mapped.Replace(OldValue, NewValue);
+  exit mapped.Replace(OldValue, NewValue) as not nullable;
   {$ELSEIF NOUGAT}
   exit mapped.stringByReplacingOccurrencesOfString(OldValue) withString(NewValue);
   {$ENDIF}
