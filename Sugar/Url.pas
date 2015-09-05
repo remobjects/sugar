@@ -137,7 +137,7 @@ begin
   if not Foundation.NSURLConnection.canHandleRequest(Req) then
     raise new SugarArgumentException("Url was not in correct format");
 
-  exit Value;
+  exit Value as not nullable;
   {$ENDIF}
 end;
 
