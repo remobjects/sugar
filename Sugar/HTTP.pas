@@ -235,7 +235,7 @@ constructor HttpResponse(aData: NSData; aResponse: NSHTTPURLResponse);
 begin
   Data := aData;
   Code := aResponse.statusCode;
-  Headers := aResponse.allHeaderFields as Dictionary<String,String>; // why is this cast needed?
+  Headers := aResponse.allHeaderFields as not nullable Dictionary<String,String>; // why is this cast needed?
 end;
 {$ENDIF}
 
@@ -385,7 +385,7 @@ begin
   {$ELSEIF NOUGAT}
   var s := new Foundation.NSString withData(Data) encoding(aEncoding as NSStringEncoding); // todo: test this
   if assigned(s) then
-    exit s
+    exit s as not nullable
   else
     raise new SugarException("Invalid Encoding");
   {$ENDIF}
@@ -402,13 +402,13 @@ begin
     allData.Write(data, len);
     len := stream.read(data);
   end;
-  result := allData;
+  result := allData as not nullable;
   {$ELSEIF ECHOES}
   var allData := new System.IO.MemoryStream();
   Response.GetResponseStream().CopyTo(allData);
-  result := allData;
+  result := allData as not nullable;
   {$ELSEIF NOUGAT}
-  result := Data.mutableCopy;
+  result := Data.mutableCopy as not nullable;
   {$ENDIF}
 end;
 

@@ -18,7 +18,7 @@ type
   XmlDocument = public class (XmlNode)
   private
     {$IF COOPER}
-    class method ParseXml(Content: String; BaseUri: String): XmlDocument;
+    class method ParseXml(Content: String; BaseUri: String): not nullable XmlDocument;
     property Doc: Document read Node as Document;
     {$ELSEIF ECHOES}
     property Doc: XDocument read Node as XDocument;
@@ -60,10 +60,10 @@ type
     method GetElementsByTagName(Name: String): array of XmlElement;
     method GetElementsByTagName(LocalName, NamespaceUri: String): array of XmlElement;
 
-    class method FromFile(aFile: File): XmlDocument;
-    class method FromBinary(aBinary: Binary): XmlDocument;
-    class method FromString(aString: String): XmlDocument;
-    class method CreateDocument: XmlDocument;
+    class method FromFile(aFile: File): not nullable XmlDocument;
+    class method FromBinary(aBinary: Binary): not nullable XmlDocument;
+    class method FromString(aString: String): not nullable XmlDocument;
+    class method CreateDocument: not nullable XmlDocument;
 
     method Save(aFile: File);
     method Save(aFile: File; XmlDeclaration: XmlDocumentDeclaration);
@@ -179,7 +179,7 @@ begin
     result[i] := new XmlElement(items.Item(i));
 end;
 
-class method XmlDocument.ParseXml(Content: String; BaseUri: String): XmlDocument;
+class method XmlDocument.ParseXml(Content: String; BaseUri: String): not nullable XmlDocument;
 begin
   SugarArgumentNullException.RaiseIfNil(Content, "Content");
 
@@ -213,7 +213,7 @@ begin
   exit new XmlDocument(Document);
 end;
 
-class method XmlDocument.FromFile(aFile: File): XmlDocument;
+class method XmlDocument.FromFile(aFile: File): not nullable XmlDocument;
 begin
   var Handle := aFile.Open(FileOpenMode.ReadOnly);  
   try
@@ -224,17 +224,17 @@ begin
   end;
 end;
 
-class method XmlDocument.FromBinary(aBinary: Binary): XmlDocument;
+class method XmlDocument.FromBinary(aBinary: Binary): not nullable XmlDocument;
 begin
   exit ParseXml(new String(aBinary.ToArray, Encoding.UTF8), nil);
 end;
 
-class method XmlDocument.FromString(aString: String): XmlDocument;
+class method XmlDocument.FromString(aString: String): not nullable XmlDocument;
 begin
   exit ParseXml(aString, nil);
 end;
 
-class method XmlDocument.CreateDocument: XmlDocument;
+class method XmlDocument.CreateDocument: not nullable XmlDocument;
 begin
   var Factory := javax.xml.parsers.DocumentBuilderFactory.newInstance;
   Factory.NamespaceAware := true;
@@ -339,7 +339,7 @@ begin
   exit new XmlComment(Comment);
 end;
 
-class method XmlDocument.CreateDocument: XmlDocument;
+class method XmlDocument.CreateDocument: not nullable XmlDocument;
 begin
   var Doc := new XDocument;
   exit new XmlDocument(Doc);
@@ -395,7 +395,7 @@ begin
   exit DocumentElement.GetElementsByTagName(Name);
 end;
 
-class method XmlDocument.FromFile(aFile: File): XmlDocument;
+class method XmlDocument.FromFile(aFile: File): not nullable XmlDocument;
 begin
   {$IF WINDOWS_PHONE OR NETFX_CORE}
   var Handle := aFile.Open(FileOpenMode.ReadOnly);
@@ -413,7 +413,7 @@ begin
   {$ENDIF}
 end;
 
-class method XmlDocument.FromBinary(aBinary: Binary): XmlDocument;
+class method XmlDocument.FromBinary(aBinary: Binary): not nullable XmlDocument;
 begin
   var ms := System.IO.MemoryStream(aBinary);
   var Position := ms.Position;
@@ -426,7 +426,7 @@ begin
   end;  
 end;
 
-class method XmlDocument.FromString(aString: String): XmlDocument;
+class method XmlDocument.FromString(aString: String): not nullable XmlDocument;
 begin
   var document := XDocument.Parse(aString);
   result := new XmlDocument(document);
@@ -562,12 +562,9 @@ begin
   exit new XmlComment(^libxml.__struct__xmlNode(NewObj), self);
 end;
 
-class method XmlDocument.CreateDocument: XmlDocument;
+class method XmlDocument.CreateDocument: not nullable XmlDocument;
 begin
   var NewObj := libxml.xmlNewDoc(XmlChar.FromString("1.0"));
-  if NewObj = nil then
-    exit nil;
-
   result := new XmlDocument(^libxml.__struct__xmlNode(NewObj), nil);
   result.Document := result;
 end;
@@ -636,27 +633,27 @@ begin
   exit new XmlNodeList(self).ElementsByName(Name);
 end;
 
-class method XmlDocument.FromFile(aFile: File): XmlDocument;
+class method XmlDocument.FromFile(aFile: File): not nullable XmlDocument;
 begin
   var NewObj := libxml.xmlReadFile(NSString(aFile), "UTF-8", libxml.xmlParserOption.XML_PARSE_NOBLANKS);
   if NewObj = nil then
-    exit nil;
+    raise new Exception("Could not parse XML Document");
 
   result := new XmlDocument(^libxml.__struct__xmlNode(NewObj), nil);
   result.Document := result;
 end;
 
-class method XmlDocument.FromBinary(aBinary: Binary): XmlDocument;
+class method XmlDocument.FromBinary(aBinary: Binary): not nullable XmlDocument;
 begin
   var NewObj := libxml.xmlReadMemory(^AnsiChar(NSMutableData(aBinary).bytes), aBinary.Length, "", "UTF-8", libxml.xmlParserOption.XML_PARSE_NOBLANKS);
   if NewObj = nil then
-    exit nil;
+    raise new Exception("Could not parse XML Document");
 
   result := new XmlDocument(^libxml.__struct__xmlNode(NewObj), nil);
   result.Document := result;
 end;
 
-class method XmlDocument.FromString(aString: String): XmlDocument;
+class method XmlDocument.FromString(aString: String): not nullable XmlDocument;
 begin
   var Data := NSString(aString).dataUsingEncoding(NSStringEncoding.NSUTF8StringEncoding);
   exit FromBinary(Binary(Data));

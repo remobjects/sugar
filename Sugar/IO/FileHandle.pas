@@ -67,6 +67,7 @@ begin
   case Mode of
     FileOpenMode.ReadOnly: exit NSFileHandle.fileHandleForReadingAtPath(FileName);
     FileOpenMode.ReadWrite: exit NSFileHandle.fileHandleForUpdatingAtPath(FileName);
+    else raise new SugarNotImplementedException;
   end;
   {$ENDIF}
 end;
