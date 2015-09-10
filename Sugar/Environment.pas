@@ -80,7 +80,9 @@ begin
   {$ELSEIF IOS}
   exit UIKit.UIDevice.currentDevice.name;
   {$ELSEIF WATCHOS}
-  exit "Apple Watch"; {$HINT solve this better?}
+  exit "Apple Watch";
+  {$ELSEIF tvOS}
+  exit "Apple TV";
   {$ENDIF}
 end;
 
@@ -100,6 +102,8 @@ begin
   exit "iOS";
   {$ELSEIF WATCHOS}
   exit "watchOS";
+  {$ELSEIF TVOS}
+  exit "tvOS";
   {$ENDIF}
 end;
 
@@ -136,6 +140,8 @@ begin
   TargetPlatform.iOS
   {$ELSEIF WATCHOS}
   TargetPlatform.watchOS
+  {$ELSEIF TVOS}
+  TargetPlatform.tvOS
   {$ENDIF};
 end;
 
@@ -153,7 +159,7 @@ begin
   ".NET"
   {$ELSEIF OSX}
   "Cocoa"
-  {$ELSEIF IOS or WATCHIOS}
+  {$ELSEIF IOS or WATCHIOS or TVOS}
   "Cocoa Touch"
   {$ENDIF};
 end;
