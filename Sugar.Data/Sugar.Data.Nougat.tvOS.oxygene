@@ -48,7 +48,7 @@
         <Reference Include="UIKit.fx"/>
     </ItemGroup>
     <ItemGroup>
-        <ProjectReference Include="..\Sugar\Sugar.Nougat.watchOS.oxygene">
+        <ProjectReference Include="..\Sugar\Sugar.Nougat.tvOS.oxygene">
             <Name>Sugar.Nougat.tvOS</Name>
             <HintPath>..\Sugar\bin\tvOS\libSugar.fx</HintPath>
             <Project>{D1B6AAB1-96D4-4498-AA31-E7048D68147C}</Project>

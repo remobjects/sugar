@@ -6,7 +6,7 @@ uses
   Sugar.IO;
 
 type
-  TargetPlatform = public enum(Net, Java, OSX, iOS, watchOS, Android, WinRT, WindowsPhone);
+  TargetPlatform = public enum(Net, Java, OSX, iOS, watchOS, tvOS, Android, WinRT, WindowsPhone);
 
   Environment = public static class
   private

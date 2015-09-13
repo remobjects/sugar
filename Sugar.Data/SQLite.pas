@@ -1,4 +1,4 @@
-namespace Sugar.Data;
+﻿namespace Sugar.Data;
 {
   On .NET this requires sqlite3.dll from the sqlite website
   On OSX/iOS this uses the system sqlite
@@ -26,13 +26,13 @@ type
     fInTrans: Boolean;
     method Prepare(aSQL: String; aArgs: array of Object): Int64;
     {$ENDIF}
-    method get_Intransaction: Boolean;
+    method get_InTransaction: Boolean;
   protected
   public
     constructor(aFilename: String; aReadOnly: Boolean := false; aCreateIfNeeded: Boolean := true);
 
-    property Intransaction: Boolean read get_Intransaction;
-    method BeginTransaction; 
+    property InTransaction: Boolean read get_InTransaction;
+    method BegInTransaction; 
     method Commit;
     method Rollback;
 
@@ -307,7 +307,7 @@ begin
   {$ENDIF}
 end;
 
-method SQLiteConnection.BeginTransaction;
+method SQLiteConnection.BegInTransaction;
 begin
   {$IFDEF PUREJAVA}
   mapped.setAutoCommit(false);
@@ -316,7 +316,7 @@ begin
   fInTrans := true;
   Execute('begin transaction');
   {$ELSEIF ANDROID}
-  mapped.beginTransaction;
+  mapped.begInTransaction;
   {$ELSE}
   {$ERROR Unsupported platform}
   {$ENDIF}
@@ -472,14 +472,14 @@ begin
   {$ENDIF}
 end;
 
-method SQLiteConnection.get_Intransaction: Boolean;
+method SQLiteConnection.get_InTransaction: Boolean;
 begin
   {$IFDEF PUREJAVA}
   exit not mapped.AutoCommit;
   {$ELSEIF ECHOES or COCOA}
   exit fInTrans;
   {$ELSEIF ANDROID}
-  exit mapped.inTransaction;
+  exit mapped.InTransaction;
   {$ELSE}
   {$ERROR Unsupported platform}
   {$ENDIF}
@@ -536,7 +536,7 @@ begin
   if res = SQLiteHelpers.SQLITE_DONE then exit false;
 
   SQLiteHelpers.Throw(fDB, fRes);
-	exit false; // unreachable
+  exit false; // unreachable
   {$ELSEIF COCOA}
   
   var res := sqlite3_step(^sqlite3_stmt(fRes));
@@ -544,7 +544,7 @@ begin
   if res = SQLITE_DONE then exit false;
 
   SQLiteHelpers.Throw(fDB, fRes);
-	exit false; // unreachable
+  exit false; // unreachable
   {$ELSEIF ANDROID}
   exit mapped.moveToNext;
   {$ELSE}

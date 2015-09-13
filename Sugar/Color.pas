@@ -17,7 +17,7 @@ type
   end;
   {$ELSE NOUGAT}
     
-    {$IF IOS}
+    {$IF IOS OR TVOS}
     Color = public class mapped to UIKit.UIColor
     public
       class method colorWithRGBAPercentage(aRed, aGreen, aBlue, aAlpha: Single): Color; mapped to colorWithRed(aRed) green(aGreen) blue(aBlue) alpha(aAlpha);
