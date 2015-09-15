@@ -42,8 +42,10 @@ cleanObj();
 msbuild["rebuild"]("Sugar/Sugar.Nougat.OSX.oxygene", 		{configuration: "Release", destinationFolder: "./Bin", extraArgs: '"/p:CrossBox=$(ciCrossBox);CrossBoxDeviceID=Mac"'});
 msbuild["rebuild"]("Sugar/Sugar.Nougat.iOS.oxygene", 		{configuration: "Release", destinationFolder: "./Bin", extraArgs: '"/p:CrossBox=$(ciCrossBox);CrossBoxDeviceID=iOS Simulator (iPhone)"'});
 msbuild["rebuild"]("Sugar/Sugar.Nougat.iOS.oxygene", 		{configuration: "Release", destinationFolder: "./Bin", extraArgs: '"/p:CrossBox=$(ciCrossBox);CrossBoxDeviceID=Generic iOS Device"'});
-msbuild["rebuild"]("Sugar/Sugar.Nougat.watchOS.oxygene", 	{configuration: "Release", destinationFolder: "./Bin", extraArgs: '"/p:CrossBox=$(ciCrossBox);CrossBoxDeviceID=watchOS Simulator (82mm)"'});
+msbuild["rebuild"]("Sugar/Sugar.Nougat.watchOS.oxygene", 	{configuration: "Release", destinationFolder: "./Bin", extraArgs: '"/p:CrossBox=$(ciCrossBox);CrossBoxDeviceID=watchOS Simulator (Apple Watch 38mm)"'});
 msbuild["rebuild"]("Sugar/Sugar.Nougat.watchOS.oxygene", 	{configuration: "Release", destinationFolder: "./Bin", extraArgs: '"/p:CrossBox=$(ciCrossBox);CrossBoxDeviceID=Generic watchOS Device"'});
+msbuild["rebuild"]("Sugar/Sugar.Nougat.tvOS.oxygene", 		{configuration: "Release", destinationFolder: "./Bin", extraArgs: '"/p:CrossBox=$(ciCrossBox);CrossBoxDeviceID=tvOS Simulator (Apple Watch 1080p)"'});
+msbuild["rebuild"]("Sugar/Sugar.Nougat.tvOS.oxygene", 		{configuration: "Release", destinationFolder: "./Bin", extraArgs: '"/p:CrossBox=$(ciCrossBox);CrossBoxDeviceID=Generic tvOS Device"'});
 
 //Build Sugar.Data
 if (false)
