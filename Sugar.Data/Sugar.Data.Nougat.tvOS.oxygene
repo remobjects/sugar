@@ -36,6 +36,7 @@
         <XmlDocWarningLevel>WarningOnPublicMembers</XmlDocWarningLevel>
         <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
         <DefineConstants>TVOS</DefineConstants>
+        <GenerateBitcode>True</GenerateBitcode>
     </PropertyGroup>
     <ItemGroup>
         <Reference Include="Foundation.fx"/>

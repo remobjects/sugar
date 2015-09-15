@@ -38,6 +38,7 @@
         <XmlDocWarningLevel>WarningOnPublicMembers</XmlDocWarningLevel>
         <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
         <DefineConstants>IOS</DefineConstants>
+        <GenerateBitcode>True</GenerateBitcode>
     </PropertyGroup>
     <ItemGroup>
         <Reference Include="Foundation.fx"/>
