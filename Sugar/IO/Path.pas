@@ -147,7 +147,7 @@ begin
   {$ELSEIF ECHOES}
   exit System.IO.Path.GetFullPath(RelativePath);
   {$ELSEIF NOUGAT}
-  exit RelativePath.stringByStandardizingPath;
+  exit (RelativePath as NSString).stringByStandardizingPath;
   {$ENDIF}
 end;
 
