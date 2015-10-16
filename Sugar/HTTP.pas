@@ -171,7 +171,7 @@ end;
 constructor HttpBinaryRequestContent(aString: not nullable String; aEncoding: Encoding);
 begin
   if aEncoding = nil then aEncoding := Encoding.Default;
-  Array := aString.ToByteArray(aEncoding);
+  &Array := aString.ToByteArray(aEncoding);
 end;
 
 method HttpBinaryRequestContent.GetContentAsBinary(): Binary;
