@@ -27,6 +27,10 @@ type
     class property UTF16BE: Encoding read GetEncoding("UTF-16BE");
 
     class property &Default: Encoding read UTF8;
+    {$IF NOUGAT}
+    method AsNSStringEncoding: NSStringEncoding;
+    class method FromNSStringEncoding(aEncoding: NSStringEncoding): Encoding;
+    {$ENDIF}
   end;
 
 implementation
@@ -214,5 +218,17 @@ begin
   exit bridge<NSString>(Str, BridgeMode.Transfer);
   {$ENDIF}  
 end;
+
+{$IF NOUGAT}
+method Encoding.AsNSStringEncoding: NSStringEncoding;
+begin
+  result := (self as NSNumber).unsignedIntegerValue as NSStringEncoding;
+end;
+
+class method Encoding.FromNSStringEncoding(aEncoding: NSStringEncoding): Encoding;
+begin
+  result := NSNumber.numberWithUnsignedInteger(aEncoding);
+end;
+{$ENDIF}
 
 end.

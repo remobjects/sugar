@@ -255,7 +255,7 @@ begin
     contentCallback(new HttpResponseContent<String>(Content := responseString))
   end;
   {$ELSEIF NOUGAT}
-  var s := new Foundation.NSString withData(Data) encoding(aEncoding as NSStringEncoding); // todo: test this
+  var s := new Foundation.NSString withData(Data) encoding(aEncoding.AsNSStringEncoding); // todo: test this
   if assigned(s) then
     contentCallback(new HttpResponseContent<String>(Content := s))
   else
@@ -383,7 +383,7 @@ begin
   {$ELSEIF ECHOES}
   result := new System.IO.StreamReader(Response.GetResponseStream(), aEncoding).ReadToEnd();
   {$ELSEIF NOUGAT}
-  var s := new Foundation.NSString withData(Data) encoding(aEncoding as NSStringEncoding); // todo: test this
+  var s := new Foundation.NSString withData(Data) encoding(aEncoding.AsNSStringEncoding); // todo: test this
   if assigned(s) then
     exit s as not nullable
   else

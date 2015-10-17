@@ -452,7 +452,7 @@ begin
   {$ELSEIF ECHOES}
   exit aEncoding.GetBytes(mapped);
   {$ELSEIF NOUGAT}
-  var Data := Binary(mapped.dataUsingEncoding(NSNumber(aEncoding).unsignedIntegerValue as NSStringEncoding)); // todo: test
+  var Data := Binary(mapped.dataUsingEncoding(aEncoding.AsNSStringEncoding)); // todo: test
   exit Data.ToArray;
   {$ENDIF}
 end;
