@@ -91,24 +91,9 @@ begin
   {$ELSEIF ECHOES}
   exit mapped.GetBytes(Value);
   {$ELSEIF NOUGAT}
-  var Str := bridge<CFStringRef>(Value);
-  var Range := CFRangeMake(0, CFStringGetLength(Str));
-  var Bin := new Binary;
-  
-  while Range.length > 0 do begin
-    var LocalBuffer := new Byte[100];
-    var UsedLength: CFIndex;
-    var NumChars := CFStringGetBytes(Str, Range, mapped.unsignedIntValue, ord('?'), false, ^UInt8(@LocalBuffer[0]), 100, var UsedLength);
-
-    if NumChars = 0 then
-      raise new SugarFormatException("Unable to convert data");
-
-    Bin.Write(LocalBuffer, UsedLength);
-    Range.location := Range.location + NumChars;
-    Range.length := Range.Length - NumChars;
-  end;  
-
-  exit Bin.ToArray;
+  result := ((Value as NSString).dataUsingEncoding(AsNSStringEncoding) as Binary).ToArray;
+  if not assigned(result) then
+    raise new SugarFormatException("Unable to convert data");
   {$ENDIF}
 end;
 
@@ -163,21 +148,14 @@ begin
     onUnmappableCharacter(java.nio.charset.CodingErrorAction.REPLACE).
     replaceWith("?").
     decode(java.nio.ByteBuffer.wrap(Value, Offset, Count));
-  exit Buffer.toString;
+  result := Buffer.toString;
   {$ELSEIF ECHOES}
-  exit mapped.GetString(Value, Offset, Count);
-  {$ELSEIF NOUGAT}  
-  if mapped.unsignedIntValue = CFStringBuiltInEncodings.kCFStringEncodingASCII then
-    for i: Integer := Offset to Count - 1 do
-      if Value[i] > 127 then
-        Value[i] := 63;
-
-  var Str := CFStringCreateWithBytesNoCopy(kCFAllocatorDefault, @Value[Offset], Count, mapped.unsignedIntValue, false, kCFAllocatorNull);
-
-  if Str = nil then
+  result := mapped.GetString(Value, Offset, Count);
+  {$ELSEIF NOUGAT}
+  var lData := new Binary(Value) as NSData;
+  result := new NSString withBytes(Value) length(length(Value)) encoding(AsNSStringEncoding);
+  if not assigned(result) then
     raise new SugarFormatException("Unable to convert input data");
-
-  exit bridge<NSString>(Str, BridgeMode.Transfer);
   {$ENDIF}
 end;
 
@@ -190,16 +168,23 @@ begin
   result := CustomEncoding.ForName(Name);
 
   if result = nil then
-    exit System.Text.Encoding.GetEncoding(Name);
+    result := System.Text.Encoding.GetEncoding(Name);
   {$ELSEIF ECHOES}
-  exit System.Text.Encoding.GetEncoding(Name);
+  result := System.Text.Encoding.GetEncoding(Name);
   {$ELSEIF NOUGAT}
-  var Enc := CFStringConvertIANACharSetNameToEncoding(bridge<CFStringRef>(Name));
-
-  if Enc = kCFStringEncodingInvalidId then
-    raise new SugarArgumentException("Encoding with name {0} can not be found", Name);
-
-  exit NSNumber.numberWithUnsignedInt(Enc);
+  var lEncoding := NSStringEncoding.UTF8StringEncoding;
+  case Name of
+    'UTF8','UTF-8': lEncoding := NSStringEncoding.UTF8StringEncoding;
+    'UTF16','UTF-16': lEncoding := NSStringEncoding.UTF16StringEncoding;
+    'UTF32','UTF-32': lEncoding := NSStringEncoding.UTF32StringEncoding;
+    'UTF16LE','UTF-16LE': lEncoding := NSStringEncoding.UTF16LittleEndianStringEncoding;
+    'UTF16BE','UTF-16BE': lEncoding := NSStringEncoding.UTF16BigEndianStringEncoding;
+    'UTF32LE','UTF-32LE': lEncoding := NSStringEncoding.UTF32LittleEndianStringEncoding;
+    'UTF32BE','UTF-32BE': lEncoding := NSStringEncoding.UTF32BigEndianStringEncoding;
+    'ASCII','UTF-ASCII': lEncoding := NSStringEncoding.ASCIIStringEncoding;
+    else lEncoding := CFStringConvertEncodingToNSStringEncoding(CFStringConvertIANACharSetNameToEncoding(bridge<CFStringRef>(Name))) as NSStringEncoding;
+  end;
+  result := NSNumber.numberWithUnsignedInt(lEncoding);
   {$ENDIF}
 end;
 
@@ -210,12 +195,9 @@ begin
   {$ELSEIF ECHOES}
   exit mapped.WebName;
   {$ELSEIF NOUGAT}
-  var Str := CFStringConvertEncodingToIANACharSetName(mapped.unsignedIntValue);
-
-  if Str = nil then
-    exit "";
-
-  exit bridge<NSString>(Str, BridgeMode.Transfer);
+  var lName := CFStringConvertEncodingToIANACharSetName(CFStringConvertNSStringEncodingToEncoding(mapped.unsignedIntValue));
+  if assigned(lName) then
+    result := bridge<NSString>(lName, BridgeMode.Transfer);
   {$ENDIF}  
 end;
 

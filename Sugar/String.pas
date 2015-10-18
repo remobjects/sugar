@@ -447,14 +447,7 @@ end;
 
 method String.ToByteArray(aEncoding: {not nullable} Encoding): array of Byte;
 begin
-  {$IF COOPER}
-  exit mapped.getBytes(aEncoding);
-  {$ELSEIF ECHOES}
-  exit aEncoding.GetBytes(mapped);
-  {$ELSEIF NOUGAT}
-  var Data := Binary(mapped.dataUsingEncoding(aEncoding.AsNSStringEncoding)); // todo: test
-  exit Data.ToArray;
-  {$ENDIF}
+  result := aEncoding.GetBytes(self);
 end;
 
 end.
