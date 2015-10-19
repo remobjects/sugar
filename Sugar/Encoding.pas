@@ -152,7 +152,6 @@ begin
   {$ELSEIF ECHOES}
   result := mapped.GetString(Value, Offset, Count);
   {$ELSEIF NOUGAT}
-  var lData := new Binary(Value) as NSData;
   result := new NSString withBytes(Value) length(length(Value)) encoding(AsNSStringEncoding);
   if not assigned(result) then
     raise new SugarFormatException("Unable to convert input data");
