@@ -7,14 +7,14 @@ uses
   Sugar.Collections;
 
 type
-  JsonObject = public class (JsonNode, ISequence<KeyValue<String, JsonNode>>)
+  JsonObject = public class (JsonNode, ISequence<KeyValuePair<String, JsonNode>>)
   private
     Items: Dictionary<String, JsonNode> := new Dictionary<String, JsonNode>;
 
     method GetItem(Key: String): JsonNode;
     method SetItem(Key: String; Value: JsonNode);
     method GetKeys: sequence of String;
-    method GetProperties: sequence of KeyValue<String, JsonNode>; iterator;
+    method GetProperties: sequence of KeyValuePair<String, JsonNode>; iterator;
   public
     method &Add(Key: String; Value: JsonNode);
     method Clear;
@@ -24,12 +24,12 @@ type
     method ToJson: String; override;
     
     {$IF COOPER}
-    method &iterator: java.util.&Iterator<KeyValue<String, JsonNode>>;
+    method &iterator: java.util.&Iterator<KeyValuePair<String, JsonNode>>;
     {$ELSEIF ECHOES}
     method GetNonGenericEnumerator: System.Collections.IEnumerator; implements System.Collections.IEnumerable.GetEnumerator;
-    method GetEnumerator: System.Collections.Generic.IEnumerator<KeyValue<String, JsonNode>>;
+    method GetEnumerator: System.Collections.Generic.IEnumerator<KeyValuePair<String, JsonNode>>;
     {$ELSEIF NOUGAT}
-    method countByEnumeratingWithState(aState: ^NSFastEnumerationState) objects(stackbuf: ^KeyValue<String,JsonNode>) count(len: NSUInteger): NSUInteger;
+    method countByEnumeratingWithState(aState: ^NSFastEnumerationState) objects(stackbuf: ^KeyValuePair<String,JsonNode>) count(len: NSUInteger): NSUInteger;
     {$ENDIF}
 
     class method Load(JsonString: String): JsonObject;
@@ -37,7 +37,7 @@ type
     property Count: Integer read Items.Count;
     property Item[Key: String]: JsonNode read GetItem write SetItem; default;
     property Keys: sequence of String read GetKeys;
-    property Properties: sequence of KeyValue<String, JsonNode> read GetProperties; 
+    property Properties: sequence of KeyValuePair<String, JsonNode> read GetProperties; 
   end;
 
 implementation
@@ -95,14 +95,14 @@ begin
   result := Serializer.Serialize;
 end;
 
-method JsonObject.GetProperties: sequence of KeyValue<String, JsonNode>;
+method JsonObject.GetProperties: sequence of KeyValuePair<String, JsonNode>;
 begin
   for Key in Keys do
-    yield new KeyValue<String, JsonNode>(Key, Item[Key]);
+    yield new KeyValuePair<String, JsonNode>(Key, Item[Key]);
 end;
 
 {$IF COOPER}
-method JsonObject.iterator: java.util.&Iterator<KeyValue<String, JsonNode>>;
+method JsonObject.iterator: java.util.&Iterator<KeyValuePair<String, JsonNode>>;
 begin
   exit Properties.iterator;
 end;
@@ -112,13 +112,13 @@ begin
   exit GetEnumerator;
 end;
 
-method JsonObject.GetEnumerator: System.Collections.Generic.IEnumerator<KeyValue<String, JsonNode>>;
+method JsonObject.GetEnumerator: System.Collections.Generic.IEnumerator<KeyValuePair<String, JsonNode>>;
 begin
   var props := GetProperties;
   exit props.GetEnumerator;
 end;
 {$ELSEIF NOUGAT}
-method JsonObject.countByEnumeratingWithState(aState: ^NSFastEnumerationState) objects(stackbuf: ^KeyValue<String,JsonNode>) count(len: NSUInteger): NSUInteger;
+method JsonObject.countByEnumeratingWithState(aState: ^NSFastEnumerationState) objects(stackbuf: ^KeyValuePair<String,JsonNode>) count(len: NSUInteger): NSUInteger;
 begin
   if aState^.state <> 0 then
     exit 0;

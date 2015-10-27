@@ -150,16 +150,16 @@ end;
 
 method DictionaryTest.ForEach;
 begin
-  var Item1 := new KeyValue<String, String>("Key", "Value");
-  var Item2 := new KeyValue<String, String>("Key", "Value");
+  var Item1 := new KeyValuePair<String, String>("Key", "Value");
+  var Item2 := new KeyValuePair<String, String>("Key", "Value");
   Assert.IsTrue(Item1.Equals(Item2));
 
   Data.Add(new CodeClass(-1), nil);
-  var Expected := new Sugar.Collections.List<KeyValue<CodeClass, String>>;
-  Expected.Add(new KeyValue<CodeClass, String>(new CodeClass(1),"One"));
-  Expected.Add(new KeyValue<CodeClass, String>(new CodeClass(2),"Two"));
-  Expected.Add(new KeyValue<CodeClass, String>(new CodeClass(3),"Three"));
-  Expected.Add(new KeyValue<CodeClass, String>(new CodeClass(-1), nil));
+  var Expected := new Sugar.Collections.List<KeyValuePair<CodeClass, String>>;
+  Expected.Add(new KeyValuePair<CodeClass, String>(new CodeClass(1),"One"));
+  Expected.Add(new KeyValuePair<CodeClass, String>(new CodeClass(2),"Two"));
+  Expected.Add(new KeyValuePair<CodeClass, String>(new CodeClass(3),"Three"));
+  Expected.Add(new KeyValuePair<CodeClass, String>(new CodeClass(-1), nil));
 
   var &Index: Integer := 0;
 

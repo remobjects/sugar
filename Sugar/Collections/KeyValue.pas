@@ -6,7 +6,7 @@ uses
   Sugar;
 
 type  
-  KeyValue<T, U> = public class
+  KeyValuePair<T, U> = public class
   public
     constructor(aKey: T; aValue: U);
     method {$IF NOUGAT}isEqual(obj: id){$ELSE}&Equals(Obj: Object){$ENDIF}: Boolean; override;    
@@ -17,9 +17,12 @@ type
     property Value: U read write; readonly;
   end;
 
+  [Obsolete('Use KeyValuePair<T, U> class instead.')]
+  KeyValue<T, U> = public class(KeyValuePair<T,U>);
+
 implementation
 
-constructor KeyValue<T,U>(aKey: T; aValue: U);
+constructor KeyValuePair<T,U>(aKey: T; aValue: U);
 begin
   if aKey = nil then
     raise new SugarArgumentNullException("Key");
@@ -28,24 +31,24 @@ begin
   Value := aValue;  
 end;
 
-method KeyValue<T, U>.{$IF NOUGAT}isEqual(obj: id){$ELSE}&Equals(Obj: Object){$ENDIF}: Boolean;
+method KeyValuePair<T, U>.{$IF NOUGAT}isEqual(obj: id){$ELSE}&Equals(Obj: Object){$ENDIF}: Boolean;
 begin
   if Obj = nil then
     exit false;
 
-  if not (Obj is KeyValue<T,U>) then
+  if not (Obj is KeyValuePair<T,U>) then
     exit false;
 
-  var Item := KeyValue<T, U>(Obj);
+  var Item := KeyValuePair<T, U>(Obj);
   exit Key.Equals(Item.Key) and ( ((Value = nil) and (Item.Value = nil)) or ((Value <> nil) and Value.Equals(Item.Value)));
 end;
 
-method KeyValue<T, U>.{$IF COOPER}hashCode: Integer{$ELSEIF ECHOES}GetHashCode: Integer{$ELSEIF NOUGAT}hash: Foundation.NSUInteger{$ENDIF};
+method KeyValuePair<T, U>.{$IF COOPER}hashCode: Integer{$ELSEIF ECHOES}GetHashCode: Integer{$ELSEIF NOUGAT}hash: Foundation.NSUInteger{$ENDIF};
 begin
   exit Key.GetHashCode + Value:GetHashCode;
 end;
 
-method KeyValue<T, U>.{$IF COOPER}ToString: java.lang.String{$ELSEIF ECHOES}ToString: System.String{$ELSEIF NOUGAT}description: Foundation.NSString{$ENDIF};
+method KeyValuePair<T, U>.{$IF COOPER}ToString: java.lang.String{$ELSEIF ECHOES}ToString: System.String{$ELSEIF NOUGAT}description: Foundation.NSString{$ENDIF};
 begin
   exit String.Format("Key: {0} Value: {1}", Key, Value);
 end;
