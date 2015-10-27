@@ -88,7 +88,7 @@ begin
   var List := new Sugar.Collections.List<XmlAttribute>;
   var ChildPtr := Node^.properties;
   while ChildPtr <> nil do begin
-    List.Add(new XmlAttribute(^libxml.__struct__xmlNode(ChildPtr), Document));    
+    List.Add(new XmlAttribute(^libxml.__struct__xmlNode(ChildPtr), OwnerDocument));    
     ChildPtr := ^libxml.__struct__xmlAttr(ChildPtr^.next);
   end;
   
@@ -100,8 +100,8 @@ method XmlElement.AddChild(aNode: XmlNode);
 begin
   SugarArgumentNullException.RaiseIfNil(aNode, "Node");
 
-  if aNode.Document <> nil then
-    if not aNode.Document.Equals(self.Document) then
+  if aNode.OwnerDocument <> nil then
+    if not aNode.OwnerDocument.Equals(self.OwnerDocument) then
       raise new SugarInvalidOperationException("Unable to insert node that is owned by other document");
 
   {$IF COOPER}
@@ -173,7 +173,7 @@ begin
   if Attr = nil then
     exit nil;
 
-  exit new XmlAttribute({$IF NOUGAT}^libxml.__struct__xmlNode(Attr), Document{$ELSE}Attr{$ENDIF});
+  exit new XmlAttribute({$IF NOUGAT}^libxml.__struct__xmlNode(Attr), OwnerDocument{$ELSE}Attr{$ENDIF});
 end;
 
 method XmlElement.GetAttributeNode(aLocalName: String; NamespaceUri: String): XmlAttribute;
@@ -188,7 +188,7 @@ begin
   if Attr = nil then
     exit nil;
 
-  exit new XmlAttribute({$IF NOUGAT}^libxml.__struct__xmlNode(Attr), Document{$ELSE}Attr{$ENDIF});
+  exit new XmlAttribute({$IF NOUGAT}^libxml.__struct__xmlNode(Attr), OwnerDocument{$ELSE}Attr{$ENDIF});
 end;
 
 method XmlElement.SetAttribute(aName: String; aValue: String);

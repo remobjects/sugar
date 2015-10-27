@@ -30,7 +30,7 @@ type
     {$IF ECHOES}
     property OwnerElement: XmlElement read iif(Attribute.Parent = nil, nil, new XmlElement(Attribute.Parent));
     {$ELSEIF NOUGAT}
-    property OwnerElement: XmlElement read iif(Node^.parent = nil, nil, new XmlElement(^libxml.__struct__xmlNode(Node^.parent), Document));
+    property OwnerElement: XmlElement read iif(Node^.parent = nil, nil, new XmlElement(^libxml.__struct__xmlNode(Node^.parent), OwnerDocument));
     {$ELSEIF COOPER}
     property OwnerElement: XmlElement read iif(Attribute.OwnerElement = nil, nil, new XmlElement(Attribute.OwnerElement));
     {$ENDIF}    

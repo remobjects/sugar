@@ -86,9 +86,9 @@ end;
 
 method NodeTest.Document;
 begin
-  Assert.IsNotNil(Data.Document);
-  Assert.IsNotNil(Data.FirstChild.Document);
-  Assert.IsTrue(Data.Document.Equals(Doc));
+  Assert.IsNotNil(Data.OwnerDocument);
+  Assert.IsNotNil(Data.FirstChild.OwnerDocument);
+  Assert.IsTrue(Data.OwnerDocument.Equals(Doc));
 end;
 
 method NodeTest.Parent;

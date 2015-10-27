@@ -566,7 +566,7 @@ class method XmlDocument.CreateDocument: not nullable XmlDocument;
 begin
   var NewObj := libxml.xmlNewDoc(XmlChar.FromString("1.0"));
   result := new XmlDocument(^libxml.__struct__xmlNode(NewObj), nil);
-  result.Document := result;
+  result.OwnerDocument := result;
 end;
 
 method XmlDocument.CreateElement(Name: String): XmlElement;
@@ -640,7 +640,7 @@ begin
     raise new Exception("Could not parse XML Document");
 
   result := new XmlDocument(^libxml.__struct__xmlNode(NewObj), nil);
-  result.Document := result;
+  result.OwnerDocument := result;
 end;
 
 class method XmlDocument.FromBinary(aBinary: Binary): not nullable XmlDocument;
@@ -650,7 +650,7 @@ begin
     raise new Exception("Could not parse XML Document");
 
   result := new XmlDocument(^libxml.__struct__xmlNode(NewObj), nil);
-  result.Document := result;
+  result.OwnerDocument := result;
 end;
 
 class method XmlDocument.FromString(aString: String): not nullable XmlDocument;

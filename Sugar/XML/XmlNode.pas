@@ -41,7 +41,9 @@ type
     property LocalName: String read Name; virtual;
     property NodeType: XmlNodeType read XmlNodeType.None; virtual;
     
+    [Obsolete('Use OwnerDocument property instead.')]
     property Document: XmlDocument read iif(Node.Document = nil, nil, new XmlDocument(Node.Document));
+    property OwnerDocument: XmlDocument read iif(Node.Document = nil, nil, new XmlDocument(Node.Document));
     property Parent: XmlNode read CreateCompatibleNode(Node.Parent);
     property NextSibling: XmlNode read GetNextSibling;
     property PreviousSibling: XmlNode read GetPreviousSibling;
@@ -76,6 +78,7 @@ type
     property NodeType: XmlNodeType read XmlNodeType.None; virtual;
     
     property Document: XmlDocument read iif(Node.OwnerDocument = nil, nil, new XmlDocument(Node.OwnerDocument));
+    property OwnerDocument: XmlDocument read iif(Node.OwnerDocument = nil, nil, new XmlDocument(Node.OwnerDocument));
     property Parent: XmlNode read GetParent;
     property NextSibling: XmlNode read CreateCompatibleNode(Node.NextSibling);
     property PreviousSibling: XmlNode read CreateCompatibleNode(Node.PreviousSibling);
@@ -117,13 +120,15 @@ type
     property LocalName: String read GetLocalName; virtual;
     property NodeType: XmlNodeType read XmlNodeType.None; virtual;
     
+    [Obsolete('Use OwnerDocument property instead.')]
     property Document: XmlDocument read fDocument protected write fDocument;
+    property OwnerDocument: XmlDocument read fDocument protected write fDocument;
     property Parent: XmlNode read GetParent;
-    property NextSibling: XmlNode read CreateCompatibleNode(^libxml.__struct__xmlNode(Node^.next), Document);
-    property PreviousSibling: XmlNode read CreateCompatibleNode(^libxml.__struct__xmlNode(Node^.prev), Document);
+    property NextSibling: XmlNode read CreateCompatibleNode(^libxml.__struct__xmlNode(Node^.next), OwnerDocument);
+    property PreviousSibling: XmlNode read CreateCompatibleNode(^libxml.__struct__xmlNode(Node^.prev), OwnerDocument);
 
-    property FirstChild: XmlNode read CreateCompatibleNode(^libxml.__struct__xmlNode(Node^.children), Document); virtual;
-    property LastChild: XmlNode read CreateCompatibleNode(^libxml.__struct__xmlNode(Node^.last), Document); virtual;
+    property FirstChild: XmlNode read CreateCompatibleNode(^libxml.__struct__xmlNode(Node^.children), OwnerDocument); virtual;
+    property LastChild: XmlNode read CreateCompatibleNode(^libxml.__struct__xmlNode(Node^.last), OwnerDocument); virtual;
     property Item[&Index: Integer]: XmlNode read GetItem; default; virtual;
     property ChildCount: Integer read GetChildCount; virtual;
     property ChildNodes: array of XmlNode read GetChildNodes; virtual;
@@ -404,9 +409,9 @@ end;
 
 method XmlNode.GetParent: XmlNode;
 begin
-  result := CreateCompatibleNode(^libxml.__struct__xmlNode(Node^.parent), Document);
+  result := CreateCompatibleNode(^libxml.__struct__xmlNode(Node^.parent), OwnerDocument);
   
-  if assigned(result) and result.isEqual(Document) then
+  if assigned(result) and result.isEqual(OwnerDocument) then
     exit nil;
 end;
 
@@ -483,7 +488,7 @@ begin
   var List := new Sugar.Collections.List<XmlNode>;
   var ChildPtr := fNode^.children;
   while ChildPtr <> nil do begin
-    List.Add(CreateCompatibleNode( ^libxml.__struct__xmlNode(ChildPtr), Document));
+    List.Add(CreateCompatibleNode( ^libxml.__struct__xmlNode(ChildPtr), OwnerDocument));
     ChildPtr := ^libxml.__struct__xmlNode(ChildPtr)^.next;
   end;
 
