@@ -17,7 +17,10 @@ type
     property Value: U read write; readonly;
   end;
 
+  {$IF Cooper}
+  {$ELSE}
   [Obsolete('Use KeyValuePair<T, U> class instead.')]
+  {$ENDIF}
   KeyValue<T, U> = public class(KeyValuePair<T,U>);
 
 implementation

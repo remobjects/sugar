@@ -22,7 +22,7 @@ type
     method ContainsValue(Value: U): Boolean;
     method &Remove(Key: T): Boolean;
 
-    method ForEach(Action: Action<KeyValuePair<T,U>>);
+    method ForEach(Action: Action<KeyValuePair<T, U>>);
 
     property Item[Key: T]: U read GetItem write SetItem; default;
     property Keys: array of T read GetKeys;
