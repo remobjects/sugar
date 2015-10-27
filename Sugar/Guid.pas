@@ -24,7 +24,9 @@ type
 
     class method NewGuid: Guid;
     class method Parse(Value: String): Guid;
+    [Obsolete('Use Empty method instead.')]
     class method EmptyGuid: Guid;
+    class method &Empty: Guid;
 
     method ToByteArray: array of Byte;
     method ToString(Format: GuidFormat): String;
@@ -127,6 +129,17 @@ begin
   {$ELSEIF NOUGAT}
   var Data := InternalParse(Value);
   exit new Guid(Data);
+  {$ENDIF}
+end;
+
+class method Sugar.Guid.Empty: Guid;
+begin
+  {$IF COOPER}
+  exit new java.util.UUID(0, 0);
+  {$ELSEIF ECHOES}
+  exit mapped.Empty;
+  {$ELSEIF NOUGAT}
+  exit new Guid;
   {$ENDIF}
 end;
 
