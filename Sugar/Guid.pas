@@ -24,7 +24,10 @@ type
 
     class method NewGuid: Guid;
     class method Parse(Value: String): Guid;
+    {$IF COOPER}
+    {$ELSE}
     [Obsolete('Use Empty method instead.')]
+    {$ENDIF}
     class method EmptyGuid: Guid;
     class method &Empty: Guid;
 
