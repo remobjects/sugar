@@ -11,9 +11,9 @@ type
   private
     Items: Dictionary<String, JsonNode> := new Dictionary<String, JsonNode>;
 
-    method GetItem(Key: String): JsonNode;
+    method GetItem(Key: String): nullable JsonNode;
     method SetItem(Key: String; Value: JsonNode);
-    method GetKeys: sequence of String;
+    method GetKeys: not nullable sequence of String;
     method GetProperties: sequence of KeyValue<String, JsonNode>; iterator;
   public
     method &Add(Key: String; Value: JsonNode);
@@ -35,16 +35,17 @@ type
     class method Load(JsonString: String): JsonObject;
 
     property Count: Integer read Items.Count;
-    property Item[Key: String]: JsonNode read GetItem write SetItem; default;
-    property Keys: sequence of String read GetKeys;
+    property Item[Key: String]: nullable JsonNode read GetItem write SetItem; default;
+    property Keys: not nullable sequence of String read GetKeys;
     property Properties: sequence of KeyValue<String, JsonNode> read GetProperties; 
   end;
 
 implementation
 
-method JsonObject.GetItem(Key: String): JsonNode;
+method JsonObject.GetItem(Key: String): nullable JsonNode;
 begin
-  exit Items[Key];
+  if Items.ContainsKey(Key) then
+    exit Items[Key];
 end;
 
 method JsonObject.SetItem(Key: String; Value: JsonNode);
@@ -84,9 +85,9 @@ begin
   result := lValue as JsonObject;
 end;
 
-method JsonObject.GetKeys: sequence of String;
+method JsonObject.GetKeys: not nullable sequence of String;
 begin
-  exit Items.Keys;
+  exit Items.Keys as not nullable;
 end;
 
 method JsonObject.ToJson: String;
