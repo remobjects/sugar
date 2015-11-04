@@ -87,6 +87,7 @@
     <Compile Include="Tests\MessageDigest.pas" />
     <Compile Include="Tests\Queue.pas" />
     <Compile Include="Tests\Random.pas" />
+    <Compile Include="Tests\RegularExpressions.pas" />
     <Compile Include="Tests\Stack.pas" />
     <Compile Include="Tests\String.pas" />
     <Compile Include="Tests\StringBuilder.pas" />
