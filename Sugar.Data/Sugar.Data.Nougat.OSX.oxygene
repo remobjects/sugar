@@ -12,7 +12,7 @@
     <AssemblyName>Sugar.Data</AssemblyName>
     <DefaultUses>Foundation</DefaultUses>
     <StartupClass />
-    <DeploymentTargetVersion>10.6</DeploymentTargetVersion>
+    <DeploymentTargetVersion>10.7</DeploymentTargetVersion>
     <AllowLegacyOutParams>False</AllowLegacyOutParams>
     <CreateHeaderFile>False</CreateHeaderFile>
   </PropertyGroup>
