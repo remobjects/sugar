@@ -148,13 +148,7 @@ end;
 
 class method Guid.EmptyGuid: Guid;
 begin
-  {$IF COOPER}
-  exit new java.util.UUID(0, 0);
-  {$ELSEIF ECHOES}
-  exit mapped.Empty;
-  {$ELSEIF NOUGAT}
-  exit new Guid;
-  {$ENDIF}
+  exit &Empty;
 end;
 
 method Guid.ToByteArray: array of Byte;
