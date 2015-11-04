@@ -381,7 +381,7 @@ begin
   {$IF COOPER}
   result := new String(GetContentAsBinarySynchronous().ToArray, aEncoding);
   {$ELSEIF ECHOES}
-  result := new System.IO.StreamReader(Response.GetResponseStream(), aEncoding).ReadToEnd();
+  result := new System.IO.StreamReader(Response.GetResponseStream(), aEncoding).ReadToEnd() as not nullable;
   {$ELSEIF NOUGAT}
   var s := new Foundation.NSString withData(Data) encoding(aEncoding.AsNSStringEncoding); // todo: test this
   if assigned(s) then
