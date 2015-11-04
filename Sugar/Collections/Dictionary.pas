@@ -22,7 +22,7 @@ type
     method ContainsValue(Value: U): Boolean;
     method &Remove(Key: T): Boolean;
 
-    method ForEach(Action: Action<KeyValue<T,U>>);
+    method ForEach(Action: Action<KeyValuePair<T, U>>);
 
     property Item[Key: T]: U read GetItem write SetItem; default;
     property Keys: array of T read GetKeys;
@@ -86,14 +86,14 @@ begin
   {$ENDIF}
 end;
 
-method Dictionary<T, U>.ForEach(Action: Action<KeyValue<T, U>>);
+method Dictionary<T, U>.ForEach(Action: Action<KeyValuePair<T, U>>);
 begin
   if Action = nil then
     raise new SugarArgumentNullException("Action");
 
   var lKeys := self.Keys;
   for i: Integer := 0 to length(lKeys) - 1 do
-    Action(new KeyValue<T,U>(lKeys[i], self.Item[lKeys[i]]));
+    Action(new KeyValuePair<T,U>(lKeys[i], self.Item[lKeys[i]]));
 end;
 
 method Dictionary<T, U>.GetItem(Key: T): U;

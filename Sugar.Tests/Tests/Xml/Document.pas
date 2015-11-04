@@ -268,7 +268,7 @@ end;
 
 method DocumentTest.NodeType;
 begin
-  Assert.AreEqual(Data.NodeType, XmlNodeType.Document);
+  Assert.AreEqual(Data.NodeType, XmlNodeType.OwnerDocument);
 end;
 
 method DocumentTest.RemoveChild;

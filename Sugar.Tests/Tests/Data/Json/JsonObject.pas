@@ -177,14 +177,14 @@ method JsonObjectTest.Properties;
 begin
   Assert.IsEmpty(Obj.Properties);
   &Add;
-  Assert.AreEqual(Obj.Properties, [new Sugar.Collections.KeyValue<String,JsonValue>("a", new JsonValue(42))]);
+  Assert.AreEqual(Obj.Properties, [new Sugar.Collections.KeyValuePair<String,JsonValue>("a", new JsonValue(42))]);
 end;
 
 method JsonObjectTest.Enumerable;
 begin
   Assert.IsEmpty(Obj);
   &Add;
-  Assert.AreEqual(Obj, [new Sugar.Collections.KeyValue<String,JsonValue>("a", new JsonValue(42))]);
+  Assert.AreEqual(Obj, [new Sugar.Collections.KeyValuePair<String,JsonValue>("a", new JsonValue(42))]);
 end;
 
 end.

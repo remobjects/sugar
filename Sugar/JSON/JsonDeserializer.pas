@@ -14,8 +14,8 @@ type
 
     method ReadObject: JsonObject;
     method ReadArray: JsonArray;
-    method ReadProperties: sequence of KeyValue<String, JsonNode>;
-    method ReadPropery: KeyValue<String, JsonNode>;
+    method ReadProperties: sequence of KeyValuePair<String, JsonNode>;
+    method ReadPropery: KeyValuePair<String, JsonNode>;
     method ReadKey: String;
     method ReadValues: sequence of JsonNode;
     method ReadValue: JsonNode;
@@ -69,9 +69,9 @@ begin
     result.Add(Item.Key, Item.Value);
 end;
 
-method JsonDeserializer.ReadProperties: sequence of KeyValue<String, JsonNode>;
+method JsonDeserializer.ReadProperties: sequence of KeyValuePair<String, JsonNode>;
 begin  
-  var List := new List<KeyValue<String, JsonNode>>;
+  var List := new List<KeyValuePair<String, JsonNode>>;
 
   repeat
     List.Add(ReadPropery);
@@ -85,12 +85,12 @@ begin
   exit List;
 end;
 
-method JsonDeserializer.ReadPropery: KeyValue<String, JsonNode>;
+method JsonDeserializer.ReadPropery: KeyValuePair<String, JsonNode>;
 begin
   var lKey := ReadKey;
   Expected(JsonTokenKind.NameSeperator);
   Tokenizer.Next;
-  result := new KeyValue<String,JsonNode>(lKey, ReadValue);
+  result := new KeyValuePair<String,JsonNode>(lKey, ReadValue);
 end;
 
 method JsonDeserializer.ReadKey: String;
