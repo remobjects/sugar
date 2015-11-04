@@ -72,6 +72,9 @@
     <Compile Include="Reflection\MethodInfo.pas" />
     <Compile Include="Reflection\ParameterInfo.pas" />
     <Compile Include="Reflection\Type.pas" />
+    <Compile Include="RegularExpressions\Group.pas" />
+    <Compile Include="RegularExpressions\Match.pas" />
+    <Compile Include="RegularExpressions\Regex.pas" />
     <Compile Include="String.pas" />
     <Compile Include="StringBuilder.pas" />
     <Compile Include="StringFormatter.pas" />
@@ -111,6 +114,7 @@
     <Folder Include="$(MSBuildThisFileDirectory)IO\" />
     <Folder Include="$(MSBuildThisFileDirectory)JSON\" />
     <Folder Include="$(MSBuildThisFileDirectory)Reflection\" />
+    <Folder Include="$(MSBuildThisFileDirectory)RegularExpressions\" />
     <Folder Include="$(MSBuildThisFileDirectory)Threading\" />
     <Folder Include="$(MSBuildThisFileDirectory)XML\" />
   </ItemGroup>
