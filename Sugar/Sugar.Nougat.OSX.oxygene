@@ -11,7 +11,7 @@
     <ProjectGuid>{ab7ab88b-2370-43bf-844b-54d015da9e57}</ProjectGuid>
     <AssemblyName>Sugar</AssemblyName>
     <DefaultUses>Foundation</DefaultUses>
-    <DeploymentTargetVersion>10.6</DeploymentTargetVersion>
+    <DeploymentTargetVersion>10.7</DeploymentTargetVersion>
     <AllowLegacyOutParams>False</AllowLegacyOutParams>
     <CreateHeaderFile>False</CreateHeaderFile>
   </PropertyGroup>
