@@ -96,7 +96,6 @@ type
 
   Http = public static class
   private
-    const SUGAR_USER_AGENT = "RemObjects Sugar/8.0 http://www.elementscompiler.com/elements/sugar";
   public
     //method ExecuteRequest(aUrl: not nullable Url; ResponseCallback: not nullable HttpResponseBlock);
     method ExecuteRequest(aRequest: not nullable HttpRequest; ResponseCallback: not nullable HttpResponseBlock);
@@ -430,8 +429,7 @@ begin
   {$IF COOPER}
   async begin
     var lConnection := java.net.URL(aRequest.URL).openConnection as java.net.HttpURLConnection;
-    lConnection.addRequestProperty("User-Agent", SUGAR_USER_AGENT);
-
+    
     if assigned(aRequest.Content) then begin
       lConnection.getOutputStream().write((aRequest.Content as IHttpRequestContent).GetContentAsArray());
       lConnection.getOutputStream().flush();
@@ -444,7 +442,6 @@ begin
   using webRequest := System.Net.WebRequest.Create(aRequest.Url) as HttpWebRequest do begin
     {$IF NOT NETFX_CORE}
     webRequest.AllowAutoRedirect := aRequest.FollowRedirects;
-    webRequest.UserAgent := SUGAR_USER_AGENT;
     {$ENDIF}
     case aRequest.Mode of
       HttpRequestMode.Get: webRequest.Method := 'GET';
@@ -486,7 +483,6 @@ begin
   var nsUrlRequest := new NSMutableURLRequest withURL(aRequest.Url) cachePolicy(0) timeoutInterval(30);
 
   //nsUrlRequest.AllowAutoRedirect := aRequest.FollowRedirects;
-  nsUrlRequest.setValue(SUGAR_USER_AGENT) forHTTPHeaderField("User-Agent");
   //nsUrlRequest.allowsCellularAccess =
   
   case aRequest.Mode of
@@ -521,8 +517,7 @@ method Http.ExecuteRequestSynchronous(aRequest: not nullable HttpRequest): not n
 begin
   {$IF COOPER}
   var lConnection := java.net.URL(aRequest.URL).openConnection as java.net.HttpURLConnection;
-  lConnection.addRequestProperty("User-Agent", SUGAR_USER_AGENT);
-
+  
   if assigned(aRequest.Content) then begin
     lConnection.getOutputStream().write((aRequest.Content as IHttpRequestContent).GetContentAsArray());
     lConnection.getOutputStream().flush();
@@ -532,7 +527,6 @@ begin
   using webRequest := System.Net.WebRequest.Create(aRequest.Url) as HttpWebRequest do begin
     {$IF NOT NETFX_CORE}
     webRequest.AllowAutoRedirect := aRequest.FollowRedirects;
-    webRequest.UserAgent := SUGAR_USER_AGENT;
     {$ENDIF}
     case aRequest.Mode of
       HttpRequestMode.Get: webRequest.Method := 'GET';
@@ -554,7 +548,6 @@ begin
   var nsUrlRequest := new NSMutableURLRequest withURL(aRequest.Url) cachePolicy(0) timeoutInterval(30);
 
   //nsUrlRequest.AllowAutoRedirect := aRequest.FollowRedirects;
-  nsUrlRequest.setValue(SUGAR_USER_AGENT) forHTTPHeaderField("User-Agent");
   //nsUrlRequest.allowsCellularAccess =
   
   case aRequest.Mode of
@@ -681,7 +674,6 @@ class method Http.InternalDownload(anUrl: Url): System.Threading.Tasks.Task<Syst
 begin
   var Request: System.Net.HttpWebRequest := System.Net.WebRequest.CreateHttp(anUrl);
   Request.Method := "GET";
-  Request.UserAgent := "Mozilla/4.76";
   Request.AllowReadStreamBuffering := true;
 
   var TaskComplete := new System.Threading.Tasks.TaskCompletionSource<System.Net.HttpWebResponse>;
