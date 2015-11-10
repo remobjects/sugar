@@ -45,7 +45,7 @@ begin
   Builder.Clear;
   Offset := 0;
   Visit(JValue);
-  exit Builder.ToString;
+  result := Builder.ToString;
 end;
 
 method JsonSerializer.VisitObject(Value: JsonObject);
