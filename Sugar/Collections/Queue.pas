@@ -18,7 +18,6 @@ type
     method Dequeue: T;
     method ToArray: array of T;
 
-    method ForEach(Action: Action<T>);
     property Count: Integer read {$IF COOPER}mapped.size{$ELSEIF ECHOES OR NOUGAT}mapped.Count{$ENDIF};
   end;
 
@@ -44,9 +43,6 @@ end;
 
 method Queue<T>.Dequeue: T;
 begin
-  if self.Count = 0 then
-    raise new SugarInvalidOperationException(ErrorMessage.COLLECTION_EMPTY);
-
   {$IF COOPER}
   exit mapped.poll;
   {$ELSEIF ECHOES}
@@ -68,21 +64,8 @@ begin
   {$ENDIF}
 end;
 
-method Queue<T>.ForEach(Action: Action<T>);
-begin
-  if Action = nil then
-    raise new SugarArgumentNullException("Action");
-
-  var Items := ToArray;
-  for i: Integer := 0 to length(Items) - 1 do
-    Action(Items[i]);
-end;
-
 method Queue<T>.Peek: T;
 begin
-  if self.Count = 0 then
-    raise new SugarInvalidOperationException(ErrorMessage.COLLECTION_EMPTY);
-
   {$IF COOPER OR ECHOES}
   exit mapped.Peek;
   {$ELSEIF NOUGAT}
@@ -97,9 +80,7 @@ begin
   {$ELSEIF ECHOES}
   exit mapped.ToArray;
   {$ELSEIF NOUGAT}
-  result := new T[mapped.count];
-  for i: Integer := 0 to mapped.count - 1 do
-    result[i] := NullHelper.ValueOf(mapped.objectAtIndex(i));
+  exit ListHelpers.ToArray<T>(self);
   {$ENDIF}
 end;
 
