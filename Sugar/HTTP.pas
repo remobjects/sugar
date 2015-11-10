@@ -23,7 +23,7 @@ type
     operator Implicit(aUrl: not nullable Url): HttpRequest;
   end;
   
-  HttpRequestMode = public enum (Get, Post);
+  HttpRequestMode = public enum (Get, Post, Head, Put, Delete, Patch, Options, Trace);
   
   IHttpRequestContent = assembly interface
     method GetContentAsBinary(): Binary;
@@ -446,6 +446,12 @@ begin
     case aRequest.Mode of
       HttpRequestMode.Get: webRequest.Method := 'GET';
       HttpRequestMode.Post: webRequest.Method := 'POST';
+      HttpRequestMode.Head: webRequest.Method := 'HEAD';
+      HttpRequestMode.Put: webRequest.Method := 'PUT';
+      HttpRequestMode.Delete: webRequest.Method := 'DLETE';
+      HttpRequestMode.Patch: webRequest.Method := 'POTCH';
+      HttpRequestMode.Options: webRequest.Method := 'OPTIONS';
+      HttpRequestMode.Trace: webRequest.Method := 'TRACE';
     end;
 
     if assigned(aRequest.Content) then begin
@@ -488,6 +494,12 @@ begin
   case aRequest.Mode of
     HttpRequestMode.Get: nsUrlRequest.HTTPMethod := 'GET';
     HttpRequestMode.Post: nsUrlRequest.HTTPMethod := 'POST';
+    HttpRequestMode.Head: nsUrlRequest.HTTPMethod := 'HEAD';
+    HttpRequestMode.Put: nsUrlRequest.HTTPMethod := 'PUT';
+    HttpRequestMode.Delete: nsUrlRequest.HTTPMethod := 'DLETE';
+    HttpRequestMode.Patch: nsUrlRequest.HTTPMethod := 'POTCH';
+    HttpRequestMode.Options: nsUrlRequest.HTTPMethod := 'OPTIONS';
+    HttpRequestMode.Trace: nsUrlRequest.HTTPMethod := 'TRACE';
   end;
 
   if assigned(aRequest.Content) then begin
@@ -531,6 +543,12 @@ begin
     case aRequest.Mode of
       HttpRequestMode.Get: webRequest.Method := 'GET';
       HttpRequestMode.Post: webRequest.Method := 'POST';
+      HttpRequestMode.Head: webRequest.Method := 'HEAD';
+      HttpRequestMode.Put: webRequest.Method := 'PUT';
+      HttpRequestMode.Delete: webRequest.Method := 'DLETE';
+      HttpRequestMode.Patch: webRequest.Method := 'POTCH';
+      HttpRequestMode.Options: webRequest.Method := 'OPTIONS';
+      HttpRequestMode.Trace: webRequest.Method := 'TRACE';
     end;
 
     if assigned(aRequest.Content) then begin
@@ -553,6 +571,12 @@ begin
   case aRequest.Mode of
     HttpRequestMode.Get: nsUrlRequest.HTTPMethod := 'GET';
     HttpRequestMode.Post: nsUrlRequest.HTTPMethod := 'POST';
+    HttpRequestMode.Head: nsUrlRequest.HTTPMethod := 'HEAD';
+    HttpRequestMode.Put: nsUrlRequest.HTTPMethod := 'PUT';
+    HttpRequestMode.Delete: nsUrlRequest.HTTPMethod := 'DLETE';
+    HttpRequestMode.Patch: nsUrlRequest.HTTPMethod := 'POTCH';
+    HttpRequestMode.Options: nsUrlRequest.HTTPMethod := 'OPTIONS';
+    HttpRequestMode.Trace: nsUrlRequest.HTTPMethod := 'TRACE';
   end;
 
   if assigned(aRequest.Content) then begin
