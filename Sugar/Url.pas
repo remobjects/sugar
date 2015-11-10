@@ -144,7 +144,7 @@ end;
 class method Url.UrlEncodeString(aString: String): String;
 begin
   {$IF COOPER}
-  {$WARNING missing implementation}
+  exit java.net.URLEncoder.Encode(aString, 'utf-8');
   {$ELSEIF ECHOES}
   {$IF WINDOWS_PHONE}
   result := System.Net.HttpUtility.UrlEncode(aString);
