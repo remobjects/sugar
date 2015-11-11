@@ -344,8 +344,6 @@ begin
   Data.Sort((x, y) -> x.CompareToIgnoreCase(y));
   for i: Integer := 0 to Data.Count - 1 do
     Assert.AreEqual(Data[i], Expected[i]);
-
-  Assert.Throws(->Data.Sort(nil));
 end;
 
 end.

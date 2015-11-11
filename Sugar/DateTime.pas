@@ -12,13 +12,17 @@ uses
 {$ENDIF}
 
 type
+  {$IF NOUGAT}
+  DateTimeHelpers = public static class
+  public
+    method GetComponent(aSelf: NSDate; Component: NSCalendarUnit): Integer;
+    method AdjustDate(aSelf: NSDate; Component: NSCalendarUnit; Value: Integer): DateTime;
+  end;
+  {$ENDIF}
+
   {$IF ECHOES}[System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Auto, Size := 1)]{$ENDIF}
   DateTime = public {$IF COOPER}class mapped to java.util.Calendar{$ELSEIF ECHOES}record mapped to System.DateTime{$ELSEIF NOUGAT}class mapped to NSDate{$ENDIF}
   private
-  {$IF NOUGAT}
-    method GetComponent(Component: NSCalendarUnit): Integer;
-    method AdjustDate(Component: NSCalendarUnit; Value: Integer): DateTime;
-  {$ENDIF}
   private
     const DEFAULT_FORMAT = "{dd}/{MM}/{yyyy} {hh}:{mm}:{ss}";
   public
@@ -47,12 +51,12 @@ type
     method description: NSString; override;
     {$ENDIF}    
     
-    property Hour: Integer read {$IF COOPER}mapped.get(Calendar.HOUR_OF_DAY){$ELSEIF ECHOES}mapped.Hour{$ELSEIF NOUGAT}GetComponent(NSCalendarUnit.NSHourCalendarUnit){$ENDIF};
-    property Minute: Integer read {$IF COOPER}mapped.get(Calendar.MINUTE){$ELSEIF ECHOES}mapped.Minute{$ELSEIF NOUGAT}GetComponent(NSCalendarUnit.NSMinuteCalendarUnit){$ENDIF};
-    property Second: Integer read {$IF COOPER}mapped.get(Calendar.SECOND){$ELSEIF ECHOES}mapped.Second{$ELSEIF NOUGAT}GetComponent(NSCalendarUnit.NSSecondCalendarUnit){$ENDIF};
-    property Year: Integer read {$IF COOPER}mapped.get(Calendar.YEAR){$ELSEIF ECHOES}mapped.Year{$ELSEIF NOUGAT}GetComponent(NSCalendarUnit.NSYearCalendarUnit){$ENDIF};
-    property Month: Integer read {$IF COOPER}mapped.get(Calendar.MONTH)+1{$ELSEIF ECHOES}mapped.Month{$ELSEIF NOUGAT}GetComponent(NSCalendarUnit.NSMonthCalendarUnit){$ENDIF};    
-    property Day: Integer read {$IF COOPER}mapped.get(Calendar.DAY_OF_MONTH){$ELSEIF ECHOES}mapped.Day{$ELSEIF NOUGAT}GetComponent(NSCalendarUnit.NSDayCalendarUnit){$ENDIF};
+    property Hour: Integer read {$IF COOPER}mapped.get(Calendar.HOUR_OF_DAY){$ELSEIF ECHOES}mapped.Hour{$ELSEIF NOUGAT}DateTimeHelpers.GetComponent(mapped, NSCalendarUnit.NSHourCalendarUnit){$ENDIF};
+    property Minute: Integer read {$IF COOPER}mapped.get(Calendar.MINUTE){$ELSEIF ECHOES}mapped.Minute{$ELSEIF NOUGAT}DateTimeHelpers.GetComponent(mapped, NSCalendarUnit.NSMinuteCalendarUnit){$ENDIF};
+    property Second: Integer read {$IF COOPER}mapped.get(Calendar.SECOND){$ELSEIF ECHOES}mapped.Second{$ELSEIF NOUGAT}DateTimeHelpers.GetComponent(mapped, NSCalendarUnit.NSSecondCalendarUnit){$ENDIF};
+    property Year: Integer read {$IF COOPER}mapped.get(Calendar.YEAR){$ELSEIF ECHOES}mapped.Year{$ELSEIF NOUGAT}DateTimeHelpers.GetComponent(mapped, NSCalendarUnit.NSYearCalendarUnit){$ENDIF};
+    property Month: Integer read {$IF COOPER}mapped.get(Calendar.MONTH)+1{$ELSEIF ECHOES}mapped.Month{$ELSEIF NOUGAT}DateTimeHelpers.GetComponent(mapped, NSCalendarUnit.NSMonthCalendarUnit){$ENDIF};    
+    property Day: Integer read {$IF COOPER}mapped.get(Calendar.DAY_OF_MONTH){$ELSEIF ECHOES}mapped.Day{$ELSEIF NOUGAT}DateTimeHelpers.GetComponent(mapped, NSCalendarUnit.NSDayCalendarUnit){$ENDIF};
     property Date: DateTime read {$IF COOPER OR NOUGAT}new DateTime(self.Year, self.Month, self.Day, 0, 0, 0){$ELSEIF ECHOES}mapped.Date{$ENDIF};  
     
     class property Today: DateTime read {$IF COOPER OR NOUGAT}Now.Date{$ELSEIF ECHOES}mapped.Today{$ENDIF};
@@ -139,7 +143,7 @@ begin
   {$ELSEIF ECHOES}
   exit mapped.AddDays(Value);
   {$ELSEIF NOUGAT}
-  exit AdjustDate(NSCalendarUnit.NSDayCalendarUnit, Value);
+  exit DateTimeHelpers.AdjustDate(mapped, NSCalendarUnit.NSDayCalendarUnit, Value);
   {$ENDIF}
 end;
 
@@ -152,7 +156,7 @@ begin
   {$ELSEIF ECHOES}
   exit mapped.AddHours(Value);
   {$ELSEIF NOUGAT}
-  exit AdjustDate(NSCalendarUnit.NSHourCalendarUnit, Value);
+  exit DateTimeHelpers.AdjustDate(mapped, NSCalendarUnit.NSHourCalendarUnit, Value);
   {$ENDIF}
 end;
 
@@ -165,7 +169,7 @@ begin
   {$ELSEIF ECHOES}
   exit mapped.AddMinutes(Value);
   {$ELSEIF NOUGAT}
-  exit AdjustDate(NSCalendarUnit.NSMinuteCalendarUnit, Value);
+  exit DateTimeHelpers.AdjustDate(mapped, NSCalendarUnit.NSMinuteCalendarUnit, Value);
   {$ENDIF}
 end;
 
@@ -178,7 +182,7 @@ begin
   {$ELSEIF ECHOES}
   exit mapped.AddMonths(Value);
   {$ELSEIF NOUGAT}
-  exit AdjustDate(NSCalendarUnit.NSMonthCalendarUnit, Value);
+  exit DateTimeHelpers.AdjustDate(mapped, NSCalendarUnit.NSMonthCalendarUnit, Value);
   {$ENDIF}
 end;
 
@@ -191,7 +195,7 @@ begin
   {$ELSEIF ECHOES}
   exit mapped.AddSeconds(Value);
   {$ELSEIF NOUGAT}
-  exit AdjustDate(NSCalendarUnit.NSSecondCalendarUnit, Value);
+  exit DateTimeHelpers.AdjustDate(mapped, NSCalendarUnit.NSSecondCalendarUnit, Value);
   {$ENDIF}
 end;
 
@@ -204,7 +208,7 @@ begin
   {$ELSEIF ECHOES}
   exit mapped.AddYears(Value);
   {$ELSEIF NOUGAT}
-  exit AdjustDate(NSCalendarUnit.NSYearCalendarUnit, Value);
+  exit DateTimeHelpers.AdjustDate(mapped, NSCalendarUnit.NSYearCalendarUnit, Value);
   {$ENDIF}
 end;
 
@@ -267,7 +271,7 @@ begin
   exit ToString(DEFAULT_FORMAT);
 end;
 {$ELSEIF NOUGAT}
-method DateTime.AdjustDate(Component: NSCalendarUnit; Value: Integer): DateTime;
+method DateTimeHelpers.AdjustDate(aSelf: NSDate; Component: NSCalendarUnit; Value: Integer): DateTime;
 begin
   var Components: NSDateComponents := new NSDateComponents();  
 
@@ -281,7 +285,7 @@ begin
   end;
   
   var lCalendar := NSCalendar.currentCalendar();
-  exit lCalendar.dateByAddingComponents(Components) toDate(mapped) options(0);  
+  exit lCalendar.dateByAddingComponents(Components) toDate(aSelf) options(0);  
 end;
 
 method DateTime.description: NSString;
@@ -289,9 +293,9 @@ begin
   exit ToString(DEFAULT_FORMAT);
 end;
 
-method DateTime.GetComponent(Component: NSCalendarUnit): Integer;
+method DateTimeHelpers.GetComponent(aSelf: NSDate; Component: NSCalendarUnit): Integer;
 begin
-  var lComponents := NSCalendar.currentCalendar().components(Component) fromDate(mapped);
+  var lComponents := NSCalendar.currentCalendar().components(Component) fromDate(aSelf);
   case Component of
     NSCalendarUnit.NSDayCalendarUnit: exit lComponents.day;
     NSCalendarUnit.NSHourCalendarUnit: exit lComponents.hour;
