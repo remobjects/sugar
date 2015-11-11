@@ -268,7 +268,7 @@ begin
   {$IF COOPER}
   async begin
     var allData := new Binary;
-    var stream := Connection.InputStream;
+    var stream := if connection.getResponseCode > 400 then Connection.ErrorStream else Connection.InputStream;
     var data := new Byte[4096]; 
     var len := stream.read(data);
     while len > 0 do begin
