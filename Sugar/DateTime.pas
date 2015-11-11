@@ -23,6 +23,7 @@ type
     const DEFAULT_FORMAT = "{dd}/{MM}/{yyyy} {hh}:{mm}:{ss}";
   public
     constructor;
+    constructor(aTicks: Int64);
     constructor(aYear, aMonth, aDay: Integer);
     constructor(aYear, aMonth, aDay, anHour, aMinute: Integer);
     constructor(aYear, aMonth, aDay, anHour, aMinute, aSecond: Integer);
@@ -56,6 +57,18 @@ type
     
     class property Today: DateTime read {$IF COOPER OR NOUGAT}Now.Date{$ELSEIF ECHOES}mapped.Today{$ENDIF};
     class property Now: DateTime read {$IF COOPER OR NOUGAT}new DateTime(){$ELSEIF ECHOES}mapped.Now{$ENDIF};    
+    const TicksSince1970: Int64 = 621355968000000000;
+    property Ticks: Int64 read{$IFDEF COOPER}mapped.getTimeInMillis() * Timespan.TicksPerMilisecond + TicksSince1970{$ELSEIF ECHOES}mapped.Ticks{$ELSE}Int64(mapped.timeIntervalSince1970 * Timespan.TicksPerSecond) + TicksSince1970{$ENDIF};
+    class operator &Add(a: DateTime; b: Timespan): DateTime;
+    class operator Subtract(a: DateTime; b: DateTime): TimeSpan;
+    class operator Subtract(a: DateTime; b: Timespan): DateTime;
+
+    class operator Equal(a,b: DateTime): Boolean;
+    class operator NotEqual(a,b: DateTime): Boolean;
+    class operator Less(a,b: DateTime): Boolean;
+    class operator LessOrEqual(a,b: DateTime): Boolean;
+    class operator Greater(a, b: DateTime): Boolean;
+    class operator GreaterOrEqual(a,b: DateTime): Boolean;
   end;
 
 implementation
@@ -283,5 +296,64 @@ begin
   end;
 end;
 {$ENDIF}
+
+operator DateTime.Add(a: DateTime; b: TimeSpan): DateTime;
+begin
+  exit new DateTime(a.Ticks + b.Ticks);
+end;
+
+operator DateTime.Subtract(a: DateTime; b: DateTime): TimeSpan;
+begin
+  exit new Timespan(a.Ticks - b.Ticks);
+end;
+
+operator DateTime.Subtract(a: DateTime; b: TimeSpan): DateTime;
+begin
+  exit new DateTime(a.Ticks - b.Ticks);
+end;
+
+operator DateTime.Equal(a: DateTime; b: DateTime): Boolean;
+begin
+  exit a.Ticks = b.Ticks; 
+end;
+
+operator DateTime.NotEqual(a: DateTime; b: DateTime): Boolean;
+begin
+  exit a.Ticks <> b.Ticks;
+end;
+
+operator DateTime.Less(a: DateTime; b: DateTime): Boolean;
+begin
+  exit a.Ticks < b.Ticks;
+end;
+
+operator DateTime.LessOrEqual(a: DateTime; b: DateTime): Boolean;
+begin
+  exit a.Ticks <= b.Ticks;
+end;
+
+operator DateTime.Greater(a: DateTime; b: DateTime): Boolean;
+begin
+  exit a.Ticks > b.Ticks;
+end;
+
+operator DateTime.GreaterOrEqual(a: DateTime; b: DateTime): Boolean;
+begin
+  exit a.Ticks >= b.Ticks;
+end;
+
+constructor DateTime(aTicks: Int64);
+begin
+  {$IFDEF COOPER}
+  var lCalendar := Calendar.Instance;
+  lCalendar.Time := new Date((aTicks - TicksSince1970) / TimeSpan.TicksPerMilisecond);
+   
+  exit lCalendar;
+  {$ELSEIF ECHOES}
+  exit new System.DateTime(aTicks);
+  {$ELSEIF NOUGAT}
+  exit new NSDate(Double(aTicks - TicksSince1970) / TimeSpan.TicksPerSecond);
+  {$ENDIF}
+end;
 
 end.
