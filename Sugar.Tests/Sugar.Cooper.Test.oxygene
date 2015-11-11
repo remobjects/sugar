@@ -20,6 +20,7 @@
     <XmlDoc>False</XmlDoc>
     <XmlDocWarningLevel>WarningOnPublicMembers</XmlDocWarningLevel>
     <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
+    <GenerateDebugInfo>True</GenerateDebugInfo>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <Optimize>true</Optimize>
@@ -71,6 +72,5 @@
   <PropertyGroup>
     <PreBuildEvent />
   </PropertyGroup>
-
   <Import Project="..\Sugar.Tests\Sugar.Shared.Test.projitems" Label="Shared" />
 </Project>

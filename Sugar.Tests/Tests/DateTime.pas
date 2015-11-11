@@ -131,7 +131,7 @@ begin
 
   Value := Data.AddSeconds(60); //next year
   Assert.AreEqual(Value.Second, 0);
-  Assert.AreEqual(Value.Minute, 8);
+  Assert.AreEqual(Value.Minute, 8); 
 end;
 
 method DateTimeTest.AddYears;
@@ -344,7 +344,7 @@ end;
 method DateTimeTest.Fields;
 begin
   Assert.AreEqual(Data.Year, 1961);
-  Assert.AreEqual(Data.Month, 4);
+  Assert.AreEqual(Data.Month, 4); 
   Assert.AreEqual(Data.Day, 12);
   Assert.AreEqual(Data.Hour, 6);
   Assert.AreEqual(Data.Minute, 7);

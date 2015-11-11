@@ -47,7 +47,7 @@ type
     method description: NSString; override;
     {$ENDIF}    
     
-    property Hour: Integer read {$IF COOPER}mapped.get(Calendar.HOUR){$ELSEIF ECHOES}mapped.Hour{$ELSEIF NOUGAT}GetComponent(NSCalendarUnit.NSHourCalendarUnit){$ENDIF};
+    property Hour: Integer read {$IF COOPER}mapped.get(Calendar.HOUR_OF_DAY){$ELSEIF ECHOES}mapped.Hour{$ELSEIF NOUGAT}GetComponent(NSCalendarUnit.NSHourCalendarUnit){$ENDIF};
     property Minute: Integer read {$IF COOPER}mapped.get(Calendar.MINUTE){$ELSEIF ECHOES}mapped.Minute{$ELSEIF NOUGAT}GetComponent(NSCalendarUnit.NSMinuteCalendarUnit){$ENDIF};
     property Second: Integer read {$IF COOPER}mapped.get(Calendar.SECOND){$ELSEIF ECHOES}mapped.Second{$ELSEIF NOUGAT}GetComponent(NSCalendarUnit.NSSecondCalendarUnit){$ENDIF};
     property Year: Integer read {$IF COOPER}mapped.get(Calendar.YEAR){$ELSEIF ECHOES}mapped.Year{$ELSEIF NOUGAT}GetComponent(NSCalendarUnit.NSYearCalendarUnit){$ENDIF};
@@ -133,8 +133,9 @@ end;
 method DateTime.AddDays(Value: Integer): DateTime;
 begin
   {$IF COOPER}
-  mapped.add(Calendar.DATE, Value);
-  exit mapped;
+  result := DateTime(mapped.clone);
+  Calendar(result).add(Calendar.DATE, Value);
+  exit;
   {$ELSEIF ECHOES}
   exit mapped.AddDays(Value);
   {$ELSEIF NOUGAT}
@@ -145,8 +146,9 @@ end;
 method DateTime.AddHours(Value: Integer): DateTime;
 begin
   {$IF COOPER}
-  mapped.add(Calendar.HOUR, Value);
-  exit mapped;
+  result := DateTime(mapped.clone);
+  Calendar(result).add(Calendar.HOUR_OF_DAY, Value);
+  exit;
   {$ELSEIF ECHOES}
   exit mapped.AddHours(Value);
   {$ELSEIF NOUGAT}
@@ -157,8 +159,9 @@ end;
 method DateTime.AddMinutes(Value: Integer): DateTime;
 begin
   {$IF COOPER}
-  mapped.add(Calendar.MINUTE, Value);
-  exit mapped;
+  result := DateTime(mapped.clone);
+  Calendar(result).add(Calendar.MINUTE, Value);
+  exit;
   {$ELSEIF ECHOES}
   exit mapped.AddMinutes(Value);
   {$ELSEIF NOUGAT}
@@ -169,8 +172,9 @@ end;
 method DateTime.AddMonths(Value: Integer): DateTime;
 begin
   {$IF COOPER}
-  mapped.add(Calendar.MONTH, Value);
-  exit mapped;
+  result := DateTime(mapped.clone);
+  Calendar(result).add(Calendar.MONTH, Value);
+  exit;
   {$ELSEIF ECHOES}
   exit mapped.AddMonths(Value);
   {$ELSEIF NOUGAT}
@@ -181,8 +185,9 @@ end;
 method DateTime.AddSeconds(Value: Integer): DateTime;
 begin
   {$IF COOPER}
-  mapped.add(Calendar.SECOND, Value);
-  exit mapped;
+  result := DateTime(mapped.clone);
+  Calendar(result).add(Calendar.SECOND, Value);
+  exit;
   {$ELSEIF ECHOES}
   exit mapped.AddSeconds(Value);
   {$ELSEIF NOUGAT}
@@ -193,8 +198,9 @@ end;
 method DateTime.AddYears(Value: Integer): DateTime;
 begin
   {$IF COOPER}
-  mapped.add(Calendar.YEAR, Value);
-  exit mapped;
+  result := DateTime(mapped.clone);
+  Calendar(result).add(Calendar.YEAR, Value);
+  exit;
   {$ELSEIF ECHOES}
   exit mapped.AddYears(Value);
   {$ELSEIF NOUGAT}

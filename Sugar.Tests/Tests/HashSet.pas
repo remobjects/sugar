@@ -223,8 +223,6 @@ begin
   Value.Clear;
   Data.Clear;
   Assert.IsTrue(Data.SetEquals(Value));
-  
-  Assert.Throws(->Data.SetEquals(nil));
 end;
 
 end.

@@ -44,10 +44,14 @@ end;
 method Queue<T>.Dequeue: T;
 begin
   {$IF COOPER}
+  if self.Count = 0 then
+    raise new SugarInvalidOperationException(ErrorMessage.COLLECTION_EMPTY);
   exit mapped.poll;
   {$ELSEIF ECHOES}
   exit mapped.Dequeue;
   {$ELSEIF NOUGAT}
+  if self.Count = 0 then
+    raise new SugarInvalidOperationException(ErrorMessage.COLLECTION_EMPTY);
   result := NullHelper.ValueOf(mapped.objectAtIndex(0));
   mapped.removeObjectAtIndex(0);
   {$ENDIF}
@@ -67,8 +71,14 @@ end;
 method Queue<T>.Peek: T;
 begin
   {$IF COOPER OR ECHOES}
+  {$IFDEF COOPER}
+  if self.Count = 0 then
+    raise new SugarInvalidOperationException(ErrorMessage.COLLECTION_EMPTY);
+    {$ENDIF}
   exit mapped.Peek;
   {$ELSEIF NOUGAT}
+  if self.Count = 0 then
+    raise new SugarInvalidOperationException(ErrorMessage.COLLECTION_EMPTY);
   exit NullHelper.ValueOf(mapped.objectAtIndex(0));
   {$ENDIF}
 end;

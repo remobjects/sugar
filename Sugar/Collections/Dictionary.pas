@@ -43,6 +43,8 @@ type
     {$ENDIF}
     {$IFDEF COOPER}
     method GetSequence<T, U>(aSelf: java.util.HashMap<T,U>) : sequence of KeyValuePair<T,U>; iterator;
+    method GetItem<T, U>(aSelf: java.util.HashMap<T,U>; aKey: T): U;
+    method Add<T, U>(aSelf: java.util.HashMap<T,U>; aKey: T; aVal: U);
     {$ELSEIF NOUGAT}
     method GetSequence<T, U>(aSelf: NSDictionary) : sequence of KeyValuePair<T,U>; iterator;
     {$ENDIF}
@@ -56,7 +58,7 @@ implementation
 method Dictionary<T, U>.Add(Key: T; Value: U);
 begin
   {$IF COOPER}
-  mapped.put(Key, Value);
+  DictionaryHelpers.Add(mapped, Key, Value);
   {$ELSEIF ECHOES}
   mapped.Add(Key, Value);
   {$ELSEIF NOUGAT}
@@ -99,7 +101,7 @@ end;
 method Dictionary<T, U>.GetItem(Key: T): U;
 begin
   {$IF COOPER}
-  result := mapped[Key];
+  result := DictionaryHelpers.GetItem(mapped, Key);
   {$ELSEIF ECHOES}
   result := mapped[Key];
   {$ELSEIF NOUGAT}
@@ -180,6 +182,18 @@ begin
     yield new KeyValue<T,U>(el.Key, el.Value);
   end;
 end;
+
+method DictionaryHelpers.GetItem<T, U>(aSelf: java.util.HashMap<T,U>; aKey: T): U;
+begin 
+  if not aSelf.containsKey(aKey) then raise new SugarKeyNotFoundException();
+  exit aSelf[aKey];
+end;
+method DictionaryHelpers.Add<T, U>(aSelf: java.util.HashMap<T,U>; aKey: T; aVal: U);
+begin
+  if aSelf.containsKey(aKey) then raise new SugarArgumentException(ErrorMessage.KEY_EXISTS);
+  aSelf.put(aKey, aVal)
+end;
+
 {$ENDIF}
 
 method DictionaryHelpers.Foreach<T, U>(aSelf: Dictionary<T, U>; aAction: Action<KeyValuePair<T, U>>);

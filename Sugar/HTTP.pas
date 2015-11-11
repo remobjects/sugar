@@ -90,7 +90,7 @@ type
     property Success: Boolean read self.Exception = nil;
     property Exception: Exception public read unit write;
   end;
-  
+ 
   HttpResponseBlock = public block (Response: HttpResponse);
   HttpContentResponseBlock<T> = public block (ResponseContent: HttpResponseContent<T>);
 
@@ -435,7 +435,8 @@ begin
       lConnection.getOutputStream().flush();
     end;
 
-    var lResponse := new HttpResponse(lConnection);
+    var lResponse := if lConnection.ResponseCode >= 300 then new HttpResponse  withException(new SugarIOException("Unable to complete request. Error code: {0}", lConnection.responseCode)) else new HttpResponse(lConnection);
+
     responseCallback(lResponse);
   end;
   {$ELSEIF ECHOES}
