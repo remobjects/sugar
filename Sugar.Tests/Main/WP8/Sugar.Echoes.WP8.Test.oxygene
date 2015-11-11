@@ -113,41 +113,6 @@
     <Compile Include="Resources\AppResources.Designer.pas">
       <DependentUpon>Resources\AppResources.resx</DependentUpon>
     </Compile>
-    <Compile Include="..\..\Tests\AutoreleasePool.pas" />
-    <Compile Include="..\..\Tests\Binary.pas" />
-    <Compile Include="..\..\Tests\Convert.pas" />
-    <Compile Include="..\..\Tests\Cryptography\Utils.pas" />
-    <Compile Include="..\..\Tests\DateTime.pas" />
-    <Compile Include="..\..\Tests\Dictionary.pas" />
-    <Compile Include="..\..\Tests\Encoding.pas" />
-    <Compile Include="..\..\Tests\Extensions.pas" />
-    <Compile Include="..\..\Tests\Guid.pas" />
-    <Compile Include="..\..\Tests\HashSet.pas" />
-    <Compile Include="..\..\Tests\HTTP.pas" />
-    <Compile Include="..\..\Tests\IO\File.pas" />
-    <Compile Include="..\..\Tests\IO\FileHandle.pas" />
-    <Compile Include="..\..\Tests\IO\FileUtils.pas" />
-    <Compile Include="..\..\Tests\IO\Folder.pas" />
-    <Compile Include="..\..\Tests\IO\FolderUtils.pas" />
-    <Compile Include="..\..\Tests\IO\Path.pas" />
-    <Compile Include="..\..\Tests\List.pas" />
-    <Compile Include="..\..\Tests\Queue.pas" />
-    <Compile Include="..\..\Tests\Random.pas" />
-    <Compile Include="..\..\Tests\RegularExpressions.pas" />
-    <Compile Include="..\..\Tests\Stack.pas" />
-    <Compile Include="..\..\Tests\String.pas" />
-    <Compile Include="..\..\Tests\StringBuilder.pas" />
-    <Compile Include="..\..\Tests\Url.pas" />
-    <Compile Include="..\..\Tests\UserSettings.pas" />
-    <Compile Include="..\..\Tests\Math.pas" />
-    <Compile Include="..\..\Tests\MessageDigest.pas" />
-    <Compile Include="..\..\Tests\Xml\CharacterData.pas" />
-    <Compile Include="..\..\Tests\Xml\Document.pas" />
-    <Compile Include="..\..\Tests\Xml\DocumentType.pas" />
-    <Compile Include="..\..\Tests\Xml\Element.pas" />
-    <Compile Include="..\..\Tests\Xml\Node.pas" />
-    <Compile Include="..\..\Tests\Xml\ProcessingInstruction.pas" />
-    <Compile Include="..\..\Tests\Xml\TestData.pas" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -196,11 +161,6 @@
     <Folder Include="Assets\Tiles\" />
     <Folder Include="Properties\" />
     <Folder Include="Resources\" />
-    <Folder Include="..\..\Printer\" />
-    <Folder Include="..\..\Tests\" />
-    <Folder Include="..\..\Tests\Xml\" />
-    <Folder Include="..\..\Tests\IO" />
-    <Folder Include="..\..\Tests\Cryptography" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Sugar\Sugar.Echoes.WP8.oxygene">
@@ -234,4 +194,5 @@
   <PropertyGroup>
     <PreBuildEvent />
   </PropertyGroup>
+  <Import Project="..\..\Sugar.Shared.Test.projitems" Label="Shared" />
 </Project>

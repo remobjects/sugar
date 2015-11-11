@@ -20,7 +20,7 @@ type
     method NewGuid;
     method Parse;
     method ParseExceptions;
-    method EmptyGuid;
+    method Empty;
     method ToByteArray;
     method TestToString;
     method ToStringFormat;
@@ -49,10 +49,10 @@ begin
   Assert.AreEqual(Data.CompareTo(Data), 0);
   var Value := Guid.Parse(GuidString);
   Assert.AreEqual(Data.CompareTo(Value), 0);
-  Assert.IsTrue(Data.CompareTo(Guid.EmptyGuid) <> 0);
+  Assert.IsTrue(Data.CompareTo(Guid.Empty) <> 0);
   Value := Guid.Parse("{5EB4BEC4-5509-4434-9D44-2A9C74CC54EE}");
   Assert.IsTrue(Data.CompareTo(Value) <> 0);
-  Assert.AreEqual(Guid.EmptyGuid.CompareTo(Guid.EmptyGuid), 0);
+  Assert.AreEqual(Guid.Empty.CompareTo(Guid.Empty), 0);
 end;
 
 method GuidTest.TestEquals;
@@ -60,26 +60,26 @@ begin
   Assert.IsTrue(Data.Equals(Data));
   var Value := Guid.Parse(GuidString);
   Assert.IsTrue(Data.Equals(Value));
-  Assert.IsFalse(Data.Equals(Guid.EmptyGuid));
+  Assert.IsFalse(Data.Equals(Guid.Empty));
   Value := Guid.Parse("{5EB4BEC4-5509-4434-9D44-2A9C74CC54EE}");
   Assert.IsFalse(Data.Equals(Value));
-  Assert.IsTrue(Guid.EmptyGuid.Equals(Guid.EmptyGuid));
+  Assert.IsTrue(Guid.Empty.Equals(Guid.Empty));
 end;
 
 method GuidTest.NewGuid;
 begin
   var Value := Guid.NewGuid;
-  Assert.IsFalse(Value.Equals(Guid.EmptyGuid));
+  Assert.IsFalse(Value.Equals(Guid.Empty));
 end;
 
 method GuidTest.Parse;
 begin
-  AreEqual(Guid.EmptyGuid, Guid.Parse("00000000-0000-0000-0000-000000000000"));
-  AreEqual(Guid.EmptyGuid, Guid.Parse("{00000000-0000-0000-0000-000000000000}"));
-  AreEqual(Guid.EmptyGuid, Guid.Parse("(00000000-0000-0000-0000-000000000000)"));  
+  AreEqual(Guid.Empty, Guid.Parse("00000000-0000-0000-0000-000000000000"));
+  AreEqual(Guid.Empty, Guid.Parse("{00000000-0000-0000-0000-000000000000}"));
+  AreEqual(Guid.Empty, Guid.Parse("(00000000-0000-0000-0000-000000000000)"));  
 
   AreEqual(Data, Guid.Parse(GuidString));
-  AreNotEqual(Guid.EmptyGuid, Guid.Parse(GuidString));
+  AreNotEqual(Guid.Empty, Guid.Parse(GuidString));
   AreEqual(Data, Guid.Parse("5EB4BEC4-5509-4434-9D33-2A9C74CC54EE"));
   AreEqual(Data, Guid.Parse("(5EB4BEC4-5509-4434-9D33-2A9C74CC54EE)"));
 end;
@@ -105,10 +105,10 @@ begin
   Assert.Throws(->Guid.Parse("0"));
 end;
 
-method GuidTest.EmptyGuid;
+method GuidTest.Empty;
 begin
-  AreEqual(Guid.Parse("{00000000-0000-0000-0000-000000000000}"), Guid.EmptyGuid);
-  var Value := Guid.EmptyGuid.ToByteArray;
+  AreEqual(Guid.Parse("{00000000-0000-0000-0000-000000000000}"), Guid.Empty);
+  var Value := Guid.Empty.ToByteArray;
   for i: Int32 := 0 to length(Value)-1 do 
     Assert.AreEqual(Value[i], 0);
 end;
@@ -121,7 +121,7 @@ begin
   for i: Int32 := 0 to length(Expected)-1 do 
     Assert.AreEqual(Actual[i], Expected[i]);
 
-  Actual := Guid.EmptyGuid.ToByteArray;
+  Actual := Guid.Empty.ToByteArray;
   Assert.AreEqual(length(Actual), 16);
   for i: Int32 := 0 to length(Expected)-1 do 
     Assert.AreEqual(Actual[i], 0);

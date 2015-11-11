@@ -20,7 +20,6 @@ type
     method Pop;
     method Push;
     method ToArray;
-    method ForEach;
   end;
 
 implementation
@@ -100,19 +99,6 @@ begin
   var Expected: array of String := ["Three", "Two", "One"];
   var Values: array of String := Data.ToArray;
   Assert.AreEqual(Values, Expected);
-end;
-
-method StackTest.ForEach;
-begin
-  var Expected: array of String := ["Three", "Two", "One"];
-  var &Index: Integer := 0;
-
-  Data.ForEach(x -> begin
-    Assert.AreEqual(x, Expected[&Index]);
-    &Index := &Index + 1;
-  end);
-
-  Assert.AreEqual(&Index, 3);
 end;
 
 end.

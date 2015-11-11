@@ -1,39 +1,29 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Package xmlns="http://schemas.microsoft.com/appx/2010/manifest">
-
-  <Identity Name="8652ee85-2573-44aa-867b-91b9dee8ce33"
-            Publisher="CN=Test"
-            Version="1.0.0.0" />
-
+<Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest">
+  <Identity Name="8652ee85-2573-44aa-867b-91b9dee8ce33" Publisher="CN=Test" Version="1.1.0.0" />
   <Properties>
     <DisplayName>Sugar.Echoes.WinRT.Test</DisplayName>
     <PublisherDisplayName>Test</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
-
   <Prerequisites>
-    <OSMinVersion>6.2.0</OSMinVersion>
-    <OSMaxVersionTested>6.2.0</OSMaxVersionTested>
+    <OSMinVersion>6.3.0</OSMinVersion>
+    <OSMaxVersionTested>6.3.0</OSMaxVersionTested>
   </Prerequisites>
-
   <Resources>
-    <Resource Language="x-generate"/>
+    <Resource Language="x-generate" />
   </Resources>
-
   <Applications>
-    <Application Id="App"
-        Executable="$targetnametoken$.exe"
-        EntryPoint="Sugar.Echoes.WinRT.Test.App">
-        <VisualElements
-            DisplayName="Sugar.Echoes.WinRT.Test"
-            Logo="Main\WinRT\Assets\Logo.png"
-            SmallLogo="Main\WinRT\Assets\SmallLogo.png"
-            Description="Sugar.Echoes.WinRT.Test"
-            ForegroundText="light"
-            BackgroundColor="#4b5195">
-            <DefaultTile ShowName="allLogos" WideLogo="Main\WinRT\Assets\WideLogo.png" />
-            <SplashScreen Image="Main\WinRT\Assets\SplashScreen.png" />
-        </VisualElements>
+    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="Sugar.Echoes.WinRT.Test.App">
+      <m2:VisualElements DisplayName="Sugar.Echoes.WinRT.Test" Description="Sugar.Echoes.WinRT.Test" BackgroundColor="#4b5195" ForegroundText="light" Square150x150Logo="Main\WinRT\Assets\Logo.png" Square30x30Logo="Main\WinRT\Assets\SmallLogo.png">
+        <m2:DefaultTile Wide310x150Logo="Main\WinRT\Assets\WideLogo.png">
+          <m2:ShowNameOnTiles>
+            <m2:ShowOn Tile="square150x150Logo" />
+            <m2:ShowOn Tile="wide310x150Logo" />
+          </m2:ShowNameOnTiles>
+        </m2:DefaultTile>
+        <m2:SplashScreen Image="Main\WinRT\Assets\SplashScreen.png" />
+      </m2:VisualElements>
     </Application>
   </Applications>
   <Capabilities>

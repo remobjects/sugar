@@ -20,8 +20,6 @@ implementation
 
 method EncodingTest.GetBytes;
 begin
-  {$WARNING Disabled #69184}
-  {
   Assert.AreEqual(Encoding.UTF8.GetBytes("Hello©"), [72, 101, 108, 108, 111, 194, 169]);
   Assert.AreEqual(Encoding.UTF16LE.GetBytes("Hello"), [72, 0, 101, 0, 108, 0, 108, 0, 111, 0]);
   Assert.AreEqual(Encoding.UTF16BE.GetBytes("Hello"), [0, 72, 0, 101, 0, 108, 0, 108, 0, 111]);
@@ -29,13 +27,11 @@ begin
   Assert.AreEqual(Encoding.GetEncoding("Windows-1251").GetBytes("æж"), [63, 230]);
 
   var Value: String := nil;
-  Assert.Throws(->Encoding.UTF8.GetBytes(Value));}
+  Assert.Throws(->Encoding.UTF8.GetBytes(Value));
 end;
 
 method EncodingTest.GetBytes2;
 begin
-  {$WARNING Disabled #69184}
-  {
   Assert.AreEqual(Encoding.UTF8.GetBytes(['H', 'e', 'l', 'l', 'o', '©']), [72, 101, 108, 108, 111, 194, 169]);
   Assert.AreEqual(Encoding.UTF16LE.GetBytes(['H', 'e', 'l', 'l', 'o']), [72, 0, 101, 0, 108, 0, 108, 0, 111, 0]);
   Assert.AreEqual(Encoding.UTF16BE.GetBytes(['H', 'e', 'l', 'l', 'o']), [0, 72, 0, 101, 0, 108, 0, 108, 0, 111]);
@@ -49,7 +45,7 @@ begin
   Assert.Throws(->Encoding.UTF8.GetBytes(['a', 'b'], 1, -1));
   var Value: array of Char := nil;
   Assert.Throws(->Encoding.UTF8.GetBytes(Value, 1, 1));
-  Assert.Throws(->Encoding.UTF8.GetBytes(Value));}
+  Assert.Throws(->Encoding.UTF8.GetBytes(Value));
 end;
 
 method EncodingTest.GetChars;

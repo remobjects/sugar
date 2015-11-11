@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>6636F222-6B54-43EF-B3AE-FE4E319449CB</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Sugar.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Tests\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Tests\Cryptography\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Tests\Data\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Tests\Data\Json\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Tests\IO\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Tests\Xml\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Tests\AutoreleasePool.pas" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tests\Binary.pas" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tests\Convert.pas" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tests\Cryptography\Utils.pas" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tests\Data\Json\JsonArray.pas">
+      <Conditional>DISABLED</Conditional>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Tests\Data\Json\JsonObject.pas">
+      <Conditional>DISABLED</Conditional>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Tests\Data\Json\JsonObjectParser.pas">
+      <Conditional>DISABLED</Conditional>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Tests\Data\Json\JsonTokenizer.pas">
+      <Conditional>DISABLED</Conditional>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Tests\Data\Json\JsonValueTest.pas">
+      <Conditional>DISABLED</Conditional>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Tests\DateTime.pas" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tests\Dictionary.pas" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tests\Encoding.pas" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tests\Extensions.pas" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tests\Guid.pas" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tests\HashSet.pas" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tests\HTTP.pas" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tests\IO\File.pas" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tests\IO\FileHandle.pas" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tests\IO\FileUtils.pas" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tests\IO\Folder.pas" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tests\IO\FolderUtils.pas" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tests\IO\Path.pas" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tests\List.pas" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tests\Math.pas" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tests\MessageDigest.pas" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tests\Queue.pas" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tests\Random.pas" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tests\RegularExpressions.pas" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tests\Stack.pas" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tests\String.pas" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tests\StringBuilder.pas" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tests\Url.pas" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tests\UserSettings.pas" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tests\Xml\CharacterData.pas" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tests\Xml\Document.pas" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tests\Xml\DocumentType.pas" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tests\Xml\Element.pas" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tests\Xml\Node.pas" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tests\Xml\ProcessingInstruction.pas" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tests\Xml\TestData.pas" />
+  </ItemGroup>
+</Project>
