@@ -13,7 +13,7 @@
     <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
     <SDK>OS X</SDK>
     <EntitlementsFile>Entitlements.entitlements</EntitlementsFile>
-    <DeploymentTargetVersion>10.7</DeploymentTargetVersion>
+    <DeploymentTargetVersion>10.11</DeploymentTargetVersion>
     <Name>Sugar.Nougat.OSX.Test</Name>
     <DefaultUses>Foundation</DefaultUses>
     <StartupClass />
