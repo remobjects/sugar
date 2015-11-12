@@ -91,9 +91,6 @@ begin
 
   Data.AddRange(new Sugar.Collections.List<String>);
   Assert.AreEqual(Data.Count, 5);
-
-  Value := nil;
-  Assert.Throws(->Data.AddRange(Value));
 end;
 
 method ListTest.Clear;

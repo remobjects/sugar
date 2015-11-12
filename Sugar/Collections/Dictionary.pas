@@ -46,6 +46,8 @@ type
     method GetItem<T, U>(aSelf: java.util.HashMap<T,U>; aKey: T): U;
     method Add<T, U>(aSelf: java.util.HashMap<T,U>; aKey: T; aVal: U);
     {$ELSEIF NOUGAT}
+    method Add<T, U>(aSelf: NSMutableDictionary; aKey: T; aVal: U);
+    method GetItem<T, U>(aSelf: NSDictionary; aKey: T): U;
     method GetSequence<T, U>(aSelf: NSDictionary) : sequence of KeyValuePair<T,U>; iterator;
     {$ENDIF}
     method Foreach<T, U>(aSelf: Dictionary<T, U>; aAction: Action<KeyValuePair<T, U>>);
@@ -62,7 +64,7 @@ begin
   {$ELSEIF ECHOES}
   mapped.Add(Key, Value);
   {$ELSEIF NOUGAT}
-  mapped.setObject(NullHelper.ValueOf(Value)) forKey(Key);
+  DictionaryHelpers.Add(mapped, Key, VAlue);
   {$ENDIF}
 end;
 
@@ -105,7 +107,7 @@ begin
   {$ELSEIF ECHOES}
   result := mapped[Key];
   {$ELSEIF NOUGAT}
-  exit NullHelper.ValueOf(mapped.objectForKey(Key));
+  result := DictionaryHelpers.GetItem<T, U>(mapped, Key);
   {$ENDIF}
 end;
 
@@ -169,6 +171,19 @@ begin
   end;
 end;
 
+method DictionaryHelpers.Add<T, U>(aSelf: NSMutableDictionary; aKey: T; aVal: U);
+begin
+  if aSelf.objectForKey(aKey) <> nil then raise new SugarArgumentException(ErrorMessage.KEY_EXISTS);
+  aSelf.setObject(NullHelper.ValueOf(aVal)) forKey(aKey);
+end;
+
+method DictionaryHelpers.GetItem<T, U>(aSelf: NSDictionary; aKey: T): U;
+begin
+  var o := aSelf.objectForKey(aKey);
+  if o = nil then raise new SugarKeyNotFoundException();
+  exit NullHelper.ValueOf(o);
+end;
+
 method DictionaryHelpers.GetSequence<T, U>(aSelf: NSDictionary) : sequence of KeyValuePair<T,U>;
 begin
    for each el in aSelf.allKeys do
@@ -212,7 +227,8 @@ begin
   exit aValue <> nil;
   {$ELSEIF NOUGAT}
   aValue := mapped.objectForKey(aKey);
-  exit aValue <> nil;
+  result := aValue <> nil;
+  aValue := NullHelper.ValueOf(aValue);
   {$ENDIF}
 end;
 
