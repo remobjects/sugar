@@ -507,7 +507,7 @@ begin
     nsUrlRequest.HTTPBody := (aRequest.Content as IHttpRequestContent).GetContentAsBinary();
   end;
 
-  NSURLConnection.sendAsynchronousRequest(nsUrlRequest) queue(NSOperationQueue.mainQueue) completionHandler( (nsUrlResponse, data, error) -> begin
+  var lRequest := NSURLSession.sharedSession.dataTaskWithRequest(nsUrlRequest) completionHandler((data, nsUrlResponse, error) -> begin
 
     var nsHttpUrlResponse := NSHTTPURLResponse(nsUrlResponse);
     if assigned(data) and assigned(nsHttpUrlResponse) and not assigned(error) then begin
@@ -522,6 +522,7 @@ begin
     end;
     
   end);
+  lRequest.resume();
   {$ENDIF}
 end;
 
