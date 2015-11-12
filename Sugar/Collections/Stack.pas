@@ -19,6 +19,14 @@ type
 
     property Count: Integer read {$IF COOPER}mapped.size{$ELSEIF ECHOES OR NOUGAT}mapped.Count{$ENDIF};
   end;
+  {$IFDEF NOUGAT}
+  StackHelpers = public static class
+  private
+  public
+    method Peek<T>(aStack: Foundation.NSMutableArray): T;
+    method Pop<T>(aStack: Foundation.NSMutableArray): T;
+  end;
+  {$ENDIF}
 
 implementation
 
@@ -46,7 +54,7 @@ begin
   {$IF COOPER OR ECHOES}
   exit mapped.Peek;
   {$ELSE}
-  exit NullHelper.ValueOf(mapped.lastObject);
+  exit StackHelpers.Peek<T>(mapped);
   {$ENDIF}
 end;
 
@@ -55,8 +63,7 @@ begin
   {$IF COOPER OR ECHOES}
   exit mapped.Pop;
   {$ELSE}
-  result := NullHelper.ValueOf(mapped.lastObject);
-  mapped.removeLastObject;
+  exit StackHelpers.Pop<T>(mapped);
   {$ENDIF}
 end;
 
@@ -79,5 +86,23 @@ begin
   exit ListHelpers.ToArrayReverse<T>(self);
   {$ENDIF}
 end;
+
+{$IFDEF NOUGAT}
+method StackHelpers.Peek<T>(aStack: Foundation.NSMutableArray): T;
+begin
+  var n := aStack.lastObject;
+  if n = nil then raise new SugarInvalidOperationException(ErrorMessage.COLLECTION_EMPTY);
+  exit NullHelper.ValueOf(n);
+end;
+
+method StackHelpers.Pop<T>(aStack: Foundation.NSMutableArray): T;
+begin
+  var n := aStack.lastObject;
+  if n = nil then raise new SugarInvalidOperationException(ErrorMessage.COLLECTION_EMPTY);
+  n := NullHelper.ValueOf(n);
+  aStack.removeLastObject;
+  exit n;
+end;
+{$ENDIF}
 
 end.
