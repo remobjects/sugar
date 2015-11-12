@@ -367,13 +367,6 @@ begin
   Assert.IsFalse(Data = NativeString);
   Assert.IsFalse(SugarString = Data);
   Assert.IsFalse(NativeString = Data);
-
-  SugarString := nil;
-  Assert.AreEqual(SugarString + SugarString, "");
-  Assert.AreEqual(SugarString + nil, "");
-  Assert.AreEqual(SugarString + "", "");
-  Assert.AreEqual(SugarString + "a", "a");
-  Assert.AreEqual(Data + SugarString, "A");
 end;
 
 method StringTest.FromCharArray;
