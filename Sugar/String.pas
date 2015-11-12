@@ -114,7 +114,7 @@ begin
   {$ELSEIF ECHOES}
   result := (System.String(Value1)+System.String(Value2)) as not nullable;
   {$ELSEIF NOUGAT}
-  result := Foundation.NSString(Value1).stringByAppendingString(Value2);
+  result := (NSString(Value1) + NSString(Value2)) as not nullable;
   {$ENDIF}
 end;
 

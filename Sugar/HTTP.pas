@@ -511,7 +511,7 @@ begin
 
     var nsHttpUrlResponse := NSHTTPURLResponse(nsUrlResponse);
     if assigned(data) and assigned(nsHttpUrlResponse) and not assigned(error) then begin
-      var response := new HttpResponse(data, nsHttpUrlResponse);
+      var response := if nsHttpUrlResponse.statusCode >= 300 then new HttpResponse  withException(new SugarIOException("Unable to complete request. Error code: {0}", nsHttpUrlResponse.statusCode)) else new HttpResponse(data, nsHttpUrlResponse);
       responseCallback(response);
     end else if assigned(error) then begin
       var response := new HttpResponse(new SugarException withError(error));
