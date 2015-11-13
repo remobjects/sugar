@@ -26,6 +26,7 @@
     <DefineConstants>DEBUG;TRACE;</DefineConstants>
     <CaptureConsoleOutput>False</CaptureConsoleOutput>
     <XmlDocWarningLevel>WarningOnPublicMembers</XmlDocWarningLevel>
+    <GenerateDebugInfo>True</GenerateDebugInfo>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <Optimize>true</Optimize>
