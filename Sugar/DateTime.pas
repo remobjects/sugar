@@ -358,13 +358,16 @@ constructor DateTime(aTicks: Int64);
 begin
   {$IFDEF COOPER}
   var lCalendar := Calendar.Instance;
-  lCalendar.Time := new Date((aTicks - TicksSince1970) / TimeSpan.TicksPerMillisecond);
+  var dt := (aTicks - TicksSince1970) / TimeSpan.TicksPerMillisecond;
+  lCalendar.Time := new Date(dt - lCalendar.TimeZone.getOffset(dt));
    
   exit lCalendar;
   {$ELSEIF ECHOES}
   exit new System.DateTime(aTicks);
   {$ELSEIF NOUGAT}
-  exit new NSDate(Double(aTicks - TicksSince1970) / TimeSpan.TicksPerSecond);
+  var dt := NSDate.dateWithTimeIntervalSince1970(Double(aTicks - TicksSince1970) / TimeSpan.TicksPerSecond);
+  
+  exit NSDate.dateWithTimeInterval(-DateTimeHelpers.LocalTimezone.secondsFromGMTForDate(dt)) sinceDate(dt);
   {$ENDIF}
 end;
 

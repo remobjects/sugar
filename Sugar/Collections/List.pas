@@ -450,8 +450,8 @@ end;
 method ListHelpers.ToArrayReverse<T>(aSelf: java.util.Vector<T>; aDest: array of T): array of T;
 begin
   result := aDest;
-  for i: Integer := aSelf.count - 1 downto 0 do
-    result[aSelf.count - i - 1] := aSelf[i];
+  for i: Integer := aSelf.size - 1 downto 0 do
+    result[aSelf.size - i - 1] := aSelf[i];
 
 end;
 {$ENDIF}

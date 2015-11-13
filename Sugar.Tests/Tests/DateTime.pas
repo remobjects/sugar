@@ -369,6 +369,7 @@ method DateTimeTest.Ticks;
 begin
   assert.AreEqual(new DateTime(1970, 1, 2, 1, 2, 3).Ticks, 621356869230000000);
   assert.AreEqual(new DateTime(1820, 1, 2, 1, 2, 3).Ticks, 574020901230000000);
+  assert.AreEqual(new DateTime(621356869230000000).Ticks, 621356869230000000);
 end;
 
 end.
