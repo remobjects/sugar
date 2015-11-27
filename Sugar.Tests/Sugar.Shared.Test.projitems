@@ -58,6 +58,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Tests\Stack.pas" />
     <Compile Include="$(MSBuildThisFileDirectory)Tests\String.pas" />
     <Compile Include="$(MSBuildThisFileDirectory)Tests\StringBuilder.pas" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tests\TimeSpan.pas" />
     <Compile Include="$(MSBuildThisFileDirectory)Tests\Url.pas" />
     <Compile Include="$(MSBuildThisFileDirectory)Tests\UserSettings.pas" />
     <Compile Include="$(MSBuildThisFileDirectory)Tests\Xml\CharacterData.pas" />
