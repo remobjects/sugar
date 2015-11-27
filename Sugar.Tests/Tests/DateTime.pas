@@ -25,6 +25,8 @@ type
     method AddYears;
     method CompareTo;
 
+    method Ticks;
+
     //Formats
     method FormatYears;
     method FormatMonths;
@@ -131,7 +133,7 @@ begin
 
   Value := Data.AddSeconds(60); //next year
   Assert.AreEqual(Value.Second, 0);
-  Assert.AreEqual(Value.Minute, 8);
+  Assert.AreEqual(Value.Minute, 8); 
 end;
 
 method DateTimeTest.AddYears;
@@ -344,9 +346,9 @@ end;
 method DateTimeTest.Fields;
 begin
   Assert.AreEqual(Data.Year, 1961);
-  Assert.AreEqual(Data.Month, 4);
+  Assert.AreEqual(Data.Month, 4); 
   Assert.AreEqual(Data.Day, 12);
-  Assert.AreEqual(Data.Hour, 6);
+  Assert.AreEqual(Data.Hour, 6); 
   Assert.AreEqual(Data.Minute, 7);
   Assert.AreEqual(Data.Second, 0);
 
@@ -361,6 +363,13 @@ begin
 
   AreEqual(new DateTime(1961, 4, 12), Data.Date);
   Assert.AreEqual(Data.Date.Hour, 0);
+end;
+
+method DateTimeTest.Ticks;
+begin
+  assert.AreEqual(new DateTime(1970, 1, 2, 1, 2, 3).Ticks, 621356869230000000);
+  assert.AreEqual(new DateTime(1820, 1, 2, 1, 2, 3).Ticks, 574020901230000000);
+  assert.AreEqual(new DateTime(621356869230000000).Ticks, 621356869230000000);
 end;
 
 end.

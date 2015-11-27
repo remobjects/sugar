@@ -145,8 +145,6 @@ begin
 
   Data.Intersect(new HashSet<String>);
   Assert.AreEqual(Data.Count, 0);
-
-  Assert.Throws(->Data.Intersect(nil));
 end;
 
 method HashSetTest.&Union;
@@ -223,8 +221,6 @@ begin
   Value.Clear;
   Data.Clear;
   Assert.IsTrue(Data.SetEquals(Value));
-  
-  Assert.Throws(->Data.SetEquals(nil));
 end;
 
 end.

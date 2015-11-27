@@ -16,7 +16,7 @@ implementation
 
 class method ConsoleApp.Main(args: array of System.String);
 begin  
-  var Tested := Runner.Run(Discovery.FromAppDomain(AppDomain.CurrentDomain));
+  var Tested := Runner.RunTests(Discovery.FromAppDomain(AppDomain.CurrentDomain));
   var Writer := new StringWriter(Tested);
 
   Writer.WriteFull;

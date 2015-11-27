@@ -23,7 +23,7 @@ type
     operator Implicit(aUrl: not nullable Url): HttpRequest;
   end;
   
-  HttpRequestMode = public enum (Get, Post);
+  HttpRequestMode = public enum (Get, Post, Head, Put, Delete, Patch, Options, Trace);
   
   IHttpRequestContent = assembly interface
     method GetContentAsBinary(): Binary;
@@ -90,13 +90,12 @@ type
     property Success: Boolean read self.Exception = nil;
     property Exception: Exception public read unit write;
   end;
-  
+ 
   HttpResponseBlock = public block (Response: HttpResponse);
   HttpContentResponseBlock<T> = public block (ResponseContent: HttpResponseContent<T>);
 
   Http = public static class
   private
-    const SUGAR_USER_AGENT = "RemObjects Sugar/8.0 http://www.elementscompiler.com/elements/sugar";
   public
     //method ExecuteRequest(aUrl: not nullable Url; ResponseCallback: not nullable HttpResponseBlock);
     method ExecuteRequest(aRequest: not nullable HttpRequest; ResponseCallback: not nullable HttpResponseBlock);
@@ -269,7 +268,7 @@ begin
   {$IF COOPER}
   async begin
     var allData := new Binary;
-    var stream := Connection.InputStream;
+    var stream := if connection.getResponseCode > 400 then Connection.ErrorStream else Connection.InputStream;
     var data := new Byte[4096]; 
     var len := stream.read(data);
     while len > 0 do begin
@@ -430,25 +429,30 @@ begin
   {$IF COOPER}
   async begin
     var lConnection := java.net.URL(aRequest.URL).openConnection as java.net.HttpURLConnection;
-    lConnection.addRequestProperty("User-Agent", SUGAR_USER_AGENT);
-
+    
     if assigned(aRequest.Content) then begin
       lConnection.getOutputStream().write((aRequest.Content as IHttpRequestContent).GetContentAsArray());
       lConnection.getOutputStream().flush();
     end;
 
-    var lResponse := new HttpResponse(lConnection);
+    var lResponse := if lConnection.ResponseCode >= 300 then new HttpResponse  withException(new SugarIOException("Unable to complete request. Error code: {0}", lConnection.responseCode)) else new HttpResponse(lConnection);
+
     responseCallback(lResponse);
   end;
   {$ELSEIF ECHOES}
   using webRequest := System.Net.WebRequest.Create(aRequest.Url) as HttpWebRequest do begin
     {$IF NOT NETFX_CORE}
     webRequest.AllowAutoRedirect := aRequest.FollowRedirects;
-    webRequest.UserAgent := SUGAR_USER_AGENT;
     {$ENDIF}
     case aRequest.Mode of
       HttpRequestMode.Get: webRequest.Method := 'GET';
       HttpRequestMode.Post: webRequest.Method := 'POST';
+      HttpRequestMode.Head: webRequest.Method := 'HEAD';
+      HttpRequestMode.Put: webRequest.Method := 'PUT';
+      HttpRequestMode.Delete: webRequest.Method := 'DLETE';
+      HttpRequestMode.Patch: webRequest.Method := 'POTCH';
+      HttpRequestMode.Options: webRequest.Method := 'OPTIONS';
+      HttpRequestMode.Trace: webRequest.Method := 'TRACE';
     end;
 
     if assigned(aRequest.Content) then begin
@@ -486,23 +490,28 @@ begin
   var nsUrlRequest := new NSMutableURLRequest withURL(aRequest.Url) cachePolicy(0) timeoutInterval(30);
 
   //nsUrlRequest.AllowAutoRedirect := aRequest.FollowRedirects;
-  nsUrlRequest.setValue(SUGAR_USER_AGENT) forHTTPHeaderField("User-Agent");
   //nsUrlRequest.allowsCellularAccess =
   
   case aRequest.Mode of
     HttpRequestMode.Get: nsUrlRequest.HTTPMethod := 'GET';
     HttpRequestMode.Post: nsUrlRequest.HTTPMethod := 'POST';
+    HttpRequestMode.Head: nsUrlRequest.HTTPMethod := 'HEAD';
+    HttpRequestMode.Put: nsUrlRequest.HTTPMethod := 'PUT';
+    HttpRequestMode.Delete: nsUrlRequest.HTTPMethod := 'DLETE';
+    HttpRequestMode.Patch: nsUrlRequest.HTTPMethod := 'POTCH';
+    HttpRequestMode.Options: nsUrlRequest.HTTPMethod := 'OPTIONS';
+    HttpRequestMode.Trace: nsUrlRequest.HTTPMethod := 'TRACE';
   end;
 
   if assigned(aRequest.Content) then begin
     nsUrlRequest.HTTPBody := (aRequest.Content as IHttpRequestContent).GetContentAsBinary();
   end;
 
-  NSURLConnection.sendAsynchronousRequest(nsUrlRequest) queue(NSOperationQueue.mainQueue) completionHandler( (nsUrlResponse, data, error) -> begin
+  var lRequest := NSURLSession.sharedSession.dataTaskWithRequest(nsUrlRequest) completionHandler((data, nsUrlResponse, error) -> begin
 
     var nsHttpUrlResponse := NSHTTPURLResponse(nsUrlResponse);
     if assigned(data) and assigned(nsHttpUrlResponse) and not assigned(error) then begin
-      var response := new HttpResponse(data, nsHttpUrlResponse);
+      var response := if nsHttpUrlResponse.statusCode >= 300 then new HttpResponse  withException(new SugarIOException("Unable to complete request. Error code: {0}", nsHttpUrlResponse.statusCode)) else new HttpResponse(data, nsHttpUrlResponse);
       responseCallback(response);
     end else if assigned(error) then begin
       var response := new HttpResponse(new SugarException withError(error));
@@ -513,6 +522,7 @@ begin
     end;
     
   end);
+  lRequest.resume();
   {$ENDIF}
 end;
 
@@ -521,8 +531,7 @@ method Http.ExecuteRequestSynchronous(aRequest: not nullable HttpRequest): not n
 begin
   {$IF COOPER}
   var lConnection := java.net.URL(aRequest.URL).openConnection as java.net.HttpURLConnection;
-  lConnection.addRequestProperty("User-Agent", SUGAR_USER_AGENT);
-
+  
   if assigned(aRequest.Content) then begin
     lConnection.getOutputStream().write((aRequest.Content as IHttpRequestContent).GetContentAsArray());
     lConnection.getOutputStream().flush();
@@ -532,11 +541,16 @@ begin
   using webRequest := System.Net.WebRequest.Create(aRequest.Url) as HttpWebRequest do begin
     {$IF NOT NETFX_CORE}
     webRequest.AllowAutoRedirect := aRequest.FollowRedirects;
-    webRequest.UserAgent := SUGAR_USER_AGENT;
     {$ENDIF}
     case aRequest.Mode of
       HttpRequestMode.Get: webRequest.Method := 'GET';
       HttpRequestMode.Post: webRequest.Method := 'POST';
+      HttpRequestMode.Head: webRequest.Method := 'HEAD';
+      HttpRequestMode.Put: webRequest.Method := 'PUT';
+      HttpRequestMode.Delete: webRequest.Method := 'DLETE';
+      HttpRequestMode.Patch: webRequest.Method := 'POTCH';
+      HttpRequestMode.Options: webRequest.Method := 'OPTIONS';
+      HttpRequestMode.Trace: webRequest.Method := 'TRACE';
     end;
 
     if assigned(aRequest.Content) then begin
@@ -554,12 +568,17 @@ begin
   var nsUrlRequest := new NSMutableURLRequest withURL(aRequest.Url) cachePolicy(0) timeoutInterval(30);
 
   //nsUrlRequest.AllowAutoRedirect := aRequest.FollowRedirects;
-  nsUrlRequest.setValue(SUGAR_USER_AGENT) forHTTPHeaderField("User-Agent");
   //nsUrlRequest.allowsCellularAccess =
   
   case aRequest.Mode of
     HttpRequestMode.Get: nsUrlRequest.HTTPMethod := 'GET';
     HttpRequestMode.Post: nsUrlRequest.HTTPMethod := 'POST';
+    HttpRequestMode.Head: nsUrlRequest.HTTPMethod := 'HEAD';
+    HttpRequestMode.Put: nsUrlRequest.HTTPMethod := 'PUT';
+    HttpRequestMode.Delete: nsUrlRequest.HTTPMethod := 'DLETE';
+    HttpRequestMode.Patch: nsUrlRequest.HTTPMethod := 'POTCH';
+    HttpRequestMode.Options: nsUrlRequest.HTTPMethod := 'OPTIONS';
+    HttpRequestMode.Trace: nsUrlRequest.HTTPMethod := 'TRACE';
   end;
 
   if assigned(aRequest.Content) then begin
@@ -681,7 +700,6 @@ class method Http.InternalDownload(anUrl: Url): System.Threading.Tasks.Task<Syst
 begin
   var Request: System.Net.HttpWebRequest := System.Net.WebRequest.CreateHttp(anUrl);
   Request.Method := "GET";
-  Request.UserAgent := "Mozilla/4.76";
   Request.AllowReadStreamBuffering := true;
 
   var TaskComplete := new System.Threading.Tasks.TaskCompletionSource<System.Net.HttpWebResponse>;

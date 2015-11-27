@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -16,6 +16,9 @@
     <StartupClass />
     <InternalAssemblyName />
     <AllowLegacyCreate>False</AllowLegacyCreate>
+    <TargetPlatformVersion>8.1</TargetPlatformVersion>
+    <MinimumVisualStudioVersion>12</MinimumVisualStudioVersion>
+    <TargetFrameworkVersion />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <CpuType>AnyCPU</CpuType>
@@ -95,10 +98,6 @@
     <Folder Include="Main\WinRT\Common\" />
     <Folder Include="Main\WinRT\Properties\" />
     <Folder Include="Properties\" />
-    <Folder Include="Tests" />
-    <Folder Include="Tests\Xml" />
-    <Folder Include="Tests\IO" />
-    <Folder Include="Tests\Cryptography" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.xaml.pas">
@@ -108,41 +107,6 @@
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Main\WinRT\Properties\AssemblyInfo.pas" />
-    <Compile Include="Tests\AutoreleasePool.pas" />
-    <Compile Include="Tests\Binary.pas" />
-    <Compile Include="Tests\Convert.pas" />
-    <Compile Include="Tests\Cryptography\Utils.pas" />
-    <Compile Include="Tests\DateTime.pas" />
-    <Compile Include="Tests\Dictionary.pas" />
-    <Compile Include="Tests\Encoding.pas" />
-    <Compile Include="Tests\Extensions.pas" />
-    <Compile Include="Tests\Guid.pas" />
-    <Compile Include="Tests\HashSet.pas" />
-    <Compile Include="Tests\HTTP.pas" />
-    <Compile Include="Tests\IO\File.pas" />
-    <Compile Include="Tests\IO\FileHandle.pas" />
-    <Compile Include="Tests\IO\FileUtils.pas" />
-    <Compile Include="Tests\IO\Folder.pas" />
-    <Compile Include="Tests\IO\FolderUtils.pas" />
-    <Compile Include="Tests\IO\Path.pas" />
-    <Compile Include="Tests\List.pas" />
-    <Compile Include="Tests\Math.pas" />
-    <Compile Include="Tests\MessageDigest.pas" />
-    <Compile Include="Tests\Queue.pas" />
-    <Compile Include="Tests\Random.pas" />
-    <Compile Include="Tests\RegularExpressions.pas" />
-    <Compile Include="Tests\Stack.pas" />
-    <Compile Include="Tests\String.pas" />
-    <Compile Include="Tests\StringBuilder.pas" />
-    <Compile Include="Tests\Url.pas" />
-    <Compile Include="Tests\UserSettings.pas" />
-    <Compile Include="Tests\Xml\CharacterData.pas" />
-    <Compile Include="Tests\Xml\Document.pas" />
-    <Compile Include="Tests\Xml\DocumentType.pas" />
-    <Compile Include="Tests\Xml\Element.pas" />
-    <Compile Include="Tests\Xml\Node.pas" />
-    <Compile Include="Tests\Xml\ProcessingInstruction.pas" />
-    <Compile Include="Tests\Xml\TestData.pas" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Main\WinRT\Package.appxmanifest">
@@ -171,8 +135,8 @@
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
-  <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
-    <VisualStudioVersion>11.0</VisualStudioVersion>
+  <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
+    <VisualStudioVersion>12.0</VisualStudioVersion>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
@@ -193,9 +157,9 @@
       <HintPath>..\Sugar\bin\WinRT\Sugar.dll</HintPath>
     </ProjectReference>
   </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Echoes.WinRT.targets" />
   <PropertyGroup>
     <PreBuildEvent />
   </PropertyGroup>
+  <Import Project="..\Sugar.Tests\Sugar.Shared.Test.projitems" Label="Shared" />
 </Project>

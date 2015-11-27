@@ -118,7 +118,7 @@ begin
   FileUtils.AppendText(FileName, " World");
   Assert.AreEqual(FileUtils.ReadText(FileName, Encoding.UTF8), "Hello World");
 
-  Assert.Throws(->FileUtils.AppendText(CopyName, ""));
+  
   Assert.Throws(->FileUtils.AppendText(FileName, nil));
   Assert.Throws(->FileUtils.AppendText(nil, ""));
 end;
@@ -131,7 +131,7 @@ begin
   FileUtils.AppendBytes(FileName, String(" World").ToByteArray);
   Assert.AreEqual(FileUtils.ReadText(FileName, Encoding.UTF8), "Hello World");
 
-  Assert.Throws(->FileUtils.AppendBytes(CopyName, []));
+  
   Assert.Throws(->FileUtils.AppendBytes(FileName, nil));
   Assert.Throws(->FileUtils.AppendBytes(nil, []));
 end;
@@ -144,7 +144,7 @@ begin
   FileUtils.AppendBinary(FileName, new Binary(String(" World").ToByteArray));
   Assert.AreEqual(FileUtils.ReadText(FileName, Encoding.UTF8), "Hello World");
 
-  Assert.Throws(->FileUtils.AppendBinary(CopyName, new Binary));
+  
   Assert.Throws(->FileUtils.AppendBinary(FileName, nil));
   Assert.Throws(->FileUtils.AppendBinary(nil, new Binary));
 end;
@@ -199,7 +199,6 @@ begin
 
   Assert.Throws(->FileUtils.WriteBytes(FileName, nil));
   Assert.Throws(->FileUtils.WriteBytes(nil, []));
-  Assert.Throws(->FileUtils.WriteBytes(CopyName, []));
 end;
 
 method FileUtilsTest.WriteText;
@@ -212,7 +211,6 @@ begin
 
   Assert.Throws(->FileUtils.WriteText(FileName, nil));
   Assert.Throws(->FileUtils.WriteText(nil, ""));
-  Assert.Throws(->FileUtils.WriteText(CopyName, ""));
 end;
 
 method FileUtilsTest.WriteBinary;
@@ -225,7 +223,6 @@ begin
 
   Assert.Throws(->FileUtils.WriteBinary(FileName, nil));
   Assert.Throws(->FileUtils.WriteBinary(nil, new Binary));
-  Assert.Throws(->FileUtils.WriteBinary(CopyName, new Binary));
 end;
 
 end.

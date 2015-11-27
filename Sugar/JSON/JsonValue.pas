@@ -127,9 +127,12 @@ end;
 { JsonFloatValue }
 
 method JsonFloatValue.ToJson: String;
-begin
-  {$WARNING ensure proper float format?}
-  result := String.Format("{0}", Value);
+begin // .NET uses current locales; OSX/Java use invariant culture by default.
+  {$IFDEF ECHOES}
+  exit Double(Value).ToString(System.Globalization.NumberFormatInfo.InvariantInfo);
+  {$ELSE}
+  exit String.Format("{0}", Value);
+  {$ENDIF}
 end;
 
 operator JsonFloatValue.Implicit(aValue: Double): JsonFloatValue;

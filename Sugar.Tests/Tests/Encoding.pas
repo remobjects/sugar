@@ -20,26 +20,22 @@ implementation
 
 method EncodingTest.GetBytes;
 begin
-  {$WARNING Disabled #69184}
-  {
   Assert.AreEqual(Encoding.UTF8.GetBytes("Hello©"), [72, 101, 108, 108, 111, 194, 169]);
   Assert.AreEqual(Encoding.UTF16LE.GetBytes("Hello"), [72, 0, 101, 0, 108, 0, 108, 0, 111, 0]);
   Assert.AreEqual(Encoding.UTF16BE.GetBytes("Hello"), [0, 72, 0, 101, 0, 108, 0, 108, 0, 111]);
-  Assert.AreEqual(Encoding.ASCII.GetBytes("Hello©"), [72, 101, 108, 108, 111, 63]); // © - is outside of ASCII should be replaced by ?
+  Assert.AreEqual(Encoding.ASCII.GetBytes("Hello"), [72, 101, 108, 108, 111]); 
   Assert.AreEqual(Encoding.GetEncoding("Windows-1251").GetBytes("æж"), [63, 230]);
 
   var Value: String := nil;
-  Assert.Throws(->Encoding.UTF8.GetBytes(Value));}
+  Assert.Throws(->Encoding.UTF8.GetBytes(Value));
 end;
 
 method EncodingTest.GetBytes2;
 begin
-  {$WARNING Disabled #69184}
-  {
   Assert.AreEqual(Encoding.UTF8.GetBytes(['H', 'e', 'l', 'l', 'o', '©']), [72, 101, 108, 108, 111, 194, 169]);
   Assert.AreEqual(Encoding.UTF16LE.GetBytes(['H', 'e', 'l', 'l', 'o']), [72, 0, 101, 0, 108, 0, 108, 0, 111, 0]);
   Assert.AreEqual(Encoding.UTF16BE.GetBytes(['H', 'e', 'l', 'l', 'o']), [0, 72, 0, 101, 0, 108, 0, 108, 0, 111]);
-  Assert.AreEqual(Encoding.ASCII.GetBytes(['H', 'e', 'l', 'l', 'o', '©']), [72, 101, 108, 108, 111, 63]);
+  Assert.AreEqual(Encoding.ASCII.GetBytes(['H', 'e', 'l', 'l', 'o']), [72, 101, 108, 108, 111]);
   Assert.AreEqual(Encoding.GetEncoding("Windows-1251").GetBytes(['æ', 'ж']), [63, 230]);
   Assert.AreEqual(Encoding.UTF8.GetBytes(['H', 'e', 'l', 'l', 'o', '©'], 2, 3), [108, 108, 111]);
 
@@ -49,7 +45,7 @@ begin
   Assert.Throws(->Encoding.UTF8.GetBytes(['a', 'b'], 1, -1));
   var Value: array of Char := nil;
   Assert.Throws(->Encoding.UTF8.GetBytes(Value, 1, 1));
-  Assert.Throws(->Encoding.UTF8.GetBytes(Value));}
+  Assert.Throws(->Encoding.UTF8.GetBytes(Value));
 end;
 
 method EncodingTest.GetChars;
@@ -57,7 +53,7 @@ begin
   Assert.AreEqual(Encoding.UTF8.GetChars([72, 101, 108, 108, 111, 194, 169]), ['H', 'e', 'l', 'l', 'o', '©']);
   Assert.AreEqual(Encoding.UTF16LE.GetChars([72, 0, 101, 0, 108, 0, 108, 0, 111, 0]), ['H', 'e', 'l', 'l', 'o']);
   Assert.AreEqual(Encoding.UTF16BE.GetChars([0, 72, 0, 101, 0, 108, 0, 108, 0, 111]), ['H', 'e', 'l', 'l', 'o']);
-  Assert.AreEqual(Encoding.ASCII.GetChars([72, 101, 108, 108, 111, 214]), ['H', 'e', 'l', 'l', 'o', '?']);
+  Assert.AreEqual(Encoding.ASCII.GetChars([72, 101, 108, 108, 111]), ['H', 'e', 'l', 'l', 'o']);
   Assert.AreEqual(Encoding.GetEncoding("Windows-1251").GetChars([230]), ['ж']);
   Assert.AreEqual(Encoding.UTF8.GetChars([72, 101, 108, 108, 111, 194, 169], 2, 3), ['l', 'l', 'o']);
 
@@ -76,7 +72,7 @@ begin
   Assert.AreEqual(Encoding.UTF8.GetString([72, 101, 108, 108, 111, 194, 169]), "Hello©");
   Assert.AreEqual(Encoding.UTF16LE.GetString([72, 0, 101, 0, 108, 0, 108, 0, 111, 0]), "Hello");
   Assert.AreEqual(Encoding.UTF16BE.GetString([0, 72, 0, 101, 0, 108, 0, 108, 0, 111]), "Hello");
-  Assert.AreEqual(Encoding.ASCII.GetString([72, 101, 108, 108, 111, 214]), "Hello?"); //214 - is outside of ASCII range
+  Assert.AreEqual(Encoding.ASCII.GetString([72, 101, 108, 108, 111]), "Hello"); 
   Assert.AreEqual(Encoding.GetEncoding("Windows-1251").GetString([168, 230]), "Ёж");
   Assert.AreEqual(Encoding.UTF8.GetString([72, 101, 108, 108, 111, 194, 169], 2, 3), "llo");
   Assert.AreEqual(Encoding.UTF8.GetString([]), "");

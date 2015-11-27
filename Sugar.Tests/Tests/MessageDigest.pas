@@ -31,8 +31,6 @@ end;
 
 method MessageDigestTest.ComputeHash;
 begin
-  {$WARNING Disabled #69184}
-  {
   var Data := Encoding.UTF8.GetBytes("Test data value");
 
   Assert.AreEqual(new MessageDigest(DigestAlgorithm.SHA256).Digest(Data), [17, 39, 191, 114, 255, 158, 204, 142, 164, 10, 242, 207, 178,
@@ -61,7 +59,6 @@ begin
   Assert.AreEqual(Utils.ToHexString(MessageDigest.ComputeHash([1, 2, 3], DigestAlgorithm.SHA1)), "7037807198C22A7D2B0807371D763779A84FDFCF");
   Assert.AreEqual(Utils.ToHexString(MessageDigest.ComputeHash([4, 5, 6], DigestAlgorithm.SHA1)), "E809C5D1CEA47B45E34701D23F608A9A58034DC9");
   Assert.AreEqual(Utils.ToHexString(MessageDigest.ComputeHash([7, 8, 9], DigestAlgorithm.SHA1)), "B470CF972A0D84FBAEEEDB51A963A902269417E8");
-}
 end;
 
 method MessageDigestTest.ToHexString;

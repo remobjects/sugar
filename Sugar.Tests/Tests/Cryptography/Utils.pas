@@ -39,8 +39,7 @@ end;
 
 method UtilsTest.FromHexString;
 begin
-  {$WARNING Disabled #69184}
-  {var Data: String := "000102030405060708090A0B0C0D0E0F";
+  var Data: String := "000102030405060708090A0B0C0D0E0F";
   Assert.AreEqual(Utils.FromHexString(Data), [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
   Assert.AreEqual(Utils.FromHexString("D41D8CD98F00B204E9800998ECF8427E"), MessageDigest.ComputeHash([], DigestAlgorithm.MD5));
   Assert.AreEqual(Utils.FromHexString(""), []);
@@ -48,7 +47,7 @@ begin
   Assert.Throws(->Utils.FromHexString(nil));
   Assert.Throws(->Utils.FromHexString("FFF"));
   Assert.Throws(->Utils.FromHexString("FFFZ"));
-  Assert.Throws(->Utils.FromHexString(#13#10));}
+  Assert.Throws(->Utils.FromHexString(#13#10));
 end;
 
 end.

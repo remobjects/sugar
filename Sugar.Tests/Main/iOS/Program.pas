@@ -17,7 +17,7 @@ implementation
 method Program.Main(argc: Integer; argv: ^^AnsiChar): Int32;
 begin
   using autoreleasepool do begin
-    var Tested := Runner.Run(Discovery.FromModule);
+    var Tested := Runner.RunTests(Discovery.FromModule);
     var Writer := new StringWriter(Tested);
 
     Writer.WriteFull;

@@ -36,7 +36,7 @@ type
     method Find(Match: Predicate<T>): T;
     method FindAll(Match: Predicate<T>): List<T>;
     method TrueForAll(Match: Predicate<T>): Boolean;
-    method ForEach(Action: Action<T>): Boolean;
+    method ForEach(Action: Action<T>);
 
     method IndexOf(anItem: T): Integer; 
     method Insert(&Index: Integer; anItem: T);
@@ -67,13 +67,30 @@ type
   end;
   {$ENDIF}
 
+  ListHelpers = public static class
+  public
+    method AddRange<T>(aSelf: List<T>; aArr: array of T);
+    method FindIndex<T>(aSelf: List<T>;StartIndex: Integer; aCount: Integer; Match: Predicate<T>): Integer;
+    method Find<T>(aSelf: List<T>;Match: Predicate<T>): T;
+    method ForEach<T>(aSelf: List<T>;Action: Action<T>);
+    method TrueForAll<T>(aSelf: List<T>;Match: Predicate<T>): Boolean;
+    method FindAll<T>(aSelf: List<T>;Match: Predicate<T>): List<T>;
+    method InsertRange<T>(aSelf: List<T>; &Index: Integer; Items: array oF T);
+    {$IFDEF NOUGAT}
+    method LastIndexOf<T>(aSelf: NSArray; aItem: T): Integer;
+    method ToArray<T>(aSelf: NSArray): array of T;
+    method ToArrayReverse<T>(aSelf: NSArray): array of T;
+    {$ENDIF}
+    {$IFDEF COOPER}
+    method ToArrayReverse<T>(aSelf: java.util.Vector<T>; aDest: array of T): array of T;
+
+    {$ENDIF}
+  end;
+
 implementation
 
 constructor List<T>(Items: List<T>);
 begin
-  if Items = nil then
-    raise new SugarArgumentNullException("Items");
-
   {$IF COOPER}
   result := new java.util.ArrayList<T>(Items);
   {$ELSEIF ECHOES}
@@ -85,9 +102,6 @@ end;
 
 constructor List<T>(anArray: array of T);
 begin
-  if anArray = nil then
-    raise new SugarArgumentNullException("anArray");
-
   {$IF COOPER}
   result := new java.util.ArrayList<T>(java.util.Arrays.asList(anArray));
   {$ELSEIF ECHOES}
@@ -109,8 +123,7 @@ end;
 method List<T>.SetItem(&Index: Integer; Value: T);
 begin
   {$IF NOUGAT}
-  var x: id := NullHelper.ValueOf(Value);
-  mapped[&Index] := x;
+  mapped[&Index] := NullHelper.ValueOf(Value);
   {$ELSE}  
   mapped[&Index] := Value;
   {$ENDIF}
@@ -127,11 +140,6 @@ end;
 
 method List<T>.AddRange(Items: List<T>);
 begin
-  if Items = nil then
-    raise new SugarArgumentNullException("Items");
-  if Items.Count = 0 then
-    exit;
-
   {$IF COOPER}
   mapped.AddAll(Items);
   {$ELSEIF ECHOES}
@@ -143,8 +151,7 @@ end;
 
 method List<T>.AddRange(Items: array of T);
 begin
-  for i: Integer := 0 to length(Items) - 1 do
-    &Add(Items[i]);
+  ListHelpers.AddRange(self, Items);
 end;
 
 method List<T>.Clear;
@@ -186,69 +193,27 @@ end;
 
 method List<T>.FindIndex(StartIndex: Integer; aCount: Integer; Match: Predicate<T>): Integer;
 begin
-    if StartIndex > Count then
-    raise new SugarArgumentOutOfRangeException(ErrorMessage.ARG_OUT_OF_RANGE_ERROR, "StartIndex");
-
-  if (aCount < 0) or (StartIndex > Count - aCount) then
-    raise new SugarArgumentOutOfRangeException(ErrorMessage.ARG_OUT_OF_RANGE_ERROR, "Count");
-
-  if Match = nil then
-    raise new SugarArgumentNullException("Match");
-
-  var Length := StartIndex + aCount; 
-
-  for i: Int32 := StartIndex to Length - 1 do
-    if Match(Item[i]) then
-      exit i;
-
-  exit -1;
+  exit ListHelpers.FindIndex(self, StartIndex, aCount, Match);
 end;
 
 method List<T>.Find(Match: Predicate<T>): T;
 begin
-  if Match = nil then
-    raise new SugarArgumentNullException("Match");
-
-  for i: Integer := 0 to Count-1 do begin
-    if Match(Item[i]) then
-      exit Item[i];
-  end;
-
-  exit &default(T);
+  exit ListHelpers.Find(self, Match);
 end;
 
 method List<T>.FindAll(Match: Predicate<T>): List<T>;
 begin
-  if Match = nil then
-    raise new SugarArgumentNullException("Match");
-
-  result := new List<T>();
-  for i: Integer := 0 to Count-1 do begin
-    if Match(Item[i]) then
-      result.Add(Item[i]);
-  end;
+  exit ListHelpers.FindAll(self, Match);
 end;
 
 method List<T>.TrueForAll(Match: Predicate<T>): Boolean;
 begin
-  if Match = nil then
-    raise new SugarArgumentNullException("Match");
-
-  for i: Integer := 0 to self.Count-1 do begin
-    if not Match(Item[i]) then
-      exit false;
-  end;
-
-  exit true;
+  exit ListHelpers.TrueForAll(self, Match);
 end;
 
-method List<T>.ForEach(Action: Action<T>): Boolean;
+method List<T>.ForEach(Action: Action<T>);
 begin
-  if Action = nil then
-    raise new SugarArgumentNullException("Action");
-
-  for i: Integer := 0 to Count-1 do
-    Action(Item[i]);
+  ListHelpers.ForEach(self, Action);
 end;
 
 method List<T>.IndexOf(anItem: T): Integer;
@@ -276,11 +241,6 @@ end;
 
 method List<T>.InsertRange(&Index: Integer; Items: List<T>);
 begin
-  if Items = nil then
-    raise new SugarArgumentNullException("Items");
-  if Items.Count = 0 then
-    exit;
-
   {$IF COOPER}
   mapped.AddAll(&Index, Items);
   {$ELSEIF ECHOES}
@@ -292,8 +252,7 @@ end;
 
 method List<T>.InsertRange(&Index: Integer; Items: array of T);
 begin
-  for i: Integer := length(Items) - 1 downto 0 do
-    Insert(&Index, Items[i]);
+  ListHelpers.InsertRange(self, &Index, Items);
 end;
 
 method List<T>.LastIndexOf(anItem: T): Integer;
@@ -303,8 +262,7 @@ begin
   {$ELSEIF ECHOES}
   exit mapped.LastIndexOf(anItem);
   {$ELSEIF NOUGAT}
-  var lIndex := mapped.indexOfObjectWithOptions(NSEnumerationOptions.NSEnumerationReverse) passingTest((x,y,z) -> x = id(NullHelper.ValueOf(anItem)));
-  exit if lIndex = NSNotFound then -1 else Integer(lIndex);
+  exit ListHelpers.LastIndexOf(self, anItem);
   {$ENDIF}
 end;
 
@@ -349,9 +307,6 @@ end;
 
 method List<T>.Sort(Comparison: Comparison<T>);
 begin
-  if Comparison = nil then
-    raise new SugarArgumentNullException("Comparison");
-
   {$IF COOPER}  
   java.util.Collections.sort(mapped, new class java.util.Comparator<T>(compare := (x, y) -> Comparison(x, y)));
   {$ELSEIF ECHOES} 
@@ -371,9 +326,7 @@ begin
   {$ELSEIF ECHOES}
   exit mapped.ToArray;
   {$ELSEIF NOUGAT}
-  result := new T[mapped.count];
-  for i: Integer := 0 to mapped.count - 1 do
-    result[i] := Item[i];
+  exit ListHelpers.ToArray<T>(self);
   {$ENDIF}
 end;
 
@@ -381,6 +334,125 @@ end;
 class method NullHelper.ValueOf(Value: id): id;
 begin
   exit if Value = NSNull.null then nil else if Value = nil then NSNull.null else Value;
+end;
+{$ENDIF}
+
+method ListHelpers.AddRange<T>(aSelf: List<T>; aArr: array of T);
+begin
+  for i: Integer := 0 to length(aArr) - 1 do
+    aself.Add(aArr[i]);
+end;
+
+
+method ListHelpers.FindIndex<T>(aSelf: List<T>;StartIndex: Integer; aCount: Integer; Match: Predicate<T>): Integer;
+begin
+  if StartIndex > aSelf.Count then
+    raise new SugarArgumentOutOfRangeException(ErrorMessage.ARG_OUT_OF_RANGE_ERROR, "StartIndex");
+
+  if (aCount < 0) or (StartIndex > aSelf.Count - aCount) then
+    raise new SugarArgumentOutOfRangeException(ErrorMessage.ARG_OUT_OF_RANGE_ERROR, "Count");
+
+  if Match = nil then
+    raise new SugarArgumentNullException("Match");
+
+  var Length := StartIndex + aCount; 
+
+  for i: Int32 := StartIndex to Length - 1 do
+    if Match(aSelf[i]) then
+      exit i;
+
+  exit -1;
+end;
+
+
+method ListHelpers.Find<T>(aSelf: List<T>; Match: Predicate<T>): T;
+begin
+  if Match = nil then
+    raise new SugarArgumentNullException("Match");
+
+  for i: Integer := 0 to aSelf.Count-1 do begin
+    if Match(aSelf[i]) then
+      exit aSelf[i];
+  end;
+
+  exit &default(T);
+end;
+
+
+method ListHelpers.FindAll<T>(aSelf: List<T>; Match: Predicate<T>): List<T>;
+begin
+  if Match = nil then
+    raise new SugarArgumentNullException("Match");
+
+  result := new List<T>();
+  for i: Integer := 0 to aSelf.Count-1 do begin
+    if Match(aSelf[i]) then
+      result.Add(aSelf[i]);
+  end;
+end;
+
+method ListHelpers.TrueForAll<T>(aSelf: List<T>; Match: Predicate<T>): Boolean;
+begin
+  if Match = nil then
+    raise new SugarArgumentNullException("Match");
+
+  for i: Integer := 0 to aSelf.Count-1 do begin
+    if not Match(aSelf[i]) then
+      exit false;
+  end; 
+
+  exit true;
+end;
+
+method ListHelpers.ForEach<T>(aSelf: List<T>; Action: Action<T>);
+begin
+  if Action = nil then
+    raise new SugarArgumentNullException("Action");
+
+  for i: Integer := 0 to aSelf.Count-1 do
+    Action(aSelf[i]);
+end;
+
+method ListHelpers.InsertRange<T>(aSelf: List<T>; &Index: Integer; Items: array oF T);
+begin
+
+  for i: Integer := length(Items) - 1 downto 0 do
+    aSelf.Insert(&Index, Items[i]);
+end;
+
+{$IFDEF NOUGAT}
+
+method ListHelpers.LastIndexOf<T>(aSelf: NSArray; aItem: T): Integer;
+begin
+  var o := NullHelper.ValueOf(aItem);
+  for i: Integer := aSelf.count -1 downto 0 do 
+    if aSelf[i] = o then exit i;
+  exit -1;
+end;
+
+method ListHelpers.ToArray<T>(aSelf: NSArray): array of T;
+begin
+  result := new T[aSelf.count];
+  for i: Integer := 0 to aSelf.count - 1 do
+    result[i] := aSelf[i];
+end;
+
+method ListHelpers.ToArrayReverse<T>(aSelf: NSArray): array of T;
+begin
+  result := new T[aSelf.count];
+  for i: Integer := aSelf.count - 1 downto 0 do
+    result[aSelf.count - i - 1] := NullHelper.ValueOf(aSelf.objectAtIndex(i));
+
+end;
+
+{$ENDIF}
+{$IFDEF COOPER}
+method ListHelpers.ToArrayReverse<T>(aSelf: java.util.Vector<T>; aDest: array of T): array of T;
+begin
+  result := aDest;
+  for i: Integer := aSelf.size - 1 downto 0 do
+    result[aSelf.size - i - 1] := aSelf[i];
+
 end;
 {$ENDIF}
 

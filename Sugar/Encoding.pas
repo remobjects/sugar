@@ -33,6 +33,16 @@ type
     {$ENDIF}
   end;
 
+  EncodingHelpers = public static class
+  private
+  public
+    class method GetBytes(aEncoding: Encoding; Value: array of Char; Offset: Integer; Count: Integer): array of Byte;
+    class method GetBytes(aEncoding: Encoding; Value: String): array of Byte;
+    class method GetChars(aEncoding: Encoding; Value: array of Byte; Offset: Integer; Count: Integer): array of Char;
+    class method GetString(aEncoding: Encoding; Value: array of Byte; Offset: Integer; Count: Integer): String;
+    class method GetEncoding(Name: String): Encoding;
+  end;
+
 implementation
 
 method Encoding.GetBytes(Value: array of Char): array of Byte;
@@ -43,76 +53,6 @@ begin
   exit GetBytes(Value, 0, Value.length);
 end;
 
-method Encoding.GetBytes(Value: array of Char; Offset: Integer; Count: Integer): array of Byte;
-begin
-  if Value = nil then
-    raise new SugarArgumentNullException("Value");
-
-  if Count = 0 then
-    exit [];
-
-  RangeHelper.Validate(Range.MakeRange(Offset, Count), Value.Length);
-  {$IF ANDROID}
-  var Buffer := mapped.newEncoder.
-    onMalformedInput(java.nio.charset.CodingErrorAction.REPLACE).
-    onUnmappableCharacter(java.nio.charset.CodingErrorAction.REPLACE).
-    replaceWith([63]).
-    encode(java.nio.CharBuffer.wrap(Value, Offset, Count));
-
-  result := new Byte[Buffer.remaining];
-  Buffer.get(result);
-  {$ELSEIF COOPER}
-  var Buffer := mapped.encode(java.nio.CharBuffer.wrap(Value, Offset, Count));
-  result := new Byte[Buffer.remaining];
-  Buffer.get(result);
-  {$ELSEIF ECHOES}
-  exit mapped.GetBytes(Value, Offset, Count);
-  {$ELSEIF NOUGAT}
-  exit GetBytes(new String(Value, Offset, Count));
-  {$ENDIF}
-end;
-
-method Encoding.GetBytes(Value: String): array of Byte;
-begin
-  SugarArgumentNullException.RaiseIfNil(Value, "Value");
-  {$IF ANDROID}
-  var Buffer := mapped.newEncoder.
-    onMalformedInput(java.nio.charset.CodingErrorAction.REPLACE).
-    onUnmappableCharacter(java.nio.charset.CodingErrorAction.REPLACE).
-    replaceWith([63]).
-    encode(java.nio.CharBuffer.wrap(Value));
-
-  result := new Byte[Buffer.remaining];
-  Buffer.get(result);
-  {$ELSEIF COOPER}
-  var Buffer := mapped.encode(Value);
-  result := new Byte[Buffer.remaining];
-  Buffer.get(result);
-  {$ELSEIF ECHOES}
-  exit mapped.GetBytes(Value);
-  {$ELSEIF NOUGAT}
-  result := ((Value as NSString).dataUsingEncoding(AsNSStringEncoding) as Binary).ToArray;
-  if not assigned(result) then
-    raise new SugarFormatException("Unable to convert data");
-  {$ENDIF}
-end;
-
-method Encoding.GetChars(Value: array of Byte; Offset: Integer; Count: Integer): array of Char;
-begin
-  {$IF COOPER}
-  var Buffer := mapped.newDecoder.
-    onMalformedInput(java.nio.charset.CodingErrorAction.REPLACE).
-    onUnmappableCharacter(java.nio.charset.CodingErrorAction.REPLACE).
-    replaceWith("?").
-    decode(java.nio.ByteBuffer.wrap(Value, Offset, Count));
-  result := new Char[Buffer.remaining];
-  Buffer.get(result);
-  {$ELSEIF ECHOES}
-  exit mapped.GetChars(Value, Offset, Count);
-  {$ELSEIF NOUGAT}
-  exit GetString(Value, Offset, Count).ToCharArray;
-  {$ENDIF}
-end;
 
 method Encoding.GetChars(Value: array of Byte): array of Char;
 begin
@@ -133,58 +73,9 @@ begin
   exit GetString(Value, 0, Value.length);
 end;
 
-method Encoding.GetString(Value: array of Byte; Offset: Integer; Count: Integer): String;
-begin
-  if Value = nil then
-    raise new SugarArgumentNullException("Value");
-
-  if Count = 0 then
-    exit "";
-
-  RangeHelper.Validate(Range.MakeRange(Offset, Count), Value.Length);
-  {$IF COOPER}
-  var Buffer := mapped.newDecoder.
-    onMalformedInput(java.nio.charset.CodingErrorAction.REPLACE).
-    onUnmappableCharacter(java.nio.charset.CodingErrorAction.REPLACE).
-    replaceWith("?").
-    decode(java.nio.ByteBuffer.wrap(Value, Offset, Count));
-  result := Buffer.toString;
-  {$ELSEIF ECHOES}
-  result := mapped.GetString(Value, Offset, Count);
-  {$ELSEIF NOUGAT}
-  result := new NSString withBytes(Value) length(length(Value)) encoding(AsNSStringEncoding);
-  if not assigned(result) then
-    raise new SugarFormatException("Unable to convert input data");
-  {$ENDIF}
-end;
-
 class method Encoding.GetEncoding(Name: String): Encoding;
 begin
-  SugarArgumentNullException.RaiseIfNil(Name, "Name");
-  {$IF COOPER}
-  exit java.nio.charset.Charset.forName(Name);
-  {$ELSEIF WINDOWS_PHONE}
-  result := CustomEncoding.ForName(Name);
-
-  if result = nil then
-    result := System.Text.Encoding.GetEncoding(Name);
-  {$ELSEIF ECHOES}
-  result := System.Text.Encoding.GetEncoding(Name);
-  {$ELSEIF NOUGAT}
-  var lEncoding := NSStringEncoding.UTF8StringEncoding;
-  case Name of
-    'UTF8','UTF-8': lEncoding := NSStringEncoding.UTF8StringEncoding;
-    'UTF16','UTF-16': lEncoding := NSStringEncoding.UTF16StringEncoding;
-    'UTF32','UTF-32': lEncoding := NSStringEncoding.UTF32StringEncoding;
-    'UTF16LE','UTF-16LE': lEncoding := NSStringEncoding.UTF16LittleEndianStringEncoding;
-    'UTF16BE','UTF-16BE': lEncoding := NSStringEncoding.UTF16BigEndianStringEncoding;
-    'UTF32LE','UTF-32LE': lEncoding := NSStringEncoding.UTF32LittleEndianStringEncoding;
-    'UTF32BE','UTF-32BE': lEncoding := NSStringEncoding.UTF32BigEndianStringEncoding;
-    'ASCII','UTF-ASCII': lEncoding := NSStringEncoding.ASCIIStringEncoding;
-    else lEncoding := CFStringConvertEncodingToNSStringEncoding(CFStringConvertIANACharSetNameToEncoding(bridge<CFStringRef>(Name))) as NSStringEncoding;
-  end;
-  result := NSNumber.numberWithUnsignedInt(lEncoding);
-  {$ENDIF}
+  exit EncodingHelpers.GetEncoding(Name);
 end;
 
 method Encoding.GetName: String;
@@ -210,6 +101,158 @@ class method Encoding.FromNSStringEncoding(aEncoding: NSStringEncoding): Encodin
 begin
   result := NSNumber.numberWithUnsignedInteger(aEncoding);
 end;
+
 {$ENDIF}
+
+
+method Encoding.GetBytes(Value: array of Char; Offset: Integer; Count: Integer): array of Byte;
+begin
+  exit EncodingHelpers.GetBytes(self, Value, Offset, Count);
+end;
+
+method Encoding.GetBytes(Value: String): array of Byte;
+begin
+  exit EncodingHelpers.GetBytes(self, Value);
+end;
+
+method Encoding.GetChars(Value: array of Byte; Offset: Integer; Count: Integer): array of Char;
+begin
+  exit EncodingHelpers.GetChars(self, Value, Offset, Count);
+end;
+
+method Encoding.GetString(Value: array of Byte; Offset: Integer; Count: Integer): String;
+begin
+  exit EncodingHelpers.GetString(self, Value, Offset, Count);
+end;
+
+class method EncodingHelpers.GetEncoding(Name: String): Encoding;
+begin
+  SugarArgumentNullException.RaiseIfNil(Name, "Name");
+  {$IF COOPER}
+  exit java.nio.charset.Charset.forName(Name);
+  {$ELSEIF WINDOWS_PHONE}
+  result := CustomEncoding.ForName(Name);
+
+  if result = nil then
+    result := System.Text.Encoding.GetEncoding(Name);
+  {$ELSEIF ECHOES}
+  result := System.Text.Encoding.GetEncoding(Name);
+  {$ELSEIF NOUGAT}
+  var lEncoding := NSStringEncoding.UTF8StringEncoding;
+  case Name of
+    'UTF8','UTF-8': lEncoding := NSStringEncoding.UTF8StringEncoding;
+    'UTF16','UTF-16': lEncoding := NSStringEncoding.UTF16StringEncoding;
+    'UTF32','UTF-32': lEncoding := NSStringEncoding.UTF32StringEncoding;
+    'UTF16LE','UTF-16LE': lEncoding := NSStringEncoding.UTF16LittleEndianStringEncoding;
+    'UTF16BE','UTF-16BE': lEncoding := NSStringEncoding.UTF16BigEndianStringEncoding;
+    'UTF32LE','UTF-32LE': lEncoding := NSStringEncoding.UTF32LittleEndianStringEncoding;
+    'UTF32BE','UTF-32BE': lEncoding := NSStringEncoding.UTF32BigEndianStringEncoding;
+    'US-ASCII', 'ASCII','UTF-ASCII': lEncoding := NSStringEncoding.ASCIIStringEncoding;
+    else begin 
+      var lH := CFStringConvertIANACharSetNameToEncoding(bridge<CFStringRef>(Name));
+      if lH = kCFStringEncodingInvalidId then 
+        raise new SugarArgumentException();
+      lEncoding := CFStringConvertEncodingToNSStringEncoding(lH) as NSStringEncoding;
+    end;
+  end;
+  result := NSNumber.numberWithUnsignedInt(lEncoding);
+  {$ENDIF}
+end;
+
+method EncodingHelpers.GetBytes(aEncoding: Encoding; Value: array of Char; Offset: Integer; Count: Integer): array of Byte;
+begin
+  if Value = nil then
+    raise new SugarArgumentNullException("Value");
+
+  if Count = 0 then
+    exit [];
+
+  RangeHelper.Validate(Range.MakeRange(Offset, Count), Value.Length);
+  {$IF ANDROID}
+  var Buffer := java.nio.charset.Charset(aEncoding).newEncoder.
+    onMalformedInput(java.nio.charset.CodingErrorAction.REPLACE).
+    onUnmappableCharacter(java.nio.charset.CodingErrorAction.REPLACE).
+    replaceWith([63]).
+    encode(java.nio.CharBuffer.wrap(Value, Offset, Count));
+
+  result := new Byte[Buffer.remaining];
+  Buffer.get(result);
+  {$ELSEIF COOPER}
+  var Buffer := java.nio.charset.Charset(aEncoding).encode(java.nio.CharBuffer.wrap(Value, Offset, Count));
+  result := new Byte[Buffer.remaining];
+  Buffer.get(result);
+  {$ELSEIF ECHOES}
+  exit System.Text.Encoding(aEncoding).GetBytes(Value, Offset, Count);
+  {$ELSEIF NOUGAT}
+  exit GetBytes(aEncoding, new String(Value, Offset, Count));
+  {$ENDIF}
+end;
+
+method EncodingHelpers.GetBytes(aEncoding: Encoding; Value: String): array of Byte;
+begin
+  SugarArgumentNullException.RaiseIfNil(Value, "Value");
+  {$IF ANDROID}
+  var Buffer := java.nio.charset.Charset(aEncoding).newEncoder.
+    onMalformedInput(java.nio.charset.CodingErrorAction.REPLACE).
+    onUnmappableCharacter(java.nio.charset.CodingErrorAction.REPLACE).
+    replaceWith([63]).
+    encode(java.nio.CharBuffer.wrap(Value));
+
+  result := new Byte[Buffer.remaining];
+  Buffer.get(result);
+  {$ELSEIF COOPER}
+  var Buffer := java.nio.charset.Charset(aEncoding).encode(Value);
+  result := new Byte[Buffer.remaining];
+  Buffer.get(result);
+  {$ELSEIF ECHOES}
+  exit System.Text.Encoding(aEncoding).GetBytes(Value);
+  {$ELSEIF NOUGAT}
+  result := ((Value as NSString).dataUsingEncoding(aEncoding.AsNSStringEncoding) allowLossyConversion(true) as Binary).ToArray;
+  if not assigned(result) then
+    raise new SugarFormatException("Unable to convert data");
+  {$ENDIF}
+end;
+
+method EncodingHelpers.GetChars(aEncoding: Encoding; Value: array of Byte; Offset: Integer; Count: Integer): array of Char;
+begin
+  {$IF COOPER}
+  var Buffer := java.nio.charset.Charset(aEncoding).newDecoder.
+    onMalformedInput(java.nio.charset.CodingErrorAction.REPLACE).
+    onUnmappableCharacter(java.nio.charset.CodingErrorAction.REPLACE).
+    replaceWith("?").
+    decode(java.nio.ByteBuffer.wrap(Value, Offset, Count));
+  result := new Char[Buffer.remaining];
+  Buffer.get(result);
+  {$ELSEIF ECHOES}
+  exit System.Text.Encoding(aEncoding).GetChars(Value, Offset, Count);
+  {$ELSEIF NOUGAT}
+  exit GetString(aEncoding, Value, Offset, Count).ToCharArray;
+  {$ENDIF}
+end;
+
+method EncodingHelpers.GetString(aEncoding: Encoding; Value: array of Byte; Offset: Integer; Count: Integer): String;
+begin
+  if Value = nil then
+    raise new SugarArgumentNullException("Value");
+
+  if Count = 0 then
+    exit "";
+
+  RangeHelper.Validate(Range.MakeRange(Offset, Count), Value.Length);
+  {$IF COOPER}
+  var Buffer := java.nio.charset.Charset(aEncoding).newDecoder.
+    onMalformedInput(java.nio.charset.CodingErrorAction.REPLACE).
+    onUnmappableCharacter(java.nio.charset.CodingErrorAction.REPLACE).
+    replaceWith("?").
+    decode(java.nio.ByteBuffer.wrap(Value, Offset, Count));
+  result := Buffer.toString;
+  {$ELSEIF ECHOES}
+  result := System.Text.Encoding(aEncoding).GetString(Value, Offset, Count);
+  {$ELSEIF NOUGAT}
+  result := new NSString withBytes(@Value[Offset]) length(Count) encoding(aEncoding.AsNSStringEncoding);
+  if not assigned(result) then
+    raise new SugarFormatException("Unable to convert input data");
+  {$ENDIF}
+end;
 
 end.

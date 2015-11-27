@@ -152,9 +152,8 @@ method ConvertTest.ToInt32String;
 begin
   Assert.AreEqual(Convert.ToInt32("42"), 42);
   Assert.AreEqual(Convert.ToInt32("-42"), -42);
-  Assert.AreEqual(Convert.ToInt32(nil), 0);
 
-  Assert.Throws(->Convert.ToInt32(""), typeOf(SugarFormatException));
+  Assert.Throws(->Convert.ToInt32(""));
   Assert.Throws(->Convert.ToInt32("9223372036854775807"));
   Assert.Throws(->Convert.ToInt32("4.2"));
   Assert.Throws(->Convert.ToInt32("1F"));

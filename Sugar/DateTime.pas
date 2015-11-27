@@ -12,17 +12,23 @@ uses
 {$ENDIF}
 
 type
+  {$IF NOUGAT}
+  DateTimeHelpers = public static class
+  public
+    method GetComponent(aSelf: NSDate; Component: NSCalendarUnit): Integer;
+    method AdjustDate(aSelf: NSDate; Component: NSCalendarUnit; Value: Integer): DateTime;
+    class property LocalTimezone: NSTimeZone := NSTimeZone.localTimeZone;
+  end;
+  {$ENDIF}
+
   {$IF ECHOES}[System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Auto, Size := 1)]{$ENDIF}
   DateTime = public {$IF COOPER}class mapped to java.util.Calendar{$ELSEIF ECHOES}record mapped to System.DateTime{$ELSEIF NOUGAT}class mapped to NSDate{$ENDIF}
   private
-  {$IF NOUGAT}
-    method GetComponent(Component: NSCalendarUnit): Integer;
-    method AdjustDate(Component: NSCalendarUnit; Value: Integer): DateTime;
-  {$ENDIF}
   private
     const DEFAULT_FORMAT = "{dd}/{MM}/{yyyy} {hh}:{mm}:{ss}";
   public
     constructor;
+    constructor(aTicks: Int64);
     constructor(aYear, aMonth, aDay: Integer);
     constructor(aYear, aMonth, aDay, anHour, aMinute: Integer);
     constructor(aYear, aMonth, aDay, anHour, aMinute, aSecond: Integer);
@@ -46,16 +52,29 @@ type
     method description: NSString; override;
     {$ENDIF}    
     
-    property Hour: Integer read {$IF COOPER}mapped.get(Calendar.HOUR){$ELSEIF ECHOES}mapped.Hour{$ELSEIF NOUGAT}GetComponent(NSCalendarUnit.NSHourCalendarUnit){$ENDIF};
-    property Minute: Integer read {$IF COOPER}mapped.get(Calendar.MINUTE){$ELSEIF ECHOES}mapped.Minute{$ELSEIF NOUGAT}GetComponent(NSCalendarUnit.NSMinuteCalendarUnit){$ENDIF};
-    property Second: Integer read {$IF COOPER}mapped.get(Calendar.SECOND){$ELSEIF ECHOES}mapped.Second{$ELSEIF NOUGAT}GetComponent(NSCalendarUnit.NSSecondCalendarUnit){$ENDIF};
-    property Year: Integer read {$IF COOPER}mapped.get(Calendar.YEAR){$ELSEIF ECHOES}mapped.Year{$ELSEIF NOUGAT}GetComponent(NSCalendarUnit.NSYearCalendarUnit){$ENDIF};
-    property Month: Integer read {$IF COOPER}mapped.get(Calendar.MONTH)+1{$ELSEIF ECHOES}mapped.Month{$ELSEIF NOUGAT}GetComponent(NSCalendarUnit.NSMonthCalendarUnit){$ENDIF};    
-    property Day: Integer read {$IF COOPER}mapped.get(Calendar.DAY_OF_MONTH){$ELSEIF ECHOES}mapped.Day{$ELSEIF NOUGAT}GetComponent(NSCalendarUnit.NSDayCalendarUnit){$ENDIF};
+    property Hour: Integer read {$IF COOPER}mapped.get(Calendar.HOUR_OF_DAY){$ELSEIF ECHOES}mapped.Hour{$ELSEIF NOUGAT}DateTimeHelpers.GetComponent(mapped, NSCalendarUnit.NSHourCalendarUnit){$ENDIF};
+    property Minute: Integer read {$IF COOPER}mapped.get(Calendar.MINUTE){$ELSEIF ECHOES}mapped.Minute{$ELSEIF NOUGAT}DateTimeHelpers.GetComponent(mapped, NSCalendarUnit.NSMinuteCalendarUnit){$ENDIF};
+    property Second: Integer read {$IF COOPER}mapped.get(Calendar.SECOND){$ELSEIF ECHOES}mapped.Second{$ELSEIF NOUGAT}DateTimeHelpers.GetComponent(mapped, NSCalendarUnit.NSSecondCalendarUnit){$ENDIF};
+    property Year: Integer read {$IF COOPER}mapped.get(Calendar.YEAR){$ELSEIF ECHOES}mapped.Year{$ELSEIF NOUGAT}DateTimeHelpers.GetComponent(mapped, NSCalendarUnit.NSYearCalendarUnit){$ENDIF};
+    property Month: Integer read {$IF COOPER}mapped.get(Calendar.MONTH)+1{$ELSEIF ECHOES}mapped.Month{$ELSEIF NOUGAT}DateTimeHelpers.GetComponent(mapped, NSCalendarUnit.NSMonthCalendarUnit){$ENDIF};    
+    property Day: Integer read {$IF COOPER}mapped.get(Calendar.DAY_OF_MONTH){$ELSEIF ECHOES}mapped.Day{$ELSEIF NOUGAT}DateTimeHelpers.GetComponent(mapped, NSCalendarUnit.NSDayCalendarUnit){$ENDIF};
     property Date: DateTime read {$IF COOPER OR NOUGAT}new DateTime(self.Year, self.Month, self.Day, 0, 0, 0){$ELSEIF ECHOES}mapped.Date{$ENDIF};  
     
     class property Today: DateTime read {$IF COOPER OR NOUGAT}Now.Date{$ELSEIF ECHOES}mapped.Today{$ENDIF};
     class property Now: DateTime read {$IF COOPER OR NOUGAT}new DateTime(){$ELSEIF ECHOES}mapped.Now{$ENDIF};    
+    const TicksSince1970: Int64 = 621355968000000000;
+                                  
+    property Ticks: Int64 read{$IFDEF COOPER}(mapped.TimeInMillis +mapped.TimeZone.getOffset(mapped.TimeInMillis)) * Timespan.TicksPerMillisecond + TicksSince1970{$ELSEIF ECHOES}mapped.Ticks{$ELSE}Int64((mapped.timeIntervalSince1970 + DateTimeHelpers.LocalTimezone.secondsFromGMTForDate(mapped)) * Timespan.TicksPerSecond) + TicksSince1970{$ENDIF};
+    class operator &Add(a: DateTime; b: Timespan): DateTime;
+    class operator Subtract(a: DateTime; b: DateTime): TimeSpan;
+    class operator Subtract(a: DateTime; b: Timespan): DateTime;
+
+    class operator Equal(a,b: DateTime): Boolean;
+    class operator NotEqual(a,b: DateTime): Boolean;
+    class operator Less(a,b: DateTime): Boolean;
+    class operator LessOrEqual(a,b: DateTime): Boolean;
+    class operator Greater(a, b: DateTime): Boolean;
+    class operator GreaterOrEqual(a,b: DateTime): Boolean;
   end;
 
 implementation
@@ -120,72 +139,78 @@ end;
 method DateTime.AddDays(Value: Integer): DateTime;
 begin
   {$IF COOPER}
-  mapped.add(Calendar.DATE, Value);
-  exit mapped;
+  result := DateTime(mapped.clone);
+  Calendar(result).add(Calendar.DATE, Value);
+  exit;
   {$ELSEIF ECHOES}
   exit mapped.AddDays(Value);
   {$ELSEIF NOUGAT}
-  exit AdjustDate(NSCalendarUnit.NSDayCalendarUnit, Value);
+  exit DateTimeHelpers.AdjustDate(mapped, NSCalendarUnit.NSDayCalendarUnit, Value);
   {$ENDIF}
 end;
 
 method DateTime.AddHours(Value: Integer): DateTime;
 begin
   {$IF COOPER}
-  mapped.add(Calendar.HOUR, Value);
-  exit mapped;
+  result := DateTime(mapped.clone);
+  Calendar(result).add(Calendar.HOUR_OF_DAY, Value);
+  exit;
   {$ELSEIF ECHOES}
   exit mapped.AddHours(Value);
   {$ELSEIF NOUGAT}
-  exit AdjustDate(NSCalendarUnit.NSHourCalendarUnit, Value);
+  exit DateTimeHelpers.AdjustDate(mapped, NSCalendarUnit.NSHourCalendarUnit, Value);
   {$ENDIF}
 end;
 
 method DateTime.AddMinutes(Value: Integer): DateTime;
 begin
   {$IF COOPER}
-  mapped.add(Calendar.MINUTE, Value);
-  exit mapped;
+  result := DateTime(mapped.clone);
+  Calendar(result).add(Calendar.MINUTE, Value);
+  exit;
   {$ELSEIF ECHOES}
   exit mapped.AddMinutes(Value);
   {$ELSEIF NOUGAT}
-  exit AdjustDate(NSCalendarUnit.NSMinuteCalendarUnit, Value);
+  exit DateTimeHelpers.AdjustDate(mapped, NSCalendarUnit.NSMinuteCalendarUnit, Value);
   {$ENDIF}
 end;
 
 method DateTime.AddMonths(Value: Integer): DateTime;
 begin
   {$IF COOPER}
-  mapped.add(Calendar.MONTH, Value);
-  exit mapped;
+  result := DateTime(mapped.clone);
+  Calendar(result).add(Calendar.MONTH, Value);
+  exit;
   {$ELSEIF ECHOES}
   exit mapped.AddMonths(Value);
   {$ELSEIF NOUGAT}
-  exit AdjustDate(NSCalendarUnit.NSMonthCalendarUnit, Value);
+  exit DateTimeHelpers.AdjustDate(mapped, NSCalendarUnit.NSMonthCalendarUnit, Value);
   {$ENDIF}
 end;
 
 method DateTime.AddSeconds(Value: Integer): DateTime;
 begin
   {$IF COOPER}
-  mapped.add(Calendar.SECOND, Value);
-  exit mapped;
+  result := DateTime(mapped.clone);
+  Calendar(result).add(Calendar.SECOND, Value);
+  exit;
   {$ELSEIF ECHOES}
   exit mapped.AddSeconds(Value);
   {$ELSEIF NOUGAT}
-  exit AdjustDate(NSCalendarUnit.NSSecondCalendarUnit, Value);
+  exit DateTimeHelpers.AdjustDate(mapped, NSCalendarUnit.NSSecondCalendarUnit, Value);
   {$ENDIF}
 end;
 
 method DateTime.AddYears(Value: Integer): DateTime;
 begin
   {$IF COOPER}
-  mapped.add(Calendar.YEAR, Value);
-  exit mapped;
+  result := DateTime(mapped.clone);
+  Calendar(result).add(Calendar.YEAR, Value);
+  exit;
   {$ELSEIF ECHOES}
   exit mapped.AddYears(Value);
   {$ELSEIF NOUGAT}
-  exit AdjustDate(NSCalendarUnit.NSYearCalendarUnit, Value);
+  exit DateTimeHelpers.AdjustDate(mapped, NSCalendarUnit.NSYearCalendarUnit, Value);
   {$ENDIF}
 end;
 
@@ -248,7 +273,7 @@ begin
   exit ToString(DEFAULT_FORMAT);
 end;
 {$ELSEIF NOUGAT}
-method DateTime.AdjustDate(Component: NSCalendarUnit; Value: Integer): DateTime;
+method DateTimeHelpers.AdjustDate(aSelf: NSDate; Component: NSCalendarUnit; Value: Integer): DateTime;
 begin
   var Components: NSDateComponents := new NSDateComponents();  
 
@@ -262,7 +287,7 @@ begin
   end;
   
   var lCalendar := NSCalendar.currentCalendar();
-  exit lCalendar.dateByAddingComponents(Components) toDate(mapped) options(0);  
+  exit lCalendar.dateByAddingComponents(Components) toDate(aSelf) options(0);  
 end;
 
 method DateTime.description: NSString;
@@ -270,9 +295,9 @@ begin
   exit ToString(DEFAULT_FORMAT);
 end;
 
-method DateTime.GetComponent(Component: NSCalendarUnit): Integer;
+method DateTimeHelpers.GetComponent(aSelf: NSDate; Component: NSCalendarUnit): Integer;
 begin
-  var lComponents := NSCalendar.currentCalendar().components(Component) fromDate(mapped);
+  var lComponents := NSCalendar.currentCalendar().components(Component) fromDate(aSelf);
   case Component of
     NSCalendarUnit.NSDayCalendarUnit: exit lComponents.day;
     NSCalendarUnit.NSHourCalendarUnit: exit lComponents.hour;
@@ -283,5 +308,67 @@ begin
   end;
 end;
 {$ENDIF}
+
+operator DateTime.Add(a: DateTime; b: TimeSpan): DateTime;
+begin
+  exit new DateTime(a.Ticks + b.Ticks);
+end;
+
+operator DateTime.Subtract(a: DateTime; b: DateTime): TimeSpan;
+begin
+  exit new Timespan(a.Ticks - b.Ticks);
+end;
+
+operator DateTime.Subtract(a: DateTime; b: TimeSpan): DateTime;
+begin
+  exit new DateTime(a.Ticks - b.Ticks);
+end;
+
+operator DateTime.Equal(a: DateTime; b: DateTime): Boolean;
+begin
+  exit a.Ticks = b.Ticks; 
+end;
+
+operator DateTime.NotEqual(a: DateTime; b: DateTime): Boolean;
+begin
+  exit a.Ticks <> b.Ticks;
+end;
+
+operator DateTime.Less(a: DateTime; b: DateTime): Boolean;
+begin
+  exit a.Ticks < b.Ticks;
+end;
+
+operator DateTime.LessOrEqual(a: DateTime; b: DateTime): Boolean;
+begin
+  exit a.Ticks <= b.Ticks;
+end;
+
+operator DateTime.Greater(a: DateTime; b: DateTime): Boolean;
+begin
+  exit a.Ticks > b.Ticks;
+end;
+
+operator DateTime.GreaterOrEqual(a: DateTime; b: DateTime): Boolean;
+begin
+  exit a.Ticks >= b.Ticks;
+end;
+
+constructor DateTime(aTicks: Int64);
+begin
+  {$IFDEF COOPER}
+  var lCalendar := Calendar.Instance;
+  var dt := (aTicks - TicksSince1970) / TimeSpan.TicksPerMillisecond;
+  lCalendar.Time := new Date(dt - lCalendar.TimeZone.getOffset(dt));
+   
+  exit lCalendar;
+  {$ELSEIF ECHOES}
+  exit new System.DateTime(aTicks);
+  {$ELSEIF NOUGAT}
+  var dt := NSDate.dateWithTimeIntervalSince1970(Double(aTicks - TicksSince1970) / TimeSpan.TicksPerSecond);
+  
+  exit NSDate.dateWithTimeInterval(-DateTimeHelpers.LocalTimezone.secondsFromGMTForDate(dt)) sinceDate(dt);
+  {$ENDIF}
+end;
 
 end.

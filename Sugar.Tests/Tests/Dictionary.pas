@@ -50,7 +50,6 @@ begin
   Assert.IsTrue(Data.ContainsValue(nil));
   
   Assert.Throws(->Data.Add(new CodeClass(4), "")); //no duplicates
-  Assert.Throws(->Data.Add(nil, ""));
 end;
 
 method DictionaryTest.Clear;
@@ -66,7 +65,6 @@ begin
   Assert.IsTrue(Data.ContainsKey(new CodeClass(2)));
   Assert.IsTrue(Data.ContainsKey(new CodeClass(3)));
   Assert.IsFalse(Data.ContainsKey(new CodeClass(4)));
-  Assert.Throws(->Data.ContainsKey(nil));
 end;
 
 method DictionaryTest.ContainsValue;
@@ -85,7 +83,6 @@ begin
   Assert.IsFalse(Data.ContainsKey(new CodeClass(1)));
   Assert.IsFalse(Data.ContainsValue("One"));
   Assert.IsFalse(Data.Remove(new CodeClass(1)));
-  Assert.Throws(->Data.Remove(nil));
 end;
 
 method DictionaryTest.Item;
@@ -96,7 +93,6 @@ begin
   Assert.AreEqual(Data.Item[C], "One");
   Assert.AreEqual(Data[C], "One");
   Assert.Throws(->Data.Item[new CodeClass(55)]);
-  Assert.Throws(->Data.Item[nil]);
 
   Data[C] := "First";
   Assert.AreEqual(Data.Item[C], "First");
@@ -107,7 +103,6 @@ begin
   Assert.AreEqual(Data.Count, 4);
   Assert.IsTrue(Data.ContainsKey(new CodeClass(4)));
   Assert.IsTrue(Data.ContainsValue("Four"));
-  Assert.Throws(->begin Data[nil] := ""; end);  
 end;
 
 method DictionaryTest.Keys;

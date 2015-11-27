@@ -16,7 +16,7 @@ implementation
 
 class method ConsoleApp.Main(args: array of String);
 begin
-  var Tested := Runner.Run(Discovery.FromPackage(Package.Package["sugar.test"]));
+  var Tested := Runner.RunTests(Discovery.FromPackage(Package.Package["sugar.test"]));
   var Writer := new StringWriter(Tested);
 
   Writer.WriteFull;

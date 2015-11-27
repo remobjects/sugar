@@ -24,6 +24,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)CustomEncodings.pas">
       <Conditional>WINDOWS_PHONE</Conditional>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)TimeSpan.pas" />
     <Compile Include="AutoreleasePool.pas">
       <Conditional>JAVA | CLR</Conditional>
     </Compile>

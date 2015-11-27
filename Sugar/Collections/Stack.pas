@@ -16,10 +16,17 @@ type
     method Pop: T;
     method Push(Item: T);
     method ToArray: array of T;
-    method ForEach(Action: Action<T>);
 
     property Count: Integer read {$IF COOPER}mapped.size{$ELSEIF ECHOES OR NOUGAT}mapped.Count{$ENDIF};
   end;
+  {$IFDEF NOUGAT}
+  StackHelpers = public static class
+  private
+  public
+    method Peek<T>(aStack: Foundation.NSMutableArray): T;
+    method Pop<T>(aStack: Foundation.NSMutableArray): T;
+  end;
+  {$ENDIF}
 
 implementation
 
@@ -41,38 +48,22 @@ begin
   {$ENDIF}
 end;
 
-method Stack<T>.ForEach(Action: Action<T>);
-begin
-  if Action = nil then
-    raise new SugarArgumentNullException("Action");
-
-  var Items := ToArray;
-  for i: Integer := 0 to length(Items) - 1 do
-    Action(Items[i]);
-end;
 
 method Stack<T>.Peek: T;
 begin
-  if self.Count = 0 then
-    raise new SugarStackEmptyException(ErrorMessage.COLLECTION_EMPTY);
-  
   {$IF COOPER OR ECHOES}
   exit mapped.Peek;
   {$ELSE}
-  exit NullHelper.ValueOf(mapped.lastObject);
+  exit StackHelpers.Peek<T>(mapped);
   {$ENDIF}
 end;
 
 method Stack<T>.Pop: T;
 begin
-  if self.Count = 0 then
-    raise new SugarStackEmptyException(ErrorMessage.COLLECTION_EMPTY);
-
   {$IF COOPER OR ECHOES}
   exit mapped.Pop;
   {$ELSE}
-  result := NullHelper.ValueOf(mapped.lastObject);
-  mapped.removeLastObject;
+  exit StackHelpers.Pop<T>(mapped);
   {$ENDIF}
 end;
 
@@ -88,20 +79,30 @@ end;
 method Stack<T>.ToArray: array of T;
 begin
   {$IF COOPER}
-  result := mapped.toArray(new T[0]);
-
-  for i: Integer := 0 to result.length div 2 do begin
-    var temp := result[i];
-    result[i] := result[result.length - 1 - i];
-    result[result.length - 1 - i] := temp;
-  end;
+  exit ListHelpers.ToArrayReverse<T>(self, new T[Count]);
   {$ELSEIF ECHOES}
   exit mapped.ToArray;
   {$ELSEIF NOUGAT}
-  result := new T[mapped.count];
-  for i: Integer := mapped.Count - 1 downto 0 do
-    result[mapped.count - i - 1] := NullHelper.ValueOf(mapped.objectAtIndex(i));
+  exit ListHelpers.ToArrayReverse<T>(self);
   {$ENDIF}
 end;
+
+{$IFDEF NOUGAT}
+method StackHelpers.Peek<T>(aStack: Foundation.NSMutableArray): T;
+begin
+  var n := aStack.lastObject;
+  if n = nil then raise new SugarInvalidOperationException(ErrorMessage.COLLECTION_EMPTY);
+  exit NullHelper.ValueOf(n);
+end;
+
+method StackHelpers.Pop<T>(aStack: Foundation.NSMutableArray): T;
+begin
+  var n := aStack.lastObject;
+  if n = nil then raise new SugarInvalidOperationException(ErrorMessage.COLLECTION_EMPTY);
+  n := NullHelper.ValueOf(n);
+  aStack.removeLastObject;
+  exit n;
+end;
+{$ENDIF}
 
 end.

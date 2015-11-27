@@ -7,7 +7,7 @@ uses
   Sugar;
 
 type
-  Dictionary<T, U> = public class mapped to {$IF COOPER}java.util.HashMap<T,U>{$ELSEIF ECHOES}System.Collections.Generic.Dictionary<T,U>{$ELSEIF NOUGAT}Foundation.NSMutableDictionary where T is class, T is INSCopying, U is class;{$ENDIF}
+  Dictionary<T, U> = public class mapped to {$IF COOPER}java.util.HashMap<T,U>{$ELSEIF ECHOES}System.Collections.Generic.Dictionary<T,U>{$ELSEIF NOUGAT}Foundation.NSMutableDictionary where T is class, U is class;{$ENDIF}
   private
     method GetKeys: array of T;
     method GetValues: array of U;
@@ -15,6 +15,9 @@ type
     method SetItem(Key: T; Value: U);
   public
     constructor; mapped to constructor();
+    {$IFNDEF ECHOES}
+    method GetSequence: sequence of KeyValuePair<T,U>;
+    {$ENDIF}
     method &Add(Key: T; Value: U);
     method Clear;
     method TryGetValue(aKey: T; out aValue: U): Boolean;
@@ -30,29 +33,38 @@ type
     property Count: Integer read {$IF COOPER}mapped.size{$ELSEIF ECHOES OR NOUGAT}mapped.Count{$ENDIF};
   end;
 
-  {$IF ECHOES}
-  ArrayHelper = public static class
+  DictionaryHelpers = public static class
   public
+  {$IF ECHOES}
     method ToArray<T>(Value: System.Collections.Generic.IEnumerable<T>): array of T;
-  end;
   {$ENDIF}
+    {$IFDEF NOUGAT}
+    method ToArray<T>(val: NSArray): array of T;
+    {$ENDIF}
+    {$IFDEF COOPER}
+    method GetSequence<T, U>(aSelf: java.util.HashMap<T,U>) : sequence of KeyValuePair<T,U>; iterator;
+    method GetItem<T, U>(aSelf: java.util.HashMap<T,U>; aKey: T): U;
+    method Add<T, U>(aSelf: java.util.HashMap<T,U>; aKey: T; aVal: U);
+    {$ELSEIF NOUGAT}
+    method Add<T, U>(aSelf: NSMutableDictionary; aKey: T; aVal: U);
+    method GetItem<T, U>(aSelf: NSDictionary; aKey: T): U;
+    method GetSequence<T, U>(aSelf: NSDictionary) : sequence of KeyValuePair<T,U>; iterator;
+    {$ENDIF}
+    method Foreach<T, U>(aSelf: Dictionary<T, U>; aAction: Action<KeyValuePair<T, U>>);
+  end;
+
+  
 
 implementation
 
 method Dictionary<T, U>.Add(Key: T; Value: U);
 begin
-  if Key = nil then
-    raise new SugarArgumentNullException("Key");
-
-  if ContainsKey(Key) then
-    raise new SugarArgumentException(ErrorMessage.KEY_EXISTS);
-
   {$IF COOPER}
-  mapped.put(Key, Value);
+  DictionaryHelpers.Add(mapped, Key, Value);
   {$ELSEIF ECHOES}
   mapped.Add(Key, Value);
   {$ELSEIF NOUGAT}
-  mapped.setObject(NullHelper.ValueOf(Value)) forKey(Key);
+  DictionaryHelpers.Add(mapped, Key, VAlue);
   {$ENDIF}
 end;
 
@@ -67,9 +79,6 @@ end;
 
 method Dictionary<T, U>.ContainsKey(Key: T): Boolean;
 begin
-  if Key = nil then
-    raise new SugarArgumentNullException("Key");
-
   {$IF COOPER OR ECHOES}
   exit mapped.ContainsKey(Key);
   {$ELSEIF NOUGAT}
@@ -88,30 +97,17 @@ end;
 
 method Dictionary<T, U>.ForEach(Action: Action<KeyValuePair<T, U>>);
 begin
-  if Action = nil then
-    raise new SugarArgumentNullException("Action");
-
-  var lKeys := self.Keys;
-  for i: Integer := 0 to length(lKeys) - 1 do
-    Action(new KeyValuePair<T,U>(lKeys[i], self.Item[lKeys[i]]));
+  DictionaryHelpers.Foreach(self, Action);
 end;
 
 method Dictionary<T, U>.GetItem(Key: T): U;
 begin
   {$IF COOPER}
-  result := mapped[Key];
-
-  if (result = nil) and (not ContainsKey(Key)) then
-    raise new SugarKeyNotFoundException;
+  result := DictionaryHelpers.GetItem(mapped, Key);
   {$ELSEIF ECHOES}
   result := mapped[Key];
   {$ELSEIF NOUGAT}
-  var lRes := mapped.objectForKey(Key);
-
-  if lRes = nil then
-    raise new SugarKeyNotFoundException;
-
-  exit NullHelper.ValueOf(lRes);
+  result := DictionaryHelpers.GetItem<T, U>(mapped, Key);
   {$ENDIF}
 end;
 
@@ -120,12 +116,9 @@ begin
   {$IF COOPER}
   exit mapped.keySet.toArray(new T[0]);
   {$ELSEIF ECHOES}
-  exit ArrayHelper.ToArray<T>(mapped.Keys);
+  exit DictionaryHelpers.ToArray<T>(mapped.Keys);
   {$ELSEIF NOUGAT}
-  result := new T[mapped.allKeys.count];
-  for i: Integer := 0 to mapped.allKeys.count - 1 do begin
-    result[i] := mapped.allKeys.objectAtIndex(i);
-  end;
+  exit DictionaryHelpers.ToArray<T>(mapped.allKeys);
   {$ENDIF}
 end;
 
@@ -134,19 +127,14 @@ begin
   {$IF COOPER}
   exit mapped.values.toArray(new U[0]);
   {$ELSEIF ECHOES}
-  exit ArrayHelper.ToArray<U>(mapped.Values);
+  exit DictionaryHelpers.ToArray<U>(mapped.Values);
   {$ELSEIF NOUGAT}
-  result := new U[mapped.allValues.count];
-  for i: Integer := 0 to mapped.allValues.count - 1 do
-    result[i] := NullHelper.ValueOf(mapped.allValues.objectAtIndex(i));
+  exit DictionaryHelpers.ToArray<U>(mapped.allValues);
   {$ENDIF}
 end;
 
 method Dictionary<T, U>.&Remove(Key: T): Boolean;
 begin
-  if Key = nil then
-    raise new SugarArgumentNullException("Key");
-
   {$IF COOPER}
   exit mapped.remove(Key) <> nil;
   {$ELSEIF ECHOES}
@@ -160,9 +148,6 @@ end;
 
 method Dictionary<T, U>.SetItem(Key: T; Value: U);
 begin
-  if Key = nil then
-    raise new SugarArgumentNullException("Key");
-
   {$IF COOPER OR ECHOES}
   mapped[Key] := Value;
   {$ELSEIF NOUGAT}
@@ -171,11 +156,67 @@ begin
 end;
 
 {$IF ECHOES}
-method ArrayHelper.ToArray<T>(Value: System.Collections.Generic.IEnumerable<T>): array of T;
+method DictionaryHelpers.ToArray<T>(Value: System.Collections.Generic.IEnumerable<T>): array of T;
 begin
   exit Value.ToArray;
 end;
 {$ENDIF}
+
+{$IFDEF NOUGAT}
+method DictionaryHelpers.ToArray<T>(val: NSArray): array of T;
+begin
+  result := new T[val.count];
+  for i: Integer := 0 to val.count - 1 do begin
+    result[i] := val.objectAtIndex(i);
+  end;
+end;
+
+method DictionaryHelpers.Add<T, U>(aSelf: NSMutableDictionary; aKey: T; aVal: U);
+begin
+  if aSelf.objectForKey(aKey) <> nil then raise new SugarArgumentException(ErrorMessage.KEY_EXISTS);
+  aSelf.setObject(NullHelper.ValueOf(aVal)) forKey(aKey);
+end;
+
+method DictionaryHelpers.GetItem<T, U>(aSelf: NSDictionary; aKey: T): U;
+begin
+  var o := aSelf.objectForKey(aKey);
+  if o = nil then raise new SugarKeyNotFoundException();
+  exit NullHelper.ValueOf(o);
+end;
+
+method DictionaryHelpers.GetSequence<T, U>(aSelf: NSDictionary) : sequence of KeyValuePair<T,U>;
+begin
+   for each el in aSelf.allKeys do
+    yield new KeyValuePair<T,U>(el, aSelf[el]);
+end;
+{$ENDIF}
+{$IFDEF COOPER}
+method DictionaryHelpers.GetSequence<T, U>(aSelf: java.util.HashMap<T,U>) : sequence of KeyValuePair<T,U>;
+begin
+  for each el in aSelf.entrySet do begin
+    yield new KeyValue<T,U>(el.Key, el.Value);
+  end;
+end;
+
+method DictionaryHelpers.GetItem<T, U>(aSelf: java.util.HashMap<T,U>; aKey: T): U;
+begin 
+  if not aSelf.containsKey(aKey) then raise new SugarKeyNotFoundException();
+  exit aSelf[aKey];
+end;
+method DictionaryHelpers.Add<T, U>(aSelf: java.util.HashMap<T,U>; aKey: T; aVal: U);
+begin
+  if aSelf.containsKey(aKey) then raise new SugarArgumentException(ErrorMessage.KEY_EXISTS);
+  aSelf.put(aKey, aVal)
+end;
+
+{$ENDIF}
+
+method DictionaryHelpers.Foreach<T, U>(aSelf: Dictionary<T, U>; aAction: Action<KeyValuePair<T, U>>);
+begin
+  var lKeys := aself.Keys;
+  for i: Integer := 0 to length(lKeys) - 1 do
+    aAction(new KeyValuePair<T,U>(T(lKeys[i]), U(aSelf.Item[lKeys[i]])));
+end;
 
 method Dictionary<T, U>.TryGetValue(aKey: T; out aValue: U): Boolean;
 begin
@@ -186,8 +227,18 @@ begin
   exit aValue <> nil;
   {$ELSEIF NOUGAT}
   aValue := mapped.objectForKey(aKey);
-  exit aValue <> nil;
+  result := aValue <> nil;
+  aValue := NullHelper.ValueOf(aValue);
   {$ENDIF}
 end;
+
+{$IFNDEF ECHOES}
+method Dictionary<T,U>.GetSequence: sequence of KeyValuePair<T,U>;
+begin
+  exit DictionaryHelpers.GetSequence<T, U>(self);
+end;
+{$ENDIF}
+    
+
 
 end.

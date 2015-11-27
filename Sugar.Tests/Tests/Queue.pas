@@ -21,7 +21,6 @@ type
     method ToArray;
     method Count;
     method Enumerator;
-    method ForEach;
   end;
 
   Message = public class
@@ -166,19 +165,6 @@ begin
     Assert.IsTrue(Expected[&Index].Equals(Item));
     inc(&Index);
   end;
-
-  Assert.AreEqual(&Index, 3);
-end;
-
-method QueueTest.ForEach;
-begin
-  var Expected: array of Message := [new Message("One", 1), new Message("Two", 2), new Message("Three", 3)];
-  var &Index: Integer := 0;
-
-  Data.ForEach(x -> begin 
-    Assert.IsTrue(Expected[&Index].Equals(x));
-    &Index := &Index + 1;
-  end);
 
   Assert.AreEqual(&Index, 3);
 end;

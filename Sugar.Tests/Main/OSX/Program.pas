@@ -16,7 +16,7 @@ implementation
 
 method Program.Main(aArguments: array of String): Int32;
 begin
-  var Tested := Runner.Run(Discovery.FromModule);
+  var Tested := Runner.RunTests(Discovery.FromModule);
   var Writer := new StringWriter(Tested);
 
   Writer.WriteFull;

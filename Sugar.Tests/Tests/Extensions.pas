@@ -26,7 +26,7 @@ type
     method {$IF NOUGAT}isEqual(obj: id){$ELSE}&Equals(Obj: Object){$ENDIF}: Boolean; override;
     method {$IF NOUGAT}description: Foundation.NSString{$ELSEIF COOPER}ToString: java.lang.String{$ELSEIF ECHOES}ToString: System.String{$ENDIF}; override;
     method {$IF NOUGAT}hash: Foundation.NSUInteger{$ELSEIF COOPER}hashCode: Integer{$ELSEIF ECHOES}GetHashCode: Integer{$ENDIF}; override;
-    {$IF NOUGAT}method copyWithZone(zone: ^Foundation.NSZone): id;{$ENDIF}
+    {$IF NOUGAT}method copyWithZone(zone: ^Foundation.NSZone): not nullable id;{$ENDIF}
 
     property Code: Integer read write;
   end;
@@ -58,7 +58,7 @@ begin
 end;
 
 {$IF NOUGAT}
-method CodeClass.copyWithZone(zone: ^Foundation.NSZone): id;
+method CodeClass.copyWithZone(zone: ^Foundation.NSZone): not nullable id;
 begin
   exit new CodeClass(Code);
 end;

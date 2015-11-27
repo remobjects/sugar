@@ -27,7 +27,7 @@ begin
   Sugar.Environment.ApplicationContext := self.ApplicationContext;
   ContentView := R.layout.main;
   
-  Runner.RunAsync(Discovery.FromContext(self), tested -> begin
+  Runner.RunTestsAsync(Discovery.FromContext(self))  completionHandler(tested -> begin
     var Writer := new StringWriter(Tested);
 
       Writer.WriteFull;

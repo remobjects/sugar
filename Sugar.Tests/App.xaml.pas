@@ -75,7 +75,7 @@ begin
      //TODO: Load state from previously suspended application
   end;
 
-  Runner.RunAsync(Discovery.FromAssembly(self.GetType.GetTypeInfo.Assembly), tested -> begin
+  Runner.RunTestsAsync(Discovery.FromAssembly(self.GetType.GetTypeInfo.Assembly) ) completionHandler( tested -> begin
     var Writer := new StringWriter(Tested);
 
       Writer.WriteFull;

@@ -44,7 +44,6 @@ begin
   Assert.AreEqual(Value.ToString, "Hello ");
 
   Assert.AreEqual(Builder.Append("").ToString, "Hello ");
-  Assert.Throws(->Builder.Append(nil));
 end;
 
 method StringBuilderTest.AppendRange;
@@ -60,12 +59,6 @@ begin
   Assert.AreEqual(Builder.Append("qwerty", 1, 0).ToString, "elH"); //count = 0, no changes
   Assert.AreEqual(Builder.Append(nil, 0, 0).ToString, "elH"); //count = 0 and index = 0, no changes
 
-  Assert.Throws(->Builder.Append(nil, 0, 1));
-  Assert.Throws(->Builder.Append(nil, 1, 0));
-  Assert.Throws(->Builder.Append("Test", 0, 50));
-  Assert.Throws(->Builder.Append("Test", 50, 1));
-  Assert.Throws(->Builder.Append("Test", -1, 1));
-  Assert.Throws(->Builder.Append("Test", 1, -1));
 end;
 
 method StringBuilderTest.AppendChar;
@@ -85,8 +78,6 @@ begin
   var NL := Sugar.Environment.NewLine;
   Assert.IsNotNil(Builder.AppendLine("Hello"));
   Assert.AreEqual(Builder.ToString, "Hello"+NL);
-
-  Assert.Throws(->Builder.AppendLine(nil));
 
   Assert.IsNotNil(Builder.AppendLine);
   Assert.AreEqual(Builder.ToString, "Hello"+NL+NL);

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0" DefaultTargets="Build">
+    <PropertyGroup Label="Globals">
+        <ProjectGuid>{6636F222-6B54-43EF-B3AE-FE4E319449CB}</ProjectGuid>
+    </PropertyGroup>
+    <PropertyGroup>
+        <RootNamespace>Sugar.Shared.Test</RootNamespace>
+    </PropertyGroup>
+    <Import Project="Sugar.Shared.Test.projitems" Label="Shared"/>
+    <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Elements.SharedProject.targets"/>
+    <PropertyGroup>
+        <PreBuildEvent/>
+    </PropertyGroup>
+</Project>
