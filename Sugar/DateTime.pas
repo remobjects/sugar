@@ -17,6 +17,7 @@ type
   public
     method GetComponent(aSelf: NSDate; Component: NSCalendarUnit): Integer;
     method AdjustDate(aSelf: NSDate; Component: NSCalendarUnit; Value: Integer): DateTime;
+    class property LocalTimezone: NSTimeZone := NSTimeZone.localTimeZone;
   end;
   {$ENDIF}
 
@@ -62,7 +63,8 @@ type
     class property Today: DateTime read {$IF COOPER OR NOUGAT}Now.Date{$ELSEIF ECHOES}mapped.Today{$ENDIF};
     class property Now: DateTime read {$IF COOPER OR NOUGAT}new DateTime(){$ELSEIF ECHOES}mapped.Now{$ENDIF};    
     const TicksSince1970: Int64 = 621355968000000000;
-    property Ticks: Int64 read{$IFDEF COOPER}mapped.getTimeInMillis() * Timespan.TicksPerMilisecond + TicksSince1970{$ELSEIF ECHOES}mapped.Ticks{$ELSE}Int64(mapped.timeIntervalSince1970 * Timespan.TicksPerSecond) + TicksSince1970{$ENDIF};
+                                  
+    property Ticks: Int64 read{$IFDEF COOPER}(mapped.TimeInMillis +mapped.TimeZone.getOffset(mapped.TimeInMillis)) * Timespan.TicksPerMillisecond + TicksSince1970{$ELSEIF ECHOES}mapped.Ticks{$ELSE}Int64((mapped.timeIntervalSince1970 + DateTimeHelpers.LocalTimezone.secondsFromGMTForDate(mapped)) * Timespan.TicksPerSecond) + TicksSince1970{$ENDIF};
     class operator &Add(a: DateTime; b: Timespan): DateTime;
     class operator Subtract(a: DateTime; b: DateTime): TimeSpan;
     class operator Subtract(a: DateTime; b: Timespan): DateTime;
@@ -356,13 +358,16 @@ constructor DateTime(aTicks: Int64);
 begin
   {$IFDEF COOPER}
   var lCalendar := Calendar.Instance;
-  lCalendar.Time := new Date((aTicks - TicksSince1970) / TimeSpan.TicksPerMilisecond);
+  var dt := (aTicks - TicksSince1970) / TimeSpan.TicksPerMillisecond;
+  lCalendar.Time := new Date(dt - lCalendar.TimeZone.getOffset(dt));
    
   exit lCalendar;
   {$ELSEIF ECHOES}
   exit new System.DateTime(aTicks);
   {$ELSEIF NOUGAT}
-  exit new NSDate(Double(aTicks - TicksSince1970) / TimeSpan.TicksPerSecond);
+  var dt := NSDate.dateWithTimeIntervalSince1970(Double(aTicks - TicksSince1970) / TimeSpan.TicksPerSecond);
+  
+  exit NSDate.dateWithTimeInterval(-DateTimeHelpers.LocalTimezone.secondsFromGMTForDate(dt)) sinceDate(dt);
   {$ENDIF}
 end;
 

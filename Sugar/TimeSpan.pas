@@ -6,11 +6,12 @@ interface
 type
   TimeSpan = public record mapped to {$IFDEF ECHOES}System.Timespan{$ELSEIF NOUGAT}NSTimeInterval{$ELSE}Int64{$ENDIF}
   private
+    method get_TotalMilliSeconds: Double;
     method get_Days: Integer;
     method get_Hours: Integer;
     method get_Minutes: Integer;
     method get_Seconds: Integer;
-    method get_Miliseconds: Integer;
+    method get_Milliseconds: Integer;
     method get_Ticks: Int64;
     method get_TotalDays: Double;
     method get_TotalHours: Double;
@@ -19,8 +20,8 @@ type
   protected
   public
     const
-    TicksPerMilisecond: Int64 = 10000;
-    TicksPerSecond: Int64 = TicksPerMilisecond * 1000;
+    TicksPerMillisecond: Int64 = 10000;
+    TicksPerSecond: Int64 = TicksPerMillisecond * 1000;
     TicksPerMinute: Int64 = TicksPerSecond * 60;
     TicksPerHour: Int64 = TicksPerMinute * 60;
     TicksPerDay: Int64 = TicksPerHour * 24;
@@ -30,13 +31,14 @@ type
     property Hours: Integer read get_Hours;
     property Minutes: Integer read get_Minutes;
     property Seconds: Integer read get_Seconds;
-    property Miliseconds: Integer read get_Miliseconds;
+    property Milliseconds: Integer read get_Milliseconds;
     property Ticks: Int64 read get_Ticks;
 
     property TotalDays: Double read get_TotalDays;
     property TotalHours: Double read get_TotalHours;
     property TotalMinutes: Double read get_TotalMinutes;
     property TotalSeconds: Double read get_TotalSeconds;
+    property TotalMilliSeconds: Double read get_TotalMilliSeconds;
 
     constructor(aTicks: Int64);
     constructor(h,m,s: Int32);
@@ -50,7 +52,7 @@ type
     class method FromHours(d: Double): TimeSpan;
     class method FromMinutes(d: Double): TimeSpan;
     class method FromSeconds(d: Double): TimeSpan;
-    class method FromMiliseconds(d: Double): TimeSpan;
+    class method FromMilliseconds(d: Double): TimeSpan;
     class method FromTicks(d: Int64): TimeSpan;
     
     class operator Equal(a,b: Timespan): Boolean;
@@ -89,7 +91,7 @@ end;
 
 constructor TimeSpan(d: Int32; h: Int32; m: Int32; s: Int32; ms: Int32);
 begin
-  exit new Timespan(((((((((d * 24) + h) * 60) + m) * 60) + s) * 1000) + ms) * TicksPerMilisecond);
+  exit new Timespan(((((((((d * 24) + h) * 60) + m) * 60) + s) * 1000) + ms) * TicksPerMillisecond);
 end;
 
 method TimeSpan.get_TotalSeconds: Double;
@@ -145,9 +147,9 @@ begin
   exit (Ticks / TicksPerDay) mod 24;
 end;
 
-method TimeSpan.get_Miliseconds: Integer;
+method TimeSpan.get_Milliseconds: Integer;
 begin
-  exit (Ticks / TicksPerSecond) mod 1000;
+  exit (Ticks / TicksPerMillisecond) mod 1000;
 end;
 
 method TimeSpan.Add(ts: TimeSpan): TimeSpan;
@@ -209,9 +211,9 @@ begin
   exit FromTicks(Int64(d * TicksPerSecond));
 end;
 
-class method TimeSpan.FromMiliseconds(d: Double): TimeSpan;
+class method TimeSpan.FromMilliseconds(d: Double): TimeSpan;
 begin
-  exit FromTicks(Int64(d * TicksPerMilisecond));
+  exit FromTicks(Int64(d * TicksPerMillisecond));
 end;
 
 class method TimeSpan.FromTicks(d: Int64): TimeSpan;
@@ -347,6 +349,11 @@ begin
   {$ELSE}
   {$ERROR Unknown platform}
   {$ENDIF}
+end;
+
+method TimeSpan.get_TotalMilliSeconds: Double;
+begin
+  exit Double(Ticks) / TicksPerMillisecond; 
 end;
 
 end.
