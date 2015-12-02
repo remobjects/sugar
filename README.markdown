@@ -14,7 +14,7 @@ The goal is that with Sugar, a lot of _low-level_ code that uses the Oxygene or 
 
 The goal is *not* to provide cross-platform shared libraries for higher-level platform features such as UI or system access.
 
-Sugar does not intent to facilitate the creation of single "lowest common denominator" applications that run on the different platforms without careful design for each platform. Such a goal would conflict with our design philosophy for platform-native proper cross platform development.
+Sugar does not intend to facilitate the creation of single "lowest common denominator" applications that run on the different platforms without careful design for each platform. Such a goal would conflict with our design philosophy for platform-native proper cross platform development.
 
 ## Requirements
 
