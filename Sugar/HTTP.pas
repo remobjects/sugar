@@ -585,10 +585,33 @@ begin
     nsUrlRequest.HTTPBody := (aRequest.Content as IHttpRequestContent).GetContentAsBinary();
   end;
 
-  var nsUrlResponse: NSURLResponse;
+ var nsUrlResponse : NSURLResponse;
   var error: NSError;
-  var data := NSURLConnection.sendSynchronousRequest(nsUrlRequest) returningResponse(var nsUrlResponse) error(var error);
+  var data : NSData;
+  
+  var outerExecutionBlock: NSBlockOperation := NSBlockOperation.blockOperationWithBlock(method begin
+      
+    var semaphore := dispatch_semaphore_create(0);
+    var session := NSURLSession.sharedSession; 
+      
+    var task := session. dataTaskWithRequest(nsUrlRequest) completionHandler(method (internalData:NSData; internalResponse:NSURLResponse; internalError:NSError)begin
+    
+      nsUrlResponse := internalResponse;
+      error := internalError;
+      data := internalData;
+        
+      dispatch_semaphore_signal(semaphore);
+    end);
+        
+    task.resume;
 
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);      
+
+  end);
+    
+  var workerQueue := new NSOperationQueue();
+  workerQueue.addOperations([outerExecutionBlock]) waitUntilFinished(true);
+  
   var nsHttpUrlResponse := NSHTTPURLResponse(nsUrlResponse);
   if assigned(data) and assigned(nsHttpUrlResponse) and not assigned(error) then begin
     exit new HttpResponse(data, nsHttpUrlResponse);
