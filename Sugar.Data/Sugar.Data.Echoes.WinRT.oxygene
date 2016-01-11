@@ -109,7 +109,4 @@
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Echoes.WinRT.targets" />
   <Import Project="Sugar.Data.Shared.projitems" Label="Shared" />
-  <PropertyGroup>
-    <PreBuildEvent>rmdir /s /q $(ProjectDir)\Obj</PreBuildEvent>
-  </PropertyGroup>
 </Project>
