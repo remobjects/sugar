@@ -225,7 +225,7 @@ begin
         't': sb.Append(#9);
         'u': if fData.Length > lPosition+4 then begin
                var lHex := fData[lPosition+1]+fData[lPosition+2]+fData[lPosition+3]+fData[lPosition+4];
-               var lValue := Convert.HexToInt32(lHex);
+               var lValue := Convert.HexStringToInt32(lHex);
                sb.Append(Char(lValue));
                lPosition := lPosition + 4;
               end;

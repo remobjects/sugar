@@ -5,114 +5,122 @@ interface
 type
   Convert = public class {$IF COOPER}{$ELSEIF ECHOES}mapped to System.Convert{$ELSEIF NOUGAT}mapped to Object{$ENDIF}
   public
-    class method ToString(Value: Boolean): String;
-    class method ToString(Value: Byte): String;
-    class method ToString(Value: Int32): String;
-    class method ToString(Value: Int64): String;
-    class method ToString(Value: Double): String;
-    class method ToString(Value: Char): String;
-    class method ToString(Value: Object): String;
+    class method ToString(aValue: Boolean): String;
+    class method ToString(aValue: Byte): String;
+    class method ToString(aValue: Int32): String;
+    class method ToString(aValue: Int64): String;
+    class method ToString(aValue: Double): String;
+    class method ToString(aValue: Char): String;
+    class method ToString(aValue: Object): String;
 
-    class method ToInt32(Value: Boolean): Int32;
-    class method ToInt32(Value: Byte): Int32;
-    class method ToInt32(Value: Int64): Int32;
-    class method ToInt32(Value: Double): Int32;
-    class method ToInt32(Value: Char): Int32;
-    class method ToInt32(Value: String): Int32;
+    class method ToInt32(aValue: Boolean): Int32;
+    class method ToInt32(aValue: Byte): Int32;
+    class method ToInt32(aValue: Int64): Int32;
+    class method ToInt32(aValue: Double): Int32;
+    class method ToInt32(aValue: Char): Int32;
+    class method ToInt32(aValue: String): Int32;
 
-    class method HexToInt32(Value: String): UInt32;
+    class method ToInt64(aValue: Boolean): Int64;
+    class method ToInt64(aValue: Byte): Int64;
+    class method ToInt64(aValue: Int32): Int64;
+    class method ToInt64(aValue: Double): Int64;
+    class method ToInt64(aValue: Char): Int64;
+    class method ToInt64(aValue: String): Int64;
 
-    class method ToInt64(Value: Boolean): Int64;
-    class method ToInt64(Value: Byte): Int64;
-    class method ToInt64(Value: Int32): Int64;
-    class method ToInt64(Value: Double): Int64;
-    class method ToInt64(Value: Char): Int64;
-    class method ToInt64(Value: String): Int64;
+    class method ToDouble(aValue: Boolean): Double;
+    class method ToDouble(aValue: Byte): Double;
+    class method ToDouble(aValue: Int32): Double;
+    class method ToDouble(aValue: Int64): Double;
+    class method ToDouble(aValue: String): Double;
 
-    class method ToDouble(Value: Boolean): Double;
-    class method ToDouble(Value: Byte): Double;
-    class method ToDouble(Value: Int32): Double;
-    class method ToDouble(Value: Int64): Double;
-    class method ToDouble(Value: String): Double;
+    class method ToByte(aValue: Boolean): Byte;
+    class method ToByte(aValue: Double): Byte;
+    class method ToByte(aValue: Int32): Byte;
+    class method ToByte(aValue: Int64): Byte;
+    class method ToByte(aValue: Char): Byte;
+    class method ToByte(aValue: String): Byte;
 
-    class method ToByte(Value: Boolean): Byte;
-    class method ToByte(Value: Double): Byte;
-    class method ToByte(Value: Int32): Byte;
-    class method ToByte(Value: Int64): Byte;
-    class method ToByte(Value: Char): Byte;
-    class method ToByte(Value: String): Byte;
+    class method ToChar(aValue: Boolean): Char;
+    class method ToChar(aValue: Int32): Char;
+    class method ToChar(aValue: Int64): Char;
+    class method ToChar(aValue: Byte): Char;
+    class method ToChar(aValue: String): Char;
 
-    class method ToChar(Value: Boolean): Char;
-    class method ToChar(Value: Int32): Char;
-    class method ToChar(Value: Int64): Char;
-    class method ToChar(Value: Byte): Char;
-    class method ToChar(Value: String): Char;
+    class method ToBoolean(aValue: Double): Boolean;
+    class method ToBoolean(aValue: Int32): Boolean;
+    class method ToBoolean(aValue: Int64): Boolean;
+    class method ToBoolean(aValue: Byte): Boolean;
+    class method ToBoolean(aValue: String): Boolean;
+    
+    //method ToHexString(aValue: Int32; aWidth: Integer := 0): String;
+    method ToHexString(aValue: Int64; aWidth: Integer := 0): String;
+    method ToHexString(aData: array of Byte; aOffset: Integer; aCount: Integer): String;
+    method ToHexString(aData: array of Byte; aCount: Integer): String;
+    method ToHexString(aData: array of Byte): String;
 
-    class method ToBoolean(Value: Double): Boolean;
-    class method ToBoolean(Value: Int32): Boolean;
-    class method ToBoolean(Value: Int64): Boolean;
-    class method ToBoolean(Value: Byte): Boolean;
-    class method ToBoolean(Value: String): Boolean;
+    class method HexStringToInt32(aValue: String): UInt32;
+    class method HexStringToInt64(aValue: String): UInt64;
+    class method HexStringToByteArray(aData: String): array of Byte;
   end;
 
   {$IF NOUGAT}
-  ConvertHelper = public class
+  ConvertHelper = assembly class
   public
-    class method ParseNumber(Value: String): NSNumber;
-    class method ParseInt32(Value: String): Int32;  
-    class method ParseInt64(Value: String): Int64; 
-    class method ParseDouble(Value: String): Double;
+    class method ParseNumber(aValue: String): NSNumber;
+    class method ParseInt32(aValue: String): Int32;  
+    class method ParseInt64(aValue: String): Int64; 
+    class method ParseDouble(aValue: String): Double;
   end;
   {$ENDIF}
 
 implementation
 
-class method Convert.ToString(Value: Boolean): String;
+class method Convert.ToString(aValue: Boolean): String;
 begin
-  result := if Value then Consts.TrueString else Consts.FalseString;
+  result := if aValue then Consts.TrueString else Consts.FalseString;
 end;
 
-class method Convert.ToString(Value: Byte): String;
+class method Convert.ToString(aValue: Byte): String;
 begin
   {$IF COOPER OR NOUGAT}
-  exit Value.ToString;
+  exit aValue.ToString;
   {$ELSEIF ECHOES}
-  exit mapped.ToString(Value);
+  exit mapped.ToString(aValue);
   {$ENDIF}
 end;
 
-class method Convert.ToString(Value: Int32): String;
+class method Convert.ToString(aValue: Int32): String;
 begin
   {$IF COOPER OR NOUGAT}
-  exit Value.ToString;
+  exit aValue.ToString;
   {$ELSEIF ECHOES}
-  exit mapped.ToString(Value);
+  exit mapped.ToString(aValue);
   {$ENDIF}
 end;
 
-class method Convert.ToString(Value: Int64): String;
+class method Convert.ToString(aValue: Int64): String;
 begin
   {$IF COOPER OR NOUGAT}
-  exit Value.ToString;
+  exit aValue.ToString;
   {$ELSEIF ECHOES}
-  exit mapped.ToString(Value);
+  exit mapped.ToString(aValue);
   {$ENDIF}
 end;
 
-class method Convert.ToString(Value: Double): String;
+class method Convert.ToString(aValue: Double): String;
 begin
-  if Consts.IsNegativeInfinity(Value) then
+  if Consts.IsNegativeInfinity(aValue) then
     exit "-Infinity";
 
-  if Consts.IsPositiveInfinity(Value) then
+  if Consts.IsPositiveInfinity(aValue) then
     exit "Infinity";
 
-  if Consts.IsNaN(Value) then
+  if Consts.IsNaN(aValue) then
     exit "NaN";
 
   {$IF COOPER}
   var DecFormat: java.text.DecimalFormat := java.text.DecimalFormat(java.text.DecimalFormat.getInstance(Sugar.Cooper.LocaleUtils.ForLanguageTag("en-US")));
-  var X := Math.Log10(Math.Abs(Value));
+  var X := Math.Log10(Math.Abs(aValue));
   var FloatPattern := "#.###############";
   var ScientificPattern := "#.###############E00";
 
@@ -121,61 +129,61 @@ begin
   else
     DecFormat.applyPattern(if Math.Abs(X) >= 5 then ScientificPattern else FloatPattern);
 
-  result := DecFormat.format(Value);
+  result := DecFormat.format(aValue);
   var Pos := result.IndexOf("E-");
 
   if Pos = - 1 then
     exit result.Replace("E", "E+");
   {$ELSEIF ECHOES}
-  exit mapped.ToString(Value, System.Globalization.CultureInfo.InvariantCulture);
+  exit mapped.ToString(aValue, System.Globalization.CultureInfo.InvariantCulture);
   {$ELSEIF NOUGAT}
-  exit Value.ToString.ToUpper;
+  exit aValue.ToString.ToUpper;
   {$ENDIF}
 end;
 
-class method Convert.ToString(Value: Char): String;
+class method Convert.ToString(aValue: Char): String;
 begin
   {$IF COOPER OR NOUGAT}
-  exit Sugar.String(Value);
+  exit Sugar.String(aValue);
   {$ELSEIF ECHOES}
-  exit mapped.ToString(Value);
+  exit mapped.ToString(aValue);
   {$ENDIF}
 end;
 
-class method Convert.ToString(Value: Object): String;
+class method Convert.ToString(aValue: Object): String;
 begin
-  exit Value.ToString;
+  exit aValue.ToString;
 end;
 
-class method Convert.ToInt32(Value: Boolean): Int32;
+class method Convert.ToInt32(aValue: Boolean): Int32;
 begin
-  result := if Value then 1 else 0; 
+  result := if aValue then 1 else 0; 
 end;
 
-class method Convert.ToInt32(Value: Byte): Int32;
+class method Convert.ToInt32(aValue: Byte): Int32;
 begin
   {$IF COOPER OR NOUGAT}
-  exit Int32(Value);
+  exit Int32(aValue);
   {$ELSEIF ECHOES}
-  exit mapped.ToInt32(Value);
+  exit mapped.ToInt32(aValue);
   {$ENDIF}
 end;
 
-class method Convert.ToInt32(Value: Int64): Int32;
+class method Convert.ToInt32(aValue: Int64): Int32;
 begin
-  if (Value > Consts.MaxInteger) or (Value < Consts.MinInteger) then
+  if (aValue > Consts.MaxInteger) or (aValue < Consts.MinInteger) then
     raise new SugarArgumentOutOfRangeException(ErrorMessage.TYPE_RANGE_ERROR, "Int32");
 
   {$IF COOPER OR NOUGAT}
-  exit Int32(Value);
+  exit Int32(aValue);
   {$ELSEIF ECHOES}
-  exit mapped.ToInt32(Value);
+  exit mapped.ToInt32(aValue);
   {$ENDIF}
 end;
 
-class method Convert.ToInt32(Value: Double): Int32;
+class method Convert.ToInt32(aValue: Double): Int32;
 begin
-  var Number := Math.Round(Value);
+  var Number := Math.Round(aValue);
 
   if (Number > Consts.MaxInteger) or (Number < Consts.MinInteger) then
     raise new SugarArgumentOutOfRangeException(ErrorMessage.TYPE_RANGE_ERROR, "Int32");
@@ -183,134 +191,232 @@ begin
   exit Int32(Number);
 end;
 
-class method Convert.ToInt32(Value: Char): Int32;
+class method Convert.ToInt32(aValue: Char): Int32;
 begin
   {$IF COOPER OR NOUGAT}
-  exit ord(Value);
+  exit ord(aValue);
   {$ELSEIF ECHOES}
-  exit mapped.ToInt32(Value);
+  exit mapped.ToInt32(aValue);
   {$ENDIF}
 end;
 
-class method Convert.ToInt32(Value: String): Int32;
+class method Convert.ToInt32(aValue: String): Int32;
 begin
   {$IF COOPER}
-  exit Integer.parseInt(Value);
+  exit Integer.parseInt(aValue);
   {$ELSEIF ECHOES}
-  exit mapped.ToInt32(Value);
+  exit mapped.ToInt32(aValue);
   {$ELSEIF NOUGAT}
-  exit ConvertHelper.ParseInt32(Value);
+  exit ConvertHelper.ParseInt32(aValue);
   {$ENDIF}
 end;
 
-class method Convert.HexToInt32(Value: String): UInt32;
+{method Convert.ToHexString(aValue: Int32; aWidth: Integer := 0): String;
+begin
+  result := ToHexString(Int64(aValue), aWidth);
+end;}
+
+method Convert.ToHexString(aValue: Int64; aWidth: Integer := 0): String;
+begin
+  if aWidth mod 2 ≠ 0 then aWidth := aWidth+1;
+
+  if aWidth > 16 then aWidth := 16
+  else if aValue > $ffff ffff ffff ff and aWidth < 16 then aWidth := 16
+  else if aValue > $ffff ffff ffff and aWidth < 14 then aWidth := 14
+  else if aValue > $ffff ffff ff and aWidth < 12 then aWidth := 12
+  else if aValue > $ffff ffff and aWidth < 10 then aWidth := 10
+  else if aValue > $ffff ff and aWidth < 8 then aWidth := 8
+  else if aValue > $ffff and aWidth < 6 then aWidth := 6
+  else if aValue > $ff and aWidth < 2 then aWidth := 4
+  else aWidth := 2;
+    
+  result := '';
+  for i: Integer := aWidth/2 - 1 downto 0 do begin
+  
+    var lCurrentByte := aValue shr i mod $ff;
+  
+    var Num := lCurrentByte shr 4  and $f;
+    result := result + chr(55 + Num + (((Num - 10) shr 31) and -7));
+    Num := lCurrentByte and $f;
+    result := result + chr(55 + Num + (((Num - 10) shr 31) and -7));
+      
+  end;
+end;
+
+method Convert.ToHexString(aData: array of Byte; aOffset: Integer; aCount: Integer): String;
+begin
+  if (length(aData) = 0) or (aCount = 0) then
+    exit '';
+
+  RangeHelper.Validate(Range.MakeRange(aOffset, aCount), aData.Length);
+
+  var Chars := new Char[aCount * 2];
+  var Num: Integer;
+
+  for i: Integer := 0 to aCount - 1 do begin
+    Num := aData[aOffset + i] shr 4;
+    Chars[i * 2] := chr(55 + Num + (((Num - 10) shr 31) and -7));
+    Num := aData[aOffset + i] and $F;
+    Chars[i * 2 + 1] := chr(55 + Num + (((Num - 10) shr 31) and -7));
+  end;
+
+  exit new String(Chars);
+end;
+
+method Convert.ToHexString(aData: array of Byte; aCount: Integer): String;
+begin
+  result := ToHexString(aData, 0, aCount);
+end;
+
+method Convert.ToHexString(aData: array of Byte): String;
+begin
+  result := ToHexString(aData, 0, length(aData));
+end;
+
+class method Convert.HexStringToByteArray(aData: String): array of Byte;
+
+  method HexValue(C: Char): Integer;
+  begin
+    var Value := ord(C);
+    result := Value - (if Value < 58 then 48 else if Value < 97 then 55 else 87);
+    
+    if (result > 15) or (result < 0) then
+      raise new SugarFormatException("{0}. Invalid character: [{1}]", ErrorMessage.FORMAT_ERROR, C);
+  end;
+
+begin
+  if length(aData) = 0 then
+    exit [];
+
+  if aData.Length mod 2 = 1 then
+    raise new SugarFormatException("{0}. {1}", ErrorMessage.FORMAT_ERROR, "Hex string can not have odd number of chars.");
+
+  result := new Byte[aData.Length shr 1];
+
+  for i: Integer := 0 to result.Length - 1 do
+    result[i] := Byte((HexValue(aData[i shl 1]) shl 4) + HexValue(aData[(i shl 1) + 1]));
+end;
+
+class method Convert.HexStringToInt32(aValue: String): UInt32;
 begin
   {$IF COOPER}
-  exit Integer.parseInt(Value, 16);
+  exit Integer.parseInt(aValue, 16);
   {$ELSEIF ECHOES}
-  exit Int32.Parse(Value, System.Globalization.NumberStyles.HexNumber);
+  exit Int32.Parse(aValue, System.Globalization.NumberStyles.HexNumber);
   {$ELSEIF NOUGAT}
-  var scanner: NSScanner := NSScanner.scannerWithString(Value);
+  var scanner: NSScanner := NSScanner.scannerWithString(aValue);
   scanner.scanHexInt(var result);
   {$ENDIF}
 end;
 
-class method Convert.ToInt64(Value: Boolean): Int64;
+class method Convert.HexStringToInt64(aValue: String): UInt64;
 begin
-  result := if Value then 1 else 0;
-end;
-
-class method Convert.ToInt64(Value: Byte): Int64;
-begin
-  {$IF COOPER OR NOUGAT}
-  exit Int64(Value);
+  {$IF COOPER}
+  exit Long.parseLong(aValue, 16);
   {$ELSEIF ECHOES}
-  exit mapped.ToInt64(Value);
+  exit Int64.Parse(aValue, System.Globalization.NumberStyles.HexNumber);
+  {$ELSEIF NOUGAT}
+  var scanner: NSScanner := NSScanner.scannerWithString(aValue);
+  scanner.scanHexLongLong(var result);
   {$ENDIF}
 end;
 
-class method Convert.ToInt64(Value: Int32): Int64;
+class method Convert.ToInt64(aValue: Boolean): Int64;
+begin
+  result := if aValue then 1 else 0;
+end;
+
+class method Convert.ToInt64(aValue: Byte): Int64;
 begin
   {$IF COOPER OR NOUGAT}
-  exit Int64(Value);
+  exit Int64(aValue);
   {$ELSEIF ECHOES}
-  exit mapped.ToInt64(Value);
+  exit mapped.ToInt64(aValue);
   {$ENDIF}
 end;
 
-class method Convert.ToInt64(Value: Double): Int64;
+class method Convert.ToInt64(aValue: Int32): Int64;
 begin
-  if (Value > Consts.MaxInt64) or (Value < Consts.MinInt64) then
+  {$IF COOPER OR NOUGAT}
+  exit Int64(aValue);
+  {$ELSEIF ECHOES}
+  exit mapped.ToInt64(aValue);
+  {$ENDIF}
+end;
+
+class method Convert.ToInt64(aValue: Double): Int64;
+begin
+  if (aValue > Consts.MaxInt64) or (aValue < Consts.MinInt64) then
     raise new SugarArgumentOutOfRangeException(ErrorMessage.TYPE_RANGE_ERROR, "Int64");
 
-  exit Math.Round(Value);
+  exit Math.Round(aValue);
 end;
 
-class method Convert.ToInt64(Value: Char): Int64;
+class method Convert.ToInt64(aValue: Char): Int64;
 begin
   {$IF COOPER OR NOUGAT}
-  exit ord(Value);
+  exit ord(aValue);
   {$ELSEIF ECHOES}
-  exit mapped.ToInt64(Value);
+  exit mapped.ToInt64(aValue);
   {$ENDIF}
 end;
 
-class method Convert.ToInt64(Value: String): Int64;
+class method Convert.ToInt64(aValue: String): Int64;
 begin
-  if Value = nil then
+  if aValue = nil then
     exit 0;
 
-  if String.IsNullOrWhiteSpace(Value) then
-    raise new SugarFormatException("Unable to convert string '{0}' to int64.", Value);
+  if String.IsNullOrWhiteSpace(aValue) then
+    raise new SugarFormatException("Unable to convert string '{0}' to int64.", aValue);
 
   {$IF COOPER}
-  exit Long.parseLong(Value);
+  exit Long.parseLong(aValue);
   {$ELSEIF ECHOES}
-  exit mapped.ToInt64(Value);
+  exit mapped.ToInt64(aValue);
   {$ELSEIF NOUGAT}
-  exit ConvertHelper.ParseInt64(Value);
+  exit ConvertHelper.ParseInt64(aValue);
   {$ENDIF}
 end;
 
-class method Convert.ToDouble(Value: Boolean): Double;
+class method Convert.ToDouble(aValue: Boolean): Double;
 begin
-  result := if Value then 1 else 0;
+  result := if aValue then 1 else 0;
 end;
 
-class method Convert.ToDouble(Value: Byte): Double;
+class method Convert.ToDouble(aValue: Byte): Double;
 begin
   {$IF COOPER OR NOUGAT}
-  exit Double(Value);
+  exit Double(aValue);
   {$ELSEIF ECHOES}
-  exit mapped.ToDouble(Value);
+  exit mapped.ToDouble(aValue);
   {$ENDIF}
 end;
 
-class method Convert.ToDouble(Value: Int32): Double;
+class method Convert.ToDouble(aValue: Int32): Double;
 begin
   {$IF COOPER OR NOUGAT}
-  exit Double(Value);
+  exit Double(aValue);
   {$ELSEIF ECHOES}
-  exit mapped.ToDouble(Value);
+  exit mapped.ToDouble(aValue);
   {$ENDIF}
 end;
 
-class method Convert.ToDouble(Value: Int64): Double;
+class method Convert.ToDouble(aValue: Int64): Double;
 begin
   {$IF COOPER OR NOUGAT}
-  exit Double(Value);
+  exit Double(aValue);
   {$ELSEIF ECHOES}
-  exit mapped.ToDouble(Value);
+  exit mapped.ToDouble(aValue);
   {$ENDIF}
 end;
 
-class method Convert.ToDouble(Value: String): Double;
+class method Convert.ToDouble(aValue: String): Double;
 begin
-  if Value = nil then
+  if aValue = nil then
     exit 0.0;
 
-  if String.IsNullOrWhiteSpace(Value) then
-    raise new SugarFormatException("Unable to convert string '{0}' to double.", Value);
+  if String.IsNullOrWhiteSpace(aValue) then
+    raise new SugarFormatException("Unable to convert string '{0}' to double.", aValue);
 
   {$IF COOPER}
   var DecFormat: java.text.DecimalFormat := java.text.DecimalFormat(java.text.DecimalFormat.getInstance(Sugar.Cooper.LocaleUtils.ForLanguageTag("en-US")));
@@ -322,39 +428,39 @@ begin
   DecFormat.setParseIntegerOnly(false);
   var Position := new java.text.ParsePosition(0);
   
-  Value := Value.Trim.ToUpper;
+  aValue := aValue.Trim.ToUpper;
   {$IF ANDROID}
-  if Value.Length > 1 then begin
-    var DecimalIndex := Value.IndexOf(".");
+  if aValue.Length > 1 then begin
+    var DecimalIndex := aValue.IndexOf(".");
     if DecimalIndex = -1 then
-      DecimalIndex := Value.Length;
+      DecimalIndex := aValue.Length;
 
-    Value := Value[0] + Value.Substring(1, DecimalIndex - 1).Replace(",", "") + Value.Substring(DecimalIndex);    
+    aValue := aValue[0] + aValue.Substring(1, DecimalIndex - 1).Replace(",", "") + aValue.Substring(DecimalIndex);    
   end;
   {$ENDIF}
 
-  result := DecFormat.parse(Value, Position).doubleValue;
+  result := DecFormat.parse(aValue, Position).doubleValue;
 
-  if Position.Index < Value.Length then
-    raise new SugarFormatException("Unable to convert string '{0}' to double.", Value);
+  if Position.Index < aValue.Length then
+    raise new SugarFormatException("Unable to convert string '{0}' to double.", aValue);
 
   if Consts.IsInfinity(result) or Consts.IsNaN(result) then
-    raise new SugarFormatException("Unable to convert string '{0}' to double.", Value);
+    raise new SugarFormatException("Unable to convert string '{0}' to double.", aValue);
   {$ELSEIF ECHOES}
-  exit mapped.ToDouble(Value, System.Globalization.CultureInfo.InvariantCulture);
+  exit mapped.ToDouble(aValue, System.Globalization.CultureInfo.InvariantCulture);
   {$ELSEIF NOUGAT}
-  exit ConvertHelper.ParseDouble(Value);
+  exit ConvertHelper.ParseDouble(aValue);
   {$ENDIF}
 end;
 
-class method Convert.ToByte(Value: Boolean): Byte;
+class method Convert.ToByte(aValue: Boolean): Byte;
 begin
-  result := if Value then 1 else 0;
+  result := if aValue then 1 else 0;
 end;
 
-class method Convert.ToByte(Value: Double): Byte;
+class method Convert.ToByte(aValue: Double): Byte;
 begin
-  var Number := Math.Round(Value);
+  var Number := Math.Round(aValue);
 
   if (Number > 255) or (Number < 0) then
     raise new SugarArgumentOutOfRangeException(ErrorMessage.TYPE_RANGE_ERROR, "Byte");
@@ -362,162 +468,149 @@ begin
   exit Byte(Number);
 end;
 
-class method Convert.ToByte(Value: Int32): Byte;
+class method Convert.ToByte(aValue: Int32): Byte;
 begin
-  if (Value > 255) or (Value < 0) then
+  if (aValue > 255) or (aValue < 0) then
     raise new SugarArgumentOutOfRangeException(ErrorMessage.TYPE_RANGE_ERROR, "Byte");
 
-  exit Byte(Value);
+  exit Byte(aValue);
 end;
 
-class method Convert.ToByte(Value: Int64): Byte;
+class method Convert.ToByte(aValue: Int64): Byte;
 begin
-  if (Value > 255) or (Value < 0) then
+  if (aValue > 255) or (aValue < 0) then
     raise new SugarArgumentOutOfRangeException(ErrorMessage.TYPE_RANGE_ERROR, "Byte");
 
-  exit Byte(Value);
+  exit Byte(aValue);
 end;
 
-class method Convert.ToByte(Value: Char): Byte;
+class method Convert.ToByte(aValue: Char): Byte;
 begin
-  var Number := Convert.ToInt32(Value);
+  var Number := Convert.ToInt32(aValue);
 
   if (Number > 255) or (Number < 0) then
     raise new SugarArgumentOutOfRangeException(ErrorMessage.TYPE_RANGE_ERROR, "Byte");
 
   {$IF COOPER OR NOUGAT}
-  exit ord(Value);
+  exit ord(aValue);
   {$ELSEIF ECHOES}
-  exit mapped.ToByte(Value);
+  exit mapped.ToByte(aValue);
   {$ENDIF}
 end;
 
-class method Convert.ToByte(Value: String): Byte;
+class method Convert.ToByte(aValue: String): Byte;
 begin
-  if Value = nil then
+  if aValue = nil then
     exit 0;
 
-  if String.IsNullOrWhiteSpace(Value) then
-    raise new SugarFormatException("Unable to convert string '{0}' to byte.", Value);
+  if String.IsNullOrWhiteSpace(aValue) then
+    raise new SugarFormatException("Unable to convert string '{0}' to byte.", aValue);
 
   {$IF COOPER}
-  exit Byte.parseByte(Value);
+  exit Byte.parseByte(aValue);
   {$ELSEIF ECHOES}
-  exit mapped.ToByte(Value);
+  exit mapped.ToByte(aValue);
   {$ELSEIF NOUGAT}
-  var Number: Int32 := ConvertHelper.ParseInt32(Value);
+  var Number: Int32 := ConvertHelper.ParseInt32(aValue);
   exit ToByte(Number);
   {$ENDIF}
 end;
 
-class method Convert.ToChar(Value: Boolean): Char;
+class method Convert.ToChar(aValue: Boolean): Char;
 begin
-  exit ToChar(ToInt32(Value));
+  exit ToChar(ToInt32(aValue));
 end;
 
-class method Convert.ToChar(Value: Int32): Char;
+class method Convert.ToChar(aValue: Int32): Char;
 begin
-  if (Value > Consts.MaxChar) or (Value < Consts.MinChar) then
+  if (aValue > Consts.MaxChar) or (aValue < Consts.MinChar) then
     raise new SugarArgumentOutOfRangeException(ErrorMessage.TYPE_RANGE_ERROR, "Char");
 
   {$IF COOPER OR NOUGAT}
-  exit chr(Value);
+  exit chr(aValue);
   {$ELSEIF ECHOES}
-  exit mapped.ToChar(Value);
+  exit mapped.ToChar(aValue);
   {$ENDIF}
 end;
 
-class method Convert.ToChar(Value: Int64): Char;
+class method Convert.ToChar(aValue: Int64): Char;
 begin
-  if (Value > Consts.MaxChar) or (Value < Consts.MinChar) then
+  if (aValue > Consts.MaxChar) or (aValue < Consts.MinChar) then
     raise new SugarArgumentOutOfRangeException(ErrorMessage.TYPE_RANGE_ERROR, "Char");
 
   {$IF COOPER OR NOUGAT}
-  exit chr(Value);
+  exit chr(aValue);
   {$ELSEIF ECHOES}
-  exit mapped.ToChar(Value);
+  exit mapped.ToChar(aValue);
   {$ENDIF}
 end;
 
-class method Convert.ToChar(Value: Byte): Char;
+class method Convert.ToChar(aValue: Byte): Char;
 begin
   {$IF COOPER}
-  exit chr(Integer(Value));
+  exit chr(Integer(aValue));
   {$ELSEIF ECHOES}
-  exit mapped.ToChar(Value);
+  exit mapped.ToChar(aValue);
   {$ELSEIF NOUGAT}
-  exit chr(Value);
+  exit chr(aValue);
   {$ENDIF}
 end;
 
-class method Convert.ToChar(Value: String): Char;
+class method Convert.ToChar(aValue: String): Char;
 begin
-  SugarArgumentNullException.RaiseIfNil(Value, "Value");
+  SugarArgumentNullException.RaiseIfNil(aValue, "aValue");
 
-  if Value.Length <> 1 then
-    raise new SugarFormatException("Unable to convert string '{0}' to char.", Value);
+  if aValue.Length <> 1 then
+    raise new SugarFormatException("Unable to convert string '{0}' to char.", aValue);
 
-  exit Value[0];
+  exit aValue[0];
 end;
 
-class method Convert.ToBoolean(Value: Double): Boolean;
+class method Convert.ToBoolean(aValue: Double): Boolean;
 begin
-  exit if Value = 0 then false else true;
+  exit if aValue = 0 then false else true;
 end;
 
-class method Convert.ToBoolean(Value: Int32): Boolean;
+class method Convert.ToBoolean(aValue: Int32): Boolean;
 begin
-  exit if Value = 0 then false else true;
+  exit if aValue = 0 then false else true;
 end;
 
-class method Convert.ToBoolean(Value: Int64): Boolean;
+class method Convert.ToBoolean(aValue: Int64): Boolean;
 begin
-  exit if Value = 0 then false else true;
+  exit if aValue = 0 then false else true;
 end;
 
-class method Convert.ToBoolean(Value: Byte): Boolean;
+class method Convert.ToBoolean(aValue: Byte): Boolean;
 begin
-  exit if Value = 0 then false else true;
+  exit if aValue = 0 then false else true;
 end;
 
-class method Convert.ToBoolean(Value: String): Boolean;
+class method Convert.ToBoolean(aValue: String): Boolean;
 begin  
-  if (Value = nil) or (Value.EqualsIgnoreCase(Consts.FalseString)) then 
+  if (aValue = nil) or (aValue.EqualsIgnoreCase(Consts.FalseString)) then 
     exit false;
 
-  if Value.EqualsIgnoreCase(Consts.TrueString) then
+  if aValue.EqualsIgnoreCase(Consts.TrueString) then
     exit true;  
   
   raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);
 end;
 
 {$IF NOUGAT}
-class method ConvertHelper.ParseNumber(Value: String): NSNumber;
+class method ConvertHelper.ParseNumber(aValue: String): NSNumber;
 begin
-  if String.IsNullOrEmpty(Value) then
+  if String.IsNullOrEmpty(aValue) then
     exit nil;
 
   var Formatter := new NSNumberFormatter;
   Formatter.numberStyle := NSNumberFormatterStyle.NSNumberFormatterDecimalStyle;
-  Formatter.decimalSeparator := ".";
-  Formatter.exponentSymbol := "E";
-  Formatter.usesGroupingSeparator := false;
-
-  //clear grouping
-  if Value.Length > 1 then begin
-    var DecimalIndex := Value.IndexOf(".");
-    if DecimalIndex = -1 then
-      DecimalIndex := Value.Length;
-
-    Value := NSString(Value).stringByReplacingOccurrencesOfString(",") withString("") options(0) range(NSMakeRange(1, DecimalIndex - 1));   
-  end;
-
-  exit Formatter.numberFromString(Value);
+  result := Formatter.numberFromString(aValue);
 end;
 
-class method ConvertHelper.ParseInt32(Value: String): Int32;
+class method ConvertHelper.ParseInt32(aValue: String): Int32;
 begin
-  var Number := ParseInt64(Value);
+  var Number := ParseInt64(aValue);
 
   if (Number > Consts.MaxInteger) or (Number < Consts.MinInteger) then
     raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);
@@ -525,12 +618,12 @@ begin
   exit Int32(Number);
 end;
 
-class method ConvertHelper.ParseInt64(Value: String): Int64;
+class method ConvertHelper.ParseInt64(aValue: String): Int64;
 begin
-  if Value = nil then
+  if aValue = nil then
     exit 0;
 
-  var Number := ParseNumber(Value);
+  var Number := ParseNumber(aValue);
 
   if Number = nil then
     raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);
@@ -545,12 +638,12 @@ begin
   raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);
 end;
 
-class method ConvertHelper.ParseDouble(Value: String): Double;
+class method ConvertHelper.ParseDouble(aValue: String): Double;
 begin
-  if Value = nil then
+  if aValue = nil then
     exit 0.0;
 
-  var Number := ParseNumber(Value);
+  var Number := ParseNumber(aValue);
 
   if Number = nil then
     raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);
