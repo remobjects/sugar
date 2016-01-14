@@ -364,17 +364,18 @@ begin
   for i: Integer := 0 to length(aArgs) -1 do begin
     var o := aArgs[i];
     if o = nil then
-      sqlite3_bind_null(^sqlite3_stmt(res), i)
+      sqlite3_bind_null(^sqlite3_stmt(res), i + 1)
     else if o is NSNumber then begin
       var r := NSNumber(o);
       case r.objCType of
-        'f': sqlite3_bind_double(^sqlite3_stmt(res), i, r.floatValue);
-        'd': sqlite3_bind_double(^sqlite3_stmt(res), i, r.doubleValue);
+        'f': sqlite3_bind_double(^sqlite3_stmt(res), i + 1, r.floatValue);
+        'd': sqlite3_bind_double(^sqlite3_stmt(res), i + 1, r.doubleValue);
       else
-        sqlite3_bind_int64(^sqlite3_stmt(res), i, r.longLongValue);
+        sqlite3_bind_int64(^sqlite3_stmt(res), i + 1, r.longLongValue);
       end;
     end else begin
-      sqlite3_bind_text16(^sqlite3_stmt(res), i, coalesce(NSString(o), o.description), -1, nil);
+      var s := coalesce(NSString(o), o.description);
+      sqlite3_bind_text16(^sqlite3_stmt(res), i + 1, s.cStringUsingEncoding(NSStringEncoding.NSUnicodeStringEncoding), -1, nil);
     end;
   end;
   result := res;
@@ -385,17 +386,17 @@ begin
   for i: Integer := 0 to length(aArgs) -1 do begin
     var o := aArgs[i];
     if o = nil then
-      SQLiteHelpers.sqlite3_bind_null(res, i)
+      SQLiteHelpers.sqlite3_bind_null(res, i + 1)
     else if o is array of Byte then
-      SQLiteHelpers.sqlite3_bind_blob(res, i, array of Byte(o), length(array of Byte(o)), IntPtr.Zero)
+      SQLiteHelpers.sqlite3_bind_blob(res, i + 1, array of Byte(o), length(array of Byte(o)), IntPtr.Zero)
     else if o is Double then 
-      SQLiteHelpers.sqlite3_bind_double(res, i, Double(o))
+      SQLiteHelpers.sqlite3_bind_double(res, i + 1, Double(o))
     else if o is Int64 then 
-      SQLiteHelpers.sqlite3_bind_int64(res, i, Int64(o))
+      SQLiteHelpers.sqlite3_bind_int64(res, i + 1, Int64(o))
     else if o is Integer then 
-      SQLiteHelpers.sqlite3_bind_int(res, i, Integer(o))
+      SQLiteHelpers.sqlite3_bind_int(res, i + 1, Integer(o))
     else 
-      SQLiteHelpers.sqlite3_bind_text16(res, i, String(o), -1, IntPtr.Zero);
+      SQLiteHelpers.sqlite3_bind_text16(res, i + 1, String(o), -1, IntPtr.Zero);
   end;
   result := res;
   {$ENDIF}
@@ -738,7 +739,12 @@ begin
       {$ELSE}
       if handle = IntPtr(nil) then 
         raise new SQLiteException('SQL error or missing database ');
-      raise new SQLiteException(NSString.stringWithCString(^AnsiChar(sqlite3_errmsg16(^sqlite3_(handle)))) encoding(NSStringEncoding.NSUTF16StringEncoding) );
+      var err := ^Char(sqlite3_errmsg16(^sqlite3_(handle)));
+      var plen := 0;
+      while err[plen] <> #0 do inc(plen);
+
+      var str := NSString.stringWithCharacters(err) length(plen);
+      raise new SQLiteException(str);
       {$ENDIF}
     end;
     SQLITE_INTERNAL: begin
