@@ -62,8 +62,4 @@
   </ItemGroup>
   <Import Project="Sugar.Data.Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Nougat.targets" />
-  <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
-  </PropertyGroup>
 </Project>

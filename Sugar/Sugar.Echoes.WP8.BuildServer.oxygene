@@ -104,7 +104,6 @@
     <Compile Include="Cryptography\MD5Managed.pas" />
     <Compile Include="Cryptography\SHA384Managed.pas" />
     <Compile Include="Cryptography\SHA512Managed.pas" />
-    <Compile Include="Cryptography\Utils.pas" />
     <Compile Include="Consts.pas" />
     <Compile Include="Convert.pas" />
     <Compile Include="DateTime.pas" />

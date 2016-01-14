@@ -120,7 +120,4 @@
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Sugar\Microsoft.Windows.UI.Xaml.Oxygene.targets" />
   <Import Project="Sugar.Data.Shared.projitems" Label="Shared" />
-  <PropertyGroup>
-    <PreBuildEvent>rmdir /s /q $(ProjectDir)\Obj</PreBuildEvent>
-  </PropertyGroup>
 </Project>
