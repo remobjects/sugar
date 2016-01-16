@@ -3,7 +3,15 @@
 interface
 
 type
-  Convert = public static class {$IF COOPER}{$ELSEIF ECHOES}mapped to System.Convert{$ELSEIF NOUGAT}mapped to Object{$ENDIF}
+  Convert = public static class 
+  private
+    {$IF NOUGAT}
+    method ParseNumber(aValue: String): NSNumber;
+    method ParseInt32(aValue: String): Int32;  
+    method ParseInt64(aValue: String): Int64; 
+    method ParseDouble(aValue: String): Double;
+    {$ENDIF}
+
   public
     method ToString(aValue: Boolean): String;
     method ToString(aValue: Byte): String;
@@ -63,16 +71,6 @@ type
     method HexStringToByteArray(aData: String): array of Byte;
   end;
 
-  {$IF NOUGAT}
-  ConvertHelper = assembly class
-  public
-    method ParseNumber(aValue: String): NSNumber;
-    method ParseInt32(aValue: String): Int32;  
-    method ParseInt64(aValue: String): Int64; 
-    method ParseDouble(aValue: String): Double;
-  end;
-  {$ENDIF}
-
 implementation
 
 method Convert.ToString(aValue: Boolean): String;
@@ -85,7 +83,7 @@ begin
   {$IF COOPER OR NOUGAT}
   exit aValue.ToString;
   {$ELSEIF ECHOES}
-  exit mapped.ToString(aValue);
+  exit System.Convert.ToString(aValue);
   {$ENDIF}
 end;
 
@@ -94,7 +92,7 @@ begin
   {$IF COOPER OR NOUGAT}
   exit aValue.ToString;
   {$ELSEIF ECHOES}
-  exit mapped.ToString(aValue);
+  exit System.Convert.ToString(aValue);
   {$ENDIF}
 end;
 
@@ -103,7 +101,7 @@ begin
   {$IF COOPER OR NOUGAT}
   exit aValue.ToString;
   {$ELSEIF ECHOES}
-  exit mapped.ToString(aValue);
+  exit System.Convert.ToString(aValue);
   {$ENDIF}
 end;
 
@@ -135,7 +133,7 @@ begin
   if Pos = - 1 then
     exit result.Replace("E", "E+");
   {$ELSEIF ECHOES}
-  exit mapped.ToString(aValue, System.Globalization.CultureInfo.InvariantCulture);
+  exit System.Convert.ToString(aValue, System.Globalization.CultureInfo.InvariantCulture);
   {$ELSEIF NOUGAT}
   exit aValue.ToString.ToUpper;
   {$ENDIF}
@@ -146,7 +144,7 @@ begin
   {$IF COOPER OR NOUGAT}
   exit Sugar.String(aValue);
   {$ELSEIF ECHOES}
-  exit mapped.ToString(aValue);
+  exit System.Convert.ToString(aValue);
   {$ENDIF}
 end;
 
@@ -165,7 +163,7 @@ begin
   {$IF COOPER OR NOUGAT}
   exit Int32(aValue);
   {$ELSEIF ECHOES}
-  exit mapped.ToInt32(aValue);
+  exit System.Convert.ToInt32(aValue);
   {$ENDIF}
 end;
 
@@ -177,7 +175,7 @@ begin
   {$IF COOPER OR NOUGAT}
   exit Int32(aValue);
   {$ELSEIF ECHOES}
-  exit mapped.ToInt32(aValue);
+  exit System.Convert.ToInt32(aValue);
   {$ENDIF}
 end;
 
@@ -196,7 +194,7 @@ begin
   {$IF COOPER OR NOUGAT}
   exit ord(aValue);
   {$ELSEIF ECHOES}
-  exit mapped.ToInt32(aValue);
+  exit System.Convert.ToInt32(aValue);
   {$ENDIF}
 end;
 
@@ -205,9 +203,9 @@ begin
   {$IF COOPER}
   exit Integer.parseInt(aValue);
   {$ELSEIF ECHOES}
-  exit mapped.ToInt32(aValue);
+  exit System.Convert.ToInt32(aValue);
   {$ELSEIF NOUGAT}
-  exit ConvertHelper.ParseInt32(aValue);
+  exit ParseInt32(aValue);
   {$ENDIF}
 end;
 
@@ -331,7 +329,7 @@ begin
   {$IF COOPER OR NOUGAT}
   exit Int64(aValue);
   {$ELSEIF ECHOES}
-  exit mapped.ToInt64(aValue);
+  exit System.Convert.ToInt64(aValue);
   {$ENDIF}
 end;
 
@@ -340,7 +338,7 @@ begin
   {$IF COOPER OR NOUGAT}
   exit Int64(aValue);
   {$ELSEIF ECHOES}
-  exit mapped.ToInt64(aValue);
+  exit System.Convert.ToInt64(aValue);
   {$ENDIF}
 end;
 
@@ -357,7 +355,7 @@ begin
   {$IF COOPER OR NOUGAT}
   exit ord(aValue);
   {$ELSEIF ECHOES}
-  exit mapped.ToInt64(aValue);
+  exit System.Convert.ToInt64(aValue);
   {$ENDIF}
 end;
 
@@ -372,9 +370,9 @@ begin
   {$IF COOPER}
   exit Long.parseLong(aValue);
   {$ELSEIF ECHOES}
-  exit mapped.ToInt64(aValue);
+  exit System.Convert.ToInt64(aValue);
   {$ELSEIF NOUGAT}
-  exit ConvertHelper.ParseInt64(aValue);
+  exit ParseInt64(aValue);
   {$ENDIF}
 end;
 
@@ -388,7 +386,7 @@ begin
   {$IF COOPER OR NOUGAT}
   exit Double(aValue);
   {$ELSEIF ECHOES}
-  exit mapped.ToDouble(aValue);
+  exit System.Convert.ToDouble(aValue);
   {$ENDIF}
 end;
 
@@ -397,7 +395,7 @@ begin
   {$IF COOPER OR NOUGAT}
   exit Double(aValue);
   {$ELSEIF ECHOES}
-  exit mapped.ToDouble(aValue);
+  exit System.Convert.ToDouble(aValue);
   {$ENDIF}
 end;
 
@@ -406,7 +404,7 @@ begin
   {$IF COOPER OR NOUGAT}
   exit Double(aValue);
   {$ELSEIF ECHOES}
-  exit mapped.ToDouble(aValue);
+  exit System.Convert.ToDouble(aValue);
   {$ENDIF}
 end;
 
@@ -447,9 +445,9 @@ begin
   if Consts.IsInfinity(result) or Consts.IsNaN(result) then
     raise new SugarFormatException("Unable to convert string '{0}' to double.", aValue);
   {$ELSEIF ECHOES}
-  exit mapped.ToDouble(aValue, System.Globalization.CultureInfo.InvariantCulture);
+  exit System.Convert.ToDouble(aValue, System.Globalization.CultureInfo.InvariantCulture);
   {$ELSEIF NOUGAT}
-  exit ConvertHelper.ParseDouble(aValue);
+  exit ParseDouble(aValue);
   {$ENDIF}
 end;
 
@@ -494,7 +492,7 @@ begin
   {$IF COOPER OR NOUGAT}
   exit ord(aValue);
   {$ELSEIF ECHOES}
-  exit mapped.ToByte(aValue);
+  exit System.Convert.ToByte(aValue);
   {$ENDIF}
 end;
 
@@ -509,9 +507,9 @@ begin
   {$IF COOPER}
   exit Byte.parseByte(aValue);
   {$ELSEIF ECHOES}
-  exit mapped.ToByte(aValue);
+  exit System.Convert.ToByte(aValue);
   {$ELSEIF NOUGAT}
-  var Number: Int32 := ConvertHelper.ParseInt32(aValue);
+  var Number: Int32 := ParseInt32(aValue);
   exit ToByte(Number);
   {$ENDIF}
 end;
@@ -529,7 +527,7 @@ begin
   {$IF COOPER OR NOUGAT}
   exit chr(aValue);
   {$ELSEIF ECHOES}
-  exit mapped.ToChar(aValue);
+  exit System.Convert.ToChar(aValue);
   {$ENDIF}
 end;
 
@@ -541,7 +539,7 @@ begin
   {$IF COOPER OR NOUGAT}
   exit chr(aValue);
   {$ELSEIF ECHOES}
-  exit mapped.ToChar(aValue);
+  exit System.Convert.ToChar(aValue);
   {$ENDIF}
 end;
 
@@ -550,7 +548,7 @@ begin
   {$IF COOPER}
   exit chr(Integer(aValue));
   {$ELSEIF ECHOES}
-  exit mapped.ToChar(aValue);
+  exit System.Convert.ToChar(aValue);
   {$ELSEIF NOUGAT}
   exit chr(aValue);
   {$ENDIF}
@@ -598,7 +596,7 @@ begin
 end;
 
 {$IF NOUGAT}
-method ConvertHelper.ParseNumber(aValue: String): NSNumber;
+method Convert.ParseNumber(aValue: String): NSNumber;
 begin
   if String.IsNullOrEmpty(aValue) then
     exit nil;
@@ -608,7 +606,7 @@ begin
   result := Formatter.numberFromString(aValue);
 end;
 
-method ConvertHelper.ParseInt32(aValue: String): Int32;
+method Convert.ParseInt32(aValue: String): Int32;
 begin
   var Number := ParseInt64(aValue);
 
@@ -618,7 +616,7 @@ begin
   exit Int32(Number);
 end;
 
-method ConvertHelper.ParseInt64(aValue: String): Int64;
+method Convert.ParseInt64(aValue: String): Int64;
 begin
   if aValue = nil then
     exit 0;
@@ -638,7 +636,7 @@ begin
   raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);
 end;
 
-method ConvertHelper.ParseDouble(aValue: String): Double;
+method Convert.ParseDouble(aValue: String): Double;
 begin
   if aValue = nil then
     exit 0.0;
