@@ -14,9 +14,9 @@ type
 
   public
     method ToString(aValue: Boolean): String;
-    method ToString(aValue: Byte): String;
-    method ToString(aValue: Int32): String;
-    method ToString(aValue: Int64): String;
+    method ToString(aValue: Byte; aBase: Integer := 10): String;
+    method ToString(aValue: Int32; aBase: Integer := 10): String;
+    method ToString(aValue: Int64; aBase: Integer := 10): String;
     method ToString(aValue: Double): String;
     method ToString(aValue: Char): String;
     method ToString(aValue: Object): String;
@@ -78,30 +78,42 @@ begin
   result := if aValue then Consts.TrueString else Consts.FalseString;
 end;
 
-method Convert.ToString(aValue: Byte): String;
+method Convert.ToString(aValue: Byte; aBase: Integer := 10): String;
 begin
   {$IF COOPER OR NOUGAT}
-  exit aValue.ToString;
+  case aBase of
+    10: exit aValue.ToString;
+    16: exit ToHexString(aValue);
+    else raise new SugarException('Unsupported base for ToString.');
+  end;
   {$ELSEIF ECHOES}
-  exit System.Convert.ToString(aValue);
+  exit System.Convert.ToString(aValue, aBase);
   {$ENDIF}
 end;
 
-method Convert.ToString(aValue: Int32): String;
+method Convert.ToString(aValue: Int32; aBase: Integer := 10): String;
 begin
   {$IF COOPER OR NOUGAT}
-  exit aValue.ToString;
+  case aBase of
+    10: exit aValue.ToString;
+    16: exit ToHexString(aValue);
+    else raise new SugarException('Unsupported base for ToString.');
+  end;
   {$ELSEIF ECHOES}
-  exit System.Convert.ToString(aValue);
+  exit System.Convert.ToString(aValue, aBase);
   {$ENDIF}
 end;
 
-method Convert.ToString(aValue: Int64): String;
+method Convert.ToString(aValue: Int64; aBase: Integer := 10): String;
 begin
   {$IF COOPER OR NOUGAT}
-  exit aValue.ToString;
+  case aBase of
+    10: exit aValue.ToString;
+    16: exit ToHexString(aValue);
+    else raise new SugarException('Unsupported base for ToString.');
+  end;
   {$ELSEIF ECHOES}
-  exit System.Convert.ToString(aValue);
+  exit System.Convert.ToString(aValue, aBase);
   {$ENDIF}
 end;
 
