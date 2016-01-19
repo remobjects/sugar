@@ -124,7 +124,7 @@ end;
 
 method HashSet<T>.IsSubsetOf(&Set: HashSet<T>): Boolean;
 begin
-  exit HashsetHelpers.ISSubsetOf(self, &Set);
+  exit HashsetHelpers.IsSubsetOf(self, &Set);
 end;
 
 class method HashsetHelpers.Foreach<T>(aSelf: HashSet<T>; aAction: Action<T>);
@@ -135,10 +135,10 @@ end;
 
 class method HashsetHelpers.IsSubsetOf<T>(aSelf, aSet: HashSet<T>): Boolean;
 begin
-  if aself.Count = 0 then
+  if aSelf.Count = 0 then
     exit true;
 
-  if aself.Count > aSet.Count then
+  if aSelf.Count > aSet.Count then
     exit false;
 
   for each el in aSelf do 

@@ -288,7 +288,7 @@ begin
     var Range := NSMakeRange(Idx, 2);
     var Buffer := HexString.substringWithRange(Range);
     var ByteScanner := NSScanner.scannerWithString(Buffer);
-    var IntValue: uint32;
+    var IntValue: UInt32;
     ByteScanner.scanHexInt(var IntValue);
     Result[Idx2] := Byte(IntValue);
     inc(Idx, 2);

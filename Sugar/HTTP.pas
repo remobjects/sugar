@@ -478,10 +478,10 @@ begin
       try
         var webResponse := webRequest.EndGetResponse(ar) as HttpWebResponse;
         var response := new HttpResponse(webResponse);
-        responseCallback(response);
+        ResponseCallback(response);
       except
         on E: Exception do
-          responseCallback(new HttpResponse(E));
+          ResponseCallback(new HttpResponse(E));
       end;
     
     end, nil);

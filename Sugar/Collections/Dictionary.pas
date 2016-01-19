@@ -213,7 +213,7 @@ end;
 
 method DictionaryHelpers.Foreach<T, U>(aSelf: Dictionary<T, U>; aAction: Action<KeyValuePair<T, U>>);
 begin
-  var lKeys := aself.Keys;
+  var lKeys := aSelf.Keys;
   for i: Integer := 0 to length(lKeys) - 1 do
     aAction(new KeyValuePair<T,U>(T(lKeys[i]), U(aSelf.Item[lKeys[i]])));
 end;

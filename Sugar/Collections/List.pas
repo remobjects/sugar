@@ -340,7 +340,7 @@ end;
 method ListHelpers.AddRange<T>(aSelf: List<T>; aArr: array of T);
 begin
   for i: Integer := 0 to length(aArr) - 1 do
-    aself.Add(aArr[i]);
+    aSelf.Add(aArr[i]);
 end;
 
 

@@ -64,10 +64,10 @@ type
     class property Now: DateTime read {$IF COOPER OR NOUGAT}new DateTime(){$ELSEIF ECHOES}mapped.Now{$ENDIF};    
     const TicksSince1970: Int64 = 621355968000000000;
                                   
-    property Ticks: Int64 read{$IFDEF COOPER}(mapped.TimeInMillis +mapped.TimeZone.getOffset(mapped.TimeInMillis)) * Timespan.TicksPerMillisecond + TicksSince1970{$ELSEIF ECHOES}mapped.Ticks{$ELSE}Int64((mapped.timeIntervalSince1970 + DateTimeHelpers.LocalTimezone.secondsFromGMTForDate(mapped)) * Timespan.TicksPerSecond) + TicksSince1970{$ENDIF};
-    class operator &Add(a: DateTime; b: Timespan): DateTime;
+    property Ticks: Int64 read{$IFDEF COOPER}(mapped.TimeInMillis +mapped.TimeZone.getOffset(mapped.TimeInMillis)) * TimeSpan.TicksPerMillisecond + TicksSince1970{$ELSEIF ECHOES}mapped.Ticks{$ELSE}Int64((mapped.timeIntervalSince1970 + DateTimeHelpers.LocalTimezone.secondsFromGMTForDate(mapped)) * TimeSpan.TicksPerSecond) + TicksSince1970{$ENDIF};
+    class operator &Add(a: DateTime; b: TimeSpan): DateTime;
     class operator Subtract(a: DateTime; b: DateTime): TimeSpan;
-    class operator Subtract(a: DateTime; b: Timespan): DateTime;
+    class operator Subtract(a: DateTime; b: TimeSpan): DateTime;
 
     class operator Equal(a,b: DateTime): Boolean;
     class operator NotEqual(a,b: DateTime): Boolean;
@@ -316,7 +316,7 @@ end;
 
 operator DateTime.Subtract(a: DateTime; b: DateTime): TimeSpan;
 begin
-  exit new Timespan(a.Ticks - b.Ticks);
+  exit new TimeSpan(a.Ticks - b.Ticks);
 end;
 
 operator DateTime.Subtract(a: DateTime; b: TimeSpan): DateTime;

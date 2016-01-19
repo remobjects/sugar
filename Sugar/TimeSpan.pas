@@ -4,7 +4,7 @@ interface
 
 
 type
-  TimeSpan = public record mapped to {$IFDEF ECHOES}System.Timespan{$ELSEIF NOUGAT}NSTimeInterval{$ELSE}Int64{$ENDIF}
+  TimeSpan = public record mapped to {$IFDEF ECHOES}System.TimeSpan{$ELSEIF NOUGAT}NSTimeInterval{$ELSE}Int64{$ENDIF}
   private
     method get_TotalMilliSeconds: Double;
     method get_Days: Integer;
@@ -44,8 +44,8 @@ type
     constructor(h,m,s: Int32);
     constructor(d,h,m,s: Int32; ms: Int32 := 0);
 
-    method Add(ts: Timespan): Timespan;
-    method Subtract(ts: Timespan): TimeSpan;
+    method Add(ts: TimeSpan): TimeSpan;
+    method Subtract(ts: TimeSpan): TimeSpan;
     method Negate: TimeSpan;
 
     class method FromDays(d: Double): TimeSpan;
@@ -55,18 +55,18 @@ type
     class method FromMilliseconds(d: Double): TimeSpan;
     class method FromTicks(d: Int64): TimeSpan;
     
-    class operator Equal(a,b: Timespan): Boolean;
+    class operator Equal(a,b: TimeSpan): Boolean;
     class operator NotEqual(a,b: TimeSpan): Boolean;
 
-    class operator &Add(a,b: Timespan): Timespan;
-    class operator Subtract(a,b: TimeSpan): Timespan;
-    class operator Plus(a: Timespan): TimeSpan;
-    class operator Minus(a: Timespan): TimeSpan;
+    class operator &Add(a,b: TimeSpan): TimeSpan;
+    class operator Subtract(a,b: TimeSpan): TimeSpan;
+    class operator Plus(a: TimeSpan): TimeSpan;
+    class operator Minus(a: TimeSpan): TimeSpan;
 
     class operator Less(a,b: TimeSpan): Boolean;
     class operator LessOrEqual(a,b: TimeSpan): Boolean;
-    class operator Greater(a,b: Timespan): Boolean;
-    class operator greaterOrEqual(a,b: Timespan): Boolean;
+    class operator Greater(a,b: TimeSpan): Boolean;
+    class operator greaterOrEqual(a,b: TimeSpan): Boolean;
   end;
 
 implementation
@@ -86,12 +86,12 @@ end;
 
 constructor TimeSpan(h: Int32; m: Int32; s: Int32);
 begin
-  exit new Timespan(((((h * 60) + m) * 60) + s) * TicksPerSecond);
+  exit new TimeSpan(((((h * 60) + m) * 60) + s) * TicksPerSecond);
 end;
 
 constructor TimeSpan(d: Int32; h: Int32; m: Int32; s: Int32; ms: Int32);
 begin
-  exit new Timespan(((((((((d * 24) + h) * 60) + m) * 60) + s) * 1000) + ms) * TicksPerMillisecond);
+  exit new TimeSpan(((((((((d * 24) + h) * 60) + m) * 60) + s) * 1000) + ms) * TicksPerMillisecond);
 end;
 
 method TimeSpan.get_TotalSeconds: Double;
@@ -168,7 +168,7 @@ end;
 method TimeSpan.Subtract(ts: TimeSpan): TimeSpan;
 begin
   {$IFDEF ECHOES}
-  exit mapped - System.TimeSpan(Ts);
+  exit mapped - System.TimeSpan(ts);
   {$ELSEIF COOPER}
   exit mapped - Int64(ts);
   {$ELSEIF NOUGAT}
