@@ -14,6 +14,8 @@
         <DeploymentTargetVersion>2.0</DeploymentTargetVersion>
         <AllowLegacyOutParams>False</AllowLegacyOutParams>
         <CreateHeaderFile>False</CreateHeaderFile>
+        <CrossPlatform>True</CrossPlatform>
+        <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
         <Optimize>False</Optimize>

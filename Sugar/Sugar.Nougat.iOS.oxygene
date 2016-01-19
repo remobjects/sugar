@@ -16,6 +16,8 @@
         <CreateHeaderFile>False</CreateHeaderFile>
         <SimulatorArchitectures>x86_64,i386</SimulatorArchitectures>
         <Architecture>arm64,armv7s,armv7</Architecture>
+        <CrossPlatform>True</CrossPlatform>
+        <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
         <Optimize>False</Optimize>
