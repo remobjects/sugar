@@ -501,19 +501,19 @@ begin
   for i: Integer := 0 to length(aArgs) -1 do begin
     var val := aArgs[i];
     if val = nil then
-      st.bindNull(i)
+      st.bindNull(i + 1)
     else if val is Double then
-      st.bindDouble(i, Double(val))
+      st.bindDouble(i + 1, Double(val))
     else if val is Single then
-      st.bindDouble(i, Single(val))
+      st.bindDouble(i + 1, Single(val))
     else if val is Int64 then
-      st.bindLong(i, Int64(val))
+      st.bindLong(i + 1, Int64(val))
     else if val is Int64 then
-      st.bindLong(i, Int64(val))
+      st.bindLong(i + 1, Int64(val))
     else if val is array of SByte then 
-      st.bindBlob(i, array of SByte(val))
+      st.bindBlob(i + 1, array of SByte(val))
     else 
-      st.bindString(i, val.toString);
+      st.bindString(i + 1, val.toString);
   end;
 end;
 {$ENDIF}
