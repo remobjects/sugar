@@ -99,7 +99,7 @@ method &Type.initWithProtocol(aProtocol: id): instancetype;
 begin
   self := inherited init;
   if assigned(self) then begin
-    fprotocol := aProtocol;
+    fProtocol := aProtocol;
   end;
   result := self;
 end;

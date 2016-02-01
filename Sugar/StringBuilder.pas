@@ -45,7 +45,7 @@ begin
   {$ELSEIF ECHOES}
   exit mapped.Append(Value, RepeatCount);
   {$ELSEIF NOUGAT}
-  for i: Int32 := 1 to repeatCount do
+  for i: Int32 := 1 to RepeatCount do
     mapped.appendString(Value);
 
   exit mapped;

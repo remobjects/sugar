@@ -261,7 +261,7 @@ begin
   else
     Seek(Origin, SeekOrigin.Begin);
   {$ELSEIF ECHOES}
-  mapped.SetLength(Value);
+  mapped.SetLength(value);
   {$ELSEIF NOUGAT}
   var Origin := mapped.offsetInFile;
   mapped.truncateFileAtOffset(value);

@@ -5,6 +5,7 @@ interface
 {$IFNDEF NOUGAT}
   {$ERROR This unit is intended for Nougat only}
 {$ENDIF}
+{$CROSSPLATFORM OFF}
 
 uses
   rtl;

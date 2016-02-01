@@ -11,7 +11,7 @@ type
     constructor(aValue: T);
 
     method {$IF NOUGAT}description: Foundation.NSString{$ELSEIF COOPER}ToString: java.lang.String{$ELSEIF ECHOES}ToString: System.String{$ENDIF}; override;
-    method {$IF NOUGAT}isEqual(obj: id){$ELSE}&Equals(Obj: Object){$ENDIF}: Boolean; override;
+    method {$IF NOUGAT}isEqual(Obj: id){$ELSE}&Equals(Obj: Object){$ENDIF}: Boolean; override;
     method {$IF NOUGAT}hash: Foundation.NSUInteger{$ELSEIF COOPER}hashCode: Integer{$ELSEIF ECHOES}GetHashCode: Integer{$ENDIF}; override;
 
     property Value: T;
@@ -56,12 +56,12 @@ begin
   result := Value.{$IF NOUGAT}description{$ELSEIF COOPER}ToString{$ELSEIF ECHOES}ToString{$ENDIF};
 end;
 
-method JsonValue<T>.{$IF NOUGAT}isEqual(obj: id){$ELSE}&Equals(Obj: Object){$ENDIF}: Boolean;
+method JsonValue<T>.{$IF NOUGAT}isEqual(Obj: id){$ELSE}&Equals(Obj: Object){$ENDIF}: Boolean;
 begin
-  if (obj = nil) or (not (obj is JsonValue<T>)) then
+  if (Obj = nil) or (not (Obj is JsonValue<T>)) then
     exit false;
   
-  exit self.Value.Equals(JsonValue<T>(obj).Value);
+  exit self.Value.Equals(JsonValue<T>(Obj).Value);
 end;
 
 method JsonValue<T>.{$IF NOUGAT}hash: Foundation.NSUInteger{$ELSEIF COOPER}hashCode: Integer{$ELSEIF ECHOES}GetHashCode: Integer{$ENDIF};

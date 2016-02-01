@@ -7,6 +7,8 @@ uses
   System.Resources,
   System.Runtime.InteropServices;
 
+{$CROSSPLATFORM OFF}
+
 [assembly: AssemblyTitle('RemObjects Sugar')]
 [assembly: AssemblyDescription('')]
 [assembly: AssemblyConfiguration('')]

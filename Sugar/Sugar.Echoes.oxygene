@@ -11,6 +11,8 @@
         <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
         <Name>Sugar.Echoes</Name>
         <ProjectGuid>{79301a0c-1f95-4fb0-9605-207e288c6171}</ProjectGuid>
+        <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
+        <CrossPlatform>True</CrossPlatform>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
         <Optimize>False</Optimize>

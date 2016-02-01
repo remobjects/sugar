@@ -98,7 +98,7 @@ begin
   Builder.Append(Value.ToJson);
 end;
 
-method JsonSerializer.VisitFloat(Value: JsonFLoatValue);
+method JsonSerializer.VisitFloat(Value: JsonFloatValue);
 begin
   Builder.Append(Value.ToJson);
 end;
@@ -126,7 +126,7 @@ begin
     case Value type of
       JsonStringValue: VisitString(Value as JsonStringValue);
       JsonIntegerValue: VisitInteger(Value as JsonIntegerValue);
-      JsonFloatValue: VisitFloat(Value as JsonFLoatValue);
+      JsonFloatValue: VisitFloat(Value as JsonFloatValue);
       JsonBooleanValue: VisitBoolean(Value as JsonBooleanValue);
       JsonArray: VisitArray(Value as JsonArray);
       JsonObject: VisitObject(Value as JsonObject);

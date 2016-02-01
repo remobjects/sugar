@@ -536,7 +536,7 @@ begin
     raise new SugarArgumentException("Invalid attribute prefix {0}", Prefix);
 
   var ns := libxml.xmlNewNs(nil, XmlChar.FromString("http://www.w3.org/2000/xmlns/"), XmlChar.FromString("xmlns"));
-  var NewObj := libxml.xmlNewNsProp(nil, ns, XmlChar.FromString(prefix), XmlChar.FromString(NamespaceUri));
+  var NewObj := libxml.xmlNewNsProp(nil, ns, XmlChar.FromString(Prefix), XmlChar.FromString(NamespaceUri));
 
   if NewObj = nil then
     exit nil;
