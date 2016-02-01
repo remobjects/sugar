@@ -49,7 +49,7 @@ type
     {$ELSEIF ECHOES}
     method ToString: System.String; override;
     {$ELSEIF NOUGAT}
-    method description: NSString; override;
+    method description: NSString; override; inline;
     {$ENDIF}    
     
     property Hour: Integer read {$IF COOPER}mapped.get(Calendar.HOUR_OF_DAY){$ELSEIF ECHOES}mapped.Hour{$ELSEIF NOUGAT}DateTimeHelpers.GetComponent(mapped, NSCalendarUnit.NSHourCalendarUnit){$ENDIF};

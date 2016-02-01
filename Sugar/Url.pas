@@ -48,7 +48,7 @@ type
     property Fragment: String read mapped.fragment;
     property UserInfo: String read GetUserInfo;
     
-    method description: NSString; override;
+    method description: NSString; override; inline;
   {$ENDIF}
 
     class method UrlEncodeString(aString: String): String;
