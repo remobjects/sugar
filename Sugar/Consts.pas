@@ -44,7 +44,7 @@ begin
   {$ELSEIF ECHOES}
   exit Double.IsNaN(Value);
   {$ELSEIF NOUGAT}
-  exit __inline_isnand(Value);
+  exit __inline_isnand(Value) <> 0;
   {$ENDIF}
 end;
 
@@ -55,7 +55,7 @@ begin
   {$ELSEIF ECHOES}
   exit Double.IsInfinity(Value);
   {$ELSEIF NOUGAT}
-  exit __inline_isinfd(Value);
+  exit __inline_isinfd(Value) <> 0;
   {$ENDIF}
 end;
 
