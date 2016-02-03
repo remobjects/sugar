@@ -9,11 +9,11 @@ uses
 type
   Dictionary<T, U> = public class mapped to {$IF COOPER}java.util.HashMap<T,U>{$ELSEIF ECHOES}System.Collections.Generic.Dictionary<T,U>{$ELSEIF NOUGAT}Foundation.NSMutableDictionary where T is class, U is class;{$ENDIF}
   private
+  public
     method GetKeys: array of T;
     method GetValues: array of U;
     method GetItem(Key: T): U;
     method SetItem(Key: T; Value: U);
-  public
     constructor; mapped to constructor();
     {$IFNDEF ECHOES}
     method GetSequence: sequence of KeyValuePair<T,U>;

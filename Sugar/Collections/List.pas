@@ -15,9 +15,9 @@ uses
 type  
   List<T> = public class (sequence of T) mapped to {$IF COOPER}java.util.ArrayList<T>{$ELSEIF ECHOES}System.Collections.Generic.List<T>{$ELSEIF NOUGAT}Foundation.NSMutableArray where T is class;{$ENDIF}
   private
+  public
     method SetItem(&Index: Integer; Value: T);
     method GetItem(&Index: Integer): T;
-  public
     constructor; mapped to constructor();
     constructor(Items: List<T>);
     constructor(anArray: array of T);
