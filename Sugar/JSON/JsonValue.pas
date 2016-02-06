@@ -29,6 +29,7 @@ type
     method ToJson: String; override;
     operator Implicit(aValue: Int64): JsonIntegerValue;
     operator Implicit(aValue: JsonIntegerValue): JsonFloatValue;
+    //operator Explicit(aValue: JsonIntegerValue): JsonFloatValue;
   end;
 
   JsonFloatValue = public class(JsonValue<Double>)
@@ -132,15 +133,21 @@ begin
   result := new JsonFloatValue(aValue.Value);
 end;
 
+{operator JsonIntegerValue.Explicit(aValue: JsonIntegerValue): JsonFloatValue;
+begin
+  result := new JsonFloatValue(aValue.Value);
+end;}
+
 { JsonFloatValue }
 
 method JsonFloatValue.ToJson: String;
 begin // .NET uses current locales; OSX/Java use invariant culture by default.
   {$IFDEF ECHOES}
-  exit Double(Value).ToString(System.Globalization.NumberFormatInfo.InvariantInfo);
+  result := Double(Value).ToString(System.Globalization.NumberFormatInfo.InvariantInfo);
   {$ELSE}
-  exit String.Format("{0}", Value);
+  result := String.Format("{0}", Value);
   {$ENDIF}
+  if not result.Contains(".") then result := result+".0";
 end;
 
 operator JsonFloatValue.Implicit(aValue: Double): JsonFloatValue;
