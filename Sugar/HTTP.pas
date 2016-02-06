@@ -487,7 +487,7 @@ begin
     end, nil);
   end;
   {$ELSEIF NOUGAT}
-  var nsUrlRequest := new NSMutableURLRequest withURL(aRequest.Url) cachePolicy(0) timeoutInterval(30);
+  var nsUrlRequest := new NSMutableURLRequest withURL(aRequest.Url) cachePolicy(NSURLRequestCachePolicy.ReloadIgnoringLocalAndRemoteCacheData) timeoutInterval(30);
 
   //nsUrlRequest.AllowAutoRedirect := aRequest.FollowRedirects;
   //nsUrlRequest.allowsCellularAccess =
@@ -565,7 +565,7 @@ begin
     exit new HttpResponse(webResponse);
   end;
   {$ELSEIF NOUGAT}
-  var nsUrlRequest := new NSMutableURLRequest withURL(aRequest.Url) cachePolicy(0) timeoutInterval(30);
+  var nsUrlRequest := new NSMutableURLRequest withURL(aRequest.Url) cachePolicy(NSURLRequestCachePolicy.ReloadIgnoringLocalAndRemoteCacheData) timeoutInterval(30);
 
   //nsUrlRequest.AllowAutoRedirect := aRequest.FollowRedirects;
   //nsUrlRequest.allowsCellularAccess =
@@ -773,7 +773,7 @@ begin
   end;
   {$ELSEIF NOUGAT}
   var lError: NSError := nil;
-  var lRequest := new NSURLRequest withURL(anUrl) cachePolicy(0) timeoutInterval(30);
+  var lRequest := new NSURLRequest withURL(anUrl) cachePolicy(NSURLRequestCachePolicy.ReloadIgnoringLocalAndRemoteCacheData) timeoutInterval(30);
   var lResponse: NSURLResponse;
   
   var lData := NSURLConnection.sendSynchronousRequest(lRequest) returningResponse(var lResponse) error(var lError);
