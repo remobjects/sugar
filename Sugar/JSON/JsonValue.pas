@@ -28,12 +28,15 @@ type
   public
     method ToJson: String; override;
     operator Implicit(aValue: Int64): JsonIntegerValue;
+    operator Implicit(aValue: JsonIntegerValue): JsonFloatValue;
   end;
 
   JsonFloatValue = public class(JsonValue<Double>)
   public
     method ToJson: String; override;
     operator Implicit(aValue: Double): JsonFloatValue;
+    operator Implicit(aValue: Single): JsonFloatValue;
+    operator Implicit(aValue: JsonFloatValue): Single;
   end;
 
   JsonBooleanValue = public class(JsonValue<Boolean>)
@@ -124,6 +127,11 @@ begin
   result := new JsonIntegerValue(aValue);
 end;
 
+operator JsonIntegerValue.Implicit(aValue: JsonIntegerValue): JsonFloatValue;
+begin
+  result := new JsonFloatValue(aValue.Value);
+end;
+
 { JsonFloatValue }
 
 method JsonFloatValue.ToJson: String;
@@ -138,6 +146,16 @@ end;
 operator JsonFloatValue.Implicit(aValue: Double): JsonFloatValue;
 begin
   result := new JsonFloatValue(aValue);
+end;
+
+operator JsonFloatValue.Implicit(aValue: Single): JsonFloatValue;
+begin
+  result := new JsonFloatValue(aValue);
+end;
+
+operator JsonFloatValue.Implicit(aValue: JsonFloatValue): Single;
+begin
+  result := aValue.Value;
 end;
 
 { JsonBooleanValue }
