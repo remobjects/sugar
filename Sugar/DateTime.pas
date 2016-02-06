@@ -61,7 +61,7 @@ type
     property Date: DateTime read {$IF COOPER OR NOUGAT}new DateTime(self.Year, self.Month, self.Day, 0, 0, 0){$ELSEIF ECHOES}mapped.Date{$ENDIF};  
     
     class property Today: DateTime read {$IF COOPER OR NOUGAT}Now.Date{$ELSEIF ECHOES}mapped.Today{$ENDIF};
-    class property Now: DateTime read {$IF COOPER OR NOUGAT}new DateTime(){$ELSEIF ECHOES}mapped.Now{$ENDIF};    
+    class property Now: DateTime read {$IF COOPER OR NOUGAT}new DateTime(){$ELSEIF ECHOES}mapped.UtcNow{$ENDIF};    
     const TicksSince1970: Int64 = 621355968000000000;
                                   
     property Ticks: Int64 read{$IFDEF COOPER}(mapped.TimeInMillis +mapped.TimeZone.getOffset(mapped.TimeInMillis)) * TimeSpan.TicksPerMillisecond + TicksSince1970{$ELSEIF ECHOES}mapped.Ticks{$ELSE}Int64((mapped.timeIntervalSince1970 + DateTimeHelpers.LocalTimezone.secondsFromGMTForDate(mapped)) * TimeSpan.TicksPerSecond) + TicksSince1970{$ENDIF};
@@ -246,9 +246,9 @@ begin
     exit "";
 
   if String.IsNullOrEmpty(Culture) then
-    exit mapped.ToString(DateFormatter.Format(Format))
+    exit mapped.ToString(Format)
   else
-    exit mapped.ToString(DateFormatter.Format(Format), new System.Globalization.CultureInfo(Culture));
+    exit mapped.ToString(Format, new System.Globalization.CultureInfo(Culture));
   {$ELSEIF NOUGAT}
   var Formatter: NSDateFormatter := new NSDateFormatter();
 
