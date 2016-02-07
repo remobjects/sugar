@@ -60,7 +60,7 @@ type
     property Day: Integer read {$IF COOPER}mapped.get(Calendar.DAY_OF_MONTH){$ELSEIF ECHOES}mapped.Day{$ELSEIF NOUGAT}DateTimeHelpers.GetComponent(mapped, NSCalendarUnit.NSDayCalendarUnit){$ENDIF};
     property Date: DateTime read {$IF COOPER OR NOUGAT}new DateTime(self.Year, self.Month, self.Day, 0, 0, 0){$ELSEIF ECHOES}mapped.Date{$ENDIF};  
     
-    class property Today: DateTime read {$IF COOPER OR NOUGAT}Now.Date{$ELSEIF ECHOES}mapped.Today{$ENDIF};
+    class property Today: DateTime read {$IF COOPER OR NOUGAT}UtcNow.Date{$ELSEIF ECHOES}mapped.Today{$ENDIF};
     class property UtcNow: DateTime read {$IF COOPER OR NOUGAT}new DateTime(){$ELSEIF ECHOES}mapped.UtcNow{$ENDIF};    
     const TicksSince1970: Int64 = 621355968000000000;
                                   
