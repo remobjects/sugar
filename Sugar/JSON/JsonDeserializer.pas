@@ -128,17 +128,16 @@ begin
     JsonTokenKind.String: result := new JsonStringValue(Tokenizer.Value);
     JsonTokenKind.Number: begin
       var lValue := Convert.ToDouble(Tokenizer.Value);
-    
-      if (not Consts.IsInfinity(lValue)) and (not Consts.IsNaN(lValue)) and (Math.Floor(lValue) = lValue) then begin
+      if Tokenizer.Value.Contains(".") or Tokenizer.Value.Contains("e") or Tokenizer.Value.Contains("E") then
+        result := new JsonFloatValue(lValue) // force float of valiue had a decimal point!
+      else if Consts.IsInfinity(lValue) or Consts.IsNaN(lValue) then
+        result := new JsonFloatValue(lValue)
+      else begin
         if lValue > Consts.MaxInt64 then
           result := new JsonFloatValue(lValue)
-        else if lValue > Consts.MinInteger then
-          result := new JsonIntegerValue(Convert.ToInt64(lValue))
         else
           result := new JsonIntegerValue(Convert.ToInt64(lValue))
-      end
-      else 
-        result := new JsonFloatValue(lValue);
+      end;
     end;
     JsonTokenKind.Null: result := nil;
     JsonTokenKind.True: result := new JsonBooleanValue(true);
