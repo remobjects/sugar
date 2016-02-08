@@ -34,9 +34,9 @@ type
 
     class method Load(JsonString: String): JsonObject;
 
-    property Count: Integer read Items.Count;
-    property Item[Key: String]: nullable JsonNode read GetItem write SetItem; default;
-    property Keys: not nullable sequence of String read GetKeys;
+    property Count: Integer read Items.Count; override;
+    property Item[Key: String]: nullable JsonNode read GetItem write SetItem; default; override;
+    property Keys: not nullable sequence of String read GetKeys; override;
     property Properties: sequence of KeyValuePair<String, JsonNode> read GetProperties; 
   end;
 

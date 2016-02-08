@@ -33,8 +33,8 @@ type
 
     class method Load(JsonString: String): JsonArray;
 
-    property Count: Integer read Items.Count;
-    property Item[&Index: Integer]: JsonNode read GetItem write SetItem; default;
+    property Count: Integer read Items.Count; override;
+    property Item[&Index: Integer]: JsonNode read GetItem write SetItem; default; override;
   end;
 
 implementation
