@@ -22,6 +22,7 @@ type
   public
     method ToJson: String; override;
     operator Implicit(aValue: not nullable String): JsonStringValue;
+    //property StringValue: String read Value write Value; override;
   end;
 
   JsonIntegerValue = public class(JsonValue<Int64>)
@@ -30,6 +31,9 @@ type
     operator Implicit(aValue: Int64): JsonIntegerValue;
     operator Implicit(aValue: JsonIntegerValue): JsonFloatValue;
     //operator Explicit(aValue: JsonIntegerValue): JsonFloatValue;
+    //property IntegerValue: Integer read Value write Value; override;
+    //property FloatValue: Double read Value write inherited IntegerValue; override;
+    //property StringValue: String read ToJson write ToJson; override;
   end;
 
   JsonFloatValue = public class(JsonValue<Double>)
@@ -38,12 +42,17 @@ type
     operator Implicit(aValue: Double): JsonFloatValue;
     operator Implicit(aValue: Single): JsonFloatValue;
     operator Implicit(aValue: JsonFloatValue): Single;
+    //property FloatValue: Double read Value write Value; override;
+    //property IntegerValue: Int64 read Value write Value; override;
+    //property StringValue: String read ToJson write ToJson; override;
   end;
 
   JsonBooleanValue = public class(JsonValue<Boolean>)
   public
     method ToJson: String; override;
     operator Implicit(aValue: Boolean): JsonBooleanValue;
+    //property BooleanValue: Boolean read Value write Value; override;
+    //property StringValue: String read ToJson write ToJson; override;
   end;
 
 implementation

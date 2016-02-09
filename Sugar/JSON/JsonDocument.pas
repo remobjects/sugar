@@ -48,9 +48,11 @@ type
     method GetIntegerValue: Int64;
     method GetFloatValue: Double;
     method GetBooleanValue: Boolean;
+    method GetStringValue: String;
     method SetIntegerValue(aValue: Int64);
     method SetFloatValue(aValue: Double);
     method SetBooleanValue(aValue: Boolean);
+    method SetStringValue(aValue: String);
   protected
   public
     method ToJson: String; virtual; abstract;
@@ -60,9 +62,10 @@ type
     property Item[Key: String]: nullable JsonNode read CantGetItem write CantSetItem; default; virtual;
     property Item[&Index: Integer]: JsonNode read CantGetItem write CantSetItem; default; virtual;
     property Keys: not nullable sequence of String read CantGetKeys; virtual;
-    property IntegerValue: Int64 read GetIntegerValue write SetIntegerValue;
-    property FloatValue: Double read GetFloatValue write SetFloatValue;
-    property BooleanValue: Boolean read GetBooleanValue write SetBooleanValue;
+    property IntegerValue: Int64 read GetIntegerValue write SetIntegerValue; virtual;
+    property FloatValue: Double read GetFloatValue write SetFloatValue; virtual;
+    property BooleanValue: Boolean read GetBooleanValue write SetBooleanValue; virtual;
+    property StringValue: String read GetStringValue write SetStringValue; virtual;
   end;
 
 implementation
@@ -185,6 +188,20 @@ begin
     raise new SugarException("JSON Node is not a boolean.")
 end;
 
+method JsonNode.GetStringValue: String;
+begin
+  if self is JsonStringValue then
+    result := (self as JsonStringValue).Value
+  else if self is JsonIntegerValue then
+    result := (self as JsonIntegerValue).ToJson()
+  else if self is JsonFloatValue then
+    result := (self as JsonFloatValue).ToJson()
+  else if self is JsonBooleanValue then
+    result := (self as JsonBooleanValue).ToJson()
+  else
+    raise new SugarException("JSON Node is not a string.")
+end;
+
 method JsonNode.SetIntegerValue(aValue: Int64);
 begin
   if self is JsonIntegerValue then
@@ -209,6 +226,14 @@ begin
     (self as JsonBooleanValue).Value := aValue
   else
     raise new SugarException("JSON Node is not a boolean.")
+end;
+
+method JsonNode.SetStringValue(aValue: String);
+begin
+  if self is JsonStringValue then
+    (self as JsonStringValue).Value := aValue
+  else
+    raise new SugarException("JSON Node is not a string.")
 end;
 
 end.
