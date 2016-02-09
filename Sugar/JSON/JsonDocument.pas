@@ -175,7 +175,7 @@ begin
   if self is JsonIntegerValue then
     result := (self as JsonIntegerValue).Value
   else if self is JsonFloatValue then
-    result := Int64((self as JsonFloatValue).Value)
+    result := (self as JsonFloatValue).Value
   else
     raise new SugarException("JSON Node is not a float.")
 end;
