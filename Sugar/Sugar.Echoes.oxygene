@@ -58,7 +58,7 @@
         <Reference Include="System.Data.DataSetExtensions">
             <RequiredTargetFramework>3.5</RequiredTargetFramework>
         </Reference>
-        <Reference Include="System.Web.dll"/>
+        <Reference Include="System.Web"/>
     </ItemGroup>
     <ItemGroup>
         <Folder Include="Properties\"/>

@@ -41,14 +41,14 @@
         <GenerateBitcode>True</GenerateBitcode>
     </PropertyGroup>
     <ItemGroup>
-        <Reference Include="Foundation.fx"/>
-        <Reference Include="libNougat.fx"/>
-        <Reference Include="libsqlite3.fx">
+        <Reference Include="Foundation"/>
+        <Reference Include="libNougat"/>
+        <Reference Include="libsqlite3">
             <HintPath>C:\Program Files (x86)\RemObjects Software\Elements\Nougat\Libraries\libsqlite3\iOS\libsqlite3.fx</HintPath>
         </Reference>
-        <Reference Include="libxml2.fx"/>
-        <Reference Include="rtl.fx"/>
-        <Reference Include="UIKit.fx"/>
+        <Reference Include="libxml2"/>
+        <Reference Include="rtl"/>
+        <Reference Include="UIKit"/>
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Sugar\Sugar.Nougat.iOS.oxygene">

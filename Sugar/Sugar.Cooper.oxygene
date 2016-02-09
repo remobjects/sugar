@@ -41,10 +41,10 @@
         <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
     </PropertyGroup>
     <ItemGroup>
-        <Reference Include="com.remobjects.elements.rtl.jar">
+        <Reference Include="cooper">
             <Private>True</Private>
         </Reference>
-        <Reference Include="rt.jar"/>
+        <Reference Include="rt"/>
     </ItemGroup>
     <ItemGroup>
         <Folder Include="Properties\"/>

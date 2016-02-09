@@ -41,12 +41,12 @@
         <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
     </PropertyGroup>
     <ItemGroup>
-        <Reference Include="AppKit.fx"/>
-        <Reference Include="CoreServices.fx"/>
-        <Reference Include="Foundation.fx"/>
-        <Reference Include="libNougat.fx"/>
-        <Reference Include="libxml2.fx"/>
-        <Reference Include="rtl.fx"/>
+        <Reference Include="AppKit"/>
+        <Reference Include="CoreServices"/>
+        <Reference Include="Foundation"/>
+        <Reference Include="libNougat"/>
+        <Reference Include="libxml2"/>
+        <Reference Include="rtl"/>
     </ItemGroup>
     <ItemGroup>
         <Folder Include="Properties\"/>
