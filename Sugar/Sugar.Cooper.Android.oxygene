@@ -41,7 +41,7 @@
         <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
     </PropertyGroup>
     <ItemGroup>
-        <Reference Include="android"/>
+        <Reference Include="android.jar"/>
         <Reference Include="cooper">
             <Private>False</Private>
         </Reference>
