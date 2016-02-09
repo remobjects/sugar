@@ -11,6 +11,11 @@ type
   JsonDocument = public class
   private
     fRootObject: JsonObject;
+
+    method GetRootObjectItem(Key: String): nullable JsonNode;
+    method SetRootObjectItem(Key: String; Value: JsonNode);
+    method GetRootObjectKeys: not nullable sequence of String;
+
     constructor(aRootObject: JsonObject);
   protected
   public
@@ -20,12 +25,17 @@ type
     class method FromBinary(aBinary: Binary; aEncoding: Encoding := nil): not nullable JsonDocument;
     class method FromString(aString: String): not nullable JsonDocument;
     class method CreateDocument: not nullable JsonDocument;
+
+    constructor();
     
     {method Save(aFile: File);
     method Save(aFile: File; XmlDeclaration: XmlDocumentDeclaration);
     method Save(aFile: File; Version: String; Encoding: String; Standalone: Boolean);}
     method {$IF NOUGAT}description: Foundation.NSString{$ELSEIF COOPER}ToString: java.lang.String{$ELSEIF ECHOES}ToString: System.String{$ENDIF}; override;
     method ToJson: String;
+
+    property Item[Key: String]: nullable JsonNode read GetRootObjectItem write SetRootObjectItem; default; virtual;
+    property Keys: not nullable sequence of String read GetRootObjectKeys; virtual;
   end;
 
   JsonNode = public abstract class
@@ -58,6 +68,11 @@ type
 implementation
 
 { JsonDocument }
+
+constructor JsonDocument;
+begin
+  fRootObject := new JsonObject();
+end;
 
 constructor JsonDocument(aRootObject: JsonObject);
 begin
@@ -93,6 +108,21 @@ end;
 method JsonDocument.ToJson: String;
 begin
   result := fRootObject.ToJson();
+end;
+
+method JsonDocument.GetRootObjectItem(Key: String): nullable JsonNode;
+begin
+  result := fRootObject[Key];
+end;
+
+method JsonDocument.SetRootObjectItem(Key: String; Value: JsonNode);
+begin
+  fRootObject[Key] := Value;
+end;
+
+method JsonDocument.GetRootObjectKeys: not nullable sequence of String;
+begin
+  result := fRootObject.Keys;
 end;
 
 { JsonNode }
