@@ -49,7 +49,7 @@
         <Reference Include="UIKit"/>
     </ItemGroup>
     <ItemGroup>
-        <ProjectReference Include="..\Sugar\Sugar.Nougat.watchOS.elements>
+        <ProjectReference Include="..\Sugar\Sugar.Nougat.watchOS.elements">
             <Name>Sugar.Nougat.watchOS</Name>
             <HintPath>..\Sugar\bin\watchOS\libSugar.fx</HintPath>
             <Project>{A0CD6BB4-9336-4E25-9084-D1C63C03BF78}</Project>

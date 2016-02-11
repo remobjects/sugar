@@ -72,7 +72,7 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Sugar\Sugar.Nougat.OSX.elements>
+    <ProjectReference Include="..\Sugar\Sugar.Nougat.OSX.elements">
       <Name>Sugar.Nougat.OSX</Name>
       <Project>{ab7ab88b-2370-43bf-844b-54d015da9e57}</Project>
       <Private>True</Private>

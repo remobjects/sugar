@@ -1,19 +1,19 @@
 
 Microsoft Visual Studio Solution File, Format Version 12.00
 # RemObjects Fire
-Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Cooper", "Sugar\Sugar.Cooper.elements, "{D1EE6C41-515B-4175-873F-EE188AC43450}"
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Cooper", "Sugar\Sugar.Cooperelements", "{D1EE6C41-515B-4175-873F-EE188AC43450}"
 EndProject
-Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Cooper.Android", "Sugar\Sugar.Cooper.Android.elements, "{8DAC177A-64EB-4175-AC9C-E6B121B6F34B}"
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Cooper.Android", "Sugar\Sugar.Cooper.Androidelements", "{8DAC177A-64EB-4175-AC9C-E6B121B6F34B}"
 EndProject
-Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Echoes", "Sugar\Sugar.Echoes.elements, "{79301A0C-1F95-4FB0-9605-207E288C6171}"
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Echoes", "Sugar\Sugar.Echoeselements", "{79301A0C-1F95-4FB0-9605-207E288C6171}"
 EndProject
-Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Echoes.WP8.BuildServer", "Sugar\Sugar.Echoes.WP8.BuildServer.elements, "{BD5D51E2-B11A-4356-9450-64566F8CDC38}"
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Echoes.WP8.BuildServer", "Sugar\Sugar.Echoes.WP8.BuildServerelements", "{BD5D51E2-B11A-4356-9450-64566F8CDC38}"
 EndProject
-Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Echoes.WinRT.BuildServer", "Sugar\Sugar.Echoes.WinRT.BuildServer.elements, "{3AB69816-9882-4FA6-ABE5-C146199F5279}"
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Echoes.WinRT.BuildServer", "Sugar\Sugar.Echoes.WinRT.BuildServerelements", "{3AB69816-9882-4FA6-ABE5-C146199F5279}"
 EndProject
-Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Nougat.OSX", "Sugar\Sugar.Nougat.OSX.elements, "{AB7AB88B-2370-43BF-844B-54D015DA9E57}"
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Nougat.OSX", "Sugar\Sugar.Nougat.OSXelements", "{AB7AB88B-2370-43BF-844B-54D015DA9E57}"
 EndProject
-Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Nougat.iOS", "Sugar\Sugar.Nougat.iOS.elements, "{91B301FC-331E-48A7-803B-4CBE3FFF6ED7}"
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Nougat.iOS", "Sugar\Sugar.Nougat.iOSelements", "{91B301FC-331E-48A7-803B-4CBE3FFF6ED7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

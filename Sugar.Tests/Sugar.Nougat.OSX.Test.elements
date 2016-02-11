@@ -56,13 +56,13 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Sugar.Data\Sugar.Data.Nougat.OSX.elements>
+    <ProjectReference Include="..\Sugar.Data\Sugar.Data.Nougat.OSX.elements">
       <Name>Sugar.Data.Nougat.OSX</Name>
       <Project>{0d5b253d-762b-42d9-bfd2-3c217e07cf52}</Project>
       <Private>True</Private>
       <HintPath>..\Sugar.Data\bin\OS X\libSugar.Data.fx</HintPath>
     </ProjectReference>
-    <ProjectReference Include="..\Sugar\Sugar.Nougat.OSX.elements>
+    <ProjectReference Include="..\Sugar\Sugar.Nougat.OSX.elements">
       <Name>Sugar.Nougat.OSX</Name>
       <Project>{ab7ab88b-2370-43bf-844b-54d015da9e57}</Project>
       <Private>True</Private>

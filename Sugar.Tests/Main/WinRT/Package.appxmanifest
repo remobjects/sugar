@@ -23,7 +23,7 @@
           </m2:ShowNameOnTiles>
         </m2:DefaultTile>
         <m2:SplashScreen Image="Main\WinRT\Assets\SplashScreen.png" />
-      </m2:VisualElements>
+      </m2:Visualelements">
     </Application>
   </Applications>
   <Capabilities>

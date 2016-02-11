@@ -109,7 +109,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Sugar\Sugar.Echoes.WP8.BuildServer.elements>
+    <ProjectReference Include="..\Sugar\Sugar.Echoes.WP8.BuildServer.elements">
       <Name>Sugar.Echoes.WP8</Name>
       <Project>{bd5d51e2-b11a-4356-9450-64566f8cdc38}</Project>
       <Private>True</Private>

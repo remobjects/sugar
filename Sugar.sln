@@ -1,43 +1,43 @@
 
 Microsoft Visual Studio Solution File, Format Version 12.00
 # RemObjects Fire
-Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar (OS X)", "Sugar\Sugar.Nougat.OSX.elements, "{AB7AB88B-2370-43BF-844B-54D015DA9E57}"
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar (OS X)", "Sugar\Sugar.Nougat.OSXelements", "{AB7AB88B-2370-43BF-844B-54D015DA9E57}"
 EndProject
-Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar (iOS)", "Sugar\Sugar.Nougat.iOS.elements, "{91B301FC-331E-48A7-803B-4CBE3FFF6ED7}"
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar (iOS)", "Sugar\Sugar.Nougat.iOSelements", "{91B301FC-331E-48A7-803B-4CBE3FFF6ED7}"
 EndProject
-Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar (tvOS)", "Sugar\Sugar.Nougat.tvOS.elements, "{D1B6AAB1-96D4-4498-AA31-E7048D68147C}"
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar (tvOS)", "Sugar\Sugar.Nougat.tvOSelements", "{D1B6AAB1-96D4-4498-AA31-E7048D68147C}"
 EndProject
-Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar (watchOS)", "Sugar\Sugar.Nougat.watchOS.elements, "{A0CD6BB4-9336-4E25-9084-D1C63C03BF78}"
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar (watchOS)", "Sugar\Sugar.Nougat.watchOSelements", "{A0CD6BB4-9336-4E25-9084-D1C63C03BF78}"
 EndProject
-Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Cooper", "Sugar\Sugar.Cooper.elements, "{D1EE6C41-515B-4175-873F-EE188AC43450}"
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Cooper", "Sugar\Sugar.Cooperelements", "{D1EE6C41-515B-4175-873F-EE188AC43450}"
 EndProject
-Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Cooper.Android", "Sugar\Sugar.Cooper.Android.elements, "{8DAC177A-64EB-4175-AC9C-E6B121B6F34B}"
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Cooper.Android", "Sugar\Sugar.Cooper.Androidelements", "{8DAC177A-64EB-4175-AC9C-E6B121B6F34B}"
 EndProject
-Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Data (OS X)", "Sugar.Data\Sugar.Data.Nougat.OSX.elements, "{0D5B253D-762B-42D9-BFD2-3C217E07CF52}"
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Data (OS X)", "Sugar.Data\Sugar.Data.Nougat.OSXelements", "{0D5B253D-762B-42D9-BFD2-3C217E07CF52}"
 EndProject
-Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Data (iOS)", "Sugar.Data\Sugar.Data.Nougat.iOS.elements, "{15939BAF-3D02-4074-A4F1-6ADBD2A5F28D}"
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Data (iOS)", "Sugar.Data\Sugar.Data.Nougat.iOSelements", "{15939BAF-3D02-4074-A4F1-6ADBD2A5F28D}"
 EndProject
-Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Data (tvOS)", "Sugar.Data\Sugar.Data.Nougat.tvOS.elements, "{D317553F-A7EA-4C59-A541-4B3E335CED60}"
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Data (tvOS)", "Sugar.Data\Sugar.Data.Nougat.tvOSelements", "{D317553F-A7EA-4C59-A541-4B3E335CED60}"
 EndProject
-Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Data (watchOS)", "Sugar.Data\Sugar.Data.Nougat.watchOS.elements, "{0EAE8082-C9A4-4A4C-B52B-BD4E1FDEA19A}"
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Data (watchOS)", "Sugar.Data\Sugar.Data.Nougat.watchOSelements", "{0EAE8082-C9A4-4A4C-B52B-BD4E1FDEA19A}"
 EndProject
-Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Data.Cooper", "Sugar.Data\Sugar.Data.Cooper.elements, "{83E22C95-CBC5-4977-87F6-0B18B8181703}"
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Data.Cooper", "Sugar.Data\Sugar.Data.Cooperelements", "{83E22C95-CBC5-4977-87F6-0B18B8181703}"
 EndProject
-Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Data.Cooper.Android", "Sugar.Data\Sugar.Data.Cooper.Android.elements, "{D5492A3D-13B2-4EF5-8835-81BC392B5A74}"
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Data.Cooper.Android", "Sugar.Data\Sugar.Data.Cooper.Androidelements", "{D5492A3D-13B2-4EF5-8835-81BC392B5A74}"
 EndProject
-Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Data.Echoes", "Sugar.Data\Sugar.Data.Echoes.elements, "{77BA48DA-3022-4E3C-AB2E-885FF84B5EFE}"
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Data.Echoes", "Sugar.Data\Sugar.Data.Echoeselements", "{77BA48DA-3022-4E3C-AB2E-885FF84B5EFE}"
 EndProject
-Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Data.Echoes.WP8", "Sugar.Data\Sugar.Data.Echoes.WP8.elements, "{4439717A-5A75-4BD0-A37D-191A2000C90A}"
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Data.Echoes.WP8", "Sugar.Data\Sugar.Data.Echoes.WP8elements", "{4439717A-5A75-4BD0-A37D-191A2000C90A}"
 EndProject
-Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Data.Echoes.WinRT", "Sugar.Data\Sugar.Data.Echoes.WinRT.elements, "{2B56E90A-F177-4D9A-A438-ED6DF7AD9826}"
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Data.Echoes.WinRT", "Sugar.Data\Sugar.Data.Echoes.WinRTelements", "{2B56E90A-F177-4D9A-A438-ED6DF7AD9826}"
 EndProject
 Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Data.Shared", "Sugar.Data\Sugar.Data.Shared.elements", "{AA2E0B6A-BB00-4967-9E6A-BFDC653F86CE}"
 EndProject
-Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Echoes", "Sugar\Sugar.Echoes.elements, "{79301A0C-1F95-4FB0-9605-207E288C6171}"
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Echoes", "Sugar\Sugar.Echoeselements", "{79301A0C-1F95-4FB0-9605-207E288C6171}"
 EndProject
-Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Echoes.WP8", "Sugar\Sugar.Echoes.WP8.elements, "{BD5D51E2-B11A-4356-9450-64566F8CDC38}"
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Echoes.WP8", "Sugar\Sugar.Echoes.WP8elements", "{BD5D51E2-B11A-4356-9450-64566F8CDC38}"
 EndProject
-Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Echoes.WinRT", "Sugar\Sugar.Echoes.WinRT.elements, "{3AB69816-9882-4FA6-ABE5-C146199F5279}"
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Echoes.WinRT", "Sugar\Sugar.Echoes.WinRTelements", "{3AB69816-9882-4FA6-ABE5-C146199F5279}"
 EndProject
 Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Shared", "Sugar\Sugar.Shared.elements", "{719BEFD9-F514-42FD-8DA1-172697C756D2}"
 EndProject

@@ -46,7 +46,7 @@
         </Reference>
     </ItemGroup>
     <ItemGroup>
-        <ProjectReference Include="..\Sugar\Sugar.Cooper.Android.elements>
+        <ProjectReference Include="..\Sugar\Sugar.Cooper.Android.elements">
             <Name>Sugar.Cooper.Android</Name>
             <Project>{8dac177a-64eb-4175-ac9c-e6b121b6f34b}</Project>
             <Private>True</Private>

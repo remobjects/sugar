@@ -81,13 +81,13 @@
     <Folder Include="Main\iOS\Resources\Launch Images\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Sugar.Data\Sugar.Data.Nougat.iOS.elements>
+    <ProjectReference Include="..\Sugar.Data\Sugar.Data.Nougat.iOS.elements">
       <Name>Sugar.Data.Nougat.iOS</Name>
       <Project>{15939baf-3d02-4074-a4f1-6adbd2a5f28d}</Project>
       <Private>True</Private>
       <HintPath>..\Sugar.Data\bin\iOS Simulator\libSugar.Data.fx</HintPath>
     </ProjectReference>
-    <ProjectReference Include="..\Sugar\Sugar.Nougat.iOS.elements>
+    <ProjectReference Include="..\Sugar\Sugar.Nougat.iOS.elements">
       <Name>Sugar.Nougat.iOS</Name>
       <Project>{91b301fc-331e-48a7-803b-4cbe3fff6ed7}</Project>
       <Private>True</Private>

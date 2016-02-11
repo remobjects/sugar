@@ -45,7 +45,7 @@
         </Reference>
     </ItemGroup>
     <ItemGroup>
-        <ProjectReference Include="..\Sugar\Sugar.Cooper.elements>
+        <ProjectReference Include="..\Sugar\Sugar.Cooper.elements">
             <Name>Sugar.Cooper</Name>
             <Project>{d1ee6c41-515b-4175-873f-ee188ac43450}</Project>
             <Private>True</Private>

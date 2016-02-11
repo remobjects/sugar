@@ -51,7 +51,7 @@
         <Reference Include="UIKit"/>
     </ItemGroup>
     <ItemGroup>
-        <ProjectReference Include="..\Sugar\Sugar.Nougat.iOS.elements>
+        <ProjectReference Include="..\Sugar\Sugar.Nougat.iOS.elements">
             <Name>Sugar.Nougat.iOS</Name>
             <Project>{91b301fc-331e-48a7-803b-4cbe3fff6ed7}</Project>
             <Private>True</Private>
