@@ -55,13 +55,13 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Sugar.Data\Sugar.Data.Cooper.oxygene">
+    <ProjectReference Include="..\Sugar.Data\Sugar.Data.Cooper.elements>
       <Name>Sugar.Data.Cooper</Name>
       <Project>{83e22c95-cbc5-4977-87f6-0b18b8181703}</Project>
       <Private>True</Private>
       <HintPath>..\Sugar.Data\bin\Java\sugar.data.jar</HintPath>
     </ProjectReference>
-    <ProjectReference Include="..\Sugar\Sugar.Cooper.oxygene">
+    <ProjectReference Include="..\Sugar\Sugar.Cooper.elements>
       <Name>Sugar.Cooper</Name>
       <Project>{d1ee6c41-515b-4175-873f-ee188ac43450}</Project>
       <Private>True</Private>

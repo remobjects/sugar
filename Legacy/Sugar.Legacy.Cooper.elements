@@ -3,9 +3,9 @@
   <PropertyGroup>
     <ProductVersion>3.5</ProductVersion>
     <RootNamespace>Sugar.Legacy</RootNamespace>
-    <ProjectGuid>{4d7fe7a5-2a35-4915-b16b-3f2e84b64216}</ProjectGuid>
-    <OutputType>StaticLibrary</OutputType>
-    <AssemblyName>SugarLegacy</AssemblyName>
+    <ProjectGuid>dcb8bc3b-f911-470f-a125-988d5ef46466</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AssemblyName>Sugar.Legacy</AssemblyName>
     <AllowGlobals>
     </AllowGlobals>
     <AllowLegacyWith>
@@ -15,14 +15,12 @@
     <AllowUnsafeCode>True</AllowUnsafeCode>
     <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <Name>Sugar.Legacy.Nougat.OSX</Name>
+    <Name>Sugar.Legacy.Cooper</Name>
     <DefaultUses />
     <StartupClass />
     <InternalAssemblyName />
     <ApplicationIcon />
     <TargetFrameworkProfile />
-    <CreateHeaderFile>True</CreateHeaderFile>
-    <SDK>OS X</SDK>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <Optimize>false</Optimize>
@@ -60,8 +58,7 @@
     <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Foundation.fx" />
-    <Reference Include="libxml2.fx" />
+    <Reference Include="rt.jar" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MemIniFile.pas" />
@@ -72,14 +69,14 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Sugar\Sugar.Nougat.OSX.oxygene">
-      <Name>Sugar.Nougat.OSX</Name>
-      <Project>{ab7ab88b-2370-43bf-844b-54d015da9e57}</Project>
+    <ProjectReference Include="..\Sugar\Sugar.Cooper.elements">
+      <Name>Sugar.Cooper</Name>
+      <Project>{d1ee6c41-515b-4175-873f-ee188ac43450}</Project>
       <Private>True</Private>
-      <HintPath>..\Sugar\bin\Debug\Sugar.exe</HintPath>
+      <HintPath>..\Sugar\bin\Debug\Java\Sugar.jar</HintPath>
     </ProjectReference>
   </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Nougat.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Cooper.targets" />
   <PropertyGroup>
     <PreBuildEvent />
   </PropertyGroup>

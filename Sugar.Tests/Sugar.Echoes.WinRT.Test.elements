@@ -150,7 +150,7 @@
     <Reference Include="RemObjects.Elements.EUnit" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Sugar\Sugar.Echoes.WinRT.oxygene">
+    <ProjectReference Include="..\Sugar\Sugar.Echoes.WinRT.elements>
       <Name>Sugar.Echoes.WinRT</Name>
       <Project>{3ab69816-9882-4fa6-abe5-c146199f5279}</Project>
       <Private>True</Private>

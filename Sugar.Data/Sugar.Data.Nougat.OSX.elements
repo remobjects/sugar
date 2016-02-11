@@ -5,20 +5,20 @@
         <OutputType>StaticLibrary</OutputType>
         <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
         <AllowLegacyCreate>False</AllowLegacyCreate>
-        <Name>Sugar.Data (tvOS)</Name>
+        <Name>Sugar.Data (OS X)</Name>
         <RootNamespace>Sugar</RootNamespace>
-        <SDK>tvOS</SDK>
-        <ProjectGuid>{D317553F-A7EA-4C59-A541-4B3E335CED60}</ProjectGuid>
+        <SDK>OS X</SDK>
+        <ProjectGuid>{0d5b253d-762b-42d9-bfd2-3c217e07cf52}</ProjectGuid>
         <AssemblyName>Sugar.Data</AssemblyName>
         <DefaultUses>Foundation</DefaultUses>
-        <DeploymentTargetVersion>2.0</DeploymentTargetVersion>
+        <DeploymentTargetVersion>10.7</DeploymentTargetVersion>
         <AllowLegacyOutParams>False</AllowLegacyOutParams>
         <CreateHeaderFile>False</CreateHeaderFile>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
         <Optimize>False</Optimize>
         <OutputPath>bin\</OutputPath>
-        <DefineConstants>DEBUG;TRACE;TVOS</DefineConstants>
+        <DefineConstants>DEBUG;TRACE;OSX</DefineConstants>
         <CaptureConsoleOutput>False</CaptureConsoleOutput>
         <StartMode>Project</StartMode>
         <XmlDoc>False</XmlDoc>
@@ -30,34 +30,35 @@
         <OutputPath>.\bin</OutputPath>
         <GenerateDebugInfo>True</GenerateDebugInfo>
         <EnableAsserts>False</EnableAsserts>
+        <DefineConstants>OSX</DefineConstants>
         <CaptureConsoleOutput>False</CaptureConsoleOutput>
         <StartMode>Project</StartMode>
         <XmlDoc>False</XmlDoc>
         <XmlDocWarningLevel>WarningOnPublicMembers</XmlDocWarningLevel>
         <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
-        <DefineConstants>TVOS</DefineConstants>
-        <GenerateBitcode>True</GenerateBitcode>
     </PropertyGroup>
     <ItemGroup>
+        <Reference Include="AppKit"/>
+        <Reference Include="CoreServices"/>
         <Reference Include="Foundation"/>
         <Reference Include="libNougat"/>
         <Reference Include="libsqlite3">
-            <HintPath>C:\Program Files (x86)\RemObjects Software\Elements\Nougat\Libraries\libsqlite3\iOS\libsqlite3.fx</HintPath>
+            <HintPath>C:\Program Files (x86)\RemObjects Software\Elements\Nougat\Libraries\libsqlite3\OS X\libsqlite3.fx</HintPath>
         </Reference>
         <Reference Include="libxml2"/>
         <Reference Include="rtl"/>
-        <Reference Include="UIKit"/>
     </ItemGroup>
     <ItemGroup>
-        <ProjectReference Include="..\Sugar\Sugar.Nougat.tvOS.oxygene">
-            <Name>Sugar.Nougat.tvOS</Name>
-            <HintPath>..\Sugar\bin\tvOS\libSugar.fx</HintPath>
-            <Project>{D1B6AAB1-96D4-4498-AA31-E7048D68147C}</Project>
+        <ProjectReference Include="..\Sugar\Sugar.Nougat.OSX.elements>
+            <Name>Sugar.Nougat.OSX</Name>
+            <Project>{ab7ab88b-2370-43bf-844b-54d015da9e57}</Project>
+            <Private>True</Private>
+            <HintPath>..\Sugar\bin\OS X\libSugar.fx</HintPath>
         </ProjectReference>
     </ItemGroup>
     <ItemGroup>
         <Folder Include="Properties\"/>
     </ItemGroup>
-    <Import Project="$(MSBuildExtensionsPath)/RemObjects Software/Oxygene/RemObjects.Oxygene.Nougat.targets"/>
     <Import Project="Sugar.Data.Shared.projitems" Label="Shared"/>
+    <Import Project="$(MSBuildExtensionsPath)/RemObjects Software/Oxygene/RemObjects.Oxygene.Nougat.targets"/>
 </Project>

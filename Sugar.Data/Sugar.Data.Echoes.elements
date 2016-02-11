@@ -55,7 +55,7 @@
     <FutureHelperClassName />
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Sugar\Sugar.Echoes.oxygene">
+    <ProjectReference Include="..\Sugar\Sugar.Echoes.elements>
       <Name>Sugar.Echoes</Name>
       <Project>{79301a0c-1f95-4fb0-9605-207e288c6171}</Project>
       <Private>True</Private>

@@ -5,10 +5,10 @@
         <OutputType>StaticLibrary</OutputType>
         <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
         <AllowLegacyCreate>False</AllowLegacyCreate>
-        <Name>Sugar.Data (watchOS)</Name>
+        <Name>Sugar.Data (tvOS)</Name>
         <RootNamespace>Sugar</RootNamespace>
-        <SDK>watchOS</SDK>
-        <ProjectGuid>{0EAE8082-C9A4-4A4C-B52B-BD4E1FDEA19A}</ProjectGuid>
+        <SDK>tvOS</SDK>
+        <ProjectGuid>{D317553F-A7EA-4C59-A541-4B3E335CED60}</ProjectGuid>
         <AssemblyName>Sugar.Data</AssemblyName>
         <DefaultUses>Foundation</DefaultUses>
         <DeploymentTargetVersion>2.0</DeploymentTargetVersion>
@@ -18,7 +18,7 @@
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
         <Optimize>False</Optimize>
         <OutputPath>bin\</OutputPath>
-        <DefineConstants>DEBUG;TRACE;WATCHOS</DefineConstants>
+        <DefineConstants>DEBUG;TRACE;TVOS</DefineConstants>
         <CaptureConsoleOutput>False</CaptureConsoleOutput>
         <StartMode>Project</StartMode>
         <XmlDoc>False</XmlDoc>
@@ -35,24 +35,24 @@
         <XmlDoc>False</XmlDoc>
         <XmlDocWarningLevel>WarningOnPublicMembers</XmlDocWarningLevel>
         <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
-        <DefineConstants>WATCHOS</DefineConstants>
+        <DefineConstants>TVOS</DefineConstants>
         <GenerateBitcode>True</GenerateBitcode>
     </PropertyGroup>
     <ItemGroup>
         <Reference Include="Foundation"/>
         <Reference Include="libNougat"/>
         <Reference Include="libsqlite3">
-            <HintPath>C:\Program Files (x86)\RemObjects Software\Elements\Nougat\Libraries\libsqlite3\watchOS\libsqlite3.fx</HintPath>
+            <HintPath>C:\Program Files (x86)\RemObjects Software\Elements\Nougat\Libraries\libsqlite3\iOS\libsqlite3.fx</HintPath>
         </Reference>
         <Reference Include="libxml2"/>
         <Reference Include="rtl"/>
         <Reference Include="UIKit"/>
     </ItemGroup>
     <ItemGroup>
-        <ProjectReference Include="..\Sugar\Sugar.Nougat.watchOS.oxygene">
-            <Name>Sugar.Nougat.watchOS</Name>
-            <HintPath>..\Sugar\bin\watchOS\libSugar.fx</HintPath>
-            <Project>{A0CD6BB4-9336-4E25-9084-D1C63C03BF78}</Project>
+        <ProjectReference Include="..\Sugar\Sugar.Nougat.tvOS.elements>
+            <Name>Sugar.Nougat.tvOS</Name>
+            <HintPath>..\Sugar\bin\tvOS\libSugar.fx</HintPath>
+            <Project>{D1B6AAB1-96D4-4498-AA31-E7048D68147C}</Project>
         </ProjectReference>
     </ItemGroup>
     <ItemGroup>

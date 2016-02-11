@@ -2,19 +2,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Echoes.Test", "Sugar.Tests\Sugar.Echoes.Test.oxygene", "{9F930A22-BE43-4D5A-83F6-4AFC91282E23}"
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Echoes.Test", "Sugar.Tests\Sugar.Echoes.Test.elements, "{9F930A22-BE43-4D5A-83F6-4AFC91282E23}"
 EndProject
-Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Cooper.Android.Test", "Sugar.Tests\Sugar.Cooper.Android.Test.oxygene", "{FCF05218-9631-4C24-A6B7-8C78434CAD94}"
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Cooper.Android.Test", "Sugar.Tests\Sugar.Cooper.Android.Test.elements, "{FCF05218-9631-4C24-A6B7-8C78434CAD94}"
 EndProject
-Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Nougat.iOS.Test", "Sugar.Tests\Sugar.Nougat.iOS.Test.oxygene", "{E8CDF7D0-43B8-48F4-A06D-37748B1FA463}"
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Nougat.iOS.Test", "Sugar.Tests\Sugar.Nougat.iOS.Test.elements, "{E8CDF7D0-43B8-48F4-A06D-37748B1FA463}"
 EndProject
-Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Nougat.OSX.Test", "Sugar.Tests\Sugar.Nougat.OSX.Test.oxygene", "{E05279DE-3031-4A1D-8C31-FF14BA511F66}"
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Nougat.OSX.Test", "Sugar.Tests\Sugar.Nougat.OSX.Test.elements, "{E05279DE-3031-4A1D-8C31-FF14BA511F66}"
 EndProject
-Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Echoes.WinRT.Test", "Sugar.Tests\Sugar.Echoes.WinRT.Test.oxygene", "{90B9F375-6C66-4316-81D7-7E549C959B30}"
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Echoes.WinRT.Test", "Sugar.Tests\Sugar.Echoes.WinRT.Test.elements, "{90B9F375-6C66-4316-81D7-7E549C959B30}"
 EndProject
-Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Echoes.WP8.Test", "Sugar.Tests\Main\WP8\Sugar.Echoes.WP8.Test.oxygene", "{EF1654E8-F2E2-43A2-888A-EB1CB177F75A}"
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Echoes.WP8.Test", "Sugar.Tests\Main\WP8\Sugar.Echoes.WP8.Test.elements, "{EF1654E8-F2E2-43A2-888A-EB1CB177F75A}"
 EndProject
-Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Cooper.Test", "Sugar.Tests\Sugar.Cooper.Test.oxygene", "{D6D563F4-0983-4AB5-B167-3E684B6080B2}"
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Cooper.Test", "Sugar.Tests\Sugar.Cooper.Test.elements, "{D6D563F4-0983-4AB5-B167-3E684B6080B2}"
 EndProject
 Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Shared.Test", "Sugar.Tests\Sugar.Shared.Test.elements", "{6636F222-6B54-43EF-B3AE-FE4E319449CB}"
 EndProject
