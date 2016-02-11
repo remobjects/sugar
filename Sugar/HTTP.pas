@@ -34,6 +34,7 @@ type
   public
     operator Implicit(aBinary: not nullable Binary): HttpRequestContent;
     operator Implicit(aString: not nullable String): HttpRequestContent;
+    operator Implicit(aJson: not nullable JsonDocument): HttpRequestContent;
   end;
   
   HttpBinaryRequestContent = public class(HttpRequestContent, IHttpRequestContent)
@@ -45,7 +46,8 @@ type
   public
     constructor(aBinary: not nullable Binary);
     constructor(aArray: not nullable array of Byte);
-    constructor(aString: not nullable String; aEncoding: Encoding);
+    constructor(aString: not nullable String; aEncoding: Encoding := nil);
+    constructor(aJson: not nullable JsonDocument; aEncoding: Encoding := nil);
   end;
 
   HttpResponse = public class
@@ -152,7 +154,12 @@ end;
 
 operator HttpRequestContent.Implicit(aString: not nullable String): HttpRequestContent;
 begin
-  result := new HttpBinaryRequestContent(aString, Encoding.UTF8);
+  result := new HttpBinaryRequestContent(aString, nil);
+end;
+
+operator HttpRequestContent.Implicit(aJson: not nullable JsonDocument): HttpRequestContent;
+begin
+  result := new HttpBinaryRequestContent(aJson, nil);
 end;
 
 { HttpBinaryRequestContent }
@@ -171,6 +178,11 @@ constructor HttpBinaryRequestContent(aString: not nullable String; aEncoding: En
 begin
   if aEncoding = nil then aEncoding := Encoding.Default;
   &Array := aString.ToByteArray(aEncoding);
+end;
+
+constructor HttpBinaryRequestContent(aJson: not nullable JsonDocument; aEncoding: Encoding);
+begin
+  constructor(aJson.ToString, aEncoding);
 end;
 
 method HttpBinaryRequestContent.GetContentAsBinary(): Binary;
