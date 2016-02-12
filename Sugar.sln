@@ -31,7 +31,7 @@ Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Data.Echoes.WP8", "Su
 EndProject
 Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Data.Echoes.WinRT", "Sugar.Data\Sugar.Data.Echoes.WinRT.elements", "{2B56E90A-F177-4D9A-A438-ED6DF7AD9826}"
 EndProject
-Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Data.Shared", "Sugar.Data\Sugar.Data.Shared..elements", "{AA2E0B6A-BB00-4967-9E6A-BFDC653F86CE}"
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Data.Shared", "Sugar.Data\Sugar.Data.Shared.elements", "{AA2E0B6A-BB00-4967-9E6A-BFDC653F86CE}"
 EndProject
 Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Echoes", "Sugar\Sugar.Echoes.elements", "{79301A0C-1F95-4FB0-9605-207E288C6171}"
 EndProject
@@ -39,7 +39,7 @@ Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Echoes.WP8", "Sugar\S
 EndProject
 Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Echoes.WinRT", "Sugar\Sugar.Echoes.WinRT.elements", "{3AB69816-9882-4FA6-ABE5-C146199F5279}"
 EndProject
-Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Shared", "Sugar\Sugar.Shared..elements", "{719BEFD9-F514-42FD-8DA1-172697C756D2}"
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Shared", "Sugar\Sugar.Shared.elements", "{719BEFD9-F514-42FD-8DA1-172697C756D2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
