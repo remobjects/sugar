@@ -17,7 +17,7 @@ type
     method GetString(Value: array of Byte): String;
     method GetString(Value: array of Byte; Offset: Integer; Count: Integer): String;
 
-    class method GetEncoding(Name: String): Encoding;
+    class method GetEncoding(aName: String): Encoding;
 
     property Name: String read GetName;
 
@@ -40,7 +40,7 @@ type
     class method GetBytes(aEncoding: Encoding; Value: String): array of Byte;
     class method GetChars(aEncoding: Encoding; Value: array of Byte; Offset: Integer; Count: Integer): array of Char;
     class method GetString(aEncoding: Encoding; Value: array of Byte; Offset: Integer; Count: Integer): String;
-    class method GetEncoding(Name: String): Encoding;
+    class method GetEncoding(aName: String): Encoding;
   end;
 
 implementation
@@ -73,9 +73,9 @@ begin
   exit GetString(Value, 0, Value.length);
 end;
 
-class method Encoding.GetEncoding(Name: String): Encoding;
+class method Encoding.GetEncoding(aName: String): Encoding;
 begin
-  exit EncodingHelpers.GetEncoding(Name);
+  exit EncodingHelpers.GetEncoding(aName);
 end;
 
 method Encoding.GetName: String;
@@ -125,9 +125,9 @@ begin
   exit EncodingHelpers.GetString(self, Value, Offset, Count);
 end;
 
-class method EncodingHelpers.GetEncoding(Name: String): Encoding;
+class method EncodingHelpers.GetEncoding(aName: String): Encoding;
 begin
-  SugarArgumentNullException.RaiseIfNil(Name, "Name");
+  SugarArgumentNullException.RaiseIfNil(aName, "Name");
   {$IF COOPER}
   exit java.nio.charset.Charset.forName(Name);
   {$ELSEIF WINDOWS_PHONE}
@@ -139,7 +139,7 @@ begin
   result := System.Text.Encoding.GetEncoding(Name);
   {$ELSEIF NOUGAT}
   var lEncoding := NSStringEncoding.UTF8StringEncoding;
-  case Name of
+  case aName of
     'UTF8','UTF-8': lEncoding := NSStringEncoding.UTF8StringEncoding;
     'UTF16','UTF-16': lEncoding := NSStringEncoding.UTF16StringEncoding;
     'UTF32','UTF-32': lEncoding := NSStringEncoding.UTF32StringEncoding;
@@ -149,7 +149,7 @@ begin
     'UTF32BE','UTF-32BE': lEncoding := NSStringEncoding.UTF32BigEndianStringEncoding;
     'US-ASCII', 'ASCII','UTF-ASCII': lEncoding := NSStringEncoding.ASCIIStringEncoding;
     else begin 
-      var lH := CFStringConvertIANACharSetNameToEncoding(bridge<CFStringRef>(Name));
+      var lH := CFStringConvertIANACharSetNameToEncoding(bridge<CFStringRef>(aName));
       if lH = kCFStringEncodingInvalidId then 
         raise new SugarArgumentException();
       lEncoding := CFStringConvertEncodingToNSStringEncoding(lH) as NSStringEncoding;

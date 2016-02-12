@@ -64,7 +64,7 @@ begin
   {$ELSEIF ECHOES}
   mapped.Add(Key, Value);
   {$ELSEIF NOUGAT}
-  DictionaryHelpers.Add(mapped, Key, VAlue);
+  DictionaryHelpers.Add(mapped, Key, Value);
   {$ENDIF}
 end;
 
