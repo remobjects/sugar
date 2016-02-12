@@ -27,53 +27,53 @@ var lFiles =
 msbuild.updateAssemblyVersion(lFiles, sugarVersion);
 
 //Build Sugar
-msbuild["rebuild"]("Sugar/Sugar.Cooperelements", 		{configuration: "Release", destinationFolder: "./Bin" });
+msbuild["rebuild"]("Sugar/Sugar.Cooper.elements", 		{configuration: "Release", destinationFolder: "./Bin" });
 cleanObj();
-msbuild["rebuild"]("Sugar/Sugar.Cooper.Androidelements", {configuration: "Release", destinationFolder: "./Bin/Android" });
-cleanObj();
-
-msbuild["rebuild"]("Sugar/Sugar.Echoeselements", 		{configuration: "Release", destinationFolder: "./Bin" });
-cleanObj();
-msbuild["rebuild"]("Sugar/Sugar.Echoes.WinRT.BuildServerelements", 	{configuration: "Release", destinationFolder: "./Bin/WinRT" });
-cleanObj();
-msbuild["rebuild"]("Sugar/Sugar.Echoes.WP8.BuildServerelements", 	{configuration: "Release", destinationFolder: "./Bin/WP8" });
+msbuild["rebuild"]("Sugar/Sugar.Cooper.Android.elements", {configuration: "Release", destinationFolder: "./Bin/Android" });
 cleanObj();
 
-msbuild["rebuild"]("Sugar/Sugar.Nougat.OSXelements", 		{configuration: "Release", destinationFolder: "./Bin", extraArgs: '"/p:CrossBox=$(ciCrossBox);CrossBoxDeviceID=Mac"'});
-msbuild["rebuild"]("Sugar/Sugar.Nougat.iOSelements", 		{configuration: "Release", destinationFolder: "./Bin", extraArgs: '"/p:CrossBox=$(ciCrossBox);CrossBoxDeviceID=iOS Simulator (iPhone)"'});
-msbuild["rebuild"]("Sugar/Sugar.Nougat.iOSelements", 		{configuration: "Release", destinationFolder: "./Bin", extraArgs: '"/p:CrossBox=$(ciCrossBox);CrossBoxDeviceID=Generic iOS Device"'});
-msbuild["rebuild"]("Sugar/Sugar.Nougat.watchOSelements", 	{configuration: "Release", destinationFolder: "./Bin", extraArgs: '"/p:CrossBox=$(ciCrossBox);CrossBoxDeviceID=watchOS Simulator (Apple Watch 38mm)"'});
-msbuild["rebuild"]("Sugar/Sugar.Nougat.watchOSelements", 	{configuration: "Release", destinationFolder: "./Bin", extraArgs: '"/p:CrossBox=$(ciCrossBox);CrossBoxDeviceID=Generic watchOS Device"'});
-msbuild["rebuild"]("Sugar/Sugar.Nougat.tvOSelements", 		{configuration: "Release", destinationFolder: "./Bin", extraArgs: '"/p:CrossBox=$(ciCrossBox);CrossBoxDeviceID=tvOS Simulator (Apple Watch 1080p)"'});
-msbuild["rebuild"]("Sugar/Sugar.Nougat.tvOSelements", 		{configuration: "Release", destinationFolder: "./Bin", extraArgs: '"/p:CrossBox=$(ciCrossBox);CrossBoxDeviceID=Generic tvOS Device"'});
+msbuild["rebuild"]("Sugar/Sugar.Echoes.elements", 		{configuration: "Release", destinationFolder: "./Bin" });
+cleanObj();
+msbuild["rebuild"]("Sugar/Sugar.Echoes.WinRT.BuildServer.elements", 	{configuration: "Release", destinationFolder: "./Bin/WinRT" });
+cleanObj();
+msbuild["rebuild"]("Sugar/Sugar.Echoes.WP8.BuildServer.elements", 	{configuration: "Release", destinationFolder: "./Bin/WP8" });
+cleanObj();
+
+msbuild["rebuild"]("Sugar/Sugar.Nougat.OSX.elements", 		{configuration: "Release", destinationFolder: "./Bin", extraArgs: '"/p:CrossBox=$(ciCrossBox);CrossBoxDeviceID=Mac"'});
+msbuild["rebuild"]("Sugar/Sugar.Nougat.iOS.elements", 		{configuration: "Release", destinationFolder: "./Bin", extraArgs: '"/p:CrossBox=$(ciCrossBox);CrossBoxDeviceID=iOS Simulator (iPhone)"'});
+msbuild["rebuild"]("Sugar/Sugar.Nougat.iOS.elements", 		{configuration: "Release", destinationFolder: "./Bin", extraArgs: '"/p:CrossBox=$(ciCrossBox);CrossBoxDeviceID=Generic iOS Device"'});
+msbuild["rebuild"]("Sugar/Sugar.Nougat.watchOS.elements", 	{configuration: "Release", destinationFolder: "./Bin", extraArgs: '"/p:CrossBox=$(ciCrossBox);CrossBoxDeviceID=watchOS Simulator (Apple Watch 38mm)"'});
+msbuild["rebuild"]("Sugar/Sugar.Nougat.watchOS.elements", 	{configuration: "Release", destinationFolder: "./Bin", extraArgs: '"/p:CrossBox=$(ciCrossBox);CrossBoxDeviceID=Generic watchOS Device"'});
+msbuild["rebuild"]("Sugar/Sugar.Nougat.tvOS.elements", 		{configuration: "Release", destinationFolder: "./Bin", extraArgs: '"/p:CrossBox=$(ciCrossBox);CrossBoxDeviceID=tvOS Simulator (Apple Watch 1080p)"'});
+msbuild["rebuild"]("Sugar/Sugar.Nougat.tvOS.elements", 		{configuration: "Release", destinationFolder: "./Bin", extraArgs: '"/p:CrossBox=$(ciCrossBox);CrossBoxDeviceID=Generic tvOS Device"'});
 
 //Build Sugar.Data
 if (false)
 {
-	msbuild["rebuild"]("Sugar.Data/Sugar.Data.Cooperelements", {configuration: "Release"});
+	msbuild["rebuild"]("Sugar.Data/Sugar.Data.Cooper.elements", {configuration: "Release"});
 	cleanObj();
 	file.copy("Sugar.Data/Bin/Java/sugar.data.jar", "./Bin", true);
 
-	msbuild["rebuild"]("Sugar.Data/Sugar.Data.Cooper.Androidelements", {configuration: "Release"});
+	msbuild["rebuild"]("Sugar.Data/Sugar.Data.Cooper.Android.elements", {configuration: "Release"});
 	cleanObj();
 	file.copy("Sugar.Data/Bin/Android/sugar.data.jar", "./Bin/Android", true);
 
-	msbuild["rebuild"]("Sugar.Data/Sugar.Data.Echoeselements", 		{configuration: "Release", destinationFolder: "./Bin" });
+	msbuild["rebuild"]("Sugar.Data/Sugar.Data.Echoes.elements", 		{configuration: "Release", destinationFolder: "./Bin" });
 	cleanObj();
 
-	msbuild["rebuild"]("Sugar.Data/Sugar.Data.Echoes.WinRT.BuildServerelements", 		{configuration: "Release", destinationFolder: "./Bin/WinRT" });
+	msbuild["rebuild"]("Sugar.Data/Sugar.Data.Echoes.WinRT.BuildServer.elements", 		{configuration: "Release", destinationFolder: "./Bin/WinRT" });
 	cleanObj();
 
-	msbuild["rebuild"]("Sugar.Data/Sugar.Data.Echoes.WP8.BuildServerelements", 		{configuration: "Release", destinationFolder: "./Bin/WP8" });
+	msbuild["rebuild"]("Sugar.Data/Sugar.Data.Echoes.WP8.BuildServer.elements", 		{configuration: "Release", destinationFolder: "./Bin/WP8" });
 	cleanObj();
 
-	msbuild["rebuild"]("Sugar.Data/Sugar.Data.Nougat.OSXelements", 	{configuration: "Release", destinationFolder: "./Bin", extraArgs: '"/p:CrossBox=$(ciCrossBox);CrossBoxDeviceID=Mac"'});
+	msbuild["rebuild"]("Sugar.Data/Sugar.Data.Nougat.OSX.elements", 	{configuration: "Release", destinationFolder: "./Bin", extraArgs: '"/p:CrossBox=$(ciCrossBox);CrossBoxDeviceID=Mac"'});
 	cleanObj();
 
-	msbuild["rebuild"]("Sugar.Data/Sugar.Data.Nougat.iOSelements", 	{configuration: "Release", destinationFolder: "./Bin", extraArgs: '"/p:CrossBox=$(ciCrossBox);CrossBoxDeviceID=iOS Simulator (iPhone)"'});
+	msbuild["rebuild"]("Sugar.Data/Sugar.Data.Nougat.iOS.elements", 	{configuration: "Release", destinationFolder: "./Bin", extraArgs: '"/p:CrossBox=$(ciCrossBox);CrossBoxDeviceID=iOS Simulator (iPhone)"'});
 	cleanObj();
 
-	msbuild["rebuild"]("Sugar.Data/Sugar.Data.Nougat.iOSelements", 	{configuration: "Release", destinationFolder: "./Bin", extraArgs: '"/p:CrossBox=$(ciCrossBox);CrossBoxDeviceID=Generic iOS Device"'});
+	msbuild["rebuild"]("Sugar.Data/Sugar.Data.Nougat.iOS.elements", 	{configuration: "Release", destinationFolder: "./Bin", extraArgs: '"/p:CrossBox=$(ciCrossBox);CrossBoxDeviceID=Generic iOS Device"'});
 	cleanObj();
 }
 
