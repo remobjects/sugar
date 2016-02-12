@@ -77,7 +77,7 @@ begin
     else raise new SugarNotImplementedException;
   end;
   if not assigned(result) then
-    raise new SugarException('Coiund not obgtain file handle for file '+FileName);
+    raise new SugarException('Could not obtain file handle for file '+FileName);
   {$ENDIF}
 end;
 
