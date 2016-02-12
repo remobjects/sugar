@@ -129,14 +129,14 @@ class method EncodingHelpers.GetEncoding(aName: String): Encoding;
 begin
   SugarArgumentNullException.RaiseIfNil(aName, "Name");
   {$IF COOPER}
-  exit java.nio.charset.Charset.forName(Name);
+  exit java.nio.charset.Charset.forName(aName);
   {$ELSEIF WINDOWS_PHONE}
   result := CustomEncoding.ForName(Name);
 
   if result = nil then
-    result := System.Text.Encoding.GetEncoding(Name);
+    result := System.Text.Encoding.GetEncoding(aName);
   {$ELSEIF ECHOES}
-  result := System.Text.Encoding.GetEncoding(Name);
+  result := System.Text.Encoding.GetEncoding(aName);
   {$ELSEIF NOUGAT}
   var lEncoding := NSStringEncoding.UTF8StringEncoding;
   case aName of
