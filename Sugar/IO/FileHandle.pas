@@ -65,11 +65,19 @@ begin
   exit new System.IO.FileStream(FileName, lMode, lAccess);
   {$ELSEIF NOUGAT}
   case Mode of
-    FileOpenMode.ReadOnly: exit NSFileHandle.fileHandleForReadingAtPath(FileName);
-    FileOpenMode.ReadWrite: exit NSFileHandle.fileHandleForUpdatingAtPath(FileName);
-    FileOpenMode.Create: exit NSFileHandle.fileHandleForWritingAtPath(FileName);
+    FileOpenMode.ReadOnly: result := NSFileHandle.fileHandleForReadingAtPath(FileName);
+    FileOpenMode.ReadWrite: result :=  NSFileHandle.fileHandleForUpdatingAtPath(FileName);
+    FileOpenMode.Create: begin
+        result :=  NSFileHandle.fileHandleForWritingAtPath(FileName);
+        if not assigned(result) then begin
+          NSFileManager.defaultManager.createFileAtPath(FileName) contents(nil) attributes(nil);
+          result :=  NSFileHandle.fileHandleForWritingAtPath(FileName);
+        end;
+      end;
     else raise new SugarNotImplementedException;
   end;
+  if not assigned(result) then
+    raise new SugarException('Coiund not obgtain file handle for file '+FileName);
   {$ENDIF}
 end;
 

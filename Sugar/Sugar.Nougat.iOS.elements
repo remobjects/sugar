@@ -29,6 +29,7 @@
         <XmlDocWarningLevel>WarningOnPublicMembers</XmlDocWarningLevel>
         <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
         <SimulatorArchitectures>i386;x86_64</SimulatorArchitectures>
+        <GenerateDebugInfo>True</GenerateDebugInfo>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
         <Optimize>True</Optimize>
