@@ -131,7 +131,7 @@ begin
   {$IF COOPER}
   exit java.nio.charset.Charset.forName(aName);
   {$ELSEIF WINDOWS_PHONE}
-  result := CustomEncoding.ForName(Name);
+  result := CustomEncoding.ForName(aName);
 
   if result = nil then
     result := System.Text.Encoding.GetEncoding(aName);
