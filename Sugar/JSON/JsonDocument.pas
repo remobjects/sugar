@@ -84,7 +84,7 @@ end;
 
 class method JsonDocument.FromFile(aFile: File): not nullable JsonDocument;
 begin
-  result := new JsonDocument(new JsonDeserializer(aFile.Path).Deserialize as JsonObject)
+  result := new JsonDocument(new JsonDeserializer(FileUtils.ReadText(aFile.Path, Encoding.Default)).Deserialize as JsonObject)
 end;
 
 class method JsonDocument.FromBinary(aBinary: Binary; aEncoding: Encoding := nil): not nullable JsonDocument;
