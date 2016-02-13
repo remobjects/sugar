@@ -108,7 +108,7 @@ end;
 
 method XmlDocument.CreateAttribute(QualifiedName: String; NamespaceUri: String): XmlAttribute;
 begin
-  exit new XmlAttribute(Doc.CreateAttributeNs(NamespaceUri, QualifiedName));
+  exit new XmlAttribute(Doc.CreateAttributeNS(NamespaceUri, QualifiedName));
 end;
 
 method XmlDocument.CreateXmlNs(Prefix: String; NamespaceUri: String): XmlAttribute;
@@ -123,7 +123,7 @@ end;
 
 method XmlDocument.CreateCDataSection(Data: String): XmlCDataSection;
 begin
-  exit new XmlCDataSection(Doc.CreateCDataSection(Data));
+  exit new XmlCDataSection(Doc.CreateCDATASection(Data));
 end;
 
 method XmlDocument.CreateComment(Data: String): XmlComment;
@@ -138,7 +138,7 @@ end;
 
 method XmlDocument.CreateElement(QualifiedName: String; NamespaceUri: String): XmlElement;
 begin
-  exit new XmlElement(Doc.CreateElementNs(NamespaceUri, QualifiedName));
+  exit new XmlElement(Doc.CreateElementNS(NamespaceUri, QualifiedName));
 end;
 
 method XmlDocument.CreateProcessingInstruction(Target: String; Data: String): XmlProcessingInstruction;
@@ -170,7 +170,7 @@ begin
   if Name = nil then
     exit [];
 
-  var items := Doc.GetElementsByTagNameNs(NamespaceUri, LocalName);
+  var items := Doc.GetElementsByTagNameNS(NamespaceUri, LocalName);
   if items = nil then
     exit [];
   
@@ -199,7 +199,7 @@ begin
   Builder.setEntityResolver(new class org.xml.sax.EntityResolver(resolveEntity := method (publicId: java.lang.String; systemId: java.lang.String): org.xml.sax.InputSource
   begin
     if (publicId <> nil) or (systemId <> nil) then
-      exit new org.xml.sax.InputSource(new java.io.ByteArrayInputStream(new sbyte[0]))
+      exit new org.xml.sax.InputSource(new java.io.ByteArrayInputStream(new SByte[0]))
     else
       exit nil;
   end

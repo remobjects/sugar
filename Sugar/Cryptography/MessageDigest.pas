@@ -181,8 +181,8 @@ end;
 
 class method MessageDigest.ComputeHash(Data: array of Byte; Algorithm: DigestAlgorithm): array of Byte;
 begin
-  var Digest := new MessageDigest(Algorithm);
-  exit Digest.Digest(Data);
+  var lDigest := new MessageDigest(Algorithm);
+  exit lDigest.Digest(Data);
 end;
 
 end.

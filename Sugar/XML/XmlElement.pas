@@ -322,7 +322,7 @@ end;
 method XmlElement.GetElementsByTagName(aLocalName: String; NamespaceUri: String): array of XmlElement;
 begin
   {$IF COOPER}
-  var items := Element.GetElementsByTagNameNs(NamespaceUri, aLocalName);
+  var items := Element.GetElementsByTagNameNS(NamespaceUri, aLocalName);
   if items = nil then
     exit [];
   
