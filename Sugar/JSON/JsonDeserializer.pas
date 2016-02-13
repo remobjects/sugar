@@ -48,7 +48,8 @@ begin
     if Tokenizer.Token = Item then
       exit;
 
-  raise new SugarUnexpectedTokenException("Unexpected token");
+  //raise new SugarUnexpectedTokenException('Unexpected token '+Int32(Tokenizer.Token)+' at '+Tokenizer.Row+'/'+Tokenizer.Column+'. Data is "'+Tokenizer.Json+'"');
+  raise new SugarUnexpectedTokenException('Unexpected token at '+Tokenizer.Row+'/'+Tokenizer.Column+'. Data is "'+Tokenizer.Json+'"');
 end;
 
 method JsonDeserializer.ReadObject: JsonObject;

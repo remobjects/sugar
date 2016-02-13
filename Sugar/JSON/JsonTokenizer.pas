@@ -25,13 +25,15 @@ type
     method ParseNumber;
     method ParseString;
   public
-    constructor (Json: String);
-    constructor (Json: String; SkipWhitespaces: Boolean);
+    constructor (aJson: String);
+    constructor (aJson: String; SkipWhitespaces: Boolean);
 
     method Next: Boolean;
+    
+    property Json: String; readonly;
 
     property Row: Integer read fLastRow + 1;
-    property Col: Integer read fPos - fLastRowStart + 1;
+    property Column: Integer read fPos - fLastRowStart + 1;
     property Value: String read private write;
     property Token: JsonTokenKind read private write;
     property IgnoreWhitespaces: Boolean read write; readonly;
@@ -39,13 +41,14 @@ type
 
 implementation
 
-constructor JsonTokenizer(Json: String);
+constructor JsonTokenizer(aJson: String);
 begin
-  constructor(Json, true);
+  constructor(aJson, true);
 end;
 
-constructor JsonTokenizer(Json: String; SkipWhitespaces: Boolean);
+constructor JsonTokenizer(aJson: String; SkipWhitespaces: Boolean);
 begin
+  Json := aJson;
   SugarArgumentNullException.RaiseIfNil(Json, "Json");
   self.IgnoreWhitespaces := SkipWhitespaces;
   var CharData := Json.ToCharArray;
