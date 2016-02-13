@@ -587,8 +587,10 @@ begin
 
   var nsUrlResponse: NSURLResponse;
   var error: NSError;
+  {$HIDE W28}
+  // we're aware it's deprecated. but async calls have their use in consoile apps.
   var data := NSURLConnection.sendSynchronousRequest(nsUrlRequest) returningResponse(var nsUrlResponse) error(var error);
-
+  {$SHOW W28}
   var nsHttpUrlResponse := NSHTTPURLResponse(nsUrlResponse);
   if assigned(data) and assigned(nsHttpUrlResponse) and not assigned(error) then begin
     exit new HttpResponse(data, nsHttpUrlResponse);
