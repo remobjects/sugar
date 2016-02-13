@@ -61,10 +61,13 @@ type
     method ToBoolean(aValue: String): Boolean;
     
     //method ToHexString(aValue: Int32; aWidth: Integer := 0): String;
-    method ToHexString(aValue: Int64; aWidth: Integer := 0): String;
+    method ToHexString(aValue: UInt64; aWidth: Integer := 0): String;
     method ToHexString(aData: array of Byte; aOffset: Integer; aCount: Integer): String;
     method ToHexString(aData: array of Byte; aCount: Integer): String;
     method ToHexString(aData: array of Byte): String;
+
+    method ToOctalString(aValue: Int64; aWidth: Integer := 0): String;
+    method ToBinaryString(aValue: Int64; aWidth: Integer := 0): String;
 
     method HexStringToInt32(aValue: String): UInt32;
     method HexStringToInt64(aValue: String): UInt64;
@@ -82,6 +85,8 @@ method Convert.ToString(aValue: Byte; aBase: Integer := 10): String;
 begin
   {$IF COOPER OR NOUGAT}
   case aBase of
+    2: exit ToBinaryString(aValue);
+    8: exit ToOctalString(aValue);
     10: exit aValue.ToString;
     16: exit ToHexString(aValue);
     else raise new SugarException('Unsupported base for ToString.');
@@ -95,6 +100,8 @@ method Convert.ToString(aValue: Int32; aBase: Integer := 10): String;
 begin
   {$IF COOPER OR NOUGAT}
   case aBase of
+    2: exit ToBinaryString(aValue);
+    8: exit ToOctalString(aValue);
     10: exit aValue.ToString;
     16: exit ToHexString(aValue);
     else raise new SugarException('Unsupported base for ToString.');
@@ -108,6 +115,8 @@ method Convert.ToString(aValue: Int64; aBase: Integer := 10): String;
 begin
   {$IF COOPER OR NOUGAT}
   case aBase of
+    2: exit ToBinaryString(aValue);
+    8: exit ToOctalString(aValue);
     10: exit aValue.ToString;
     16: exit ToHexString(aValue);
     else raise new SugarException('Unsupported base for ToString.');
@@ -226,31 +235,41 @@ begin
   result := ToHexString(Int64(aValue), aWidth);
 end;}
 
-method Convert.ToHexString(aValue: Int64; aWidth: Integer := 0): String;
+method Convert.ToHexString(aValue: UInt64; aWidth: Integer := 0): String;
 begin
   if aWidth mod 2 ≠ 0 then aWidth := aWidth+1;
 
   if aWidth > 16 then aWidth := 16
-  else if aValue > $ffff ffff ffff ff and aWidth < 16 then aWidth := 16
-  else if aValue > $ffff ffff ffff and aWidth < 14 then aWidth := 14
-  else if aValue > $ffff ffff ff and aWidth < 12 then aWidth := 12
-  else if aValue > $ffff ffff and aWidth < 10 then aWidth := 10
-  else if aValue > $ffff ff and aWidth < 8 then aWidth := 8
-  else if aValue > $ffff and aWidth < 6 then aWidth := 6
-  else if aValue > $ff and aWidth < 2 then aWidth := 4
-  else aWidth := 2;
-    
+  else if (aValue > $ffff ffff ffff ff) and (aWidth < 16) then aWidth := 16
+  else if (aValue > $ffff ffff ffff) and (aWidth < 14) then aWidth := 14
+  else if (aValue > $ffff ffff ff) and (aWidth < 12) then aWidth := 12
+  else if (aValue > $ffff ffff) and (aWidth < 10) then aWidth := 10
+  else if (aValue > $ffff ff) and (aWidth < 8) then aWidth := 8
+  else if (aValue > $ffff) and (aWidth < 6) then aWidth := 6
+  else if (aValue > $ff) and (aWidth < 2) then aWidth := 4
+  else if (aWidth < 2) then aWidth := 2;
+  
   result := '';
   for i: Integer := aWidth/2 - 1 downto 0 do begin
   
-    var lCurrentByte := aValue shr i mod $ff;
+    var lCurrentByte := aValue shr (i*8) mod $ff;
   
-    var Num := lCurrentByte shr 4  and $f;
+    var Num := lCurrentByte shr 4 and $f;
     result := result + chr(55 + Num + (((Num - 10) shr 31) and -7));
     Num := lCurrentByte and $f;
     result := result + chr(55 + Num + (((Num - 10) shr 31) and -7));
       
   end;
+end;
+
+method Convert.ToOctalString(aValue: Int64; aWidth: Integer): String;
+begin
+  {$HINT implement!}
+end;
+
+method Convert.ToBinaryString(aValue: Int64; aWidth: Integer): String;
+begin
+  {$HINT implement!}
 end;
 
 method Convert.ToHexString(aData: array of Byte; aOffset: Integer; aCount: Integer): String;
@@ -660,6 +679,7 @@ begin
 
   exit Number.doubleValue;
 end;
+
 {$ENDIF}
 
 end.

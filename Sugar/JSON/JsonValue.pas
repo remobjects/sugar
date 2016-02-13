@@ -112,8 +112,8 @@ begin
       #32..#33,
       #35..#46,
       #48..#91,
-      #93..#128: sb.Append(c);
-      else sb.Append('\u'+Sugar.String.Format("{0:x4}", Int32(c)));
+      #93..#127: sb.Append(c);
+      else sb.Append('\u'+Sugar.Convert.ToHexString(Int32(c), 4));
     end;
   end;
   
