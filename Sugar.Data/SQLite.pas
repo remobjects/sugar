@@ -499,9 +499,9 @@ begin
     SQLiteHelpers.sqlite3_close_v2(fHandle);
   fHandle := nil;
   {$ELSEIF NOUGAT}
-  if fHandle <> nil then 
+  if fHandle <> IntPtr(0) then 
     sqlite3_close_v2(^sqlite3_(fHandle));
-  fHandle := nil;
+  fHandle := IntPtr(0);
   {$ELSE}
   {$ERROR Unsupported platform}
   {$ENDIF}
@@ -565,9 +565,9 @@ begin
     SQLiteHelpers.sqlite3_finalize(fRes);
   fRes := nil;
   {$ELSEIF NOUGAT}
-  if fRes <> nil then 
+  if fRes <> IntPtr(0) then 
     sqlite3_finalize(^sqlite3_stmt(fRes));
-  fRes := nil;
+  fRes := IntPtr(0);
   {$ELSE}
   {$ERROR Unsupported platform}
   {$ENDIF}
