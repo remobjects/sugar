@@ -19,7 +19,7 @@ uses
 
 type
   SQLiteConnection = public {$IFDEF PUREJAVA}interface{$ELSE}class{$ENDIF} {$IFDEF ANDROID}mapped to android.database.sqlite.SQLiteDatabase{$ENDIF}
-  {$IFDEF PUREJAVA}mapped to java.sql.Connection{$ENDIF}
+  {$IFDEF PUREJAVA}mapped to java.sql.Connection{$ENDIF}{$IFDEF ECHOES}(IDisposable){$ENDIF}
   private
     {$IFDEF ECHOES or COCOA}
     fHandle: IntPtr;
@@ -42,11 +42,13 @@ type
     method Execute(aSQL: String; params aArgValues: array of Object): Int64;
     // select
     method ExecuteQuery(aSQL: String; params aArgValues: array of Object): SQLiteQueryResult;
+    method Close;{$IFDEF ECHOES}implements IDisposable.Dispose;{$ENDIF}
+    {$IFDEF COCOA}finalizer;{$ENDIF}
   end;
 
   SQLiteQueryResult = public {$IFDEF JAVA}interface{$ELSE}class{$ENDIF}
   {$IFDEF PUREJAVA}mapped to ResultSet{$ENDIF}
-  {$IFDEF ANDROID}mapped to android.database.Cursor{$ENDIF}
+  {$IFDEF ANDROID}mapped to android.database.Cursor{$ENDIF}{$IFDEF ECHOES}(IDisposable){$ENDIF}
   private
     {$IFDEF ECHOES or COCOA}
     fDB: IntPtr;
@@ -77,6 +79,8 @@ type
     method GetDouble(aIndex: Integer): nullable Double;
     method GetBytes(aIndex: Integer): array of {$IFDEF JAVA}SByte{$ELSE}Byte{$ENDIF};
     method GetString(aIndex: Integer): String;
+    method Close;{$IFDEF ECHOES}implements IDisposable.Dispose;{$ENDIF}
+    {$IFDEF COCOA}finalizer;{$ENDIF}
   end;
   {$IFDEF ANDROID}
   SQLiteHelpers = public static class
@@ -486,6 +490,30 @@ begin
   {$ENDIF}
 end;
 
+method SQLiteConnection.Close;
+begin
+  {$IFDEF COOPER}
+  mapped.Close();
+  {$ELSEIF ECHOES}
+  if fHandle <> nil then 
+    SQLiteHelpers.sqlite3_close_v2(fHandle);
+  fHandle := nil;
+  {$ELSEIF NOUGAT}
+  if fHandle <> IntPtr(0) then 
+    sqlite3_close_v2(^sqlite3_(fHandle));
+  fHandle := IntPtr(0);
+  {$ELSE}
+  {$ERROR Unsupported platform}
+  {$ENDIF}
+end;
+
+{$IFDEF COCOA}finalizer SQLiteConnection;
+begin 
+  Close;
+end;
+{$ENDIF}
+
+
 {$IFDEF ANDROID}
 method SQLiteHelpers.ArgsToString(arr: array of Object): array of String;
 begin
@@ -501,19 +529,19 @@ begin
   for i: Integer := 0 to length(aArgs) -1 do begin
     var val := aArgs[i];
     if val = nil then
-      st.bindNull(i)
+      st.bindNull(i + 1)
     else if val is Double then
-      st.bindDouble(i, Double(val))
+      st.bindDouble(i + 1, Double(val))
     else if val is Single then
-      st.bindDouble(i, Single(val))
+      st.bindDouble(i + 1, Single(val))
     else if val is Int64 then
-      st.bindLong(i, Int64(val))
+      st.bindLong(i + 1, Int64(val))
     else if val is Int64 then
-      st.bindLong(i, Int64(val))
+      st.bindLong(i + 1, Int64(val))
     else if val is array of SByte then 
-      st.bindBlob(i, array of SByte(val))
+      st.bindBlob(i + 1, array of SByte(val))
     else 
-      st.bindString(i, val.toString);
+      st.bindString(i + 1, val.toString);
   end;
 end;
 {$ENDIF}
@@ -523,6 +551,31 @@ constructor SQLiteQueryResult(aDB, aRes: Int64);
 begin
   fDB := aDB;
   fRes := aRes;
+end;
+{$ENDIF}
+
+
+
+method SQLiteQueryResult.Close;
+begin
+  {$IFDEF COOPER}
+  mapped.Close();
+  {$ELSEIF ECHOES}
+  if fRes <> nil then 
+    SQLiteHelpers.sqlite3_finalize(fRes);
+  fRes := nil;
+  {$ELSEIF NOUGAT}
+  if fRes <> IntPtr(0) then 
+    sqlite3_finalize(^sqlite3_stmt(fRes));
+  fRes := IntPtr(0);
+  {$ELSE}
+  {$ERROR Unsupported platform}
+  {$ENDIF}
+end;
+
+{$IFDEF COCOA}finalizer SQLiteQueryResult;
+begin 
+  Close;
 end;
 {$ENDIF}
     
