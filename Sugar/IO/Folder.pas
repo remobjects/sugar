@@ -22,6 +22,8 @@ type
     class method GetSeparator: Char;
   {$IF ECHOES}
     method GetName: String;
+  {$ELSEIF COOPER}
+    property JavaFile: java.io.File read new java.io.File(mapped);
   {$ELSEIF NOUGAT}
     method Combine(BasePath: String; SubPath: String): String;
   {$ENDIF}
@@ -31,29 +33,35 @@ type
     method CreateFile(FileName: String; FailIfExists: Boolean): File;
     method CreateFolder(FailIfExists: Boolean);
     method CreateSubfolder(SubfolderName: String; FailIfExists: Boolean): Folder;
-    class method CreateFolder(FolderName: Folder; FailIfExists: Boolean): Folder;
-    method Exists: Boolean;
-    class method Exists(FolderName: Folder): Boolean;
     method Delete;
+
+    method Exists: Boolean;
     method GetFile(FileName: String): File;
     method GetFiles: array of File;
     method GetSubfolders: array of Folder;
     method Rename(NewName: String): Folder;
 
-    class method UserLocal: Folder;
+    class method CreateFolder(FolderName: Folder; FailIfExists: Boolean): Folder;
+    class method Exists(FolderName: Folder): Boolean;
+
+    class method UserHomeFolder: Folder;
 
     {$IF WINDOWS_PHONE OR NETFX_CORE}
     property FullPath: String read mapped.Path;
     property Name: String read mapped.Name;
+    property &Extension: String read Sugar.IO.Path.GetExtension(FullPath);
     {$ELSEIF ECHOES}
     property FullPath: String read mapped;
-    property Name: String read Sugar.IO.Path.GetFilename(mapped);
+    property Name: String read Sugar.IO.Path.GetFileName(mapped);
+    property &Extension: String read Sugar.IO.Path.GetExtension(mapped);
     {$ELSEIF COOPER}
-    property AbsolutePath: String read mapped;
-    property Name: String read new java.io.File(mapped).name;
+    property FullPath: String read mapped;
+    property Name: String read Sugar.IO.Path.GetFileName(mapped);
+    property &Extension: String read Sugar.IO.Path.GetExtension(mapped);
     {$ELSEIF NOUGAT}
     property FullPath: String read mapped;
-    property Name: String read NSFileManager.defaultManager.displayNameAtPath(mapped);
+    property Name: String read Sugar.IO.Path.GetFileName(mapped);
+    property &Extension: String read Sugar.IO.Path.GetExtension(mapped);
     {$ENDIF}
 
     class property Separator: Char read GetSeparator;
@@ -141,7 +149,7 @@ begin
   exit '\';
 end;
 
-class method Folder.UserLocal: Folder;
+class method Folder.UserHomeFolder: Folder;
 begin
   exit Windows.Storage.ApplicationData.Current.LocalFolder;
 end;
@@ -212,7 +220,7 @@ begin
   exit System.IO.Path.DirectorySeparatorChar;
 end;
 
-class method Folder.UserLocal: Folder;
+class method Folder.UserHomeFolder: Folder;
 begin
   exit Folder(System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile));
 end;
@@ -303,7 +311,7 @@ begin
   exit java.io.File.separatorChar;
 end;
 
-class method Folder.UserLocal: Folder;
+class method Folder.UserHomeFolder: Folder;
 begin
   {$IF ANDROID}
   SugarAppContextMissingException.RaiseIfMissing;
@@ -315,19 +323,19 @@ end;
 
 method Folder.Exists: Boolean;
 begin
-  result := new java.io.File(mapped).exists;
+  result := JavaFile.exists;
 end;
 
 method Folder.CreateFolder(FailIfExists: Boolean);
 begin
-  var NewFolder := new java.io.File(mapped);
-  if NewFolder.exists then begin
+  var lFile := JavaFile;
+  if lFile.exists then begin
     if FailIfExists then
       raise new SugarIOException(ErrorMessage.FOLDER_EXISTS, mapped);
     exit;
   end
   else begin
-    if not NewFolder.mkdir then
+    if not lFile.mkdir then
       raise new SugarIOException(ErrorMessage.FOLDER_CREATE_ERROR, mapped);
   end;
 end;
@@ -349,7 +357,7 @@ end;
 
 method Folder.Delete;
 begin
-  var lFile := new java.io.File(mapped);
+  var lFile := JavaFile;
   if not lFile.exists then
     raise new SugarIOException(ErrorMessage.FOLDER_NOTFOUND, mapped);
 
@@ -367,17 +375,17 @@ end;
 
 method Folder.GetFiles: array of File;
 begin
-  result := new java.io.File(mapped).listFiles((f,n)->new java.io.File(f, n).isFile);
+  result := JavaFile.listFiles((f,n)->new java.io.File(f, n).isFile);
 end;
 
 method Folder.GetSubfolders: array of Folder;
 begin
-  result := new java.io.File(mapped).listFiles( (f,n) -> new java.io.File(f, n).isDirectory).Select(f -> f.Path).ToArray();
+  result := JavaFile.listFiles( (f,n) -> new java.io.File(f, n).isDirectory).Select(f -> f.Path).ToArray();
 end;
 
 method Folder.Rename(NewName: String): Folder;
 begin
-  var lFile := new java.io.File(mapped);
+  var lFile := JavaFile;
   var NewFolder := new java.io.File(lFile.ParentFile, NewName);
   if NewFolder.exists then
     raise new SugarIOException(ErrorMessage.FOLDER_EXISTS, NewName);
@@ -408,7 +416,7 @@ begin
   exit '/';
 end;
 
-class method Folder.UserLocal: Folder;
+class method Folder.UserHomeFolder: Folder;
 begin
   result := NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.NSApplicationSupportDirectory, NSSearchPathDomainMask.NSUserDomainMask, true).objectAtIndex(0);
 

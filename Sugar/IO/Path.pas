@@ -8,42 +8,35 @@ uses
 type
   Path = public static class
   public
-    method ChangeExtension(FileName: String; NewExtension: String): String;
-    method Combine(BasePath: String; Path: String): String;
-    method Combine(BasePath: String; Path1: String; Path2: String): String;
-    method GetParentDirectory(FileName: String): String;
-    method GetExtension(FileName: String): String;
-    method GetFileName(FileName: String): String;
-    method GetFileNameWithoutExtension(FileName: String): String;
-    method RemoveExtension(FileName: String): String;
-    method GetFullPath(RelativePath: String): String;
+    method ChangeExtension(FileName: not nullable String; NewExtension: nullable String): not nullable String;
+    method Combine(BasePath: not nullable String; Path: not nullable String): not nullable String;
+    method Combine(BasePath: not nullable String; Path1: not nullable String; Path2: not nullable String): not nullable String;
+    method GetParentDirectory(FileName: not nullable String): nullable String;
+    method GetExtension(FileName: not nullable String): not nullable String;
+    method GetFileName(FileName: not nullable String): not nullable String;
+    method GetFileNameWithoutExtension(FileName: not nullable String): not nullable String;
+    method GetFullPath(RelativePath: not nullable String): not nullable String;
   end;
 
 implementation
 
-class method Path.ChangeExtension(FileName: String; NewExtension: String): String;
+method Path.ChangeExtension(FileName: not nullable String; NewExtension: nullable String): not nullable String;
 begin
-  SugarArgumentNullException.RaiseIfNil(FileName, "FileName");
-
-  if NewExtension = nil then
-    exit RemoveExtension(FileName);
+  if length(NewExtension) = 0 then
+    exit GetFileNameWithoutExtension(FileName);
 
   var lIndex := FileName.LastIndexOf(".");
-
-  if NewExtension.Length = 0 then
-    exit FileName;
 
   if lIndex <> -1 then
     FileName := FileName.Substring(0, lIndex);
 
   if NewExtension[0] = '.' then
-    exit FileName + NewExtension;
-
-
-  exit FileName + "." + NewExtension;
+    result := FileName + NewExtension
+  else
+    result := FileName + "." + NewExtension;
 end;
 
-class method Path.Combine(BasePath: String; Path: String): String;
+method Path.Combine(BasePath: not nullable String; Path: not nullable String): not nullable String;
 begin
   if String.IsNullOrEmpty(BasePath) and String.IsNullOrEmpty(Path) then
     raise new SugarArgumentException("Invalid arguments");
@@ -62,35 +55,36 @@ begin
   exit BasePath + Folder.Separator + Path;
 end;
 
-class method Path.Combine(BasePath: String; Path1: String; Path2: String): String;
+method Path.Combine(BasePath: not nullable String; Path1: not nullable String; Path2: not nullable String): not nullable String;
 begin
   exit Combine(Combine(BasePath, Path1), Path2);
 end;
 
-class method Path.GetParentDirectory(FileName: String): String;
+method Path.GetParentDirectory(FileName: not nullable String): nullable String;
 begin
-  SugarArgumentNullException.RaiseIfNil(FileName, "FileName");
-
-  if FileName.Length = 0 then
-    exit nil;
-
+  if length(FileName) = 0 then
+    raise new SugarArgumentException("Invalid arguments");
+    
   var LastChar: Char := FileName[FileName.Length - 1];
 
   if LastChar = Folder.Separator then
     FileName := FileName.Substring(0, FileName.Length - 1);
 
+  if (Filename = Folder.Separator) or ((length(FileName) = 2) and (Filename[1] = ':')) then
+    exit nil; // root folder has no parent
+  {$HINT todo: handle windows network paths, "\\share\xxx"}
+
   var lIndex := FileName.LastIndexOf(Folder.Separator);
   
   if lIndex <> -1 then
-    exit FileName.Substring(0, lIndex);
-
-  exit nil;
+    result := FileName.Substring(0, lIndex)
+  else
+    result := FileName+Folder.Separator+'..'
 end;
 
-class method Path.GetExtension(FileName: String): String;
+method Path.GetExtension(FileName: not nullable String): not nullable String;
 begin
-  SugarArgumentNullException.RaiseIfNil(FileName, "FileName");
-
+  FileName := GetFileName(FileName);
   var lIndex := FileName.LastIndexOf(".");
   
   if (lIndex <> -1) and (lIndex < FileName.Length - 1) then
@@ -99,10 +93,8 @@ begin
   exit "";
 end;
 
-class method Path.GetFileName(FileName: String): String;
+method Path.GetFileName(FileName: not nullable String): not nullable String;
 begin
-  SugarArgumentNullException.RaiseIfNil(FileName, "FileName");
-
   if FileName.Length = 0 then
     exit "";
 
@@ -119,15 +111,8 @@ begin
   exit FileName;
 end;
 
-class method Path.GetFileNameWithoutExtension(FileName: String): String;
+method Path.GetFileNameWithoutExtension(FileName: not nullable String): not nullable String;
 begin
-  exit RemoveExtension(GetFileName(FileName));
-end;
-
-class method Path.RemoveExtension(FileName: String): String;
-begin
-  SugarArgumentNullException.RaiseIfNil(FileName, "FileName");
-
   var lIndex := FileName.LastIndexOf(".");
   
   if lIndex <> -1 then
@@ -136,7 +121,7 @@ begin
   exit FileName;
 end;
 
-class method Path.GetFullPath(RelativePath: String): String;
+method Path.GetFullPath(RelativePath: not nullable String): not nullable String;
 begin
   {$IF COOPER}
   exit new java.io.File(RelativePath).getAbsolutePath();  
