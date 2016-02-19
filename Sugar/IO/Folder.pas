@@ -26,11 +26,11 @@ type
     method Combine(BasePath: String; SubPath: String): String;
     {$ENDIF}
   public
-    constructor(aPath: String);
+    constructor(aPath: not nullable String);
 
-    method CreateFile(FileName: String; FailIfExists: Boolean): File;
-    method CreateFolder(FailIfExists: Boolean);
-    method CreateSubfolder(SubfolderName: String; FailIfExists: Boolean): Folder;
+    method CreateFile(FileName: String; FailIfExists: Boolean := false): File;
+    method CreateFolder(FailIfExists: Boolean := false);
+    method CreateSubfolder(SubfolderName: String; FailIfExists: Boolean := false): Folder;
     method Delete;
     method Rename(NewName: String): Folder;
 
@@ -39,7 +39,7 @@ type
     method GetFiles: not nullable array of File;
     method GetSubfolders: not nullable array of Folder;
 
-    class method CreateFolder(FolderName: Folder; FailIfExists: Boolean): Folder;
+    class method CreateFolder(FolderName: Folder; FailIfExists: Boolean := false): Folder;
     class method Exists(FolderName: Folder): Boolean;
 
     class method UserHomeFolder: Folder;
@@ -77,9 +77,8 @@ type
 
 implementation
 
-constructor Folder(aPath: String);
+constructor Folder(aPath: not nullable String);
 begin
-  SugarArgumentNullException.RaiseIfNil(aPath, "Path");
   {$IF WINDOWS_PHONE OR NETFX_CORE}
   exit Windows.Storage.StorageFolder.GetFolderFromPathAsync(aPath).Await;
   {$ELSE}
@@ -92,13 +91,13 @@ begin
   result := FolderName.Exists;
 end;
 
-method Folder.CreateSubfolder(SubfolderName: String; FailIfExists: Boolean): Folder;
+method Folder.CreateSubfolder(SubfolderName: String; FailIfExists: Boolean := false): Folder;
 begin
   result := Folder(Sugar.IO.Path.Combine(mapped, SubfolderName));
   result.CreateFolder(FailIfExists);
 end;
 
-class method Folder.CreateFolder(FolderName: Folder; FailIfExists: Boolean): Folder;
+class method Folder.CreateFolder(FolderName: Folder; FailIfExists: Boolean := false): Folder;
 begin
   result := Folder(FolderName);
   result.CreateFolder(FailIfExists);
@@ -138,7 +137,7 @@ begin
   exit Windows.Storage.ApplicationData.Current.LocalFolder;
 end;
 
-method Folder.CreateFile(FileName: String; FailIfExists: Boolean): File;
+method Folder.CreateFile(FileName: String; FailIfExists: Boolean := false): File;
 begin
   exit mapped.CreateFileAsync(FileName, iif(FailIfExists, Windows.Storage.CreationCollisionOption.FailIfExists, Windows.Storage.CreationCollisionOption.OpenIfExists)).Await;
 end;
@@ -148,7 +147,7 @@ begin
   result := System.IO.Directory.Exists(aFolderName);
 end;
 
-method Folder.CreateFolder(FailIfExists: Boolean);
+method Folder.CreateFolder(FailIfExists: Boolean := false);
 begin
   exit mapped.CreateSubfolderAsync(FolderName, iif(FailIfExists, Windows.Storage.CreationCollisionOption.FailIfExists, Windows.Storage.CreationCollisionOption.OpenIfExists)).Await;
 end;
@@ -204,7 +203,7 @@ begin
   exit Folder(System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile));
 end;
 
-method Folder.CreateFile(FileName: String; FailIfExists: Boolean): File;
+method Folder.CreateFile(FileName: String; FailIfExists: Boolean := false): File;
 begin
   var NewFileName := System.IO.Path.Combine(mapped, FileName);
 
@@ -225,7 +224,7 @@ begin
   result := System.IO.Directory.Exists(mapped);
 end;
 
-method Folder.CreateFolder(FailIfExists: Boolean);
+method Folder.CreateFolder(FailIfExists: Boolean := false);
 begin
   if System.IO.Directory.Exists(mapped) then begin
     if FailIfExists then
@@ -271,7 +270,7 @@ begin
   result := FolderName;
 end;
 {$ELSEIF COOPER}
-method Folder.CreateFile(FileName: String; FailIfExists: Boolean): File;
+method Folder.CreateFile(FileName: String; FailIfExists: Boolean := false): File;
 begin
   var lNewFile := new java.io.File(mapped, FileName);
   if lNewFile.exists then begin
@@ -306,7 +305,7 @@ begin
   result := JavaFile.exists;
 end;
 
-method Folder.CreateFolder(FailIfExists: Boolean);
+method Folder.CreateFolder(FailIfExists: Boolean := false);
 begin
   var lFile := JavaFile;
   if lFile.exists then begin
@@ -376,7 +375,7 @@ begin
   result := NewName;
 end;
 {$ELSEIF NOUGAT}
-method Folder.CreateFile(FileName: String; FailIfExists: Boolean): File;
+method Folder.CreateFile(FileName: String; FailIfExists: Boolean := false): File;
 begin
   var NewFileName := Combine(mapped, FileName);
   var Manager := NSFileManager.defaultManager;
@@ -413,7 +412,7 @@ begin
   result := NSFileManager.defaultManager.fileExistsAtPath(self) isDirectory(var isDirectory) and isDirectory;
 end;
 
-method Folder.CreateFolder(FailIfExists: Boolean);
+method Folder.CreateFolder(FailIfExists: Boolean := false);
 begin
   var isDirectory := false;
   if NSFileManager.defaultManager.fileExistsAtPath(mapped) isDirectory(var isDirectory) then begin

@@ -49,11 +49,6 @@ implementation
 
 constructor File(aPath: not nullable String);
 begin
-  SugarArgumentNullException.RaiseIfNil(aPath, "Path");
-
-  if not FileUtils.Exists(aPath) then
-    raise new SugarFileNotFoundException(aPath);
-
   {$IF WINDOWS_PHONE OR NETFX_CORE}
   exit StorageFile.GetFileFromPathAsync(aPath).Await;
   {$ELSE}
