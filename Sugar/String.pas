@@ -8,7 +8,7 @@ type
     method get_Chars(aIndex: Int32): Char;
     class method Compare(Value1, Value2: String): Integer;
   public
-    constructor(Value: array of Byte; Encoding: Encoding);
+    constructor(Value: array of Byte; Encoding: Encoding := nil);
     constructor(Value: array of Char);
     constructor(Value: array of Char; Offset: Integer; Count: Integer);
 
@@ -52,11 +52,14 @@ type
 
 implementation
 
-constructor String(Value: array of Byte; Encoding: Encoding);
+constructor String(Value: array of Byte; Encoding: Encoding := nil);
 begin
   if Value = nil then
     raise new SugarArgumentNullException("Value");
 
+  if Encoding = nil then
+    Encoding := Encoding.Default;
+    
   exit Encoding.GetString(Value);
 end;
 

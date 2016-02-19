@@ -218,7 +218,7 @@ begin
   var Handle := aFile.Open(FileOpenMode.ReadOnly);  
   try
     var Bin := Handle.Read(Handle.Length);
-    exit ParseXml(new String(Bin.ToArray, Encoding.UTF8), aFile.Path);
+    exit ParseXml(new String(Bin.ToArray, Encoding.UTF8), aFile.FullPath);
   finally
     Handle.Close;
   end;

@@ -20,11 +20,11 @@ type
   Folder = public class mapped to {$IF WINDOWS_PHONE OR NETFX_CORE}Windows.Storage.StorageFolder{$ELSEIF ECHOES}System.String{$ELSEIF COOPER}java.lang.String{$ELSEIF NOUGAT}Foundation.NSString{$ENDIF}
   private
     class method GetSeparator: Char;
-  {$IF COOPER}
+    {$IF COOPER}
     property JavaFile: java.io.File read new java.io.File(mapped);
-  {$ELSEIF NOUGAT}
+    {$ELSEIF NOUGAT}
     method Combine(BasePath: String; SubPath: String): String;
-  {$ENDIF}
+    {$ENDIF}
   public
     constructor(aPath: String);
 
@@ -36,8 +36,8 @@ type
 
     method Exists: Boolean;
     method GetFile(FileName: String): File;
-    method GetFiles: array of File;
-    method GetSubfolders: array of Folder;
+    method GetFiles: not nullable array of File;
+    method GetSubfolders: not nullable array of Folder;
 
     class method CreateFolder(FolderName: Folder; FailIfExists: Boolean): Folder;
     class method Exists(FolderName: Folder): Boolean;
@@ -47,22 +47,13 @@ type
     class property Separator: Char read GetSeparator;
 
     {$IF WINDOWS_PHONE OR NETFX_CORE}
-    property FullPath: String read mapped.Path;
-    property Name: String read mapped.Name;
-    property &Extension: String read Sugar.IO.Path.GetExtension(FullPath);
-    {$ELSEIF ECHOES}
-    property FullPath: String read mapped;
-    property Name: String read Sugar.IO.Path.GetFileName(mapped);
-    property &Extension: String read Sugar.IO.Path.GetExtension(mapped);
-    {$ELSEIF COOPER}
-    property FullPath: String read mapped;
-    property Name: String read Sugar.IO.Path.GetFileName(mapped);
-    property &Extension: String read Sugar.IO.Path.GetExtension(mapped);
-    {$ELSEIF NOUGAT}
-    property FullPath: String read mapped;
-    property Name: String read Sugar.IO.Path.GetFileName(mapped);
-    property &Extension: String read Sugar.IO.Path.GetExtension(mapped);
+    property FullPath: not nullable String read mapped.Path;
+    property Name: not nullable String read mapped.Name;
+    {$ELSE}
+    property FullPath: not nullable String read mapped;
+    property Name: not nullable String read Sugar.IO.Path.GetFileName(mapped);
     {$ENDIF}
+    property &Extension: not nullable String read Sugar.IO.Path.GetExtension(FullPath);
   end;
 
   {$IF WINDOWS_PHONE OR NETFX_CORE}
@@ -172,7 +163,7 @@ begin
   exit FolderHelper.GetFile(mapped, FileName);
 end;
 
-method Folder.GetFiles: array of File;
+method Folder.GetFiles: not nullable array of File;
 begin
   var files := mapped.GetFilesAsync.Await;
   result := new File[files.Count];
@@ -185,7 +176,7 @@ begin
   exit FolderHelper.GetFolder(mapped, FolderName);
 end;
 
-method Folder.GetSubfolders: array of Folder;
+method Folder.GetSubfolders: not nullable array of Folder;
 begin
   var folders := mapped.GetFoldersAsync.Await;
   result := new Folder[folders.Count];
@@ -259,14 +250,14 @@ begin
   exit nil;
 end;
 
-method Folder.GetFiles: array of File;
+method Folder.GetFiles: not nullable array of File;
 begin
-  exit System.IO.Directory.GetFiles(mapped);
+  exit System.IO.Directory.GetFiles(mapped) as not nullable;
 end;
 
-method Folder.GetSubfolders: array of Folder;
+method Folder.GetSubfolders: not nullable array of Folder;
 begin
-  exit System.IO.Directory.GetDirectories(mapped);
+  exit System.IO.Directory.GetDirectories(mapped) as not nullable;
 end;
 
 method Folder.Rename(NewName: String): Folder;
@@ -282,16 +273,17 @@ end;
 {$ELSEIF COOPER}
 method Folder.CreateFile(FileName: String; FailIfExists: Boolean): File;
 begin
-  var NewFile := new java.io.File(mapped, FileName);
-  if NewFile.exists then begin
+  var lNewFile := new java.io.File(mapped, FileName);
+  if lNewFile.exists then begin
     if FailIfExists then
       raise new SugarIOException(ErrorMessage.FILE_EXISTS, FileName);
 
-    exit NewFile;
+    exit lNewFile.path;
+  end
+  else begin
+    lNewFile.createNewFile;
   end;
-
-  NewFile.createNewFile;
-  exit NewFile;
+  result := lNewFile.path;
 end;
 
 class method Folder.GetSeparator: Char;
@@ -358,17 +350,17 @@ begin
   if not ExistingFile.exists then
     exit nil;
 
-  exit ExistingFile;
+  exit ExistingFile.path;
 end;
 
-method Folder.GetFiles: array of File;
+method Folder.GetFiles: not nullable array of File;
 begin
-  result := JavaFile.listFiles((f,n)->new java.io.File(f, n).isFile);
+  result := JavaFile.listFiles((f,n)->new java.io.File(f, n).isFile).Select(f->f.path).ToArray() as not nullable;
 end;
 
-method Folder.GetSubfolders: array of Folder;
+method Folder.GetSubfolders: not nullable array of Folder;
 begin
-  result := JavaFile.listFiles( (f,n) -> new java.io.File(f, n).isDirectory).Select(f -> f.Path).ToArray();
+  result := JavaFile.listFiles( (f,n) -> new java.io.File(f, n).isDirectory).Select(f -> f.Path).ToArray() as not nullable;
 end;
 
 method Folder.Rename(NewName: String): Folder;
@@ -459,11 +451,11 @@ begin
   Foundation.NSFileManager.defaultManager.fileExistsAtPath(Value) isDirectory(@Result);
 end;
 
-method Folder.GetFiles: array of File;
+method Folder.GetFiles: not nullable array of File;
 begin
   var Items := NSFileManager.defaultManager.contentsOfDirectoryAtPath(mapped) error(nil);
   if Items = nil then
-    exit new File[0];
+    exit new File[0]; // 74542: Bogus nullable wanting when assigning new array
 
   var Files := new List<File>;
   for i: Integer := 0 to Items.count - 1 do begin
@@ -472,14 +464,14 @@ begin
       Files.Add(File(item));
   end;
 
-  exit Files.ToArray;
+  exit Files.ToArray as not nullable;
 end;
 
-method Folder.GetSubfolders: array of Folder;
+method Folder.GetSubfolders: not nullable array of Folder;
 begin
   var Items := NSFileManager.defaultManager.contentsOfDirectoryAtPath(mapped) error(nil);
   if Items = nil then
-    exit new Folder[0];
+    exit new Folder[0]; // 74542: Bogus nullable wanting when assigning new array
 
   var Folders := new List<Folder>;
   for i: Integer := 0 to Items.count - 1 do begin
@@ -488,7 +480,7 @@ begin
       Folders.Add(Folder(item));
   end;
 
-  exit Folders.ToArray;
+  exit Folders.ToArray as not nullable;
 end;
 
 method Folder.Rename(NewName: String): Folder;

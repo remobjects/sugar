@@ -28,7 +28,7 @@ type
     method AppendText(FileName: String; Content: String);
     method AppendBytes(FileName: String; Content: array of Byte);
     method AppendBinary(FileName: String; Content: Binary);
-    method ReadText(FileName: String; Encoding: Encoding): String;
+    method ReadText(FileName: String; Encoding: Encoding := nil): String;
     method ReadBytes(FileName: String): array of Byte;
     method ReadBinary(FileName: String): Binary;
     method WriteBytes(FileName: String; Content: array of Byte);
@@ -195,7 +195,7 @@ begin
   end;
 end;
 
-class method FileUtils.ReadText(FileName: String; Encoding: Encoding): String;
+class method FileUtils.ReadText(FileName: String; Encoding: Encoding := nil): String;
 begin
   exit new String(ReadBytes(FileName), Encoding);
 end;

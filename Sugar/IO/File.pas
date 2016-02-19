@@ -12,24 +12,37 @@ uses
   Sugar.Collections;
 
 type
-  File = public class mapped to {$IF WINDOWS_PHONE OR NETFX_CORE}Windows.Storage.StorageFile{$ELSEIF ECHOES}System.String{$ELSEIF COOPER}java.io.File{$ELSEIF NOUGAT}NSString{$ENDIF}
+  File = public class mapped to {$IF WINDOWS_PHONE OR NETFX_CORE}Windows.Storage.StorageFile{$ELSEIF ECHOES}System.String{$ELSEIF COOPER}java.lang.String{$ELSEIF NOUGAT}NSString{$ENDIF}
   private    
-    method GetPath: String;
-    method GetName: String;
+    {$IF COOPER}
+    property JavaFile: java.io.File read new java.io.File(mapped);
+    {$ENDIF}
   public
     constructor(aPath: String);
 
-    method &Copy(Destination: Folder): File;
+    method &Copy(NewPathAndName: File): File;
     method &Copy(Destination: Folder; NewName: String): File;
     method Delete;
-    method Exists: Boolean;
-    method Move(Destination: Folder): File;
-    method Move(Destination: Folder; NewName: String): File;
+    method Exists: Boolean; inline;
+    method Move(NewPathAndName: File): File;
+    method Move(DestinationFolder: Folder; NewName: String): File;
     method Open(Mode: FileOpenMode): FileHandle;
     method Rename(NewName: String): File;
 
-    property Path: String read GetPath;
-    property Name: String read GetName;
+    class method Exists(FileName: File): Boolean; inline;
+
+    {$IF WINDOWS_PHONE OR NETFX_CORE}
+    property FullPath: String read mapped.Path;
+    property Name: String read mapped.Name;
+    {$ELSE}
+    property FullPath: String read mapped;
+    property Name: String read Sugar.IO.Path.GetFileName(mapped);
+    {$ENDIF}
+    property &Extension: String read Sugar.IO.Path.GetExtension(FullPath);
+    
+    method ReadText(Encoding: Encoding := nil): String;
+    method ReadBytes: array of Byte;
+    method ReadBinary: Binary;
   end;
 
 implementation
@@ -41,18 +54,16 @@ begin
   if not FileUtils.Exists(aPath) then
     raise new SugarFileNotFoundException(aPath);
 
-  {$IF COOPER}  
-  exit new java.io.File(aPath);
-  {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
+  {$IF WINDOWS_PHONE OR NETFX_CORE}
   exit StorageFile.GetFileFromPathAsync(aPath).Await;
-  {$ELSEIF ECHOES OR NOUGAT}
+  {$ELSE}
   exit File(aPath);
   {$ENDIF}
 end;
 
-method File.&Copy(Destination: Folder): File;
+method File.&Copy(NewPathAndName: File): File;
 begin
-  exit &Copy(Destination, Name);
+  exit &Copy(Sugar.IO.Path.GetParentDirectory(NewPathAndName), Sugar.IO.Path.GetFileName(NewPathAndName));
 end;
 
 method File.&Copy(Destination: Folder; NewName: String): File;
@@ -60,56 +71,41 @@ begin
   SugarArgumentNullException.RaiseIfNil(Destination, "Destination");
   SugarArgumentNullException.RaiseIfNil(NewName, "NewName");
 
-  {$IF COOPER}  
-  var NewFile := new java.io.File(Destination, NewName);
-  if NewFile.exists then
+  {$IF WINDOWS_PHONE OR NETFX_CORE}
+  result := mapped.CopyAsync(Destination, NewName, NameCollisionOption.FailIfExists).Await;
+  {$ELSE}
+  var lNewFile := File(Sugar.IO.Path.Combine(Destination, NewName));
+  if lNewFile.Exists then
     raise new SugarIOException(ErrorMessage.FILE_EXISTS, NewName);
 
-  NewFile.createNewFile;
+  {$IF COOPER}  
+  new java.io.File(lNewFile).createNewFile;
   var source := new java.io.FileInputStream(mapped).Channel;
-  var dest := new java.io.FileOutputStream(NewFile).Channel;
+  var dest := new java.io.FileOutputStream(lNewFile).Channel;
   dest.transferFrom(source, 0, source.size);
 
   source.close;
   dest.close;
-  exit NewFile;
-  {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
-  exit mapped.CopyAsync(Destination, NewName, NameCollisionOption.FailIfExists).Await;
   {$ELSEIF ECHOES}
-  var NewFile := System.IO.Path.Combine(Destination, NewName);
-  if System.IO.File.Exists(NewFile) then
-    raise new SugarIOException(ErrorMessage.FILE_EXISTS, NewName);
-
-  System.IO.File.Copy(mapped, NewFile);
-  exit NewFile;
+  System.IO.File.Copy(mapped, lNewFile);
   {$ELSEIF NOUGAT}
-  var NewFile := NSString(Destination).stringByAppendingPathComponent(NewName);
-  var Manager := NSFileManager.defaultManager;
-
-  if Manager.fileExistsAtPath(NewFile) then
-    raise new SugarIOException(String.Format(ErrorMessage.FILE_EXISTS, NewName));
-
   var lError: Foundation.NSError := nil;
-  if not Manager.copyItemAtPath(mapped) toPath(NewFile) error(var lError) then
+  if not NSFileManager.defaultManager.copyItemAtPath(mapped) toPath(lNewFile) error(var lError) then
     raise new SugarNSErrorException(lError);
-
-  exit File(NewFile);
+  {$ENDIF}
+  result := lNewFile;
   {$ENDIF}
 end;
 
 method File.Delete;
 begin
+  if not Exists then
+    raise new SugarFileNotFoundException(self.FullPath);
   {$IF COOPER}  
-  if not mapped.exists then
-    raise new SugarFileNotFoundException(self.Path);
-
-  mapped.delete;
+  JavaFile.delete;
   {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
   mapped.DeleteAsync.AsTask.Wait;
   {$ELSEIF ECHOES}
-  if not System.IO.File.Exists(mapped) then
-    raise new SugarFileNotFoundException(self.Path);
-
   System.IO.File.Delete(mapped);
   {$ELSEIF NOUGAT}
   var lError: NSError := nil;
@@ -120,109 +116,67 @@ end;
 
 method File.Exists: Boolean;
 begin
-  {$IF COOPER}  
-  exit mapped.exists;
-  {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
-  exit FileUtils.Exists(mapped);
-  {$ELSEIF ECHOES}
-  exit FileUtils.Exists(mapped);
-  {$ELSEIF NOUGAT}
-  exit FileUtils.Exists(mapped);
-  {$ENDIF}
+  result := FileUtils.Exists(mapped);
 end;
 
-method File.GetName: String;
+class method File.Exists(FileName: File): Boolean;
 begin
-  {$IF COOPER}  
-  exit mapped.Name;
-  {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
-  exit mapped.Name;
-  {$ELSEIF ECHOES}
-  exit System.IO.Path.GetFileName(mapped);
-  {$ELSEIF NOUGAT}
-  exit NSFileManager.defaultManager.displayNameAtPath(mapped);
-  {$ENDIF}
+  result := FileUtils.Exists(FileName);
 end;
 
-method File.GetPath: String;
+method File.Move(NewPathAndName: File): File;
 begin
+  if NewPathAndName.Exists then
+    raise new SugarIOException(ErrorMessage.FILE_EXISTS, NewPathAndName);
   {$IF COOPER}  
-  exit mapped.AbsolutePath;
+  var lNewFile := &Copy(NewPathAndName);
+  JavaFile.delete;
+  exit lNewFile;
   {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
-  exit mapped.Path;
+  result := mapped.CopyAsync(Destination, NewPathAndName, NameCollisionOption.FailIfExists).Await;
   {$ELSEIF ECHOES}
-  exit mapped;
+  System.IO.File.Move(mapped, NewPathAndName);
+  result :=  NewPathAndName;
   {$ELSEIF NOUGAT}
-  exit mapped;
-  {$ENDIF}
-end;
-
-method File.Move(Destination: Folder): File;
-begin
-  exit Move(Destination, Name);
-end;
-
-method File.Move(Destination: Folder; NewName: String): File;
-begin
-  {$IF COOPER}  
-  var NewFile := &Copy(Destination, NewName);
-  mapped.delete;
-  exit NewFile;
-  {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
-  result := mapped.CopyAsync(Destination, NewName, NameCollisionOption.FailIfExists).Await;
-  mapped.DeleteAsync.AsTask.Wait;
-  {$ELSEIF ECHOES}
-  var NewFile := System.IO.Path.Combine(Destination, NewName);
-
-  if System.IO.File.Exists(NewFile) then
-    raise new SugarIOException(ErrorMessage.FILE_EXISTS, NewFile);
-
-  System.IO.File.Move(mapped, NewFile);
-  exit NewFile;
-  {$ELSEIF NOUGAT}
-  var NewFile := NSString(Destination).stringByAppendingPathComponent(NewName);
-  var Manager := NSFileManager.defaultManager;
-
-  if Manager.fileExistsAtPath(NewFile) then
-    raise new SugarIOException(String.Format(ErrorMessage.FILE_EXISTS, NewName));
-
   var lError: Foundation.NSError := nil;
-  if not Manager.moveItemAtPath(mapped) toPath(NewFile) error(var lError) then
+  if not NSFileManager.defaultManager.moveItemAtPath(mapped) toPath(NewPathAndName) error(var lError) then
     raise new SugarNSErrorException(lError);
-
-  exit File(NewFile);
+  result := NewPathAndName
   {$ENDIF}
+end;
+
+method File.Move(DestinationFolder: Folder; NewName: String): File;
+begin
+  result := Move(Sugar.IO.Path.Combine(DestinationFolder, NewName));
+end;
+
+method File.Rename(NewName: String): File;
+begin  
+  var lNewFile := Path.Combine(Path.GetParentDirectory(mapped), NewName);
+  result := Move(lNewFile);
 end;
 
 method File.Open(Mode: FileOpenMode): FileHandle;
 begin
   if not Exists then
-    raise new SugarFileNotFoundException(self.Path);
+    raise new SugarFileNotFoundException(self.FullPath);
 
   exit FileHandle.FromFile(mapped, Mode);
 end;
 
-method File.Rename(NewName: String): File;
-begin  
-  {$IF COOPER}  
-  var NewFile := new java.io.File(mapped.ParentFile, NewName);
-  
-  if NewFile.exists then
-    raise new SugarIOException(ErrorMessage.FILE_EXISTS, NewName);
+method File.ReadText(Encoding: Encoding := nil): String;
+begin
+  result := FileUtils.ReadText(mapped, Encoding);
+end;
 
-  if not mapped.renameTo(NewFile) then
-    raise new SugarIOException(ErrorMessage.IO_RENAME_ERROR, mapped.Name, NewName);
+method File.ReadBytes: array of Byte;
+begin
+  result := FileUtils.ReadBytes(mapped);
+end;
 
-  exit NewFile;
-  {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
-  mapped.RenameAsync(NewName, Windows.Storage.NameCollisionOption.FailIfExists).AsTask.Wait;
-  exit mapped;
-  {$ELSEIF ECHOES}
-  exit Move(System.IO.Path.GetDirectoryName(mapped), NewName);
-  {$ELSEIF NOUGAT}
-  var CurrentFolder := NSString(mapped).stringByDeletingLastPathComponent;
-  exit Move(Folder(CurrentFolder), NewName);
-  {$ENDIF}
+method File.ReadBinary: Binary;
+begin
+  result := FileUtils.ReadBinary(mapped);
 end;
 
 end.

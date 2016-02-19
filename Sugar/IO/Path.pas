@@ -54,7 +54,7 @@ begin
   if LastChar = Folder.Separator then
     result := BasePath + Path
   else
-    result := BasePath + Folder.Separator + Path;
+    result := BasePath + Folder.Separator + Path; // 74540: Bogus nullability wanring, Nougat only
 end;
 
 method Path.Combine(BasePath: not nullable String; Path1: not nullable String; Path2: not nullable String): not nullable String;

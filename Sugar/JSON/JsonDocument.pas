@@ -16,14 +16,14 @@ type
     method SetRootObjectItem(Key: String; Value: JsonNode);
     method GetRootObjectKeys: not nullable sequence of String;
 
-    constructor(aRootObject: JsonObject);
+    constructor(aRootObject: not nullable JsonObject);
   protected
   public
     property RootObject: JsonObject read fRootObject;
 
-    class method FromFile(aFile: File): not nullable JsonDocument;
-    class method FromBinary(aBinary: Binary; aEncoding: Encoding := nil): not nullable JsonDocument;
-    class method FromString(aString: String): not nullable JsonDocument;
+    class method FromFile(aFile: not nullable File): not nullable JsonDocument;
+    class method FromBinary(aBinary: not nullable Binary; aEncoding: Encoding := nil): not nullable JsonDocument;
+    class method FromString(aString: not nullable String): not nullable JsonDocument;
     class method CreateDocument: not nullable JsonDocument;
 
     constructor();
@@ -77,23 +77,23 @@ begin
   fRootObject := new JsonObject();
 end;
 
-constructor JsonDocument(aRootObject: JsonObject);
+constructor JsonDocument(aRootObject: not nullable JsonObject);
 begin
   fRootObject := aRootObject;
 end;
 
-class method JsonDocument.FromFile(aFile: File): not nullable JsonDocument;
+class method JsonDocument.FromFile(aFile: not nullable File): not nullable JsonDocument;
 begin
-  result := new JsonDocument(new JsonDeserializer(FileUtils.ReadText(aFile.Path, Encoding.Default)).Deserialize as JsonObject)
+  result := new JsonDocument(new JsonDeserializer(aFile.ReadText(Encoding.Default)).Deserialize as JsonObject)
 end;
 
-class method JsonDocument.FromBinary(aBinary: Binary; aEncoding: Encoding := nil): not nullable JsonDocument;
+class method JsonDocument.FromBinary(aBinary: not nullable Binary; aEncoding: Encoding := nil): not nullable JsonDocument;
 begin
   if aEncoding = nil then aEncoding := Encoding.Default;
   result := new JsonDocument(new JsonDeserializer(new String(aBinary.ToArray, aEncoding)).Deserialize as JsonObject);
 end;
 
-class method JsonDocument.FromString(aString: String): not nullable JsonDocument;
+class method JsonDocument.FromString(aString: not nullable String): not nullable JsonDocument;
 begin
   result := new JsonDocument(new JsonDeserializer(aString).Deserialize as JsonObject)
 end;
