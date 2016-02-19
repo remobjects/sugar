@@ -16,6 +16,8 @@ type
     method GetFileName(FileName: not nullable String): not nullable String;
     method GetFileNameWithoutExtension(FileName: not nullable String): not nullable String;
     method GetFullPath(RelativePath: not nullable String): not nullable String;
+    
+    property DirectorySeparatorChar: Char read Folder.Separator;
   end;
 
 implementation
@@ -33,7 +35,7 @@ begin
   if NewExtension[0] = '.' then
     result := FileName + NewExtension
   else
-    result := FileName + "." + NewExtension;
+    result := FileName + "." + NewExtension as not nullable;
 end;
 
 method Path.Combine(BasePath: not nullable String; Path: not nullable String): not nullable String;
@@ -47,12 +49,12 @@ begin
   if String.IsNullOrEmpty(Path) then
     exit BasePath;
 
-  var LastChar: Char := BasePath[BasePath.Length - 1];
+  var LastChar := BasePath[BasePath.Length - 1];
 
   if LastChar = Folder.Separator then
-    exit BasePath + Path;
-
-  exit BasePath + Folder.Separator + Path;
+    result := BasePath + Path
+  else
+    result := BasePath + Folder.Separator + Path;
 end;
 
 method Path.Combine(BasePath: not nullable String; Path1: not nullable String; Path2: not nullable String): not nullable String;
@@ -65,21 +67,32 @@ begin
   if length(FileName) = 0 then
     raise new SugarArgumentException("Invalid arguments");
     
-  var LastChar: Char := FileName[FileName.Length - 1];
+  var LastChar := FileName[FileName.Length - 1];
 
   if LastChar = Folder.Separator then
     FileName := FileName.Substring(0, FileName.Length - 1);
 
-  if (Filename = Folder.Separator) or ((length(FileName) = 2) and (Filename[1] = ':')) then
+  if (FileName = Folder.Separator) or ((length(FileName) = 2) and (FileName[1] = ':')) then
     exit nil; // root folder has no parent
-  {$HINT todo: handle windows network paths, "\\share\xxx"}
 
   var lIndex := FileName.LastIndexOf(Folder.Separator);
+
+  if FileName.StartsWith('\\') then begin
+
+    if lIndex > 1 then
+      result := FileName.Substring(0, lIndex)
+    else
+      result := nil; // network share has no parent folder
+    
+  end
+  else begin
   
-  if lIndex <> -1 then
-    result := FileName.Substring(0, lIndex)
-  else
-    result := FileName+Folder.Separator+'..'
+    if lIndex > -1 then
+      result := FileName.Substring(0, lIndex)
+    else
+      result := FileName+Folder.Separator+'..' // "fake" parent folder by appending ..
+      
+  end;
 end;
 
 method Path.GetExtension(FileName: not nullable String): not nullable String;
@@ -124,13 +137,13 @@ end;
 method Path.GetFullPath(RelativePath: not nullable String): not nullable String;
 begin
   {$IF COOPER}
-  exit new java.io.File(RelativePath).getAbsolutePath();  
+  exit new java.io.File(RelativePath).AbsolutePath as not nullable;  
   {$ELSEIF NETFX_CORE}
   exit RelativePath; //api has no such function
   {$ELSEIF WINDOWS_PHONE}
-  exit System.IO.Path.GetFullPath(RelativePath);
+  exit System.IO.Path.GetFullPath(RelativePath)  as not nullable;
   {$ELSEIF ECHOES}
-  exit System.IO.Path.GetFullPath(RelativePath);
+  exit System.IO.Path.GetFullPath(RelativePath) as not nullable;
   {$ELSEIF NOUGAT}
   exit (RelativePath as NSString).stringByStandardizingPath;
   {$ENDIF}

@@ -20,9 +20,7 @@ type
   Folder = public class mapped to {$IF WINDOWS_PHONE OR NETFX_CORE}Windows.Storage.StorageFolder{$ELSEIF ECHOES}System.String{$ELSEIF COOPER}java.lang.String{$ELSEIF NOUGAT}Foundation.NSString{$ENDIF}
   private
     class method GetSeparator: Char;
-  {$IF ECHOES}
-    method GetName: String;
-  {$ELSEIF COOPER}
+  {$IF COOPER}
     property JavaFile: java.io.File read new java.io.File(mapped);
   {$ELSEIF NOUGAT}
     method Combine(BasePath: String; SubPath: String): String;
@@ -34,17 +32,19 @@ type
     method CreateFolder(FailIfExists: Boolean);
     method CreateSubfolder(SubfolderName: String; FailIfExists: Boolean): Folder;
     method Delete;
+    method Rename(NewName: String): Folder;
 
     method Exists: Boolean;
     method GetFile(FileName: String): File;
     method GetFiles: array of File;
     method GetSubfolders: array of Folder;
-    method Rename(NewName: String): Folder;
 
     class method CreateFolder(FolderName: Folder; FailIfExists: Boolean): Folder;
     class method Exists(FolderName: Folder): Boolean;
 
     class method UserHomeFolder: Folder;
+
+    class property Separator: Char read GetSeparator;
 
     {$IF WINDOWS_PHONE OR NETFX_CORE}
     property FullPath: String read mapped.Path;
@@ -63,8 +63,6 @@ type
     property Name: String read Sugar.IO.Path.GetFileName(mapped);
     property &Extension: String read Sugar.IO.Path.GetExtension(mapped);
     {$ENDIF}
-
-    class property Separator: Char read GetSeparator;
   end;
 
   {$IF WINDOWS_PHONE OR NETFX_CORE}
@@ -139,11 +137,6 @@ begin
   end;
 end;
 
-method Folder.GetName: String;
-begin
-  exit mapped.Name;
-end;
-
 class method Folder.GetSeparator: Char;
 begin
   exit '\';
@@ -210,11 +203,6 @@ begin
   exit self.AsTask.Result;
 end;
 {$ELSEIF ECHOES}
-method Folder.GetName: String;
-begin
-  exit new System.IO.DirectoryInfo(mapped).Name;
-end;
-
 class method Folder.GetSeparator: Char;
 begin
   exit System.IO.Path.DirectorySeparatorChar;
