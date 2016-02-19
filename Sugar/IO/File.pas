@@ -18,27 +18,27 @@ type
     property JavaFile: java.io.File read new java.io.File(mapped);
     {$ENDIF}
   public
-    constructor(aPath: String);
+    constructor(aPath: not nullable String);
 
-    method &Copy(NewPathAndName: File): File;
-    method &Copy(Destination: Folder; NewName: String): File;
+    method &Copy(NewPathAndName: not nullable File): not nullable File;
+    method &Copy(Destination: not nullable Folder; NewName: not nullable String): not nullable File;
     method Delete;
     method Exists: Boolean; inline;
-    method Move(NewPathAndName: File): File;
-    method Move(DestinationFolder: Folder; NewName: String): File;
-    method Open(Mode: FileOpenMode): FileHandle;
-    method Rename(NewName: String): File;
+    method Move(NewPathAndName: not nullable File): not nullable File;
+    method Move(DestinationFolder: not nullable Folder; NewName: not nullable String): not nullable File;
+    method Open(Mode: FileOpenMode): not nullable FileHandle;
+    method Rename(NewName: not nullable String): not nullable File;
 
-    class method Exists(FileName: File): Boolean; inline;
+    class method Exists(FileName: not nullable File): Boolean; inline;
 
     {$IF WINDOWS_PHONE OR NETFX_CORE}
-    property FullPath: String read mapped.Path;
-    property Name: String read mapped.Name;
+    property FullPath: not nullable String read mapped.Path;
+    property Name: not nullable String read mapped.Name;
     {$ELSE}
-    property FullPath: String read mapped;
-    property Name: String read Sugar.IO.Path.GetFileName(mapped);
+    property FullPath: not nullable String read mapped;
+    property Name: not nullable String read Sugar.IO.Path.GetFileName(mapped);
     {$ENDIF}
-    property &Extension: String read Sugar.IO.Path.GetExtension(FullPath);
+    property &Extension: not nullable String read Sugar.IO.Path.GetExtension(FullPath);
     
     method ReadText(Encoding: Encoding := nil): String;
     method ReadBytes: array of Byte;
@@ -47,7 +47,7 @@ type
 
 implementation
 
-constructor File(aPath: String);
+constructor File(aPath: not nullable String);
 begin
   SugarArgumentNullException.RaiseIfNil(aPath, "Path");
 
@@ -61,12 +61,12 @@ begin
   {$ENDIF}
 end;
 
-method File.&Copy(NewPathAndName: File): File;
+method File.&Copy(NewPathAndName: not nullable File): not nullable File;
 begin
   exit &Copy(Sugar.IO.Path.GetParentDirectory(NewPathAndName), Sugar.IO.Path.GetFileName(NewPathAndName));
 end;
 
-method File.&Copy(Destination: Folder; NewName: String): File;
+method File.&Copy(Destination: not nullable Folder; NewName: not nullable String): not nullable File;
 begin
   SugarArgumentNullException.RaiseIfNil(Destination, "Destination");
   SugarArgumentNullException.RaiseIfNil(NewName, "NewName");
@@ -93,14 +93,14 @@ begin
   if not NSFileManager.defaultManager.copyItemAtPath(mapped) toPath(lNewFile) error(var lError) then
     raise new SugarNSErrorException(lError);
   {$ENDIF}
-  result := lNewFile;
+  result := lNewFile as not nullable;
   {$ENDIF}
 end;
 
 method File.Delete;
 begin
   if not Exists then
-    raise new SugarFileNotFoundException(self.FullPath);
+    raise new SugarFileNotFoundException(FullPath);
   {$IF COOPER}  
   JavaFile.delete;
   {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
@@ -119,19 +119,18 @@ begin
   result := FileUtils.Exists(mapped);
 end;
 
-class method File.Exists(FileName: File): Boolean;
+class method File.Exists(FileName: not nullable File): Boolean;
 begin
   result := FileUtils.Exists(FileName);
 end;
 
-method File.Move(NewPathAndName: File): File;
+method File.Move(NewPathAndName: not nullable File): not nullable File;
 begin
   if NewPathAndName.Exists then
     raise new SugarIOException(ErrorMessage.FILE_EXISTS, NewPathAndName);
   {$IF COOPER}  
-  var lNewFile := &Copy(NewPathAndName);
+  result := &Copy(NewPathAndName) as not nullable;
   JavaFile.delete;
-  exit lNewFile;
   {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
   result := mapped.CopyAsync(Destination, NewPathAndName, NameCollisionOption.FailIfExists).Await;
   {$ELSEIF ECHOES}
@@ -145,23 +144,23 @@ begin
   {$ENDIF}
 end;
 
-method File.Move(DestinationFolder: Folder; NewName: String): File;
+method File.Move(DestinationFolder: not nullable Folder; NewName: not nullable String): not nullable File;
 begin
   result := Move(Sugar.IO.Path.Combine(DestinationFolder, NewName));
 end;
 
-method File.Rename(NewName: String): File;
+method File.Rename(NewName: not nullable String): not nullable File;
 begin  
   var lNewFile := Path.Combine(Path.GetParentDirectory(mapped), NewName);
   result := Move(lNewFile);
 end;
 
-method File.Open(Mode: FileOpenMode): FileHandle;
+method File.Open(Mode: FileOpenMode): not nullable FileHandle;
 begin
   if not Exists then
-    raise new SugarFileNotFoundException(self.FullPath);
+    raise new SugarFileNotFoundException(FullPath);
 
-  exit FileHandle.FromFile(mapped, Mode);
+  exit FileHandle.FromFile(mapped, Mode) as not nullable;
 end;
 
 method File.ReadText(Encoding: Encoding := nil): String;
