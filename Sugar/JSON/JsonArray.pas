@@ -5,7 +5,14 @@ interface
 uses
   Sugar,
   Sugar.Json,
-  Sugar.Collections;
+  Sugar.Collections,
+  {$IF ECHOES}
+  System.Linq;
+  {$ELSEIF COOPER}
+  com.remobjects.elements.linq;
+  {$ELSEIF NOUGAT}
+  RemObjects.Elements.Linq;
+  {$ENDIF}
 
 type
   JsonArray = public class (JsonNode, ISequence<JsonNode>)
@@ -19,6 +26,9 @@ type
     method Insert(&Index: Integer; Value: JsonNode);
     method Clear;
     method &RemoveAt(&Index: Integer);
+
+    method ToStrings: not nullable sequence of String;
+    method ToStringList: not nullable List<String>;
 
     method ToJson: String; override;
      
@@ -108,5 +118,16 @@ begin
   exit NSArray(Items).countByEnumeratingWithState(aState) objects(^id(stackbuf)) count(len);
 end;
 {$ENDIF}
+
+method JsonArray.ToStrings: not nullable sequence of String;
+begin
+  result := self.Where(i -> i is JsonStringValue).Select(i -> i.StringValue)
+end;
+
+method JsonArray.ToStringList: not nullable List<String>;
+begin
+  //result := ToStrings().ToList(); // 74548: Sugar: compiler gets confused between mapped and underlying type.
+  result := ToStrings().ToList() as not nullable List<String>;
+end;
 
 end.
