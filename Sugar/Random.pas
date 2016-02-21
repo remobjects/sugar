@@ -7,7 +7,7 @@ type
   Random = public class mapped to java.util.Random
   public
     method NextInt: Integer; mapped to nextInt;
-    method NextInt(MaxValue: Integer): Integer; mapped to nextInt(MaxValue);
+    method NextInt(MaxValuePlusOne: Integer): Integer; mapped to nextInt(MaxValuePlusOne); // 6 gives results between 0..5
     method NextDouble: Double; mapped to nextDouble;
   end;
   {$ELSE}
@@ -24,7 +24,7 @@ type
     constructor(aSeed: UInt64);
 
     method NextInt: Integer;
-    method NextInt(MaxValue: Integer): Integer;
+    method NextInt(MaxValuePlusOne: Integer): Integer; // 6 gives results between 0..5
     method NextDouble: Double;
   end;
   {$ENDIF}
@@ -59,21 +59,21 @@ begin
   exit Integer(Next(32))
 end;
 
-method Random.NextInt(MaxValue: Integer): Integer;
+  method Random.NextInt(MaxValuePlusOne: Integer): Integer;
 begin
-  if MaxValue <= 0 then
-    raise new SugarArgumentException("MaxValue must be positive");
+  if MaxValuePlusOne <= 0 then
+    raise new SugarArgumentException("MaxValuePlusOne must be positive");
 
-  if (MaxValue and -MaxValue) = MaxValue then
-    exit Integer((MaxValue * Int64(Next(31))) shr 31);
+  if (MaxValuePlusOne and -MaxValuePlusOne) = MaxValuePlusOne then
+    exit Integer((MaxValuePlusOne * Int64(Next(31))) shr 31);
 
   var Bits: Int64;
   var Val: Int64;
 
   repeat
     Bits := Next(31);
-    Val := Bits mod UInt32(MaxValue);
-  until not (Bits - Val + (MaxValue - 1) < 0);
+    Val := Bits mod UInt32(MaxValuePlusOne);
+  until not (Bits - Val + (MaxValuePlusOne - 1) < 0);
 
   exit Integer(Val);
 end;
