@@ -128,7 +128,7 @@ begin
   case Tokenizer.Token of
     JsonTokenKind.String: result := new JsonStringValue(Tokenizer.Value);
     JsonTokenKind.Number: begin
-      var lValue := Convert.ToDouble(Tokenizer.Value);
+      var lValue := Convert.ToDoubleInvariant(Tokenizer.Value);
       if Tokenizer.Value.Contains(".") or Tokenizer.Value.Contains("e") or Tokenizer.Value.Contains("E") then
         result := new JsonFloatValue(lValue) // force float of valiue had a decimal point!
       else if Consts.IsInfinity(lValue) or Consts.IsNaN(lValue) then
