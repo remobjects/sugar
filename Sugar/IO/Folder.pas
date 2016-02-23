@@ -56,10 +56,6 @@ type
     property &Extension: not nullable String read Sugar.IO.Path.GetExtension(FullPath);
   end;
 
-  {$IF WINDOWS_PHONE OR NETFX_CORE}
-  extension method Windows.Foundation.IAsyncOperation<TResult>.Await<TResult>: TResult;  
-  {$ENDIF}
-
   {$IF COOPER OR NOUGAT}
   FolderHelper = public static class
   public
@@ -67,13 +63,17 @@ type
     {$IF NOUGAT}method IsDirectory(Value: String): Boolean;{$ENDIF}
   end;
   {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
-  type
   FolderHelper = public static class
   public
     method GetFile(Folder: Windows.Storage.StorageFolder; FileName: String): Windows.Storage.StorageFile;
     method GetFolder(Folder: Windows.Storage.StorageFolder; FolderName: String): Windows.Storage.StorageFolder;
   end;
   {$ENDIF}
+
+  {$IF WINDOWS_PHONE OR NETFX_CORE}
+  extension method Windows.Foundation.IAsyncOperation<TResult>.Await<TResult>: TResult;  
+  {$ENDIF}
+
 
 implementation
 
@@ -93,7 +93,7 @@ end;
 
 method Folder.CreateSubfolder(SubfolderName: String; FailIfExists: Boolean := false): Folder;
 begin
-  result := Folder(Sugar.IO.Path.Combine(mapped, SubfolderName));
+  result := new Folder(Sugar.IO.Path.Combine(self.FullPath, SubfolderName));
   result.CreateFolder(FailIfExists);
 end;
 
@@ -142,14 +142,25 @@ begin
   exit mapped.CreateFileAsync(FileName, iif(FailIfExists, Windows.Storage.CreationCollisionOption.FailIfExists, Windows.Storage.CreationCollisionOption.OpenIfExists)).Await;
 end;
 
-method Folder.Exists: Boolean;
+method Folder.Exists(): Boolean;
 begin
-  result := System.IO.Directory.Exists(aFolderName);
+{$IF NETFX_CORE}
+  var item := Windows.Storage.ApplicationData.Current.LocalFolder.TryGetItemAsync(mapped.Name).Await();
+  exit assigned(item);
+{$ELSE}
+  // WP8 API - best API
+  try
+    var item := Windows.Storage.ApplicationData.Current.LocalFolder.GetItemAsync(mapped.Name).Await();
+    exit assigned(item);
+  except
+    exit false;
+  end;
+{$ENDIF}
 end;
 
 method Folder.CreateFolder(FailIfExists: Boolean := false);
 begin
-  exit mapped.CreateSubfolderAsync(FolderName, iif(FailIfExists, Windows.Storage.CreationCollisionOption.FailIfExists, Windows.Storage.CreationCollisionOption.OpenIfExists)).Await;
+  mapped.CreateFolderAsync(self.FullPath, iif(FailIfExists, Windows.Storage.CreationCollisionOption.FailIfExists, Windows.Storage.CreationCollisionOption.OpenIfExists)).Await();
 end;
 
 method Folder.Delete;
@@ -170,11 +181,6 @@ begin
     result[i] := File(files.Item[i]);
 end;
 
-method Folder.GetFolder(FolderName: String): Folder;
-begin
-  exit FolderHelper.GetFolder(mapped, FolderName);
-end;
-
 method Folder.GetSubfolders: not nullable array of Folder;
 begin
   var folders := mapped.GetFoldersAsync.Await;
@@ -183,9 +189,9 @@ begin
     result[i] := Folder(folders.Item[i]);
 end;
 
-method Folder.Rename(NewName: String);
+method Folder.Rename(NewName: String): Folder;
 begin
-  mapped.RenameAsync(NewName, Windows.Storage.NameCollisionOption.FailIfExists).AsTask.Wait;
+  mapped.RenameAsync(NewName, Windows.Storage.NameCollisionOption.FailIfExists).AsTask().Wait();
 end;
 
 extension method Windows.Foundation.IAsyncOperation<TResult>.&Await<TResult>: TResult;
