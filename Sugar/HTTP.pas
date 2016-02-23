@@ -340,7 +340,7 @@ begin
   {$IF WINDOWS_PHONE OR NETFX_CORE}
   try
     using responseStream := Response.GetResponseStream() do begin
-      var storageFile := await Windows.Storage.ApplicationData.Current.LocalFolder.CreateFileAsync(aTargetFile.Name, Windows.Storage.CreationCollisionOption.ReplaceExisting);
+      var storageFile := Windows.Storage.ApplicationData.Current.LocalFolder.CreateFileAsync(aTargetFile.Name, Windows.Storage.CreationCollisionOption.ReplaceExisting).Await();
 
       using fileStream := await System.IO.WindowsRuntimeStorageExtensions.OpenStreamForWriteAsync(storageFile) do begin
         await responseStream.CopyToAsync(fileStream);
