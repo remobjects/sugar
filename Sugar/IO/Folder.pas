@@ -144,10 +144,6 @@ end;
 
 method Folder.Exists(): Boolean;
 begin
-{$IF NETFX_CORE}
-  var item := Windows.Storage.ApplicationData.Current.LocalFolder.TryGetItemAsync(mapped.Name).Await();
-  exit assigned(item);
-{$ELSE}
   // WP8 API - best API
   try
     var item := Windows.Storage.ApplicationData.Current.LocalFolder.GetItemAsync(mapped.Name).Await();
@@ -155,7 +151,6 @@ begin
   except
     exit false;
   end;
-{$ENDIF}
 end;
 
 method Folder.CreateFolder(FailIfExists: Boolean := false);
