@@ -8,8 +8,10 @@ uses
   {$ENDIF}
   Sugar;
 
+{$HIDE W37}
 
 type
+  [Obsolete("Use Folder instead")]
   FolderUtils = public static class
   private
     {$IF COOPER}

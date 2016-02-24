@@ -171,7 +171,7 @@ end;
 method Folder.GetFiles: not nullable List<File>;
 begin
   var files := mapped.GetFilesAsync.Await;
-  result := new List<File>(files.Count);
+  result := new List<File>();
   for i: Integer := 0 to files.Count-1 do
     result.Add(File(files.Item[i]));
 end;
@@ -179,7 +179,7 @@ end;
 method Folder.GetSubfolders: not nullable List<Folder>;
 begin
   var folders := mapped.GetFoldersAsync.Await;
-  result := new List<Folder>(folders.Count);
+  result := new List<Folder>();
   for i: Integer := 0 to folders.Count-1 do
     result.Add(Folder(folders.Item[i]));
 end;
