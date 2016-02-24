@@ -506,6 +506,9 @@ begin
   if assigned(aRequest.Content) then begin
     nsUrlRequest.HTTPBody := (aRequest.Content as IHttpRequestContent).GetContentAsBinary();
   end;
+  
+  for each k in aRequest.Headers.Keys do
+    nsUrlRequest.setValue(aRequest.Headers[k]) forHTTPHeaderField(k);
 
   var lRequest := NSURLSession.sharedSession.dataTaskWithRequest(nsUrlRequest) completionHandler((data, nsUrlResponse, error) -> begin
 
