@@ -36,8 +36,8 @@ type
 
     method Exists: Boolean;
     method GetFile(FileName: String): File;
-    method GetFiles: not nullable array of File;
-    method GetSubfolders: not nullable array of Folder;
+    method GetFiles: not nullable List<File>;
+    method GetSubfolders: not nullable List<Folder>;
 
     class method CreateFolder(FolderName: Folder; FailIfExists: Boolean := false): Folder;
     class method Exists(FolderName: Folder): Boolean;
@@ -168,20 +168,20 @@ begin
   exit FolderHelper.GetFile(mapped, FileName);
 end;
 
-method Folder.GetFiles: not nullable array of File;
+method Folder.GetFiles: not nullable List<File>;
 begin
   var files := mapped.GetFilesAsync.Await;
-  result := new File[files.Count];
+  result := new List<File>(files.Count);
   for i: Integer := 0 to files.Count-1 do
-    result[i] := File(files.Item[i]);
+    result.Add(File(files.Item[i]));
 end;
 
-method Folder.GetSubfolders: not nullable array of Folder;
+method Folder.GetSubfolders: not nullable List<Folder>;
 begin
   var folders := mapped.GetFoldersAsync.Await;
-  result := new Folder[folders.Count];
+  result := new List<Folder>(folders.Count);
   for i: Integer := 0 to folders.Count-1 do
-    result[i] := Folder(folders.Item[i]);
+    result.Add(Folder(folders.Item[i]));
 end;
 
 method Folder.Rename(NewName: String): Folder;
@@ -250,14 +250,14 @@ begin
   exit nil;
 end;
 
-method Folder.GetFiles: not nullable array of File;
+method Folder.GetFiles: not nullable List<File>;
 begin
-  exit System.IO.Directory.GetFiles(mapped) as not nullable;
+  result := new List<File>(System.IO.Directory.GetFiles(mapped));
 end;
 
-method Folder.GetSubfolders: not nullable array of Folder;
+method Folder.GetSubfolders: not nullable List<Folder>;
 begin
-  exit System.IO.Directory.GetDirectories(mapped) as not nullable;
+  result := new List<Folder>(System.IO.Directory.GetDirectories(mapped));
 end;
 
 method Folder.Rename(NewName: String): Folder;
@@ -353,14 +353,14 @@ begin
   exit ExistingFile.path;
 end;
 
-method Folder.GetFiles: not nullable array of File;
+method Folder.GetFiles: not nullable List<File>;
 begin
-  result := JavaFile.listFiles((f,n)->new java.io.File(f, n).isFile).Select(f->f.path).ToArray() as not nullable;
+  result := JavaFile.listFiles((f,n)->new java.io.File(f, n).isFile).Select(f->f.path).ToList() as not nullable;
 end;
 
-method Folder.GetSubfolders: not nullable array of Folder;
+method Folder.GetSubfolders: not nullable List<Folder>;
 begin
-  result := JavaFile.listFiles( (f,n) -> new java.io.File(f, n).isDirectory).Select(f -> f.Path).ToArray() as not nullable;
+  result := JavaFile.listFiles( (f,n) -> new java.io.File(f, n).isDirectory).Select(f -> f.Path).ToList() as not nullable;
 end;
 
 method Folder.Rename(NewName: String): Folder;
@@ -451,36 +451,33 @@ begin
   Foundation.NSFileManager.defaultManager.fileExistsAtPath(Value) isDirectory(@Result);
 end;
 
-method Folder.GetFiles: not nullable array of File;
+method Folder.GetFiles: not nullable List<File>;
 begin
+  result := new List<File>;
   var Items := NSFileManager.defaultManager.contentsOfDirectoryAtPath(mapped) error(nil);
   if Items = nil then
-    exit new File[0]; // 74542: Bogus nullable wanting when assigning new array
+    exit;
 
-  var Files := new List<File>;
   for i: Integer := 0 to Items.count - 1 do begin
     var item := Combine(mapped, Items.objectAtIndex(i));
     if not FolderHelper.IsDirectory(item) then
-      Files.Add(File(item));
+      result.Add(File(item));
   end;
-
-  exit Files.ToArray as not nullable;
 end;
 
-method Folder.GetSubfolders: not nullable array of Folder;
+method Folder.GetSubfolders: not nullable List<Folder>;
 begin
+  result := new List<Folder>();
+
   var Items := NSFileManager.defaultManager.contentsOfDirectoryAtPath(mapped) error(nil);
   if Items = nil then
-    exit new Folder[0]; // 74542: Bogus nullable wanting when assigning new array
+    exit;
 
-  var Folders := new List<Folder>;
   for i: Integer := 0 to Items.count - 1 do begin
     var item := Combine(mapped, Items.objectAtIndex(i));
     if FolderHelper.IsDirectory(item) then
-      Folders.Add(Folder(item));
+      result.Add(Folder(item));
   end;
-
-  exit Folders.ToArray as not nullable;
 end;
 
 method Folder.Rename(NewName: String): Folder;
