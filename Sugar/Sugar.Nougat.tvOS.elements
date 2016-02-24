@@ -47,6 +47,7 @@
         <Reference Include="libxml2"/>
         <Reference Include="rtl"/>
         <Reference Include="UIKit"/>
+        <Reference Include="CoreFoundation"/>
     </ItemGroup>
     <ItemGroup>
         <Folder Include="Cryptography\"/>

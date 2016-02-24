@@ -47,12 +47,13 @@
         <Reference Include="libxml2"/>
         <Reference Include="rtl"/>
         <Reference Include="UIKit"/>
+        <Reference Include="CoreFoundation"/>
     </ItemGroup>
     <ItemGroup>
         <Folder Include="Cryptography\"/>
         <Folder Include="Properties\"/>
     </ItemGroup>
-    <Import Project="$(MSBuildExtensionsPath)/RemObjects Software/Oxygene/RemObjects.Oxygene.Nougat.targets"/>
+    <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Elements\RemObjects.Elements.Nougat.targets"/>
     <PropertyGroup>
         <PreBuildEvent/>
     </PropertyGroup>

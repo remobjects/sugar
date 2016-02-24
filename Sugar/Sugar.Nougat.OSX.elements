@@ -47,6 +47,7 @@
         <Reference Include="libNougat"/>
         <Reference Include="libxml2"/>
         <Reference Include="rtl"/>
+        <Reference Include="CoreFoundation"/>
     </ItemGroup>
     <ItemGroup>
         <Folder Include="Properties\"/>
