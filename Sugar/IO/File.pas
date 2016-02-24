@@ -58,7 +58,7 @@ end;
 
 method File.&Copy(NewPathAndName: not nullable File): not nullable File;
 begin
-  exit &Copy(Sugar.IO.Path.GetParentDirectory(NewPathAndName), Sugar.IO.Path.GetFileName(NewPathAndName));
+  exit self.&Copy(new Folder(Sugar.IO.Path.GetParentDirectory(NewPathAndName.FullPath)), Sugar.IO.Path.GetFileName(NewPathAndName.Name));
 end;
 
 method File.&Copy(Destination: not nullable Folder; NewName: not nullable String): not nullable File;
@@ -127,7 +127,7 @@ begin
   result := &Copy(NewPathAndName) as not nullable;
   JavaFile.delete;
   {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
-  result := mapped.CopyAsync(Destination, NewPathAndName, NameCollisionOption.FailIfExists).Await;
+  exit mapped.CopyAsync(new Folder(NewPathAndName.FullPath), NewPathAndName.Name, NameCollisionOption.FailIfExists).Await();
   {$ELSEIF ECHOES}
   System.IO.File.Move(mapped, NewPathAndName);
   result :=  NewPathAndName;
@@ -141,13 +141,13 @@ end;
 
 method File.Move(DestinationFolder: not nullable Folder; NewName: not nullable String): not nullable File;
 begin
-  result := Move(Sugar.IO.Path.Combine(DestinationFolder, NewName));
+  exit Move(new File(Sugar.IO.Path.Combine(DestinationFolder.FullPath, NewName)));
 end;
 
 method File.Rename(NewName: not nullable String): not nullable File;
 begin  
-  var lNewFile := Path.Combine(Path.GetParentDirectory(mapped), NewName);
-  result := Move(lNewFile);
+  var lNewFile := new File(Path.Combine(Path.GetParentDirectory(self.FullPath), NewName));
+  exit Move(lNewFile);
 end;
 
 method File.Open(Mode: FileOpenMode): not nullable FileHandle;
@@ -160,17 +160,17 @@ end;
 
 method File.ReadText(Encoding: Encoding := nil): String;
 begin
-  result := FileUtils.ReadText(mapped, Encoding);
+  exit FileUtils.ReadText(self.Name, Encoding);
 end;
 
 method File.ReadBytes: array of Byte;
 begin
-  result := FileUtils.ReadBytes(mapped);
+  exit FileUtils.ReadBytes(self.Name);
 end;
 
 method File.ReadBinary: Binary;
 begin
-  result := FileUtils.ReadBinary(mapped);
+  exit FileUtils.ReadBinary(self.Name);
 end;
 
 end.
