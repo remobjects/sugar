@@ -121,7 +121,7 @@ end;
 
 method JsonArray.ToStrings: not nullable sequence of String;
 begin
-  result := self.Where(i -> i is JsonStringValue).Select(i -> i.StringValue)
+  result := self.Where(i -> i is JsonStringValue).Select(i -> i.StringValue) as not nullable;
 end;
 
 method JsonArray.ToStringList: not nullable List<String>;
