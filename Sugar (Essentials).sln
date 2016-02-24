@@ -5,6 +5,8 @@ Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar (OS X)", "Sugar\Sugar
 EndProject
 Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar (iOS)", "Sugar\Sugar.Nougat.iOS.elements", "{91B301FC-331E-48A7-803B-4CBE3FFF6ED7}"
 EndProject
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar (tvOS)", "Sugar\Sugar.Nougat.tvOS.elements", "{D1B6AAB1-96D4-4498-AA31-E7048D68147C}"
+EndProject
 Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Cooper.Android", "Sugar\Sugar.Cooper.Android.elements", "{8DAC177A-64EB-4175-AC9C-E6B121B6F34B}"
 EndProject
 Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Sugar.Echoes", "Sugar\Sugar.Echoes.elements", "{79301A0C-1F95-4FB0-9605-207E288C6171}"
@@ -18,13 +20,13 @@ Global
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{AB7AB88B-2370-43BF-844B-54D015DA9E57}.Debug|AnyCPU.ActiveCfg = Debug|AnyCPU
-		{AB7AB88B-2370-43BF-844B-54D015DA9E57}.Debug|AnyCPU.Build.0 = Debug|AnyCPU
 		{AB7AB88B-2370-43BF-844B-54D015DA9E57}.Release|AnyCPU.ActiveCfg = Release|AnyCPU
-		{AB7AB88B-2370-43BF-844B-54D015DA9E57}.Release|AnyCPU.Build.0 = Release|AnyCPU
 		{91B301FC-331E-48A7-803B-4CBE3FFF6ED7}.Debug|AnyCPU.ActiveCfg = Debug|AnyCPU
 		{91B301FC-331E-48A7-803B-4CBE3FFF6ED7}.Debug|AnyCPU.Build.0 = Debug|AnyCPU
 		{91B301FC-331E-48A7-803B-4CBE3FFF6ED7}.Release|AnyCPU.ActiveCfg = Release|AnyCPU
 		{91B301FC-331E-48A7-803B-4CBE3FFF6ED7}.Release|AnyCPU.Build.0 = Release|AnyCPU
+		{D1B6AAB1-96D4-4498-AA31-E7048D68147C}.Debug|AnyCPU.ActiveCfg = Debug|AnyCPU
+		{D1B6AAB1-96D4-4498-AA31-E7048D68147C}.Release|AnyCPU.ActiveCfg = Release|AnyCPU
 		{8DAC177A-64EB-4175-AC9C-E6B121B6F34B}.Debug|AnyCPU.ActiveCfg = Debug|AnyCPU
 		{8DAC177A-64EB-4175-AC9C-E6B121B6F34B}.Debug|AnyCPU.Build.0 = Debug|AnyCPU
 		{8DAC177A-64EB-4175-AC9C-E6B121B6F34B}.Release|AnyCPU.ActiveCfg = Release|AnyCPU

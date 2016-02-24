@@ -30,6 +30,7 @@
         <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
         <SimulatorArchitectures>i386;x86_64</SimulatorArchitectures>
         <GenerateDebugInfo>True</GenerateDebugInfo>
+        <GenerateBitcode>True</GenerateBitcode>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
         <Optimize>True</Optimize>
@@ -55,7 +56,7 @@
         <Folder Include="Cryptography\"/>
         <Folder Include="Properties\"/>
     </ItemGroup>
-    <Import Project="$(MSBuildExtensionsPath)/RemObjects Software/Oxygene/RemObjects.Oxygene.Nougat.targets"/>
+    <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Elements\RemObjects.Elements.Nougat.targets"/>
     <PropertyGroup>
         <PreBuildEvent/>
     </PropertyGroup>
