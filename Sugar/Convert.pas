@@ -87,12 +87,12 @@ begin
   case aBase of
     2: exit ToBinaryString(aValue);
     8: exit ToOctalString(aValue);
-    10: exit aValue.ToString;
+    10: exit aValue.ToString as not nullable;
     16: exit ToHexString(aValue);
     else raise new SugarException('Unsupported base for ToString.');
   end;
   {$ELSEIF ECHOES}
-  exit System.Convert.ToString(aValue, aBase);
+  exit System.Convert.ToString(aValue, aBase) as not nullable;
   {$ENDIF}
 end;
 
@@ -102,12 +102,12 @@ begin
   case aBase of
     2: exit ToBinaryString(aValue);
     8: exit ToOctalString(aValue);
-    10: exit aValue.ToString;
+    10: exit aValue.ToString as not nullable;
     16: exit ToHexString(aValue);
     else raise new SugarException('Unsupported base for ToString.');
   end;
   {$ELSEIF ECHOES}
-  exit System.Convert.ToString(aValue, aBase);
+  exit System.Convert.ToString(aValue, aBase) as not nullable;
   {$ENDIF}
 end;
 
@@ -117,12 +117,12 @@ begin
   case aBase of
     2: exit ToBinaryString(aValue);
     8: exit ToOctalString(aValue);
-    10: exit aValue.ToString;
+    10: exit aValue.ToString as not nullable;
     16: exit ToHexString(aValue);
     else raise new SugarException('Unsupported base for ToString.');
   end;
   {$ELSEIF ECHOES}
-  exit System.Convert.ToString(aValue, aBase);
+  exit System.Convert.ToString(aValue, aBase) as not nullable;
   {$ENDIF}
 end;
 
@@ -148,30 +148,32 @@ begin
   else
     DecFormat.applyPattern(if Math.Abs(X) >= 5 then ScientificPattern else FloatPattern);
 
-  result := DecFormat.format(aValue);
+  result := DecFormat.format(aValue) as not nullable;
   var Pos := result.IndexOf("E-");
 
   if Pos = - 1 then
     exit result.Replace("E", "E+");
   {$ELSEIF ECHOES}
-  exit System.Convert.ToString(aValue, System.Globalization.CultureInfo.InvariantCulture);
+  exit System.Convert.ToString(aValue, System.Globalization.CultureInfo.InvariantCulture) as not nullable;
   {$ELSEIF NOUGAT}
-  exit aValue.ToString.ToUpper;
+  exit aValue.ToString.ToUpper();
   {$ENDIF}
 end;
 
 method Convert.ToString(aValue: Char): not nullable String;
 begin
   {$IF COOPER OR NOUGAT}
+  //74584: Two more bogus nullable warnings
   exit Sugar.String(aValue);
   {$ELSEIF ECHOES}
-  exit System.Convert.ToString(aValue);
+  exit System.Convert.ToString(aValue) as not nullable;
   {$ENDIF}
 end;
 
 method Convert.ToString(aValue: Object): not nullable String;
 begin
-  exit aValue.ToString;
+  //74584: Two more bogus nullable warnings
+  exit coalesce(aValue.ToString, '');
 end;
 
 method Convert.ToInt32(aValue: Boolean): Int32;

@@ -26,8 +26,8 @@ type
     property NegativeInfinity: Double read {$IF COOPER}Double.NEGATIVE_INFINITY{$ELSEIF ECHOES}Double.NegativeInfinity{$ELSEIF NOUGAT}-INFINITY{$ENDIF};
     property NaN: Double read {$IF COOPER}Double.NaN{$ELSEIF ECHOES}Double.NaN{$ELSEIF NOUGAT}rtl.nan{$ENDIF};
 
-    property TrueString: String read "True";
-    property FalseString: String read "False";
+    property TrueString: not nullable String read "True";
+    property FalseString: not nullable String read "False";
 
     method IsNaN(Value: Double): Boolean;
     method IsInfinity(Value: Double): Boolean;

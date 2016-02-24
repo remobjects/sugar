@@ -37,9 +37,9 @@ type
     method Substring(StartIndex: Int32; aLength: Int32): not nullable String;
     method Split(Separator: String): array of String;
     method Replace(OldValue, NewValue: String): not nullable String;
-    method ToLower: String;
-    method ToUpper: String;
-    method Trim: String;
+    method ToLower: not nullable String;
+    method ToUpper: not nullable String;
+    method Trim: not nullable String;
     method StartsWith(Value: String): Boolean;
     method EndsWith(Value: String): Boolean;
     method ToByteArray: array of Byte;
@@ -369,32 +369,32 @@ begin
   {$ENDIF}
 end;
 
-method String.ToLower: String;
+method String.ToLower: not nullable String;
 begin
   {$IF COOPER}
-  exit mapped.toLowerCase;
+  exit mapped.toLowerCase as not nullable;
   {$ELSEIF ECHOES}
-  exit mapped.ToLower;
+  exit mapped.ToLower as not nullable;
   {$ELSEIF NOUGAT}
   exit mapped.lowercaseString;
   {$ENDIF}
 end;
 
-method String.ToUpper: String;
+method String.ToUpper: not nullable String;
 begin
   {$IF COOPER}
-  exit mapped.toUpperCase;
+  exit mapped.toUpperCase as not nullable;
   {$ELSEIF ECHOES}
-  exit mapped.ToUpper;
+  exit mapped.ToUpper as not nullable;
   {$ELSEIF NOUGAT}
   exit mapped.uppercaseString;
   {$ENDIF}
 end;
 
-method String.Trim: String;
+method String.Trim: not nullable String;
 begin
   {$IF COOPER OR ECHOES}
-  exit mapped.Trim;
+  exit mapped.Trim as not nullable;
   {$ELSEIF NOUGAT}
   exit mapped.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet);
   {$ENDIF}
