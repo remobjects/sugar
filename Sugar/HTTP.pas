@@ -17,6 +17,7 @@ type
     property Content: nullable HttpRequestContent;
     property Url: not nullable Url;
     property FollowRedirects: Boolean := true;
+    property AllowCellularAccess: Boolean := true;
     
     constructor(aUrl: not nullable Url); // log
     constructor(aUrl: not nullable Url; aMode: HttpRequestMode); // log  := HttpRequestMode.Ge
@@ -431,13 +432,16 @@ begin
   {$IF COOPER}
   async begin
     var lConnection := java.net.URL(aRequest.URL).openConnection as java.net.HttpURLConnection;
+
+    for each k in aRequest.Headers.Keys do
+      lConnection.setRequestProperty(k, aRequest.Headers[k]);
     
     if assigned(aRequest.Content) then begin
       lConnection.getOutputStream().write((aRequest.Content as IHttpRequestContent).GetContentAsArray());
       lConnection.getOutputStream().flush();
     end;
 
-    var lResponse := if lConnection.ResponseCode >= 300 then new HttpResponse  withException(new SugarIOException("Unable to complete request. Error code: {0}", lConnection.responseCode)) else new HttpResponse(lConnection);
+    var lResponse := if lConnection.ResponseCode >= 300 then new HttpResponse withException(new SugarIOException("Unable to complete request. Error code: {0}", lConnection.responseCode)) else new HttpResponse(lConnection);
 
     responseCallback(lResponse);
   end;
@@ -451,8 +455,8 @@ begin
       HttpRequestMode.Post: webRequest.Method := 'POST';
       HttpRequestMode.Head: webRequest.Method := 'HEAD';
       HttpRequestMode.Put: webRequest.Method := 'PUT';
-      HttpRequestMode.Delete: webRequest.Method := 'DLETE';
-      HttpRequestMode.Patch: webRequest.Method := 'POTCH';
+      HttpRequestMode.Delete: webRequest.Method := 'DELETE';
+      HttpRequestMode.Patch: webRequest.Method := 'PATCH';
       HttpRequestMode.Options: webRequest.Method := 'OPTIONS';
       HttpRequestMode.Trace: webRequest.Method := 'TRACE';
     end;
@@ -492,15 +496,15 @@ begin
   var nsUrlRequest := new NSMutableURLRequest withURL(aRequest.Url) cachePolicy(NSURLRequestCachePolicy.ReloadIgnoringLocalAndRemoteCacheData) timeoutInterval(30);
 
   //nsUrlRequest.AllowAutoRedirect := aRequest.FollowRedirects;
-  //nsUrlRequest.allowsCellularAccess =
+  nsUrlRequest.allowsCellularAccess := aRequest.AllowCellularAccess;
   
   case aRequest.Mode of
     HttpRequestMode.Get: nsUrlRequest.HTTPMethod := 'GET';
     HttpRequestMode.Post: nsUrlRequest.HTTPMethod := 'POST';
     HttpRequestMode.Head: nsUrlRequest.HTTPMethod := 'HEAD';
     HttpRequestMode.Put: nsUrlRequest.HTTPMethod := 'PUT';
-    HttpRequestMode.Delete: nsUrlRequest.HTTPMethod := 'DLETE';
-    HttpRequestMode.Patch: nsUrlRequest.HTTPMethod := 'POTCH';
+    HttpRequestMode.Delete: nsUrlRequest.HTTPMethod := 'DELETE';
+    HttpRequestMode.Patch: nsUrlRequest.HTTPMethod := 'PATCH';
     HttpRequestMode.Options: nsUrlRequest.HTTPMethod := 'OPTIONS';
     HttpRequestMode.Trace: nsUrlRequest.HTTPMethod := 'TRACE';
   end;
@@ -536,10 +540,17 @@ begin
   {$IF COOPER}
   var lConnection := java.net.URL(aRequest.URL).openConnection as java.net.HttpURLConnection;
   
+  for each k in aRequest.Headers.Keys do
+    lConnection.setRequestProperty(k, aRequest.Headers[k]);
+    
   if assigned(aRequest.Content) then begin
     lConnection.getOutputStream().write((aRequest.Content as IHttpRequestContent).GetContentAsArray());
     lConnection.getOutputStream().flush();
   end;
+  
+  if lConnection.ResponseCode >= 300 then
+    raise new HttpResponse withException(new SugarIOException("Unable to complete request. Error code: {0}", lConnection.responseCode));
+    
   result := new HttpResponse(lConnection);
   {$ELSEIF ECHOES}
   using webRequest := System.Net.WebRequest.Create(aRequest.Url) as HttpWebRequest do begin
@@ -551,8 +562,8 @@ begin
       HttpRequestMode.Post: webRequest.Method := 'POST';
       HttpRequestMode.Head: webRequest.Method := 'HEAD';
       HttpRequestMode.Put: webRequest.Method := 'PUT';
-      HttpRequestMode.Delete: webRequest.Method := 'DLETE';
-      HttpRequestMode.Patch: webRequest.Method := 'POTCH';
+      HttpRequestMode.Delete: webRequest.Method := 'DELETE';
+      HttpRequestMode.Patch: webRequest.Method := 'PATCH';
       HttpRequestMode.Options: webRequest.Method := 'OPTIONS';
       HttpRequestMode.Trace: webRequest.Method := 'TRACE';
     end;
@@ -572,15 +583,15 @@ begin
   var nsUrlRequest := new NSMutableURLRequest withURL(aRequest.Url) cachePolicy(NSURLRequestCachePolicy.ReloadIgnoringLocalAndRemoteCacheData) timeoutInterval(30);
 
   //nsUrlRequest.AllowAutoRedirect := aRequest.FollowRedirects;
-  //nsUrlRequest.allowsCellularAccess =
+  nsUrlRequest.allowsCellularAccess := aRequest.AllowCellularAccess;
   
   case aRequest.Mode of
     HttpRequestMode.Get: nsUrlRequest.HTTPMethod := 'GET';
     HttpRequestMode.Post: nsUrlRequest.HTTPMethod := 'POST';
     HttpRequestMode.Head: nsUrlRequest.HTTPMethod := 'HEAD';
     HttpRequestMode.Put: nsUrlRequest.HTTPMethod := 'PUT';
-    HttpRequestMode.Delete: nsUrlRequest.HTTPMethod := 'DLETE';
-    HttpRequestMode.Patch: nsUrlRequest.HTTPMethod := 'POTCH';
+    HttpRequestMode.Delete: nsUrlRequest.HTTPMethod := 'DELETE';
+    HttpRequestMode.Patch: nsUrlRequest.HTTPMethod := 'PATCH';
     HttpRequestMode.Options: nsUrlRequest.HTTPMethod := 'OPTIONS';
     HttpRequestMode.Trace: nsUrlRequest.HTTPMethod := 'TRACE';
   end;
