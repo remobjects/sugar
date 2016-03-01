@@ -12,6 +12,8 @@ type
     method ParseDouble(aValue: not nullable String): Double;
     {$ENDIF}
 
+    method TrimLeadingZeros(aValue: not nullable String): not nullable String; inline;
+    method DigitForValue(aValue: Int32): Char; inline;
   public
     method ToString(aValue: Boolean): not nullable String;
     method ToString(aValue: Byte; aBase: Integer := 10): not nullable String;
@@ -232,49 +234,49 @@ begin
   {$ENDIF}
 end;
 
-{method Convert.ToHexString(aValue: Int32; aWidth: Integer := 0): not nullable String;
+method Convert.DigitForValue(aValue: Int32): Char;
 begin
-  result := ToHexString(Int64(aValue), aWidth);
-end;}
+  result := chr(55 + aValue + (((aValue - 10) shr 31) and -7)); // don't ask me how this works but it does.
+end;
+
+method Convert.TrimLeadingZeros(aValue: not nullable String): not nullable String;
+begin
+  for i: Int32 := 0 to length(aValue)-2 do
+    if aValue[i] ≠ '0' then exit aValue.Substring(i);
+  exit aValue;
+end;
 
 method Convert.ToHexString(aValue: UInt64; aWidth: Integer := 0): not nullable String;
 begin
-  if aWidth mod 2 ≠ 0 then aWidth := aWidth+1;
-
-  if aWidth > 16 then aWidth := 16
-  else if (aValue > $ffff ffff ffff ff) and (aWidth < 16) then aWidth := 16
-  else if (aValue > $ffff ffff ffff) and (aWidth < 14) then aWidth := 14
-  else if (aValue > $ffff ffff ff) and (aWidth < 12) then aWidth := 12
-  else if (aValue > $ffff ffff) and (aWidth < 10) then aWidth := 10
-  else if (aValue > $ffff ff) and (aWidth < 8) then aWidth := 8
-  else if (aValue > $ffff) and (aWidth < 6) then aWidth := 6
-  else if (aValue > $ff) and (aWidth < 2) then aWidth := 4
-  else if (aWidth < 2) then aWidth := 2;
-  
+  var lWidth := aWidth;
+  if (lWidth < 1) or (lWidth > 64/4) then lWidth := 64/4;
   result := '';
-  for i: Integer := aWidth/2 - 1 downto 0 do begin
-  
-    var lCurrentByte := aValue shr (i*8) mod $ff;
-  
-    //74540: Bogus nullability wanring, Nougat only
-    var Num := lCurrentByte shr 4 and $f;
-    result := result + chr(55 + Num + (((Num - 10) shr 31) and -7));
-    Num := lCurrentByte and $f;
-    result := result + chr(55 + Num + (((Num - 10) shr 31) and -7));
-      
-  end;
+  for i: Integer := lWidth-1 downto 0 do
+    result := result + DigitForValue(aValue shr (i*4) and $0f);
+  if aWidth = 0 then
+    result := TrimLeadingZeros(result);
 end;
 
-method Convert.ToOctalString(aValue: Int64; aWidth: Integer): not nullable String;
+method Convert.ToOctalString(aValue: Int64; aWidth: Integer := 0): not nullable String;
 begin
-  {$HINT implement!}
-  raise new SugarNotImplementedException();
+  var lWidth := aWidth;
+  if (lWidth < 1) or (lWidth > 64/3) then lWidth := 64/3;
+  result := '';
+  for i: Integer := lWidth-1 downto 0 do
+    result := result + DigitForValue(aValue shr (i*3) and $07);
+  if aWidth = 0 then
+    result := TrimLeadingZeros(result);
 end;
 
-method Convert.ToBinaryString(aValue: Int64; aWidth: Integer): not nullable String;
+method Convert.ToBinaryString(aValue: Int64; aWidth: Integer := 0): not nullable String;
 begin
-  {$HINT implement!}
-  raise new SugarNotImplementedException();
+  var lWidth := aWidth;
+  if (lWidth < 1) or (lWidth > 64) then lWidth := 64;
+  result := '';
+  for i: Integer := lWidth-1 downto 0 do
+    result := result + DigitForValue(aValue shr i and $01);
+  if aWidth = 0 then
+    result := TrimLeadingZeros(result);
 end;
 
 method Convert.ToHexString(aData: array of Byte; aOffset: Integer; aCount: Integer): not nullable String;
