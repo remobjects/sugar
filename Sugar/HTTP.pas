@@ -505,9 +505,8 @@ begin
     HttpRequestMode.Trace: nsUrlRequest.HTTPMethod := 'TRACE';
   end;
 
-  if assigned(aRequest.Content) then begin
+  if assigned(aRequest.Content) then
     nsUrlRequest.HTTPBody := (aRequest.Content as IHttpRequestContent).GetContentAsBinary();
-  end;
   
   for each k in aRequest.Headers.Keys do
     nsUrlRequest.setValue(aRequest.Headers[k]) forHTTPHeaderField(k);
@@ -516,7 +515,7 @@ begin
 
     var nsHttpUrlResponse := NSHTTPURLResponse(nsUrlResponse);
     if assigned(data) and assigned(nsHttpUrlResponse) and not assigned(error) then begin
-      var response := if nsHttpUrlResponse.statusCode >= 300 then new HttpResponse  withException(new SugarIOException("Unable to complete request. Error code: {0}", nsHttpUrlResponse.statusCode)) else new HttpResponse(data, nsHttpUrlResponse);
+      var response := if nsHttpUrlResponse.statusCode >= 300 then new HttpResponse withException(new SugarIOException("Unable to complete request. Error code: {0}", nsHttpUrlResponse.statusCode)) else new HttpResponse(data, nsHttpUrlResponse);
       responseCallback(response);
     end else if assigned(error) then begin
       var response := new HttpResponse(new SugarException withError(error));
@@ -586,24 +585,25 @@ begin
     HttpRequestMode.Trace: nsUrlRequest.HTTPMethod := 'TRACE';
   end;
 
-  if assigned(aRequest.Content) then begin
+  if assigned(aRequest.Content) then
     nsUrlRequest.HTTPBody := (aRequest.Content as IHttpRequestContent).GetContentAsBinary();
-  end;
+
+  for each k in aRequest.Headers.Keys do
+    nsUrlRequest.setValue(aRequest.Headers[k]) forHTTPHeaderField(k);
 
   var nsUrlResponse: NSURLResponse;
   var error: NSError;
   {$HIDE W28}
-  // we're aware it's deprecated. but async calls have their use in consoile apps.
+  // we're aware it's deprecated. but async calls do have their use in console apps.
   var data := NSURLConnection.sendSynchronousRequest(nsUrlRequest) returningResponse(var nsUrlResponse) error(var error);
   {$SHOW W28}
   var nsHttpUrlResponse := NSHTTPURLResponse(nsUrlResponse);
-  if assigned(data) and assigned(nsHttpUrlResponse) and not assigned(error) then begin
-    exit new HttpResponse(data, nsHttpUrlResponse);
-  end else if assigned(error) then begin
+  if assigned(data) and assigned(nsHttpUrlResponse) and not assigned(error) then
+    exit if nsHttpUrlResponse.statusCode >= 300 then new HttpResponse withException(new SugarIOException("Unable to complete request. Error code: {0}", nsHttpUrlResponse.statusCode)) else new HttpResponse(data, nsHttpUrlResponse)
+  else if assigned(error) then
     raise new SugarException withError(error)
-  end else begin
+  else
     raise new SugarException("Request failed without providing an error.");
-  end;
   {$ENDIF}
 end;
 {$ENDIF}
