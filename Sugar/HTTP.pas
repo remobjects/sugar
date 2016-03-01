@@ -461,6 +461,9 @@ begin
       HttpRequestMode.Trace: webRequest.Method := 'TRACE';
     end;
 
+    for each k in aRequest.Headers.Keys do
+      webRequest.Headers[k] := aRequest.Headers[k];
+
     if assigned(aRequest.Content) then begin
     {$IF WINDOWS_PHONE}
       // I don't want to mess with BeginGetRequestStream/EndGetRequestStream methods here
@@ -483,7 +486,7 @@ begin
 
       try
         var webResponse := webRequest.EndGetResponse(ar) as HttpWebResponse;
-        var response := new HttpResponse(webResponse);
+        var response := if webResponse.StatusCode >= 300 then new HttpResponse withException(new SugarIOException("Unable to complete request. Error code: {0}", webResponse.StatusCode)) else new HttpResponse(webResponse);
         ResponseCallback(response);
       except
         on E: Exception do
@@ -567,6 +570,9 @@ begin
       HttpRequestMode.Options: webRequest.Method := 'OPTIONS';
       HttpRequestMode.Trace: webRequest.Method := 'TRACE';
     end;
+    
+    for each k in aRequest.Headers.Keys do
+      webRequest.Headers[k] := aRequest.Headers[k];
 
     if assigned(aRequest.Content) then begin
       using stream := webRequest.GetRequestStream() do begin
@@ -577,6 +583,9 @@ begin
     end;
 
     var webResponse := webRequest.GetResponse() as HttpWebResponse;
+
+    if webResponse.StatusCode >= 300 then
+      raise new HttpResponse withException(new SugarIOException("Unable to complete request. Error code: {0}", webResponse.StatusCode));
     exit new HttpResponse(webResponse);
   end;
   {$ELSEIF NOUGAT}
