@@ -552,9 +552,9 @@ begin
   end;
   
   if lConnection.ResponseCode >= 300 then
-    raise new HttpResponse withException(new SugarIOException("Unable to complete request. Error code: {0}", lConnection.responseCode));
-    
-  result := new HttpResponse(lConnection);
+    result := new HttpResponse withException(new SugarIOException("Unable to complete request. Error code: {0}", lConnection.responseCode))
+  else
+    result := new HttpResponse(lConnection);
   {$ELSEIF ECHOES}
   using webRequest := System.Net.WebRequest.Create(aRequest.Url) as HttpWebRequest do begin
     {$IF NOT NETFX_CORE}
@@ -585,7 +585,7 @@ begin
     var webResponse := webRequest.GetResponse() as HttpWebResponse;
 
     if webResponse.StatusCode >= 300 then
-      raise new HttpResponse withException(new SugarIOException("Unable to complete request. Error code: {0}", webResponse.StatusCode));
+      exit new HttpResponse withException(new SugarIOException("Unable to complete request. Error code: {0}", webResponse.StatusCode));
     exit new HttpResponse(webResponse);
   end;
   {$ELSEIF NOUGAT}
