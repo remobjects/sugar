@@ -143,7 +143,7 @@ begin
   exit mapped.CreateFileAsync(FileName, iif(FailIfExists, Windows.Storage.CreationCollisionOption.FailIfExists, Windows.Storage.CreationCollisionOption.OpenIfExists)).Await;
 end;
 
-method Folder.Exists(aFolderName: Folder): Boolean;
+class method Folder.Exists(aFolderName: Folder): Boolean;
 begin
   // WP8 API - best API
   try
