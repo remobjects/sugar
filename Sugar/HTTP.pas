@@ -552,9 +552,8 @@ begin
   end;
   
   if lConnection.ResponseCode >= 300 then
-    result := new HttpResponse withException(new SugarIOException("Unable to complete request. Error code: {0}", lConnection.responseCode))
-  else
-    result := new HttpResponse(lConnection);
+    raise new SugarIOException("Unable to complete request. Error code: {0}", lConnection.responseCode);
+  result := new HttpResponse(lConnection);
   {$ELSEIF ECHOES}
   using webRequest := System.Net.WebRequest.Create(aRequest.Url) as HttpWebRequest do begin
     {$IF NOT NETFX_CORE}
@@ -585,8 +584,8 @@ begin
     var webResponse := webRequest.GetResponse() as HttpWebResponse;
 
     if webResponse.StatusCode >= 300 then
-      exit new HttpResponse withException(new SugarIOException("Unable to complete request. Error code: {0}", webResponse.StatusCode));
-    exit new HttpResponse(webResponse);
+      raise new SugarIOException("Unable to complete request. Error code: {0}", webResponse.StatusCode);
+    result := new HttpResponse(webResponse);
   end;
   {$ELSEIF NOUGAT}
   var nsUrlRequest := new NSMutableURLRequest withURL(aRequest.Url) cachePolicy(NSURLRequestCachePolicy.ReloadIgnoringLocalAndRemoteCacheData) timeoutInterval(30);
@@ -618,8 +617,11 @@ begin
   var data := NSURLConnection.sendSynchronousRequest(nsUrlRequest) returningResponse(var nsUrlResponse) error(var error);
   {$SHOW W28}
   var nsHttpUrlResponse := NSHTTPURLResponse(nsUrlResponse);
-  if assigned(data) and assigned(nsHttpUrlResponse) and not assigned(error) then
-    exit if nsHttpUrlResponse.statusCode >= 300 then new HttpResponse withException(new SugarIOException("Unable to complete request. Error code: {0}", nsHttpUrlResponse.statusCode)) else new HttpResponse(data, nsHttpUrlResponse)
+  if assigned(data) and assigned(nsHttpUrlResponse) and not assigned(error) then begin
+    if nsHttpUrlResponse.statusCode >= 300 then
+      raise new SugarIOException("Unable to complete request. Error code: {0}", nsHttpUrlResponse.statusCode);
+    result := new HttpResponse(data, nsHttpUrlResponse);
+  end
   else if assigned(error) then
     raise new SugarException withError(error)
   else
