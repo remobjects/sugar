@@ -27,11 +27,11 @@ type
     {$ENDIF}
     
     method __Exists: Boolean; // Workaround for 74547: Mapped types: static methods can be called with class type as parameter
+    method __CreateFolder(FailIfExists: Boolean := false);
   public
     constructor(aPath: not nullable String);
 
     method CreateFile(FileName: String; FailIfExists: Boolean := false): File;
-    method CreateFolder(FailIfExists: Boolean := false);
     method CreateSubfolder(SubfolderName: String; FailIfExists: Boolean := false): Folder;
     method Delete;
     method Rename(NewName: String): Folder;
@@ -95,13 +95,13 @@ end;
 method Folder.CreateSubfolder(SubfolderName: String; FailIfExists: Boolean := false): Folder;
 begin
   result := new Folder(Sugar.IO.Path.Combine(self.FullPath, SubfolderName));
-  result.CreateFolder(FailIfExists);
+  result.__CreateFolder(FailIfExists);
 end;
 
 class method Folder.CreateFolder(FolderName: Folder; FailIfExists: Boolean := false): Folder;
 begin
   result := Folder(FolderName);
-  result.CreateFolder(FailIfExists);
+  result.__CreateFolder(FailIfExists);
 end;
 
 
@@ -154,7 +154,7 @@ begin
   end;
 end;
 
-method Folder.CreateFolder(FailIfExists: Boolean := false);
+method Folder.__CreateFolder(FailIfExists: Boolean := false);
 begin
   mapped.CreateFolderAsync(self.FullPath, iif(FailIfExists, Windows.Storage.CreationCollisionOption.FailIfExists, Windows.Storage.CreationCollisionOption.OpenIfExists)).Await();
 end;
@@ -226,7 +226,7 @@ begin
   result := System.IO.Directory.Exists(mapped);
 end;
 
-method Folder.CreateFolder(FailIfExists: Boolean := false);
+method Folder.__CreateFolder(FailIfExists: Boolean := false);
 begin
   if System.IO.Directory.Exists(mapped) then begin
     if FailIfExists then
@@ -307,7 +307,7 @@ begin
   result := JavaFile.exists;
 end;
 
-method Folder.CreateFolder(FailIfExists: Boolean := false);
+method Folder.__CreateFolder(FailIfExists: Boolean := false);
 begin
   var lFile := JavaFile;
   if lFile.exists then begin
@@ -414,7 +414,7 @@ begin
   result := NSFileManager.defaultManager.fileExistsAtPath(self) isDirectory(var isDirectory) and isDirectory;
 end;
 
-method Folder.CreateFolder(FailIfExists: Boolean := false);
+method Folder.__CreateFolder(FailIfExists: Boolean := false);
 begin
   var isDirectory := false;
   if NSFileManager.defaultManager.fileExistsAtPath(mapped) isDirectory(var isDirectory) then begin
