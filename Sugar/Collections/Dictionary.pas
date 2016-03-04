@@ -10,8 +10,8 @@ type
   Dictionary<T, U> = public class mapped to {$IF COOPER}java.util.HashMap<T,U>{$ELSEIF ECHOES}System.Collections.Generic.Dictionary<T,U>{$ELSEIF NOUGAT}Foundation.NSMutableDictionary where T is class, U is class;{$ENDIF}
   private
   public
-    method GetKeys: array of T;
-    method GetValues: array of U;
+    method GetKeys: sequence of T;
+    method GetValues: sequence of U;
     method GetItem(Key: T): U;
     method SetItem(Key: T; Value: U);
     constructor; mapped to constructor();
@@ -28,19 +28,13 @@ type
     method ForEach(Action: Action<KeyValuePair<T, U>>);
 
     property Item[Key: T]: U read GetItem write SetItem; default;
-    property Keys: array of T read GetKeys;
-    property Values: array of U read GetValues;
+    property Keys: sequence of T read GetKeys;
+    property Values: sequence of U read GetValues;
     property Count: Integer read {$IF COOPER}mapped.size{$ELSEIF ECHOES OR NOUGAT}mapped.Count{$ENDIF};
   end;
 
   DictionaryHelpers = public static class
   public
-  {$IF ECHOES}
-    method ToArray<T>(Value: System.Collections.Generic.IEnumerable<T>): array of T;
-  {$ENDIF}
-    {$IFDEF NOUGAT}
-    method ToArray<T>(val: NSArray): array of T;
-    {$ENDIF}
     {$IFDEF COOPER}
     method GetSequence<T, U>(aSelf: java.util.HashMap<T,U>) : sequence of KeyValuePair<T,U>; iterator;
     method GetItem<T, U>(aSelf: java.util.HashMap<T,U>; aKey: T): U;
@@ -111,25 +105,25 @@ begin
   {$ENDIF}
 end;
 
-method Dictionary<T, U>.GetKeys: array of T;
+method Dictionary<T, U>.GetKeys: sequence of T;
 begin
   {$IF COOPER}
-  exit mapped.keySet.toArray(new T[0]);
+  exit mapped.keySet;
   {$ELSEIF ECHOES}
-  exit DictionaryHelpers.ToArray<T>(mapped.Keys);
+  exit mapped.Keys;
   {$ELSEIF NOUGAT}
-  exit DictionaryHelpers.ToArray<T>(mapped.allKeys);
+  exit mapped.allKeys;
   {$ENDIF}
 end;
 
-method Dictionary<T, U>.GetValues: array of U;
+method Dictionary<T, U>.GetValues: sequence of U;
 begin
   {$IF COOPER}
-  exit mapped.values.toArray(new U[0]);
+  exit mapped.values;
   {$ELSEIF ECHOES}
-  exit DictionaryHelpers.ToArray<U>(mapped.Values);
+  exit mapped.Values;
   {$ELSEIF NOUGAT}
-  exit DictionaryHelpers.ToArray<U>(mapped.allValues);
+  exit mapped.allValues;
   {$ENDIF}
 end;
 
@@ -155,21 +149,7 @@ begin
   {$ENDIF}
 end;
 
-{$IF ECHOES}
-method DictionaryHelpers.ToArray<T>(Value: System.Collections.Generic.IEnumerable<T>): array of T;
-begin
-  exit Value.ToArray;
-end;
-{$ENDIF}
-
 {$IFDEF NOUGAT}
-method DictionaryHelpers.ToArray<T>(val: NSArray): array of T;
-begin
-  result := new T[val.count];
-  for i: Integer := 0 to val.count - 1 do begin
-    result[i] := val.objectAtIndex(i);
-  end;
-end;
 
 method DictionaryHelpers.Add<T, U>(aSelf: NSMutableDictionary; aKey: T; aVal: U);
 begin
@@ -213,9 +193,8 @@ end;
 
 method DictionaryHelpers.Foreach<T, U>(aSelf: Dictionary<T, U>; aAction: Action<KeyValuePair<T, U>>);
 begin
-  var lKeys := aSelf.Keys;
-  for i: Integer := 0 to length(lKeys) - 1 do
-    aAction(new KeyValuePair<T,U>(T(lKeys[i]), U(aSelf.Item[lKeys[i]])));
+  for each el in aSelf.Keys do 
+    aAction(new KeyValuePair<T,U>(T(el), U(aSelf.Item[el])));
 end;
 
 method Dictionary<T, U>.TryGetValue(aKey: T; out aValue: U): Boolean;
