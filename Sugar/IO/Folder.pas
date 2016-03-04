@@ -25,6 +25,8 @@ type
     {$ELSEIF NOUGAT}
     method Combine(BasePath: String; SubPath: String): String;
     {$ENDIF}
+    
+    method __Exists: Boolean; // Workaround for 74547: Mapped types: static methods can be called with class type as parameter
   public
     constructor(aPath: not nullable String);
 
@@ -34,14 +36,12 @@ type
     method Delete;
     method Rename(NewName: String): Folder;
 
-    //workaround for 74547: Mapped types: static methods can be called with class type as parameter
-    //method Exists: Boolean;
     method GetFile(FileName: String): File;
     method GetFiles: not nullable List<File>;
     method GetSubfolders: not nullable List<Folder>;
 
     class method CreateFolder(FolderName: Folder; FailIfExists: Boolean := false): Folder;
-    class method Exists(aFolderName: Folder): Boolean;
+    class method Exists(FolderName: Folder): Boolean;
 
     class method UserHomeFolder: Folder;
 
@@ -87,10 +87,10 @@ begin
   {$ENDIF}
 end;
 
-{method Folder.Exists(): Boolean;
+class method Folder.Exists(FolderName: Folder): Boolean;
 begin
-  result := Folder.Exists(mapped);
-end;}
+  result := FolderName.__Exists;
+end;
 
 method Folder.CreateSubfolder(SubfolderName: String; FailIfExists: Boolean := false): Folder;
 begin
@@ -143,11 +143,11 @@ begin
   exit mapped.CreateFileAsync(FileName, iif(FailIfExists, Windows.Storage.CreationCollisionOption.FailIfExists, Windows.Storage.CreationCollisionOption.OpenIfExists)).Await;
 end;
 
-class method Folder.Exists(aFolderName: Folder): Boolean;
+method Folder.__Exists(): Boolean;
 begin
   // WP8 API - best API
   try
-    var item := Windows.Storage.ApplicationData.Current.LocalFolder.GetItemAsync(aFolderName).Await();
+    var item := Windows.Storage.ApplicationData.Current.LocalFolder.GetItemAsync(mapped.Name).Await();
     exit assigned(item);
   except
     exit false;
@@ -221,9 +221,9 @@ begin
   exit NewFileName;
 end;
 
-class method Folder.Exists(aFolderName: Folder): Boolean;
+method Folder.__Exists: Boolean;
 begin
-  result := System.IO.Directory.Exists(aFolderName);
+  result := System.IO.Directory.Exists(mapped);
 end;
 
 method Folder.CreateFolder(FailIfExists: Boolean := false);
@@ -302,9 +302,9 @@ begin
   {$ENDIF}
 end;
 
-class method Folder.Exists(aFolderName: Folder): Boolean;
+method Folder.__Exists: Boolean;
 begin
-  result := Folder(aFolderName).JavaFile.exists;
+  result := JavaFile.exists;
 end;
 
 method Folder.CreateFolder(FailIfExists: Boolean := false);
@@ -408,10 +408,10 @@ begin
   end;
 end;
 
-class method Folder.Exists(aFolderName: Folder): Boolean;
+method Folder.__Exists: Boolean;
 begin
   var isDirectory := false;
-  result := NSFileManager.defaultManager.fileExistsAtPath(aFolderName) isDirectory(var isDirectory) and isDirectory;
+  result := NSFileManager.defaultManager.fileExistsAtPath(self) isDirectory(var isDirectory) and isDirectory;
 end;
 
 method Folder.CreateFolder(FailIfExists: Boolean := false);
