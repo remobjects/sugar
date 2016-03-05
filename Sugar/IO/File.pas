@@ -160,17 +160,17 @@ end;
 
 method File.ReadText(Encoding: Encoding := nil): String;
 begin
-  exit FileUtils.ReadText(self.Name, Encoding);
+  exit FileUtils.ReadText(self.FullPath, Encoding);
 end;
 
 method File.ReadBytes: array of Byte;
 begin
-  exit FileUtils.ReadBytes(self.Name);
+  exit FileUtils.ReadBytes(self.FullPath);
 end;
 
 method File.ReadBinary: Binary;
 begin
-  exit FileUtils.ReadBinary(self.Name);
+  exit FileUtils.ReadBinary(self.FullPath);
 end;
 
 end.

@@ -403,7 +403,7 @@ begin
 
   if not NSFileManager.defaultManager.fileExistsAtPath(result) then begin
     var lError: NSError := nil;
-    if not NSFileManager.defaultManager.createDirectoryAtPath(result) withIntermediateDirectories(false) attributes(nil) error(var lError) then
+    if not NSFileManager.defaultManager.createDirectoryAtPath(result) withIntermediateDirectories(true) attributes(nil) error(var lError) then
       raise new SugarNSErrorException(lError);
   end;
 end;
@@ -425,7 +425,7 @@ begin
   end
   else begin
     var lError: NSError := nil;
-    if not NSFileManager.defaultManager.createDirectoryAtPath(mapped) withIntermediateDirectories(false) attributes(nil) error(var lError) then
+    if not NSFileManager.defaultManager.createDirectoryAtPath(mapped) withIntermediateDirectories(true) attributes(nil) error(var lError) then
       raise new SugarNSErrorException(lError);
   end;
 end;
