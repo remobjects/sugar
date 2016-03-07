@@ -490,7 +490,7 @@ begin
         ResponseCallback(response);
       except
         on E: Exception do
-          ResponseCallback(new HttpResponse(E));
+          ResponseCallback(new HttpResponse withException(E));
       end;
     
     end, nil);
