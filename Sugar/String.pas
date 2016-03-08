@@ -40,6 +40,7 @@ type
     method ToLower: not nullable String;
     method ToUpper: not nullable String;
     method Trim: not nullable String;
+    //method Trim(aCharacters: array of Char): not nullable String;
     method StartsWith(Value: String): Boolean;
     method EndsWith(Value: String): Boolean;
     method ToByteArray: array of Byte;
@@ -393,12 +394,28 @@ end;
 
 method String.Trim: not nullable String;
 begin
-  {$IF COOPER OR ECHOES}
-  exit mapped.Trim as not nullable;
+  {$IF COOPER}
+  result := mapped.trim() as not nullable; // trims #$00-#$20
+  {$ELSEIF ECHOES}
+  result := mapped.Trim() as not nullable; // Trim() does include CR/LF and Unicode whitespace
   {$ELSEIF NOUGAT}
-  exit mapped.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet);
+  result := mapped.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet);
   {$ENDIF}
 end;
+
+(*method String.Trim(aCharacters: array of Char): not nullable String;
+begin
+  {$IF COOPER}
+  result := mapped.trim(aCharacters) as not nullable;
+  {$ELSEIF ECHOES}
+  result := mapped.Trim(aCharacters) as not nullable;
+  {$ELSEIF NOUGAT}
+  var lCharacterString := '';
+  for each c in aCharacters do
+    lCharacterString := lCharacterString+c;
+  result := mapped.stringByTrimmingCharactersInSet(NSCharacterSet.characterSetWithCharactersInString(lCharacterString));
+  {$ENDIF}
+end;*)
 
 method String.StartsWith(Value: String): Boolean;
 begin
