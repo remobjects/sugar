@@ -610,12 +610,39 @@ begin
   for each k in aRequest.Headers.Keys do
     nsUrlRequest.setValue(aRequest.Headers[k]) forHTTPHeaderField(k);
 
-  var nsUrlResponse: NSURLResponse;
+ var nsUrlResponse : NSURLResponse;
   var error: NSError;
   {$HIDE W28}
   // we're aware it's deprecated. but async calls do have their use in console apps.
   var data := NSURLConnection.sendSynchronousRequest(nsUrlRequest) returningResponse(var nsUrlResponse) error(var error);
   {$SHOW W28}
+(*
+  var data : NSData;
+  
+  var outerExecutionBlock: NSBlockOperation := NSBlockOperation.blockOperationWithBlock(method begin
+      
+    var semaphore := dispatch_semaphore_create(0);
+    var session := NSURLSession.sharedSession; 
+      
+    var task := session. dataTaskWithRequest(nsUrlRequest) completionHandler(method (internalData:NSData; internalResponse:NSURLResponse; internalError:NSError)begin
+    
+      nsUrlResponse := internalResponse;
+      error := internalError;
+      data := internalData;
+        
+      dispatch_semaphore_signal(semaphore);
+    end);
+        
+    task.resume;
+
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);      
+
+  end);
+    
+  var workerQueue := new NSOperationQueue();
+  workerQueue.addOperations([outerExecutionBlock]) waitUntilFinished(true);
+  
+*)
   var nsHttpUrlResponse := NSHTTPURLResponse(nsUrlResponse);
   if assigned(data) and assigned(nsHttpUrlResponse) and not assigned(error) then begin
     if nsHttpUrlResponse.statusCode >= 300 then
