@@ -31,6 +31,10 @@ type
     property Keys: sequence of T read GetKeys;
     property Values: sequence of U read GetValues;
     property Count: Integer read {$IF COOPER}mapped.size{$ELSEIF ECHOES OR NOUGAT}mapped.Count{$ENDIF};
+
+    {$IF NOUGAT}
+    operator Implicit(aDictionary: NSDictionary<T,U>): Dictionary<T,U>;
+    {$ENDIF}
   end;
 
   DictionaryHelpers = public static class
@@ -218,6 +222,14 @@ begin
 end;
 {$ENDIF}
     
-
+{$IF NOUGAT}
+operator Dictionary<T,U>.Implicit(aDictionary: NSDictionary<T,U>): Dictionary<T,U>;
+begin
+  if aDictionary is NSMutableDictionary then
+    result := Dictionary<T,U>(aDictionary)
+  else
+    result := Dictionary<T,U>(aDictionary:mutableCopy);
+end;
+{$ENDIF}
 
 end.

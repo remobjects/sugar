@@ -41,6 +41,10 @@ type
 
     method ToArray: array of Byte;
     property Length: Integer read {$IF COOPER}fData.size{$ELSEIF ECHOES}mapped.Length{$ELSEIF NOUGAT}mapped.length{$ENDIF};
+    
+    {$IF NOUGAT}
+    operator Implicit(aData: NSData): Binary;
+    {$ENDIF}
   end;
 
 implementation
@@ -208,5 +212,15 @@ begin
   mapped.setLength(0);
   {$ENDIF}  
 end;
+
+{$IF NOUGAT}
+operator Binary.Implicit(aData: NSData): Binary;
+begin
+  if aData is NSMutableData then
+    result := Binary(aData)
+  else
+    result := Binary(aData:mutableCopy);
+end;
+{$ENDIF}
 
 end.

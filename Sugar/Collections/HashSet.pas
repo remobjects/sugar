@@ -21,6 +21,10 @@ type
     method SetEquals(&Set: HashSet<T>): Boolean;
 
     property Count: Integer read {$IF ECHOES OR NOUGAT}mapped.Count{$ELSE}mapped.size{$ENDIF};
+
+    {$IF NOUGAT}
+    operator Implicit(aSet: NSSet<T>): HashSet<T>;
+    {$ENDIF}
   end;
 
   HashsetHelpers = public class
@@ -126,6 +130,18 @@ method HashSet<T>.IsSubsetOf(&Set: HashSet<T>): Boolean;
 begin
   exit HashsetHelpers.IsSubsetOf(self, &Set);
 end;
+
+{$IF NOUGAT}
+operator HashSet<T>.Implicit(aSet: NSSet<T>): HashSet<T>;
+begin
+  if aSet is NSMutableArray then
+    result := HashSet<T>(aSet)
+  else
+    result := HashSet<T>(aSet:mutableCopy);
+end;
+{$ENDIF}
+
+{ HashsetHelpers }
 
 class method HashsetHelpers.Foreach<T>(aSelf: HashSet<T>; aAction: Action<T>);
 begin

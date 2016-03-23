@@ -54,6 +54,10 @@ type
     
     property Count: Integer read {$IF COOPER}mapped.Size{$ELSEIF ECHOES}mapped.Count{$ELSEIF NOUGAT}mapped.count{$ENDIF};
     property Item[i: Integer]: T read GetItem write SetItem; default;
+
+    {$IF NOUGAT}
+    operator Implicit(aArray: NSArray<T>): List<T>;
+    {$ENDIF}
   end;
   
   Predicate<T> = public block (Obj: T): Boolean;
@@ -331,18 +335,31 @@ begin
 end;
 
 {$IF NOUGAT}
+operator List<T>.Implicit(aArray: NSArray<T>): List<T>;
+begin
+  if aArray is NSMutableArray then
+    result := List<T>(aArray)
+  else
+    result := List<T>(aArray:mutableCopy);
+end;
+{$ENDIF}
+
+{ NullHelper }
+
+{$IF NOUGAT}
 class method NullHelper.ValueOf(Value: id): id;
 begin
   exit if Value = NSNull.null then nil else if Value = nil then NSNull.null else Value;
 end;
 {$ENDIF}
 
+{ ListHelpers }
+
 method ListHelpers.AddRange<T>(aSelf: List<T>; aArr: array of T);
 begin
   for i: Integer := 0 to length(aArr) - 1 do
     aSelf.Add(aArr[i]);
 end;
-
 
 method ListHelpers.FindIndex<T>(aSelf: List<T>;StartIndex: Integer; aCount: Integer; Match: Predicate<T>): Integer;
 begin
@@ -364,7 +381,6 @@ begin
   exit -1;
 end;
 
-
 method ListHelpers.Find<T>(aSelf: List<T>; Match: Predicate<T>): T;
 begin
   if Match = nil then
@@ -377,7 +393,6 @@ begin
 
   exit &default(T);
 end;
-
 
 method ListHelpers.FindAll<T>(aSelf: List<T>; Match: Predicate<T>): List<T>;
 begin
