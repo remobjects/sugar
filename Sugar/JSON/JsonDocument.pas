@@ -10,23 +10,22 @@ uses
 type
   JsonDocument = public class
   private
-    fRootObject: JsonObject;
+    fRootNode: not nullable JsonNode;
 
     method GetRootObjectItem(Key: String): nullable JsonNode;
     method SetRootObjectItem(Key: String; Value: JsonNode);
     method GetRootObjectKeys: not nullable sequence of String;
 
-    constructor(aRootObject: not nullable JsonObject);
   protected
   public
-    property RootObject: JsonObject read fRootObject;
+    property Root: not nullable JsonNode read fRootNode;
 
     class method FromFile(aFile: not nullable File): not nullable JsonDocument;
     class method FromBinary(aBinary: not nullable Binary; aEncoding: Encoding := nil): not nullable JsonDocument;
     class method FromString(aString: not nullable String): not nullable JsonDocument;
     class method CreateDocument: not nullable JsonDocument;
 
-    constructor();
+    constructor(aRoot: not nullable JsonNode);
     
     {method Save(aFile: File);
     method Save(aFile: File; XmlDeclaration: XmlDocumentDeclaration);
@@ -34,8 +33,9 @@ type
     method {$IF NOUGAT}description: Foundation.NSString{$ELSEIF COOPER}ToString: java.lang.String{$ELSEIF ECHOES}ToString: System.String{$ENDIF}; override;
     method ToJson: String;
 
-    property Item[Key: String]: nullable JsonNode read GetRootObjectItem write SetRootObjectItem; default; virtual;
-    property Keys: not nullable sequence of String read GetRootObjectKeys; virtual;
+    [Obsolete("Use Root: JsonNode, instead")] property RootObject: not nullable JsonObject read fRootNode as JsonObject;
+    [Obsolete("Use Root: JsonNode, instead")] property Item[Key: String]: nullable JsonNode read GetRootObjectItem write SetRootObjectItem; default; virtual;
+    [Obsolete("Use Root: JsonNode, instead")] property Keys: not nullable sequence of String read GetRootObjectKeys; virtual;
   end;
 
   JsonNode = public abstract class
@@ -72,14 +72,9 @@ implementation
 
 { JsonDocument }
 
-constructor JsonDocument;
+constructor JsonDocument(aRoot: not nullable JsonNode);
 begin
-  fRootObject := new JsonObject();
-end;
-
-constructor JsonDocument(aRootObject: not nullable JsonObject);
-begin
-  fRootObject := aRootObject;
+  fRootNode := aRoot;
 end;
 
 class method JsonDocument.FromFile(aFile: not nullable File): not nullable JsonDocument;
@@ -105,27 +100,27 @@ end;
 
 method JsonDocument.{$IF NOUGAT}description: Foundation.NSString{$ELSEIF COOPER}ToString: java.lang.String{$ELSEIF ECHOES}ToString: System.String{$ENDIF};
 begin
-  result := fRootObject.ToJson();
+  result := fRootNode.ToJson();
 end;
 
 method JsonDocument.ToJson: String;
 begin
-  result := fRootObject.ToJson();
+  result := fRootNode.ToJson();
 end;
 
 method JsonDocument.GetRootObjectItem(Key: String): nullable JsonNode;
 begin
-  result := fRootObject[Key];
+  result := fRootNode[Key];
 end;
 
 method JsonDocument.SetRootObjectItem(Key: String; Value: JsonNode);
 begin
-  fRootObject[Key] := Value;
+  fRootNode[Key] := Value;
 end;
 
 method JsonDocument.GetRootObjectKeys: not nullable sequence of String;
 begin
-  result := fRootObject.Keys;
+  result := fRootNode.Keys;
 end;
 
 { JsonNode }
