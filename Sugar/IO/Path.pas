@@ -126,6 +126,7 @@ end;
 
 method Path.GetFileNameWithoutExtension(FileName: not nullable String): not nullable String;
 begin
+  FileName := GetFileName(FileName);
   var lIndex := FileName.LastIndexOf(".");
   
   if lIndex <> -1 then
