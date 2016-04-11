@@ -15,6 +15,8 @@ type
 
     property Key: T read write; readonly;
     property Value: U read write; readonly;
+    
+    method GetTuple: tuple of (T,U);
   end;
 
   {$IF Cooper}
@@ -43,17 +45,22 @@ begin
     exit false;
 
   var Item := KeyValuePair<T, U>(Obj);
-  exit Key.Equals(Item.Key) and ( ((Value = nil) and (Item.Value = nil)) or ((Value <> nil) and Value.Equals(Item.Value)));
+  result := Key.Equals(Item.Key) and ( ((Value = nil) and (Item.Value = nil)) or ((Value <> nil) and Value.Equals(Item.Value)));
 end;
 
 method KeyValuePair<T, U>.{$IF COOPER}hashCode: Integer{$ELSEIF ECHOES}GetHashCode: Integer{$ELSEIF NOUGAT}hash: Foundation.NSUInteger{$ENDIF};
 begin
-  exit Key.GetHashCode + Value:GetHashCode;
+  result := Key.GetHashCode + Value:GetHashCode;
 end;
 
 method KeyValuePair<T, U>.{$IF COOPER}ToString: java.lang.String{$ELSEIF ECHOES}ToString: System.String{$ELSEIF NOUGAT}description: Foundation.NSString{$ENDIF};
 begin
-  exit String.Format("Key: {0} Value: {1}", Key, Value);
+  result := String.Format("Key: {0} Value: {1}", Key, Value);
+end;
+
+method KeyValuePair<T, U>.GetTuple: tuple of (T,U);
+begin
+  result := (Key, Value);
 end;
 
 end.
