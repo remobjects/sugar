@@ -19,7 +19,7 @@ type
     method ToString(aValue: Byte; aBase: Integer := 10): not nullable String;
     method ToString(aValue: Int32; aBase: Integer := 10): not nullable String;
     method ToString(aValue: Int64; aBase: Integer := 10): not nullable String;
-    method ToString(aValue: Double): not nullable String;
+    method ToString(aValue: Double; aDigitsAfterDecimalPoint: Integer := -1): not nullable String;
     method ToString(aValue: Char): not nullable String;
     method ToString(aValue: Object): not nullable String;
 
@@ -129,7 +129,7 @@ begin
   {$ENDIF}
 end;
 
-method Convert.ToString(aValue: Double): not nullable String;
+method Convert.ToString(aValue: Double; aDigitsAfterDecimalPoint: Integer := -1): not nullable String;
 begin
   if Consts.IsNegativeInfinity(aValue) then
     exit "-Infinity";
@@ -143,8 +143,8 @@ begin
   {$IF COOPER}
   var DecFormat: java.text.DecimalFormat := java.text.DecimalFormat(java.text.DecimalFormat.getInstance(Sugar.Cooper.LocaleUtils.ForLanguageTag("en-US")));
   var X := Math.Log10(Math.Abs(aValue));
-  var FloatPattern := "#.###############";
-  var ScientificPattern := "#.###############E00";
+  var FloatPattern := if aDigitsAfterDecimalPoint < 0 then "#.###############" else "#."+new String('#', aDigitsAfterDecimalPoint);
+  var ScientificPattern := FloatPattern+"E00";
 
   if Math.Sign(X) > 0 then
     DecFormat.applyPattern(if Math.Abs(X) >= 15 then ScientificPattern else FloatPattern)
@@ -152,14 +152,20 @@ begin
     DecFormat.applyPattern(if Math.Abs(X) >= 5 then ScientificPattern else FloatPattern);
 
   result := DecFormat.format(aValue) as not nullable;
-  var Pos := result.IndexOf("E-");
 
-  if Pos = - 1 then
-    exit result.Replace("E", "E+");
+  if result.IndexOf("E-") > -1 then
+    result := result.Replace("E", "E+");
   {$ELSEIF ECHOES}
-  exit System.Convert.ToString(aValue, System.Globalization.CultureInfo.InvariantCulture) as not nullable;
+  if aDigitsAfterDecimalPoint < 0 then
+    result := System.Convert.ToString(aValue, System.Globalization.CultureInfo.InvariantCulture) as not nullable
+  else
+    result := aValue.ToString("0."+new String('0', aDigitsAfterDecimalPoint), System.Globalization.CultureInfo.InvariantCulture) as not nullable
   {$ELSEIF NOUGAT}
-  exit aValue.ToString.ToUpper();
+  if aDigitsAfterDecimalPoint < 0 then
+    result := aValue.ToString.ToUpper()
+  else
+    //{$HIDE NW3}result := NSString.stringWithFormat("%0."+new String('0', aDigitsAfterDecimalPoint)+"f", aValue) as not nullable;{$SHOW NW3}
+    result := NSString.stringWithFormat("%0.*f", aDigitsAfterDecimalPoint, aValue) as not nullable;
   {$ENDIF}
 end;
 

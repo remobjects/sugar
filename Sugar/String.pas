@@ -11,6 +11,7 @@ type
     constructor(Value: array of Byte; Encoding: Encoding := nil);
     constructor(Value: array of Char);
     constructor(Value: array of Char; Offset: Integer; Count: Integer);
+    constructor(aChar: Char; aCount: Integer);
 
     class operator Add(Value1: String; Value2: String): not nullable String;
     class operator Implicit(Value: Char): String;
@@ -94,6 +95,20 @@ begin
   exit new System.String(Value, Offset, Count);
   {$ELSEIF NOUGAT}
   exit new Foundation.NSString withCharacters(@Value[Offset]) length(Count);
+  {$ENDIF}
+end;
+
+constructor String(aChar: Char; aCount: Integer);
+begin
+  {$IF COOPER}
+  var chars := new Char[aCount];
+  for i: Integer := 0 to aCount-1 do
+    chars[i] := aChar;
+  result := new java.lang.String(chars);
+  {$ELSEIF ECHOES}
+  result := new System.String(aChar, aCount);
+  {$ELSEIF NOUGAT}
+  result := Foundation.NSString("").stringByPaddingToLength(aCount) withString(Foundation.NSString.stringWithFormat("%c", aChar)) startingAtIndex(0);
   {$ENDIF}
 end;
 
