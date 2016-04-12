@@ -44,6 +44,9 @@ type
     method ToString(Format: String): String;
     method ToString(Format: String; Culture: String): String;
 
+    method ToShortDateString: String;
+    method ToShortTimeString: String;
+
     {$IF COOPER}
     method ToString: java.lang.String; override;
     {$ELSEIF ECHOES}
@@ -233,14 +236,14 @@ end;
 method DateTime.ToString(Format: String; Culture: String): String;
 begin
   {$IF COOPER}
-  var Formatter: java.text.SimpleDateFormat;
+  var lFormatter: java.text.SimpleDateFormat;
 
   if String.IsNullOrEmpty(Culture) then
-    Formatter := new java.text.SimpleDateFormat(DateFormatter.Format(Format))
+    lFormatter := new java.text.SimpleDateFormat(DateFormatter.Format(Format))
   else    
-    Formatter := new java.text.SimpleDateFormat(DateFormatter.Format(Format), Sugar.Cooper.LocaleUtils.ForLanguageTag(Culture));
+    lFormatter := new java.text.SimpleDateFormat(DateFormatter.Format(Format), Sugar.Cooper.LocaleUtils.ForLanguageTag(Culture));
     
-  exit Formatter.format(mapped.Time);
+  exit lFormatter.format(mapped.Time);
   {$ELSEIF ECHOES}
   if Format = "" then
     exit "";
@@ -250,15 +253,13 @@ begin
   else
     exit mapped.ToString(Format, new System.Globalization.CultureInfo(Culture));
   {$ELSEIF NOUGAT}
-  var Formatter: NSDateFormatter := new NSDateFormatter();
-
+  var lFormatter := new NSDateFormatter();
   if not String.IsNullOrEmpty(Culture) then begin
     var Locale := new NSLocale withLocaleIdentifier(Culture);
-    Formatter.locale := Locale;
+    lFormatter.locale := Locale;
   end;
-
-  Formatter.setDateFormat(DateFormatter.Format(Format));
-  exit Formatter.stringFromDate(mapped);
+  lFormatter.setDateFormat(DateFormatter.Format(Format));
+  exit lFormatter.stringFromDate(mapped);
   {$ENDIF}
 end;
 
@@ -272,7 +273,37 @@ method DateTime.ToString: System.String;
 begin
   exit ToString(DEFAULT_FORMAT);
 end;
-{$ELSEIF NOUGAT}
+{$ENDIF}
+
+method DateTime.ToShortDateString: String;
+begin
+  {$IF COOPER}
+  java.text.DateFormat.getDateInstance().format(mapped.Time);
+  {$ELSEIF ECHOES}
+  result := mapped.ToShortDateString;
+  {$ELSEIF NOUGAT}
+  var lFormatter: NSDateFormatter := new NSDateFormatter();
+  lFormatter.dateStyle := NSDateFormatterStyle.ShortStyle;
+  lFormatter.timeStyle := NSDateFormatterStyle.NoStyle;
+  result := lFormatter.stringFromDate(mapped);
+  {$ENDIF}
+end;
+
+method DateTime.ToShortTimeString: String;
+begin
+  {$IF COOPER}
+  java.text.DateFormat.getTimeInstance().format(mapped.Time);
+  {$ELSEIF ECHOES}
+  result := mapped.ToShortTimeString;
+  {$ELSEIF NOUGAT}
+  var lFormatter: NSDateFormatter := new NSDateFormatter();
+  lFormatter.dateStyle := NSDateFormatterStyle.NoStyle;
+  lFormatter.timeStyle := NSDateFormatterStyle.ShortStyle;
+  result := lFormatter.stringFromDate(mapped);
+  {$ENDIF}
+end;
+
+{$IF NOUGAT}
 method DateTimeHelpers.AdjustDate(aSelf: NSDate; Component: NSCalendarUnit; Value: Integer): DateTime;
 begin
   var Components: NSDateComponents := new NSDateComponents();  
@@ -326,31 +357,59 @@ end;
 
 operator DateTime.Equal(a: DateTime; b: DateTime): Boolean;
 begin
-  exit a.Ticks = b.Ticks; 
+  {$IF NOT ECHOES}
+  if (Object(a) = nil) and (Object(b) = nil) then exit true;
+  if (Object(a) = nil) or (Object(b) = nil) then exit false;
+  {$ENDIF}
+  exit a.Ticks = b.Ticks;
 end;
 
 operator DateTime.NotEqual(a: DateTime; b: DateTime): Boolean;
 begin
+  {$IF NOT ECHOES}
+  if (Object(a) = nil) and (Object(b) = nil) then exit false;
+  if (Object(a) = nil) or (Object(b) = nil) then exit true;
+  {$ENDIF}
   exit a.Ticks <> b.Ticks;
 end;
 
 operator DateTime.Less(a: DateTime; b: DateTime): Boolean;
 begin
+  {$IF NOT ECHOES}
+  if (Object(a) = nil) and (Object(b) = nil) then exit false;
+  if (Object(a) = nil) then exit true;
+  if (Object(b) = nil) then exit false;
+  {$ENDIF}
   exit a.Ticks < b.Ticks;
 end;
 
 operator DateTime.LessOrEqual(a: DateTime; b: DateTime): Boolean;
 begin
+  {$IF NOT ECHOES}
+  if (Object(a) = nil) and (Object(b) = nil) then exit true;
+  if (Object(a) = nil) then exit true;
+  if (Object(b) = nil) then exit false;
+  {$ENDIF}
   exit a.Ticks <= b.Ticks;
 end;
 
 operator DateTime.Greater(a: DateTime; b: DateTime): Boolean;
 begin
+  {$IF NOT ECHOES}
+  if (Object(a) = nil) and (Object(b) = nil) then exit false;
+  if (Object(a) = nil) then exit false;
+  if (Object(b) = nil) then exit true;
+  {$ENDIF}
   exit a.Ticks > b.Ticks;
 end;
 
 operator DateTime.GreaterOrEqual(a: DateTime; b: DateTime): Boolean;
 begin
+  {$IF NOT ECHOES}
+  if (Object(a) = nil) and (Object(b) = nil) then exit true;
+  if (Object(a) = nil) then exit false;
+  if (Object(b) = nil) then exit true;
+  {$ENDIF}
   exit a.Ticks >= b.Ticks;
 end;
 
