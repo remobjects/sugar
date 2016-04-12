@@ -280,7 +280,11 @@ begin
   {$IF COOPER}
   java.text.DateFormat.getDateInstance().format(mapped.Time);
   {$ELSEIF ECHOES}
-  result := mapped.ToShortDateString;
+    {$IF WINDOWS_PHONE OR NETFX_CORE}
+    result := mapped.ToString;
+    {$ELSE}
+    result := mapped.ToShortDateString;
+    {$ENDIF}
   {$ELSEIF NOUGAT}
   var lFormatter: NSDateFormatter := new NSDateFormatter();
   lFormatter.dateStyle := NSDateFormatterStyle.ShortStyle;
@@ -294,7 +298,11 @@ begin
   {$IF COOPER}
   java.text.DateFormat.getTimeInstance().format(mapped.Time);
   {$ELSEIF ECHOES}
-  result := mapped.ToShortTimeString;
+    {$IF WINDOWS_PHONE OR NETFX_CORE}
+    result := mapped.ToString;
+    {$ELSE}
+    result := mapped.ToShortTimeString;
+    {$ENDIF}
   {$ELSEIF NOUGAT}
   var lFormatter: NSDateFormatter := new NSDateFormatter();
   lFormatter.dateStyle := NSDateFormatterStyle.NoStyle;
