@@ -9,7 +9,7 @@
         <AllowLegacyCreate>False</AllowLegacyCreate>
         <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
         <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-        <Name>Sugar.Echoes</Name>
+        <Name>Sugar (.NET)</Name>
         <ProjectGuid>{79301a0c-1f95-4fb0-9605-207e288c6171}</ProjectGuid>
         <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
         <CrossPlatform>True</CrossPlatform>

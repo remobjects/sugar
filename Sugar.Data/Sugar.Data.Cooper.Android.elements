@@ -6,7 +6,7 @@
         <OutputType>Library</OutputType>
         <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
         <AllowLegacyCreate>False</AllowLegacyCreate>
-        <Name>Sugar.Data.Cooper.Android</Name>
+        <Name>Sugar.Data (Android)</Name>
         <RootNamespace>sugar</RootNamespace>
         <AssemblyName>sugar.data</AssemblyName>
     </PropertyGroup>
@@ -56,6 +56,6 @@
     <ItemGroup>
         <Folder Include="Properties\"/>
     </ItemGroup>
-    <Import Project="$(MSBuildExtensionsPath)/RemObjects Software/Oxygene/RemObjects.Oxygene.Cooper.Android.targets"/>
+    <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Elements\RemObjects.Elements.Cooper.Android.targets"/>
     <Import Project="Sugar.Data.Shared.projitems" Label="Shared"/>
 </Project>

@@ -5,7 +5,7 @@
         <OutputType>Library</OutputType>
         <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
         <AllowLegacyCreate>False</AllowLegacyCreate>
-        <Name>Sugar.Data.Cooper</Name>
+        <Name>Sugar.Data (Java)</Name>
         <RootNamespace>sugar</RootNamespace>
         <ProjectGuid>{83e22c95-cbc5-4977-87f6-0b18b8181703}</ProjectGuid>
         <AssemblyName>sugar.data</AssemblyName>
@@ -55,6 +55,6 @@
     <ItemGroup>
         <Folder Include="Properties\"/>
     </ItemGroup>
-    <Import Project="$(MSBuildExtensionsPath)/RemObjects Software/Oxygene/RemObjects.Oxygene.Cooper.targets"/>
+    <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Elements\RemObjects.Elements.Cooper.targets"/>
     <Import Project="Sugar.Data.Shared.projitems" Label="Shared"/>
 </Project>

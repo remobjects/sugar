@@ -6,7 +6,7 @@
         <OutputType>Library</OutputType>
         <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
         <AllowLegacyCreate>False</AllowLegacyCreate>
-        <Name>Sugar.Cooper.Android</Name>
+        <Name>Sugar (Android)</Name>
         <RootNamespace>sugar</RootNamespace>
         <AssemblyName>sugar</AssemblyName>
         <DefaultUses>Sugar.Cooper</DefaultUses>
