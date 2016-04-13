@@ -9,7 +9,7 @@
         <RootNamespace>Sugar</RootNamespace>
         <SDK>OS X</SDK>
         <ProjectGuid>{0d5b253d-762b-42d9-bfd2-3c217e07cf52}</ProjectGuid>
-        <AssemblyName>Sugar.Data</AssemblyName>
+        <AssemblyName>SugarData</AssemblyName>
         <DefaultUses>Foundation</DefaultUses>
         <DeploymentTargetVersion>10.7</DeploymentTargetVersion>
         <AllowLegacyOutParams>False</AllowLegacyOutParams>

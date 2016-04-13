@@ -9,7 +9,7 @@
         <RootNamespace>Sugar</RootNamespace>
         <SDK>watchOS</SDK>
         <ProjectGuid>{0EAE8082-C9A4-4A4C-B52B-BD4E1FDEA19A}</ProjectGuid>
-        <AssemblyName>Sugar.Data</AssemblyName>
+        <AssemblyName>SugarData</AssemblyName>
         <DefaultUses>Foundation</DefaultUses>
         <DeploymentTargetVersion>2.0</DeploymentTargetVersion>
         <AllowLegacyOutParams>False</AllowLegacyOutParams>

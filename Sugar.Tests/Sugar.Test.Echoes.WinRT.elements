@@ -11,7 +11,7 @@
     <DefaultLanguage>en-US</DefaultLanguage>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{656346D9-4656-40DA-A068-22D5425D4639}</ProjectTypeGuids>
     <PackageCertificateKeyFile>Sugar.Echoes.WinRT.Test_TemporaryKey.pfx</PackageCertificateKeyFile>
-    <Name>Sugar.Echoes.WinRT.Test</Name>
+    <Name>Sugar.Test (WinRT)</Name>
     <DefaultUses />
     <StartupClass />
     <InternalAssemblyName />
@@ -161,5 +161,5 @@
   <PropertyGroup>
     <PreBuildEvent />
   </PropertyGroup>
-  <Import Project="..\Sugar.Tests\Sugar.Shared.Test.projitems" Label="Shared" />
+  <Import Project="..\Sugar.Tests\Sugar.Test.Shared.projitems" Label="Shared" />
 </Project>

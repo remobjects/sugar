@@ -4,9 +4,9 @@
         <ProjectGuid>{6636F222-6B54-43EF-B3AE-FE4E319449CB}</ProjectGuid>
     </PropertyGroup>
     <PropertyGroup>
-        <RootNamespace>Sugar.Shared.Test</RootNamespace>
+        <RootNamespace>Sugar.Test</RootNamespace>
     </PropertyGroup>
-    <Import Project="Sugar.Shared.Test.projitems" Label="Shared"/>
+    <Import Project="Sugar.Test.Shared.projitems" Label="Shared"/>
     <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Elements.SharedProject.targets"/>
     <PropertyGroup>
         <PreBuildEvent/>

@@ -3,11 +3,12 @@
   <PropertyGroup>
     <ProductVersion>3.5</ProductVersion>
     <ProjectGuid>{d6d563f4-0983-4ab5-b167-3e684b6080b2}</ProjectGuid>
-    <OutputType>exe</OutputType>
+    <OutputType>Exe</OutputType>
     <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
     <AllowLegacyCreate>False</AllowLegacyCreate>
-    <Name>Sugar.Cooper.Test</Name>
+    <Name>Sugar.Test (Java)</Name>
     <RootNamespace>Sugar.Test</RootNamespace>
+    <AssemblyName>sugar.test</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <Optimize>False</Optimize>
@@ -72,5 +73,5 @@
   <PropertyGroup>
     <PreBuildEvent />
   </PropertyGroup>
-  <Import Project="..\Sugar.Tests\Sugar.Shared.Test.projitems" Label="Shared" />
+  <Import Project="..\Sugar.Tests\Sugar.Test.Shared.projitems" Label="Shared" />
 </Project>

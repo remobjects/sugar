@@ -9,7 +9,7 @@
         <RootNamespace>Sugar</RootNamespace>
         <SDK>tvOS</SDK>
         <ProjectGuid>{D317553F-A7EA-4C59-A541-4B3E335CED60}</ProjectGuid>
-        <AssemblyName>Sugar.Data</AssemblyName>
+        <AssemblyName>SugarData</AssemblyName>
         <DefaultUses>Foundation</DefaultUses>
         <DeploymentTargetVersion>2.0</DeploymentTargetVersion>
         <AllowLegacyOutParams>False</AllowLegacyOutParams>
