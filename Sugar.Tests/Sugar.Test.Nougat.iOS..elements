@@ -15,7 +15,7 @@
     <CreateAppBundle>True</CreateAppBundle>
     <InfoPListFile>Main\iOS\Resources\Info.plist</InfoPListFile>
     <DeploymentTargetVersion>6.0</DeploymentTargetVersion>
-    <Name>Sugar.Nougat.iOS.Test</Name>
+    <Name>Sugar.Test (iOS)</Name>
     <DefaultUses />
     <StartupClass />
     <CreateHeaderFile>False</CreateHeaderFile>
@@ -98,5 +98,5 @@
   <PropertyGroup>
     <PreBuildEvent />
   </PropertyGroup>
-  <Import Project="..\Sugar.Tests\Sugar.Shared.Test.projitems" Label="Shared" />
+  <Import Project="..\Sugar.Tests\Sugar.Test.Shared.projitems" Label="Shared" />
 </Project>

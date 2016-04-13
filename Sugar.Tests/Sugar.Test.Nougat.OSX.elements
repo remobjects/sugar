@@ -14,7 +14,7 @@
     <SDK>OS X</SDK>
     <EntitlementsFile>Entitlements.entitlements</EntitlementsFile>
     <DeploymentTargetVersion>10.11</DeploymentTargetVersion>
-    <Name>Sugar.Nougat.OSX.Test</Name>
+    <Name>Sugar.Test (OS X)</Name>
     <DefaultUses>Foundation</DefaultUses>
     <StartupClass />
     <CreateHeaderFile>False</CreateHeaderFile>
@@ -73,5 +73,5 @@
   <PropertyGroup>
     <PreBuildEvent />
   </PropertyGroup>
-  <Import Project="..\Sugar.Tests\Sugar.Shared.Test.projitems" Label="Shared" />
+  <Import Project="..\Sugar.Tests\Sugar.Test.Shared.projitems" Label="Shared" />
 </Project>

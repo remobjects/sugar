@@ -6,8 +6,9 @@
     <OutputType>Library</OutputType>
     <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
     <AllowLegacyCreate>False</AllowLegacyCreate>
-    <Name>sugar.cooper.android.test</Name>
+    <Name>Sugar.Test (Android)</Name>
     <RootNamespace>sugar.cooper.android.test</RootNamespace>
+    <AssemblyName>sugar.test</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <Optimize>False</Optimize>
@@ -101,6 +102,6 @@
   <PropertyGroup>
     <PreBuildEvent />
   </PropertyGroup>
-  
-  <Import Project="..\Sugar.Tests\Sugar.Shared.Test.projitems" Label="Shared" />
+
+  <Import Project="..\Sugar.Tests\Sugar.Test.Shared.projitems" Label="Shared" />
 </Project>

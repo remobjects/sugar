@@ -1,0 +1,400 @@
+0f157b19c336abd1e4f16227e60b4c8ac7f65f14ad98f082c39bb0d8615bec77e95d329fdc7c2d0cdff3aed9d5a0929b2b9c5d3db5a93de2d9f1c9d52b0255bc26ed3418c1e870542331e2c965c26d36878dd4e62cb26dbb48d734ed9cc6d0e85c9ca17d88ec49c24090f7643e5e19374d7cdba36a52ec9d8bd568d896d97141e8e2fc49e319d878a965574dcdbc41d739a1574e9a09301e1f0f31ebc2a0366ff80db4d2974b1519d3c28cdee5b3dbdfd4507edc6c60c5695c719f6f9320921cc3851490307ce68a15df6b4c0620832dbae9cb3c9c9f91bdbee2dded0594ad9d564ec1dd5e16745a50e662ad90d5f3f2bcf942e24d1a90da53632c4ebb5a2b0e
+f443d30b2e40c2787242416c0caf1477cec72c084b34d70c7cc1e583216f762d6162db45f6ca9ef8a7e38728d92d2e98f1edca90008c4212e7336ba52ca7680ef18f2c06105af3aec62b73ac254825b46744d292dfc5036c6327fdfc90b04ea63d887d23f30bbc17eae67ab28f91acfa7b0bd5a1d1a4592f011e466e86da3892
+//
+// Sugar Core
+//
+
+[License]
+LicenseType=Project
+Product=Oxygene
+Platform=.NET
+AllowBeta=1
+AllowFull=1
+
+DisplayName=Sugar Contributor License
+ProjectName=Sugar (.NET)
+ProjectFileName=Sugar.Echoes.elements
+ProjectGuid={79301a0c-1f95-4fb0-9605-207e288c6171}
+ProjectAssemblyName=Sugar
+ProjectOutputType=Library
+
+[License]
+LicenseType=Project
+Product=Oxygene
+Platform=.NET
+AllowBeta=1
+AllowFull=1
+
+DisplayName=Sugar Contributor License
+ProjectName=Sugar (WinRT)
+ProjectFileName=Sugar.Echoes.WinRT.elements
+ProjectGuid={3ab69816-9882-4fa6-abe5-c146199f5279}
+ProjectAssemblyName=Sugar
+ProjectOutputType=Library
+
+[License]
+LicenseType=Project
+Product=Oxygene
+Platform=.NET
+AllowBeta=1
+AllowFull=1
+
+DisplayName=Sugar Contributor License
+ProjectName=Sugar (Windows Phone)
+ProjectFileName=Sugar.Echoes.WP8.elements
+ProjectGuid={bd5d51e2-b11a-4356-9450-64566f8cdc38}
+ProjectAssemblyName=Sugar
+ProjectOutputType=Library
+
+[License]
+LicenseType=Project
+Product=Oxygene
+Platform=Cocoa
+AllowBeta=1
+AllowFull=1
+
+DisplayName=Sugar Contributor License
+ProjectName=Sugar (OS X)
+ProjectFileName=Sugar.Nougat.OSX.elements
+ProjectGuid={ab7ab88b-2370-43bf-844b-54d015da9e57}
+ProjectAssemblyName=Sugar
+ProjectOutputType=StaticLibrary
+
+[License]
+LicenseType=Project
+Product=Oxygene
+Platform=Cocoa
+AllowBeta=1
+AllowFull=1
+
+DisplayName=Sugar Contributor License
+ProjectName=Sugar (iOS)
+ProjectFileName=Sugar.Nougat.iOS.elements
+ProjectGuid={91b301fc-331e-48a7-803b-4cbe3fff6ed7}
+ProjectAssemblyName=Sugar
+ProjectOutputType=StaticLibrary
+
+[License]
+LicenseType=Project
+Product=Oxygene
+Platform=Cocoa
+AllowBeta=1
+AllowFull=1
+
+DisplayName=Sugar Contributor License
+ProjectName=Sugar (tvOS)
+ProjectFileName=Sugar.Nougat.tvOS.elements
+ProjectGuid={d1b6aab1-96d4-4498-aa31-e7048d68147c}
+ProjectAssemblyName=Sugar
+ProjectOutputType=StaticLibrary
+
+[License]
+LicenseType=Project
+Product=Oxygene
+Platform=Cocoa
+AllowBeta=1
+AllowFull=1
+
+DisplayName=Sugar Contributor License
+ProjectName=Sugar (watchOS)
+ProjectFileName=Sugar.Nougat.watchOS.elements
+ProjectGuid={a0cd6bb4-9336-4e25-9084-d1c63c03bf78}
+ProjectAssemblyName=Sugar
+ProjectOutputType=StaticLibrary
+
+[License]
+LicenseType=Project
+Product=Oxygene
+Platform=Java
+AllowBeta=1
+AllowFull=1
+
+DisplayName=Sugar Contributor License
+ProjectName=Sugar (Java)
+ProjectFileName=Sugar.Cooper.elements
+ProjectGuid={d1ee6c41-515b-4175-873f-ee188ac43450}
+ProjectAssemblyName=sugar
+ProjectOutputType=Library
+
+[License]
+LicenseType=Project
+Product=Oxygene
+Platform=Java
+AllowBeta=1
+AllowFull=1
+
+DisplayName=Sugar Contributor License
+ProjectName=Sugar (Android)
+ProjectFileName=Sugar.Cooper.Android.elements
+ProjectGuid={8dac177a-64eb-4175-ac9c-e6b121b6f34b}
+ProjectAssemblyName=sugar
+ProjectOutputType=Library
+
+//
+// Sugar Data
+//
+
+[License]
+LicenseType=Project
+Product=Oxygene
+Platform=.NET
+AllowBeta=1
+AllowFull=1
+
+DisplayName=Sugar Contributor License
+ProjectName=Sugar.Data (.NET)
+ProjectFileName=Sugar.Data.Echoes.elements
+ProjectGuid={77ba48da-3022-4e3c-ab2e-885ff84b5efe}
+ProjectAssemblyName=Sugar.Data
+ProjectOutputType=Library
+
+[License]
+LicenseType=Project
+Product=Oxygene
+Platform=.NET
+AllowBeta=1
+AllowFull=1
+
+DisplayName=Sugar Contributor License
+ProjectName=Sugar.Data (WinRT)
+ProjectFileName=Sugar.Data.Echoes.WinRT.elements
+ProjectGuid={2b56e90a-f177-4d9a-a438-ed6df7ad9826}
+ProjectAssemblyName=Sugar.Data
+ProjectOutputType=Library
+
+[License]
+LicenseType=Project
+Product=Oxygene
+Platform=.NET
+AllowBeta=1
+AllowFull=1
+
+DisplayName=Sugar Contributor License
+ProjectName=Sugar.Data (Windows Phone)
+ProjectFileName=Sugar.Data.Echoes.WP8.elements
+ProjectGuid={4439717a-5a75-4bd0-a37d-191a2000c90a}
+ProjectAssemblyName=Sugar.Data
+ProjectOutputType=Library
+
+[License]
+LicenseType=Project
+Product=Oxygene
+Platform=Cocoa
+AllowBeta=1
+AllowFull=1
+
+DisplayName=Sugar Contributor License
+ProjectName=Sugar.Data (OS X)
+ProjectFileName=Sugar.Data.Nougat.OSX.elements
+ProjectGuid={0d5b253d-762b-42d9-bfd2-3c217e07cf52}
+ProjectAssemblyName=Sugar.Data
+ProjectOutputType=StaticLibrary
+
+[License]
+LicenseType=Project
+Product=Oxygene
+Platform=Cocoa
+AllowBeta=1
+AllowFull=1
+
+DisplayName=Sugar Contributor License
+ProjectName=Sugar.Data (iOS)
+ProjectFileName=Sugar.Data.Nougat.iOS.elements
+ProjectGuid={15939baf-3d02-4074-a4f1-6adbd2a5f28d}
+ProjectAssemblyName=Sugar.Data
+ProjectOutputType=StaticLibrary
+
+[License]
+LicenseType=Project
+Product=Oxygene
+Platform=Cocoa
+AllowBeta=1
+AllowFull=1
+
+DisplayName=Sugar Contributor License
+ProjectName=Sugar.Data (tvOS)
+ProjectFileName=Sugar.Data.Nougat.tvOS.elements
+ProjectGuid={d317553f-a7ea-4c59-a541-4b3e335ced60}
+ProjectAssemblyName=Sugar.Data
+ProjectOutputType=StaticLibrary
+
+[License]
+LicenseType=Project
+Product=Oxygene
+Platform=Cocoa
+AllowBeta=1
+AllowFull=1
+
+DisplayName=Sugar Contributor License
+ProjectName=Sugar.Data (watchOS)
+ProjectFileName=Sugar.Data.Nougat.watchOS.elements
+ProjectGuid={0eae8082-c9a4-4a4c-b52b-bd4e1fdea19a}
+ProjectAssemblyName=Sugar.Data
+ProjectOutputType=StaticLibrary
+
+[License]
+LicenseType=Project
+Product=Oxygene
+Platform=Java
+AllowBeta=1
+AllowFull=1
+
+DisplayName=Sugar Contributor License
+ProjectName=Sugar.Data (Java)
+ProjectFileName=Sugar.DataCooper.elements
+ProjectGuid={83e22c95-cbc5-4977-87f6-0b18b8181703}
+ProjectAssemblyName=sugar.data
+ProjectOutputType=Library
+
+[License]
+LicenseType=Project
+Product=Oxygene
+Platform=Java
+AllowBeta=1
+AllowFull=1
+
+DisplayName=Sugar Contributor License
+ProjectName=Sugar.Data (Android)
+ProjectFileName=Sugar.DataCooper.Android.elements
+ProjectGuid={d5492a3d-13b2-4ef5-8835-81bc392b5a74}
+ProjectAssemblyName=sugar.data
+ProjectOutputType=Library
+
+//
+// Sugar Tests
+//
+
+[License]
+LicenseType=Project
+Product=Oxygene
+Platform=.NET
+AllowBeta=1
+AllowFull=1
+
+DisplayName=Sugar Contributor License
+ProjectName=Sugar.Test (.NET)
+ProjectFileName=Sugar.Tests.Echoes.elements
+ProjectGuid={9f930a22-be43-4d5a-83f6-4afc91282e23}
+ProjectAssemblyName=Sugar.Test
+ProjectOutputType=Exe
+
+[License]
+LicenseType=Project
+Product=Oxygene
+Platform=.NET
+AllowBeta=1
+AllowFull=1
+
+DisplayName=Sugar Contributor License
+ProjectName=Sugar.Test (WinRT)
+ProjectFileName=Sugar.Tests.Echoes.WinRT.elements
+ProjectGuid={90b9f375-6c66-4316-81d7-7e549c959b30}
+ProjectAssemblyName=Sugar.Test
+ProjectOutputType=AppContainerExe
+
+[License]
+LicenseType=Project
+Product=Oxygene
+Platform=.NET
+AllowBeta=1
+AllowFull=1
+
+DisplayName=Sugar Contributor License
+ProjectName=Sugar.Test (Windows Phone)
+ProjectFileName=Sugar.Tests.Echoes.WP8.elements
+ProjectGuid=XX
+ProjectAssemblyName=Sugar.Test
+ProjectOutputType=Library
+
+[License]
+LicenseType=Project
+Product=Oxygene
+Platform=Cocoa
+AllowBeta=1
+AllowFull=1
+
+DisplayName=Sugar Contributor License
+ProjectName=Sugar.Test (OS X)
+ProjectFileName=Sugar.Tests.Nougat.OSX.elements
+ProjectGuid={e05279de-3031-4a1d-8c31-ff14ba511f66}
+ProjectAssemblyName=SugarTest
+ProjectOutputType=Executable
+
+[License]
+LicenseType=Project
+Product=Oxygene
+Platform=Cocoa
+AllowBeta=1
+AllowFull=1
+
+DisplayName=Sugar Contributor License
+ProjectName=Sugar.Test (iOS)
+ProjectFileName=Sugar.Tests.Nougat.iOS.elements
+ProjectGuid={e8cdf7d0-43b8-48f4-a06d-37748b1fa463}
+ProjectAssemblyName=SugarTest
+ProjectOutputType=Executable
+
+[License]
+LicenseType=Project
+Product=Oxygene
+Platform=Cocoa
+AllowBeta=1
+AllowFull=1
+
+DisplayName=Sugar Contributor License
+ProjectName=Sugar.Test (tvOS)
+ProjectFileName=Sugar.Tests.Nougat.tvOS.elements
+ProjectGuid=XX
+ProjectAssemblyName=SugarTest
+ProjectOutputType=Executable
+
+[License]
+LicenseType=Project
+Product=Oxygene
+Platform=Cocoa
+AllowBeta=1
+AllowFull=1
+
+DisplayName=Sugar Contributor License
+ProjectName=Sugar.Test (watchOS)
+ProjectFileName=Sugar.Tests.Nougat.watchOS.elements
+ProjectGuid=XX
+ProjectAssemblyName=SugarTest
+ProjectOutputType=Executable
+
+[License]
+LicenseType=Project
+Product=Oxygene
+Platform=Java
+AllowBeta=1
+AllowFull=1
+
+DisplayName=Sugar Contributor License
+ProjectName=Sugar.Test (Java)
+ProjectFileName=Sugar.Tests.Cooper.elements
+ProjectGuid={d6d563f4-0983-4ab5-b167-3e684b6080b2}
+ProjectAssemblyName=sugar.test
+ProjectOutputType=Exe
+
+[License]
+LicenseType=Project
+Product=Oxygene
+Platform=Java
+AllowBeta=1
+AllowFull=1
+
+DisplayName=Sugar Contributor License
+ProjectName=Sugar.Test (Android)
+ProjectFileName=Sugar.Tests.Cooper.Android.elements
+ProjectGuid={fcf05218-9631-4c24-a6b7-8c78434cad94}
+ProjectAssemblyName=sugar.test
+ProjectOutputType=Library
+
+[SignatureInfo]
+LicenseFileStartDate=2016-04-11
+LicenseFileEndDate=2016-04-15
+P1=17008633419758486252
+P2=7785261382863466299
+P3=3747922913
+P4=659359838
+
