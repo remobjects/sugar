@@ -11,7 +11,7 @@
         <ProjectGuid>{D1B6AAB1-96D4-4498-AA31-E7048D68147C}</ProjectGuid>
         <AssemblyName>Sugar</AssemblyName>
         <DefaultUses>Foundation</DefaultUses>
-        <DeploymentTargetVersion>2.0</DeploymentTargetVersion>
+        <DeploymentTargetVersion>9.0</DeploymentTargetVersion>
         <AllowLegacyOutParams>False</AllowLegacyOutParams>
         <CreateHeaderFile>False</CreateHeaderFile>
         <CrossPlatform>True</CrossPlatform>
