@@ -430,7 +430,7 @@ end;
 method Http.ExecuteRequest(aRequest: not nullable HttpRequest; ResponseCallback: not nullable HttpResponseBlock);
 begin
   {$IF COOPER}
-  async begin
+  async try
     var lConnection := java.net.URL(aRequest.URL).openConnection as java.net.HttpURLConnection;
 
     for each k in aRequest.Headers.Keys do
@@ -442,11 +442,14 @@ begin
     end;
 
     var lResponse := if lConnection.ResponseCode >= 300 then new HttpResponse withException(new SugarIOException("Unable to complete request. Error code: {0}", lConnection.responseCode)) else new HttpResponse(lConnection);
-
     responseCallback(lResponse);
+
+  except
+    on E: Exception do
+      ResponseCallback(new HttpResponse withException(E));
   end;
   {$ELSEIF ECHOES}
-  using webRequest := System.Net.WebRequest.Create(aRequest.Url) as HttpWebRequest do begin
+  using webRequest := System.Net.WebRequest.Create(aRequest.Url) as HttpWebRequest do try
     {$IF NOT NETFX_CORE}
     webRequest.AllowAutoRedirect := aRequest.FollowRedirects;
     {$ENDIF}
@@ -494,46 +497,54 @@ begin
       end;
     
     end, nil);
+  except
+    on E: Exception do
+      ResponseCallback(new HttpResponse withException(E));
   end;
   {$ELSEIF NOUGAT}
-  var nsUrlRequest := new NSMutableURLRequest withURL(aRequest.Url) cachePolicy(NSURLRequestCachePolicy.ReloadIgnoringLocalAndRemoteCacheData) timeoutInterval(30);
-
-  //nsUrlRequest.AllowAutoRedirect := aRequest.FollowRedirects;
-  nsUrlRequest.allowsCellularAccess := aRequest.AllowCellularAccess;
+  try
+    var nsUrlRequest := new NSMutableURLRequest withURL(aRequest.Url) cachePolicy(NSURLRequestCachePolicy.ReloadIgnoringLocalAndRemoteCacheData) timeoutInterval(30);
   
-  case aRequest.Mode of
-    HttpRequestMode.Get: nsUrlRequest.HTTPMethod := 'GET';
-    HttpRequestMode.Post: nsUrlRequest.HTTPMethod := 'POST';
-    HttpRequestMode.Head: nsUrlRequest.HTTPMethod := 'HEAD';
-    HttpRequestMode.Put: nsUrlRequest.HTTPMethod := 'PUT';
-    HttpRequestMode.Delete: nsUrlRequest.HTTPMethod := 'DELETE';
-    HttpRequestMode.Patch: nsUrlRequest.HTTPMethod := 'PATCH';
-    HttpRequestMode.Options: nsUrlRequest.HTTPMethod := 'OPTIONS';
-    HttpRequestMode.Trace: nsUrlRequest.HTTPMethod := 'TRACE';
-  end;
-
-  if assigned(aRequest.Content) then
-    nsUrlRequest.HTTPBody := (aRequest.Content as IHttpRequestContent).GetContentAsBinary();
-  
-  for each k in aRequest.Headers.Keys do
-    nsUrlRequest.setValue(aRequest.Headers[k]) forHTTPHeaderField(k);
-
-  var lRequest := NSURLSession.sharedSession.dataTaskWithRequest(nsUrlRequest) completionHandler((data, nsUrlResponse, error) -> begin
-
-    var nsHttpUrlResponse := NSHTTPURLResponse(nsUrlResponse);
-    if assigned(data) and assigned(nsHttpUrlResponse) and not assigned(error) then begin
-      var response := if nsHttpUrlResponse.statusCode >= 300 then new HttpResponse withException(new SugarIOException("Unable to complete request. Error code: {0}", nsHttpUrlResponse.statusCode)) else new HttpResponse(data, nsHttpUrlResponse);
-      responseCallback(response);
-    end else if assigned(error) then begin
-      var response := new HttpResponse(new SugarException withError(error));
-      responseCallback(response);
-    end else begin
-      var response := new HttpResponse(new SugarException("Request failed without providing an error."));
-      responseCallback(response);
-    end;
+    //nsUrlRequest.AllowAutoRedirect := aRequest.FollowRedirects;
+    nsUrlRequest.allowsCellularAccess := aRequest.AllowCellularAccess;
     
-  end);
-  lRequest.resume();
+    case aRequest.Mode of
+      HttpRequestMode.Get: nsUrlRequest.HTTPMethod := 'GET';
+      HttpRequestMode.Post: nsUrlRequest.HTTPMethod := 'POST';
+      HttpRequestMode.Head: nsUrlRequest.HTTPMethod := 'HEAD';
+      HttpRequestMode.Put: nsUrlRequest.HTTPMethod := 'PUT';
+      HttpRequestMode.Delete: nsUrlRequest.HTTPMethod := 'DELETE';
+      HttpRequestMode.Patch: nsUrlRequest.HTTPMethod := 'PATCH';
+      HttpRequestMode.Options: nsUrlRequest.HTTPMethod := 'OPTIONS';
+      HttpRequestMode.Trace: nsUrlRequest.HTTPMethod := 'TRACE';
+    end;
+  
+    if assigned(aRequest.Content) then
+      nsUrlRequest.HTTPBody := (aRequest.Content as IHttpRequestContent).GetContentAsBinary();
+    
+    for each k in aRequest.Headers.Keys do
+      nsUrlRequest.setValue(aRequest.Headers[k]) forHTTPHeaderField(k);
+  
+    var lRequest := NSURLSession.sharedSession.dataTaskWithRequest(nsUrlRequest) completionHandler((data, nsUrlResponse, error) -> begin
+  
+      var nsHttpUrlResponse := NSHTTPURLResponse(nsUrlResponse);
+      if assigned(data) and assigned(nsHttpUrlResponse) and not assigned(error) then begin
+        var response := if nsHttpUrlResponse.statusCode >= 300 then new HttpResponse withException(new SugarIOException("Unable to complete request. Error code: {0}", nsHttpUrlResponse.statusCode)) else new HttpResponse(data, nsHttpUrlResponse);
+        responseCallback(response);
+      end else if assigned(error) then begin
+        var response := new HttpResponse(new SugarException withError(error));
+        responseCallback(response);
+      end else begin
+        var response := new HttpResponse(new SugarException("Request failed without providing an error."));
+        responseCallback(response);
+      end;
+      
+    end);
+    lRequest.resume();
+  except
+    on E: Exception do
+      ResponseCallback(new HttpResponse withException(E));
+  end;
   {$ENDIF}
 end;
 
