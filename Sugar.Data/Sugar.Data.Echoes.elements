@@ -3,22 +3,14 @@
     <PropertyGroup>
         <ProductVersion>3.5</ProductVersion>
         <RootNamespace>Sugar</RootNamespace>
-        <StartupClass/>
         <OutputType>Library</OutputType>
         <AssemblyName>Sugar.Data</AssemblyName>
-        <AllowGlobals/>
-        <AllowLegacyWith/>
         <AllowLegacyOutParams>False</AllowLegacyOutParams>
         <AllowLegacyCreate>False</AllowLegacyCreate>
-        <AllowUnsafeCode/>
-        <ApplicationIcon/>
         <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
         <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
         <Name>Sugar.Data (.NET)</Name>
         <ProjectGuid>{77ba48da-3022-4e3c-ab2e-885ff84b5efe}</ProjectGuid>
-        <DefaultUses/>
-        <InternalAssemblyName/>
-        <TargetFrameworkProfile/>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
         <Optimize>False</Optimize>
@@ -46,9 +38,6 @@
         <XmlDoc>False</XmlDoc>
         <XmlDocWarningLevel>WarningOnPublicMembers</XmlDocWarningLevel>
         <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
-        <DefineConstants/>
-        <SuppressWarnings/>
-        <FutureHelperClassName/>
     </PropertyGroup>
     <ItemGroup>
         <ProjectReference Include="..\Sugar\Sugar.Echoes.elements">
@@ -63,4 +52,7 @@
     </ItemGroup>
     <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Elements\RemObjects.Elements.Echoes.targets"/>
     <Import Project="Sugar.Data.Shared.projitems" Label="Shared"/>
+    <ItemGroup>
+        <Compile Include="Properties\AssemblyInfo.pas"/>
+    </ItemGroup>
 </Project>

@@ -11,7 +11,6 @@
         <DefaultLanguage>en-US</DefaultLanguage>
         <TargetPlatformVersion>8.1</TargetPlatformVersion>
         <MinimumVisualStudioVersion>12</MinimumVisualStudioVersion>
-        <TargetFrameworkVersion/>
         <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{656346D9-4656-40DA-A068-22D5425D4639}</ProjectTypeGuids>
         <Name>Sugar.Data (WinRT)</Name>
         <AllowLegacyCreate>False</AllowLegacyCreate>
@@ -109,4 +108,7 @@
     <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')"/>
     <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Elements\RemObjects.Elements.Echoes.WinRT.targets"/>
     <Import Project="Sugar.Data.Shared.projitems" Label="Shared"/>
+    <ItemGroup>
+        <Compile Include="Properties\AssemblyInfo.pas"/>
+    </ItemGroup>
 </Project>

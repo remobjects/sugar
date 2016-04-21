@@ -123,4 +123,7 @@
     </ItemGroup>
     <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Elements\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\RemObjects.Elements.Echoes.$(TargetFrameworkIdentifier).targets"/>
     <Import Project="Sugar.Data.Shared.projitems" Label="Shared"/>
+    <ItemGroup>
+        <Compile Include="Properties\AssemblyInfo.pas"/>
+    </ItemGroup>
 </Project>
