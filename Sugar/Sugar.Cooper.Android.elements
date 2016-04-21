@@ -46,9 +46,7 @@
             <Private>False</Private>
         </Reference>
     </ItemGroup>
-    <ItemGroup>
-        <Folder Include="Properties\"/>
-    </ItemGroup>
+    <ItemGroup/>
     <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Elements\RemObjects.Elements.Cooper.Android.targets"/>
     <PropertyGroup>
         <PreBuildEvent Condition="'$(OS)' != 'Unix'">rmdir /s /q $(ProjectDir)\Obj</PreBuildEvent>

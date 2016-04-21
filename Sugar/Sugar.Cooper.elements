@@ -46,9 +46,7 @@
         </Reference>
         <Reference Include="rt"/>
     </ItemGroup>
-    <ItemGroup>
-        <Folder Include="Properties\"/>
-    </ItemGroup>
+    <ItemGroup/>
     <ItemGroup/>
     <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Elements\RemObjects.Elements.Cooper.targets"/>
     <PropertyGroup>

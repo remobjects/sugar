@@ -40,9 +40,7 @@
         <Reference Include="cooper">
             <Private>True</Private>
         </Reference>
-        <Reference Include="rt">
-            <Private>True</Private>
-        </Reference>
+        <Reference Include="rt"/>
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Sugar\Sugar.Cooper.elements">
@@ -52,9 +50,7 @@
             <HintPath>..\Sugar\bin\Java\sugar.jar</HintPath>
         </ProjectReference>
     </ItemGroup>
-    <ItemGroup>
-        <Folder Include="Properties\"/>
-    </ItemGroup>
+    <ItemGroup/>
     <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Elements\RemObjects.Elements.Cooper.targets"/>
     <Import Project="Sugar.Data.Shared.projitems" Label="Shared"/>
 </Project>

@@ -49,9 +49,7 @@
         <Reference Include="rtl"/>
         <Reference Include="CoreFoundation"/>
     </ItemGroup>
-    <ItemGroup>
-        <Folder Include="Properties\"/>
-    </ItemGroup>
+    <ItemGroup/>
     <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Elements\RemObjects.Elements.Nougat.targets"/>
     <PropertyGroup>
         <PreBuildEvent/>
