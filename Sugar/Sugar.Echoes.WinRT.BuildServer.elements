@@ -124,7 +124,7 @@
     <None Include="Threading\ThreadPool.pas" />
     <Compile Include="UserSettings.pas" />
     <Compile Include="Math.pas" />
-    <Compile Include="Properties\AssemblyInfo_WinRT.pas" />
+    <Compile Include="Echoes\AssemblyInfo.pas" />
     <Compile Include="String.pas" />
     <Compile Include="StringBuilder.pas" />
     <Compile Include="StringFormatter.pas" />
