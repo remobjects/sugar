@@ -41,9 +41,7 @@
     <ItemGroup>
         <Reference Include="Foundation"/>
         <Reference Include="libNougat"/>
-        <Reference Include="libsqlite3">
-            <HintPath>C:\Program Files (x86)\RemObjects Software\Elements\Nougat\Libraries\libsqlite3\watchOS\libsqlite3.fx</HintPath>
-        </Reference>
+        <Reference Include="libsqlite3"/>
         <Reference Include="libxml2"/>
         <Reference Include="rtl"/>
         <Reference Include="UIKit"/>
