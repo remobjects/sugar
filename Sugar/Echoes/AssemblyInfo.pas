@@ -27,6 +27,6 @@ uses
 {$ENDIF}
 
 implementation
-{$ENDIF
+{$ENDIF}
 
 end.
