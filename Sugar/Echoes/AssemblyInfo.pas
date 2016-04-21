@@ -26,7 +26,8 @@ uses
 [assembly: AssemblyKeyName('RemObjectsSoftware')]
 {$ENDIF}
 
-implementation
 {$ENDIF}
+
+implementation
 
 end.

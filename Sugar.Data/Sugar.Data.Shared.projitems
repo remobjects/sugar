@@ -10,7 +10,9 @@
     </PropertyGroup>
     <ItemGroup>
         <Compile Include="$(MSBuildThisFileDirectory)SQLite.pas"/>
-        <Compile Include="$(MSBuildThisFileDirectory)Echoes\AssemblyInfo.pas"/>
+        <Compile Include="$(MSBuildThisFileDirectory)Echoes\AssemblyInfo.pas">
+            <Conditional>CLR</Conditional>
+        </Compile>
     </ItemGroup>
     <ItemGroup/>
 </Project>
