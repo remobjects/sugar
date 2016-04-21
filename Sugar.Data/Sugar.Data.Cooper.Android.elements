@@ -49,13 +49,10 @@
         <ProjectReference Include="..\Sugar\Sugar.Cooper.Android.elements">
             <Name>Sugar.Cooper.Android</Name>
             <Project>{8dac177a-64eb-4175-ac9c-e6b121b6f34b}</Project>
-            <Private>True</Private>
             <HintPath>..\Sugar\bin\Android\sugar.jar</HintPath>
         </ProjectReference>
     </ItemGroup>
-    <ItemGroup>
-        <Folder Include="Properties\"/>
-    </ItemGroup>
+    <ItemGroup/>
     <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Elements\RemObjects.Elements.Cooper.Android.targets"/>
     <Import Project="Sugar.Data.Shared.projitems" Label="Shared"/>
 </Project>

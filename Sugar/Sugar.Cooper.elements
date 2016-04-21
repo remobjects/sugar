@@ -41,9 +41,7 @@
         <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
     </PropertyGroup>
     <ItemGroup>
-        <Reference Include="cooper">
-            <Private>True</Private>
-        </Reference>
+        <Reference Include="cooper"/>
         <Reference Include="rt"/>
     </ItemGroup>
     <ItemGroup/>

@@ -37,16 +37,13 @@
         <DefineConstants>PUREJAVA</DefineConstants>
     </PropertyGroup>
     <ItemGroup>
-        <Reference Include="cooper">
-            <Private>True</Private>
-        </Reference>
+        <Reference Include="cooper"/>
         <Reference Include="rt"/>
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Sugar\Sugar.Cooper.elements">
             <Name>Sugar.Cooper</Name>
             <Project>{d1ee6c41-515b-4175-873f-ee188ac43450}</Project>
-            <Private>True</Private>
             <HintPath>..\Sugar\bin\Java\sugar.jar</HintPath>
         </ProjectReference>
     </ItemGroup>
