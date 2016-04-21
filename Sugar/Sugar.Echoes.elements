@@ -60,15 +60,11 @@
         </Reference>
         <Reference Include="System.Web"/>
     </ItemGroup>
-    <ItemGroup>
-        <Folder Include="Properties\"/>
-    </ItemGroup>
+    <ItemGroup/>
     <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Elements\RemObjects.Elements.Echoes.targets"/>
     <PropertyGroup>
         <PreBuildEvent Condition="'$(OS)' != 'Unix'">rmdir /s /q $(ProjectDir)\Obj</PreBuildEvent>
     </PropertyGroup>
     <Import Project="Sugar.Shared.projitems" Label="Shared"/>
-    <ItemGroup>
-        <Compile Include="Properties\AssemblyInfo.pas"/>
-    </ItemGroup>
+    <ItemGroup/>
 </Project>

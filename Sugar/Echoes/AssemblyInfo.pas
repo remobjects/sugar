@@ -2,6 +2,7 @@
 
 interface
 
+{$IF ECHOES}
 uses
   System.Reflection,
   System.Resources,
@@ -26,5 +27,6 @@ uses
 {$ENDIF}
 
 implementation
+{$ENDIF
 
 end.

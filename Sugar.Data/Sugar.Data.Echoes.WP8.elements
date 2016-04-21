@@ -118,12 +118,8 @@
             <HintPath>..\Sugar\bin\WP8\Sugar.dll</HintPath>
         </ProjectReference>
     </ItemGroup>
-    <ItemGroup>
-        <Folder Include="Properties\"/>
-    </ItemGroup>
+    <ItemGroup/>
     <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Elements\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\RemObjects.Elements.Echoes.$(TargetFrameworkIdentifier).targets"/>
     <Import Project="Sugar.Data.Shared.projitems" Label="Shared"/>
-    <ItemGroup>
-        <Compile Include="Properties\AssemblyInfo.pas"/>
-    </ItemGroup>
+    <ItemGroup/>
 </Project>

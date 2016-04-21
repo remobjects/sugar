@@ -1,29 +1,32 @@
-﻿namespace Sugar.Echoes;
+﻿namespace Sugar;
 
 interface
 
+{$IF ECHOES}
 uses
   System.Reflection,
   System.Resources,
-  System.Runtime.CompilerServices,  
   System.Runtime.InteropServices;
 
+{$CROSSPLATFORM OFF}
+
 [assembly: AssemblyTitle('RemObjects Sugar')]
-[assembly: AssemblyDescription('RemObjects Sugar Cross-Platform Library for Elements')]
-[assembly: AssemblyCompany('RemObjects Software')]
+[assembly: AssemblyDescription('')]
+[assembly: AssemblyConfiguration('')]
+[assembly: AssemblyCompany('')]
 [assembly: AssemblyProduct('')]
-[assembly: AssemblyCopyright('RemObjects Software')]
+[assembly: AssemblyCopyright('')]
 [assembly: AssemblyTrademark('')]
 [assembly: AssemblyCulture('')]
 [assembly: AssemblyVersion('1.0.0.1')]
+[assembly: NeutralResourcesLanguage('')]
 [assembly: ComVisible(false)]
 
-[assembly: AssemblyDelaySign(false)]
-[assembly: AssemblyKeyFile('')]
-{$IF CODESIGN}
+{$IF SIGN}
 [assembly: AssemblyKeyName('RemObjectsSoftware')]
 {$ENDIF}
 
 implementation
+{$ENDIF
 
 end.
