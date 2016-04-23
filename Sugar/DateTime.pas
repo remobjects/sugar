@@ -26,12 +26,19 @@ type
   private
   private
     const DEFAULT_FORMAT = "{dd}/{MM}/{yyyy} {hh}:{mm}:{ss}";
+    const DEFAULT_FORMAT_DATE = "{dd}/{MM}/{yyyy}";
+    const DEFAULT_FORMAT_DATE_SHORT = "{d}/{M}/{yyyy}";
+    const DEFAULT_FORMAT_TIME = "{hh}:{mm}:{ss}";
+    const DEFAULT_FORMAT_TIME_SHORT = "{hh}:{mm}";
   public
     constructor;
     constructor(aTicks: Int64);
     constructor(aYear, aMonth, aDay: Integer);
     constructor(aYear, aMonth, aDay, anHour, aMinute: Integer);
     constructor(aYear, aMonth, aDay, anHour, aMinute, aSecond: Integer);
+    {$IF COOPER}
+    constructor(aDate: date);
+    {$ENDIF}
 
     method AddDays(Value: Integer): DateTime;
     method AddHours(Value: Integer): DateTime;
@@ -46,6 +53,9 @@ type
 
     method ToShortDateString: String;
     method ToShortTimeString: String;
+
+    method ToShortPrettyDateString: String;
+    method ToLongPrettyDateString: String;
 
     {$IF COOPER}
     method ToString: java.lang.String; override;
@@ -138,6 +148,14 @@ begin
   exit lCalendar.dateFromComponents(Components);
   {$ENDIF}
 end;
+
+{$IF COOPER}
+constructor DateTime(aDate: Date);
+begin
+  result := Calendar.Instance;
+  (result as Calendar).Time := aDate;
+end;
+{$ENDIF}
 
 method DateTime.AddDays(Value: Integer): DateTime;
 begin
@@ -278,7 +296,7 @@ end;
 method DateTime.ToShortDateString: String;
 begin
   {$IF COOPER}
-  java.text.DateFormat.getDateInstance().format(mapped.Time);
+  result := ToString(DEFAULT_FORMAT_DATE_SHORT)
   {$ELSEIF ECHOES}
     {$IF WINDOWS_PHONE OR NETFX_CORE}
     result := mapped.ToString;
@@ -294,6 +312,42 @@ begin
 end;
 
 method DateTime.ToShortTimeString: String;
+begin
+  {$IF COOPER}
+  result := ToString(DEFAULT_FORMAT_TIME_SHORT)
+  {$ELSEIF ECHOES}
+    {$IF WINDOWS_PHONE OR NETFX_CORE}
+    result := mapped.ToString();
+    {$ELSE}
+    result := mapped.ToShortTimeString();
+    {$ENDIF}
+  {$ELSEIF NOUGAT}
+  var lFormatter: NSDateFormatter := new NSDateFormatter();
+  lFormatter.dateStyle := NSDateFormatterStyle.LongStyle;
+  lFormatter.timeStyle := NSDateFormatterStyle.ShortStyle;
+  result := lFormatter.stringFromDate(mapped);
+  {$ENDIF}
+end;
+
+method DateTime.ToShortPrettyDateString: String;
+begin
+  {$IF COOPER}
+  result := ToShortDateString();
+  {$ELSEIF ECHOES}
+    {$IF WINDOWS_PHONE OR NETFX_CORE}
+    result := ToShortDateString();
+    {$ELSE}
+    result := ToShortDateString();
+    {$ENDIF}
+  {$ELSEIF NOUGAT}
+  var lFormatter: NSDateFormatter := new NSDateFormatter();
+  lFormatter.dateStyle := NSDateFormatterStyle.MediumStyle;
+  lFormatter.timeStyle := NSDateFormatterStyle.NoStyle;
+  result := lFormatter.stringFromDate(mapped);
+  {$ENDIF}
+end;
+
+method DateTime.ToLongPrettyDateString: String;
 begin
   {$IF COOPER}
   java.text.DateFormat.getTimeInstance().format(mapped.Time);
