@@ -323,7 +323,7 @@ begin
     {$ENDIF}
   {$ELSEIF NOUGAT}
   var lFormatter: NSDateFormatter := new NSDateFormatter();
-  lFormatter.dateStyle := NSDateFormatterStyle.LongStyle;
+  lFormatter.dateStyle := NSDateFormatterStyle.NoStyle;
   lFormatter.timeStyle := NSDateFormatterStyle.ShortStyle;
   result := lFormatter.stringFromDate(mapped);
   {$ENDIF}
@@ -355,12 +355,12 @@ begin
     {$IF WINDOWS_PHONE OR NETFX_CORE}
     result := mapped.ToString;
     {$ELSE}
-    result := mapped.ToShortTimeString;
+    result := mapped.ToShortDateString;
     {$ENDIF}
   {$ELSEIF NOUGAT}
   var lFormatter: NSDateFormatter := new NSDateFormatter();
-  lFormatter.dateStyle := NSDateFormatterStyle.NoStyle;
-  lFormatter.timeStyle := NSDateFormatterStyle.ShortStyle;
+  lFormatter.dateStyle := NSDateFormatterStyle.LongStyle;
+  lFormatter.timeStyle := NSDateFormatterStyle.NoStyle;
   result := lFormatter.stringFromDate(mapped);
   {$ENDIF}
 end;
