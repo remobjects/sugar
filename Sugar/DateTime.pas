@@ -267,9 +267,9 @@ begin
     exit "";
 
   if String.IsNullOrEmpty(Culture) then
-    exit mapped.ToString(Format)
+    exit mapped.ToString(DateFormatter.Format(Format))
   else
-    exit mapped.ToString(Format, new System.Globalization.CultureInfo(Culture));
+    exit mapped.ToString(DateFormatter.Format(Format), new System.Globalization.CultureInfo(Culture));
   {$ELSEIF NOUGAT}
   var lFormatter := new NSDateFormatter();
   if not String.IsNullOrEmpty(Culture) then begin
