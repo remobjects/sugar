@@ -55,7 +55,7 @@ implementation
 constructor File(aPath: not nullable String);
 begin
   {$IF WINDOWS_PHONE OR NETFX_CORE}
-  exit StorageFile.GetFileFromPathAsync(aPath).Await;
+  exit StorageFile.GetFileFromPathAsync(aPath).Await();
   {$ELSE}
   exit File(aPath);
   {$ENDIF}
@@ -184,9 +184,10 @@ begin
     raise new SugarFileNotFoundException(FullPath);
   {$IF COOPER}
   result := new DateTime(new java.util.Date(JavaFile.lastModified())); // Java doesn't seem to have access to the creation date separately?
-  //{$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
+  {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
+  result := mapped.DateCreated.UtcDateTime;
   {$ELSEIF ECHOES}
-  System.IO.File.GetCreationTimeUtc(mapped);
+  result := System.IO.File.GetCreationTimeUtc(mapped);
   {$ELSEIF NOUGAT}
   result := NSFileManager.defaultManager.attributesOfItemAtPath(self.FullPath) error(nil):valueForKey(NSFileCreationDate)
   {$ENDIF}
@@ -198,9 +199,10 @@ begin
     raise new SugarFileNotFoundException(FullPath);
   {$IF COOPER}  
   result := new DateTime(new java.util.Date(JavaFile.lastModified()));
-  //{$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
+  {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
+  result := mapped.GetBasicPropertiesAsync().Await().DateModified.UtcDateTime;
   {$ELSEIF ECHOES}
-  System.IO.File.GetLastWriteTimeUtc(mapped);
+  result := System.IO.File.GetLastWriteTimeUtc(mapped);
   {$ELSEIF NOUGAT}
   result := NSFileManager.defaultManager.attributesOfItemAtPath(self.FullPath) error(nil):valueForKey(NSFileModificationDate)
   {$ENDIF}
