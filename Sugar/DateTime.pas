@@ -76,6 +76,9 @@ type
     class property Today: DateTime read {$IF COOPER OR NOUGAT}UtcNow.Date{$ELSEIF ECHOES}mapped.Today{$ENDIF};
     class property UtcNow: DateTime read {$IF COOPER OR NOUGAT}new DateTime(){$ELSEIF ECHOES}mapped.UtcNow{$ENDIF};    
     const TicksSince1970: Int64 = 621355968000000000;
+    
+    property TimeSince: TimeSpan read (UtcNow-self);
+    class method TimeSince(aOtherDateTime: DateTime): TimeSpan;
                                   
     property Ticks: Int64 read{$IFDEF COOPER}(mapped.TimeInMillis +mapped.TimeZone.getOffset(mapped.TimeInMillis)) * TimeSpan.TicksPerMillisecond + TicksSince1970{$ELSEIF ECHOES}mapped.Ticks{$ELSE}Int64((mapped.timeIntervalSince1970 + DateTimeHelpers.LocalTimezone.secondsFromGMTForDate(mapped)) * TimeSpan.TicksPerSecond) + TicksSince1970{$ENDIF};
     class operator &Add(a: DateTime; b: TimeSpan): DateTime;
@@ -401,6 +404,11 @@ begin
   end;
 end;
 {$ENDIF}
+
+class method DateTime.TimeSince(aOtherDateTime: DateTime): TimeSpan;
+begin
+  result := (UtcNow-aOtherDateTime);
+end;
 
 operator DateTime.Add(a: DateTime; b: TimeSpan): DateTime;
 begin

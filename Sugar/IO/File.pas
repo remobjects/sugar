@@ -13,7 +13,9 @@ uses
 
 type
   File = public class mapped to {$IF WINDOWS_PHONE OR NETFX_CORE}Windows.Storage.StorageFile{$ELSEIF ECHOES}System.String{$ELSEIF COOPER}java.lang.String{$ELSEIF NOUGAT}NSString{$ENDIF}
-  private    
+  private
+    method getDateModified: DateTime;
+    method getDateCreated: DateTime;    
     {$IF COOPER}
     property JavaFile: java.io.File read new java.io.File(mapped);
     {$ENDIF}
@@ -39,6 +41,9 @@ type
     property Name: not nullable String read Sugar.IO.Path.GetFileName(mapped);
     {$ENDIF}
     property &Extension: not nullable String read Sugar.IO.Path.GetExtension(FullPath);
+    
+    property DateCreated: DateTime read getDateCreated;
+    property DateModified: DateTime read getDateModified;
     
     method ReadText(Encoding: Encoding := nil): String;
     method ReadBytes: array of Byte;
@@ -171,6 +176,34 @@ end;
 method File.ReadBinary: Binary;
 begin
   exit FileUtils.ReadBinary(self.FullPath);
+end;
+
+method File.getDateCreated: DateTime;
+begin
+  if not Exists then
+    raise new SugarFileNotFoundException(FullPath);
+  {$IF COOPER}
+  result := new DateTime(new java.util.Date(JavaFile.lastModified())); // Java doesn't seem to have access to the creation date separately?
+  //{$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
+  {$ELSEIF ECHOES}
+  System.IO.File.GetCreationTimeUtc(mapped);
+  {$ELSEIF NOUGAT}
+  result := NSFileManager.defaultManager.attributesOfItemAtPath(self.FullPath) error(nil):valueForKey(NSFileCreationDate)
+  {$ENDIF}
+end;
+
+method File.getDateModified: DateTime;
+begin
+  if not Exists then
+    raise new SugarFileNotFoundException(FullPath);
+  {$IF COOPER}  
+  result := new DateTime(new java.util.Date(JavaFile.lastModified()));
+  //{$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
+  {$ELSEIF ECHOES}
+  System.IO.File.GetLastWriteTimeUtc(mapped);
+  {$ELSEIF NOUGAT}
+  result := NSFileManager.defaultManager.attributesOfItemAtPath(self.FullPath) error(nil):valueForKey(NSFileModificationDate)
+  {$ENDIF}
 end;
 
 end.
