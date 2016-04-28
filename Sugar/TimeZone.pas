@@ -30,6 +30,9 @@ class method TimeZone.get_TimeZoneNames: not nullable sequence of String;
 begin
   {$IF COOPER}
   result := java.util.TimeZone.getAvailableIDs() as not nullable;
+  {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
+  // Windows Phone 8.1 and Windows 8.1 do not expose any managed API for enumerating TimeZones
+  raise new NotSupportedException();
   {$ELSEIF ECHOES}
   result := System.TimeZoneInfo.GetSystemTimeZones().Select(tz -> tz.Id) as not nullable;
   {$ELSEIF NOUGAT}
@@ -42,6 +45,7 @@ begin
   {$IF COOPER}
   result := java.util.TimeZone.getTimeZone(aAbbreviation);
   {$ELSEIF ECHOES}
+   raise new NotSupportedException();
   {$ELSEIF NOUGAT}
   result := NSTimeZone.timeZoneWithAbbreviation(aAbbreviation);
   {$ENDIF}
@@ -51,6 +55,9 @@ class method TimeZone.get_TimeZoneWithName(aName: String): nullable TimeZone;
 begin
   {$IF COOPER}
   result := java.util.TimeZone.getTimeZone(aName);
+  {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
+  // Windows Phone 8.1 and Windows 8.1 do not expose any managed API for this
+  raise new NotSupportedException();
   {$ELSEIF ECHOES}
   result := System.TimeZoneInfo.FindSystemTimeZoneById(aName);
   {$ELSEIF NOUGAT}
