@@ -103,6 +103,8 @@
     <Compile Include="Consts.pas" />
     <Compile Include="Convert.pas" />
     <Compile Include="DateTime.pas" />
+    <Compile Include="TimeSpan.pas" />
+    <Compile Include="TimeZone.pas" />
     <Compile Include="DateFormatter.pas" />
     <Compile Include="Encoding.pas" />
     <Compile Include="HTTP.pas" />
