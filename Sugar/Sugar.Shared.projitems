@@ -104,6 +104,7 @@
         <Compile Include="$(MSBuildThisFileDirectory)JSON\JsonSerializer.pas"/>
         <Compile Include="$(MSBuildThisFileDirectory)JSON\JsonTokenizer.pas"/>
         <Compile Include="$(MSBuildThisFileDirectory)JSON\JsonValue.pas"/>
+        <Compile Include="$(MSBuildThisFileDirectory)TimeZone.pas"/>
     </ItemGroup>
     <ItemGroup>
         <Folder Include="$(MSBuildThisFileDirectory)Collections\"/>

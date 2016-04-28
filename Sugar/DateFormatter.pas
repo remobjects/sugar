@@ -100,6 +100,9 @@ end;
 
 class method DateFormatter.Format(Value: String): String;
 begin
+  // right now we use the "native" format, which afaict works everywhere. If we ever need per-platfor adjsutments, we'll add them here.
+  result := Value;
+(*
   if Value = nil then
     raise new SugarArgumentNullException('Value');
 
@@ -177,6 +180,7 @@ begin
   if BlockStart < Value.Length then 
     AppendEscaped(Value, BlockStart, Value.Length - BlockStart, sb);
   exit sb.ToString();
+  *)
 end;
 
 class method DateFormatter.GetFormatters: List<FormatSpecifier>;

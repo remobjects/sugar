@@ -25,11 +25,11 @@ type
   DateTime = public {$IF COOPER}class mapped to java.util.Calendar{$ELSEIF ECHOES}record mapped to System.DateTime{$ELSEIF NOUGAT}class mapped to NSDate{$ENDIF}
   private
   private
-    const DEFAULT_FORMAT = "{dd}/{MM}/{yyyy} {hh}:{mm}:{ss}";
-    const DEFAULT_FORMAT_DATE = "{dd}/{MM}/{yyyy}";
-    const DEFAULT_FORMAT_DATE_SHORT = "{d}/{M}/{yyyy}";
-    const DEFAULT_FORMAT_TIME = "{hh}:{mm}:{ss}";
-    const DEFAULT_FORMAT_TIME_SHORT = "{hh}:{mm}";
+    const DEFAULT_FORMAT = "dd/MM/yyyy hh:mm:ss";
+    const DEFAULT_FORMAT_DATE = "dd/MM/yyyy";
+    const DEFAULT_FORMAT_DATE_SHORT = "d/M/yyyy";
+    const DEFAULT_FORMAT_TIME = "hh:mm:ss";
+    const DEFAULT_FORMAT_TIME_SHORT = "hh:mm";
   public
     constructor;
     constructor(aTicks: Int64);
@@ -48,14 +48,15 @@ type
     method AddYears(Value: Integer): DateTime;
 
     method CompareTo(Value: DateTime): Integer;
-    method ToString(Format: String): String;
-    method ToString(Format: String; Culture: String): String;
+    method ToString(aTimeZone: TimeZone): String;
+    method ToString(Format: String; aTimeZone: TimeZone := nil): String;
+    method ToString(Format: String; Culture: String; aTimeZone: TimeZone := nil): String;
 
-    method ToShortDateString: String;
-    method ToShortTimeString: String;
+    method ToShortDateString(aTimeZone: TimeZone := nil): String;
+    method ToShortTimeString(aTimeZone: TimeZone := nil): String;
 
-    method ToShortPrettyDateString: String;
-    method ToLongPrettyDateString: String;
+    method ToShortPrettyDateString(aTimeZone: TimeZone := nil): String;
+    method ToLongPrettyDateString(aTimeZone: TimeZone := nil): String;
 
     {$IF COOPER}
     method ToString: java.lang.String; override;
@@ -152,11 +153,207 @@ begin
   {$ENDIF}
 end;
 
+constructor DateTime(aTicks: Int64);
+begin
+  {$IFDEF COOPER}
+  var lCalendar := Calendar.Instance;
+  var dt := (aTicks - TicksSince1970) / TimeSpan.TicksPerMillisecond;
+  lCalendar.Time := new Date(dt - lCalendar.TimeZone.getOffset(dt));
+   
+  exit lCalendar;
+  {$ELSEIF ECHOES}
+  exit new System.DateTime(aTicks);
+  {$ELSEIF NOUGAT}
+  var dt := NSDate.dateWithTimeIntervalSince1970(Double(aTicks - TicksSince1970) / TimeSpan.TicksPerSecond);
+  
+  exit NSDate.dateWithTimeInterval(-DateTimeHelpers.LocalTimezone.secondsFromGMTForDate(dt)) sinceDate(dt);
+  {$ENDIF}
+end;
+
 {$IF COOPER}
 constructor DateTime(aDate: Date);
 begin
   result := Calendar.Instance;
   (result as Calendar).Time := aDate;
+end;
+{$ENDIF}
+
+class method DateTime.TimeSince(aOtherDateTime: DateTime): TimeSpan;
+begin
+  result := (UtcNow-aOtherDateTime);
+end;
+
+//
+// ToString
+//
+
+{$IF COOPER}
+method DateTime.ToString: java.lang.String;
+{$ELSEIF ECHOES}
+method DateTime.ToString: System.String;
+{$ELSEIF NOUGAT}
+method DateTime.description: NSString;
+{$ENDIF}
+begin
+  exit ToString(DEFAULT_FORMAT);
+end;
+
+method DateTime.ToString(Format: String; aTimeZone: TimeZone := nil): String;
+begin
+  exit ToString(Format, nil, aTimeZone);
+end;
+
+method DateTime.ToString(Format: String; Culture: String; aTimeZone: TimeZone := nil): String;
+begin
+  {$IF COOPER}
+  var lFormatter := if String.IsNullOrEmpty(Culture) then
+                      new java.text.SimpleDateFormat(DateFormatter.Format(Format))
+                    else    
+                      new java.text.SimpleDateFormat(DateFormatter.Format(Format), Sugar.Cooper.LocaleUtils.ForLanguageTag(Culture));
+  lFormatter.timeZone := coalesce(aTimeZone, TimeZone.Utc);
+  exit lFormatter.format(mapped.Time);
+  {$ELSEIF ECHOES}
+  if Format = "" then
+    exit "";
+
+  if String.IsNullOrEmpty(Culture) then
+    exit mapped.ToString(DateFormatter.Format(Format))
+  else
+    exit mapped.ToString(DateFormatter.Format(Format), new System.Globalization.CultureInfo(Culture));
+  {$ELSEIF NOUGAT}
+  var lFormatter := new NSDateFormatter();
+  lFormatter.timeZone := coalesce(aTimeZone, TimeZone.Utc);
+  if not String.IsNullOrEmpty(Culture) then begin
+    var Locale := new NSLocale withLocaleIdentifier(Culture);
+    lFormatter.locale := Locale;
+  end;
+  lFormatter.setDateFormat(DateFormatter.Format(Format));
+  exit lFormatter.stringFromDate(mapped);
+  {$ENDIF}
+end;
+
+method DateTime.ToString(aTimeZone: TimeZone := nil): String;
+begin
+  exit ToString(DEFAULT_FORMAT, nil, aTimeZone);
+end;
+
+method DateTime.ToShortDateString(aTimeZone: TimeZone := nil): String;
+begin
+  {$IF COOPER}
+  var lFormatter := java.text.DateFormat.getDateInstance(java.text.DateFormat.SHORT);
+  lFormatter.timeZone := coalesce(aTimeZone, TimeZone.Utc);
+  lFormatter.format(mapped.Time);
+  {$ELSEIF ECHOES}
+    {$IF WINDOWS_PHONE OR NETFX_CORE}
+    result := mapped.ToString;
+    {$ELSE}
+    result := mapped.ToShortDateString;
+    {$ENDIF}
+  {$ELSEIF NOUGAT}
+  var lFormatter: NSDateFormatter := new NSDateFormatter();
+  lFormatter.timeZone := coalesce(aTimeZone, TimeZone.Utc);
+  lFormatter.dateStyle := NSDateFormatterStyle.ShortStyle;
+  lFormatter.timeStyle := NSDateFormatterStyle.NoStyle;
+  result := lFormatter.stringFromDate(mapped);
+  {$ENDIF}
+end;
+
+method DateTime.ToShortTimeString(aTimeZone: TimeZone := nil): String;
+begin
+  {$IF COOPER}
+  var lFormatter := java.text.DateFormat.getTimeInstance(java.text.DateFormat.SHORT);
+  lFormatter.timeZone := coalesce(aTimeZone, TimeZone.Utc);
+  lFormatter.format(mapped.Time);
+  {$ELSEIF ECHOES}
+    {$IF WINDOWS_PHONE OR NETFX_CORE}
+    result := mapped.ToString();
+    {$ELSE}
+    result := mapped.ToShortTimeString();
+    {$ENDIF}
+  {$ELSEIF NOUGAT}
+  var lFormatter: NSDateFormatter := new NSDateFormatter();
+  lFormatter.timeZone := coalesce(aTimeZone, TimeZone.Utc);
+  lFormatter.dateStyle := NSDateFormatterStyle.NoStyle;
+  lFormatter.timeStyle := NSDateFormatterStyle.ShortStyle;
+  result := lFormatter.stringFromDate(mapped);
+  {$ENDIF}
+end;
+
+method DateTime.ToShortPrettyDateString(aTimeZone: TimeZone := nil): String;
+begin
+  {$IF COOPER}
+  var lFormatter := java.text.DateFormat.getDateInstance(java.text.DateFormat.SHORT);
+  lFormatter.timeZone := coalesce(aTimeZone, TimeZone.Utc);
+  lFormatter.format(mapped.Time);
+  {$ELSEIF ECHOES}
+    {$IF WINDOWS_PHONE OR NETFX_CORE}
+    result := ToShortDateString();
+    {$ELSE}
+    result := ToShortDateString();
+    {$ENDIF}
+  {$ELSEIF NOUGAT}
+  var lFormatter: NSDateFormatter := new NSDateFormatter();
+  lFormatter.timeZone := coalesce(aTimeZone, TimeZone.Utc);
+  lFormatter.dateStyle := NSDateFormatterStyle.MediumStyle;
+  lFormatter.timeStyle := NSDateFormatterStyle.NoStyle;
+  result := lFormatter.stringFromDate(mapped);
+  {$ENDIF}
+end;
+
+method DateTime.ToLongPrettyDateString(aTimeZone: TimeZone := nil): String;
+begin
+  {$IF COOPER}
+  var lFormatter := java.text.DateFormat.getDateInstance(java.text.DateFormat.LONG);
+  lFormatter.timeZone := coalesce(aTimeZone, TimeZone.Utc);
+  lFormatter.format(mapped.Time);
+  {$ELSEIF ECHOES}
+    {$IF WINDOWS_PHONE OR NETFX_CORE}
+    result := mapped.ToString;
+    {$ELSE}
+    result := mapped.ToShortDateString;
+    {$ENDIF}
+  {$ELSEIF NOUGAT}
+  var lFormatter: NSDateFormatter := new NSDateFormatter();
+  lFormatter.timeZone := coalesce(aTimeZone, TimeZone.Utc);
+  lFormatter.dateStyle := NSDateFormatterStyle.LongStyle;
+  lFormatter.timeStyle := NSDateFormatterStyle.NoStyle;
+  result := lFormatter.stringFromDate(mapped);
+  {$ENDIF}
+end;
+
+//
+// Mutating Dates
+//
+
+{$IF NOUGAT}
+method DateTimeHelpers.AdjustDate(aSelf: NSDate; Component: NSCalendarUnit; Value: Integer): DateTime;
+begin
+  var Components: NSDateComponents := new NSDateComponents();  
+
+  case Component of
+    NSCalendarUnit.NSDayCalendarUnit: Components.setDay(Value);
+    NSCalendarUnit.NSHourCalendarUnit: Components.setHour(Value);
+    NSCalendarUnit.NSMinuteCalendarUnit: Components.setMinute(Value);
+    NSCalendarUnit.NSMonthCalendarUnit: Components.setMonth(Value);
+    NSCalendarUnit.NSSecondCalendarUnit: Components.setSecond(Value);
+    NSCalendarUnit.NSYearCalendarUnit: Components.setYear(Value);
+  end;
+  
+  var lCalendar := NSCalendar.currentCalendar();
+  exit lCalendar.dateByAddingComponents(Components) toDate(aSelf) options(0);  
+end;
+
+method DateTimeHelpers.GetComponent(aSelf: NSDate; Component: NSCalendarUnit): Integer;
+begin
+  var lComponents := NSCalendar.currentCalendar().components(Component) fromDate(aSelf);
+  case Component of
+    NSCalendarUnit.NSDayCalendarUnit: exit lComponents.day;
+    NSCalendarUnit.NSHourCalendarUnit: exit lComponents.hour;
+    NSCalendarUnit.NSMinuteCalendarUnit: exit lComponents.minute;
+    NSCalendarUnit.NSMonthCalendarUnit: exit lComponents.month;
+    NSCalendarUnit.NSSecondCalendarUnit: exit lComponents.second;
+    NSCalendarUnit.NSYearCalendarUnit: exit lComponents.year;
+  end;
 end;
 {$ENDIF}
 
@@ -238,178 +435,6 @@ begin
   {$ENDIF}
 end;
 
-method DateTime.CompareTo(Value: DateTime): Integer;
-begin
-  {$IF COOPER}
-  exit mapped.compareTo(new DateTime(Value.Year, Value.Month, Value.Day, Value.Hour, Value.Minute, Value.Second));
-  {$ELSEIF ECHOES}
-  exit mapped.CompareTo(Value);
-  {$ELSEIF NOUGAT}
-  exit mapped.compare(new DateTime(Value.Year, Value.Month, Value.Day, Value.Hour, Value.Minute, Value.Second));
-  {$ENDIF}
-end;
-
-method DateTime.ToString(Format: String): String;
-begin
-  exit ToString(Format, nil);
-end;
-
-method DateTime.ToString(Format: String; Culture: String): String;
-begin
-  {$IF COOPER}
-  var lFormatter: java.text.SimpleDateFormat;
-
-  if String.IsNullOrEmpty(Culture) then
-    lFormatter := new java.text.SimpleDateFormat(DateFormatter.Format(Format))
-  else    
-    lFormatter := new java.text.SimpleDateFormat(DateFormatter.Format(Format), Sugar.Cooper.LocaleUtils.ForLanguageTag(Culture));
-    
-  exit lFormatter.format(mapped.Time);
-  {$ELSEIF ECHOES}
-  if Format = "" then
-    exit "";
-
-  if String.IsNullOrEmpty(Culture) then
-    exit mapped.ToString(DateFormatter.Format(Format))
-  else
-    exit mapped.ToString(DateFormatter.Format(Format), new System.Globalization.CultureInfo(Culture));
-  {$ELSEIF NOUGAT}
-  var lFormatter := new NSDateFormatter();
-  if not String.IsNullOrEmpty(Culture) then begin
-    var Locale := new NSLocale withLocaleIdentifier(Culture);
-    lFormatter.locale := Locale;
-  end;
-  lFormatter.setDateFormat(DateFormatter.Format(Format));
-  exit lFormatter.stringFromDate(mapped);
-  {$ENDIF}
-end;
-
-{$IF COOPER}
-method DateTime.ToString: java.lang.String;
-begin
-  exit ToString(DEFAULT_FORMAT);
-end;
-{$ELSEIF ECHOES}
-method DateTime.ToString: System.String;
-begin
-  exit ToString(DEFAULT_FORMAT);
-end;
-{$ENDIF}
-
-method DateTime.ToShortDateString: String;
-begin
-  {$IF COOPER}
-  result := ToString(DEFAULT_FORMAT_DATE_SHORT)
-  {$ELSEIF ECHOES}
-    {$IF WINDOWS_PHONE OR NETFX_CORE}
-    result := mapped.ToString;
-    {$ELSE}
-    result := mapped.ToShortDateString;
-    {$ENDIF}
-  {$ELSEIF NOUGAT}
-  var lFormatter: NSDateFormatter := new NSDateFormatter();
-  lFormatter.dateStyle := NSDateFormatterStyle.ShortStyle;
-  lFormatter.timeStyle := NSDateFormatterStyle.NoStyle;
-  result := lFormatter.stringFromDate(mapped);
-  {$ENDIF}
-end;
-
-method DateTime.ToShortTimeString: String;
-begin
-  {$IF COOPER}
-  result := ToString(DEFAULT_FORMAT_TIME_SHORT)
-  {$ELSEIF ECHOES}
-    {$IF WINDOWS_PHONE OR NETFX_CORE}
-    result := mapped.ToString();
-    {$ELSE}
-    result := mapped.ToShortTimeString();
-    {$ENDIF}
-  {$ELSEIF NOUGAT}
-  var lFormatter: NSDateFormatter := new NSDateFormatter();
-  lFormatter.dateStyle := NSDateFormatterStyle.NoStyle;
-  lFormatter.timeStyle := NSDateFormatterStyle.ShortStyle;
-  result := lFormatter.stringFromDate(mapped);
-  {$ENDIF}
-end;
-
-method DateTime.ToShortPrettyDateString: String;
-begin
-  {$IF COOPER}
-  result := ToShortDateString();
-  {$ELSEIF ECHOES}
-    {$IF WINDOWS_PHONE OR NETFX_CORE}
-    result := ToShortDateString();
-    {$ELSE}
-    result := ToShortDateString();
-    {$ENDIF}
-  {$ELSEIF NOUGAT}
-  var lFormatter: NSDateFormatter := new NSDateFormatter();
-  lFormatter.dateStyle := NSDateFormatterStyle.MediumStyle;
-  lFormatter.timeStyle := NSDateFormatterStyle.NoStyle;
-  result := lFormatter.stringFromDate(mapped);
-  {$ENDIF}
-end;
-
-method DateTime.ToLongPrettyDateString: String;
-begin
-  {$IF COOPER}
-  java.text.DateFormat.getTimeInstance().format(mapped.Time);
-  {$ELSEIF ECHOES}
-    {$IF WINDOWS_PHONE OR NETFX_CORE}
-    result := mapped.ToString;
-    {$ELSE}
-    result := mapped.ToShortDateString;
-    {$ENDIF}
-  {$ELSEIF NOUGAT}
-  var lFormatter: NSDateFormatter := new NSDateFormatter();
-  lFormatter.dateStyle := NSDateFormatterStyle.LongStyle;
-  lFormatter.timeStyle := NSDateFormatterStyle.NoStyle;
-  result := lFormatter.stringFromDate(mapped);
-  {$ENDIF}
-end;
-
-{$IF NOUGAT}
-method DateTimeHelpers.AdjustDate(aSelf: NSDate; Component: NSCalendarUnit; Value: Integer): DateTime;
-begin
-  var Components: NSDateComponents := new NSDateComponents();  
-
-  case Component of
-    NSCalendarUnit.NSDayCalendarUnit: Components.setDay(Value);
-    NSCalendarUnit.NSHourCalendarUnit: Components.setHour(Value);
-    NSCalendarUnit.NSMinuteCalendarUnit: Components.setMinute(Value);
-    NSCalendarUnit.NSMonthCalendarUnit: Components.setMonth(Value);
-    NSCalendarUnit.NSSecondCalendarUnit: Components.setSecond(Value);
-    NSCalendarUnit.NSYearCalendarUnit: Components.setYear(Value);
-  end;
-  
-  var lCalendar := NSCalendar.currentCalendar();
-  exit lCalendar.dateByAddingComponents(Components) toDate(aSelf) options(0);  
-end;
-
-method DateTime.description: NSString;
-begin
-  exit ToString(DEFAULT_FORMAT);
-end;
-
-method DateTimeHelpers.GetComponent(aSelf: NSDate; Component: NSCalendarUnit): Integer;
-begin
-  var lComponents := NSCalendar.currentCalendar().components(Component) fromDate(aSelf);
-  case Component of
-    NSCalendarUnit.NSDayCalendarUnit: exit lComponents.day;
-    NSCalendarUnit.NSHourCalendarUnit: exit lComponents.hour;
-    NSCalendarUnit.NSMinuteCalendarUnit: exit lComponents.minute;
-    NSCalendarUnit.NSMonthCalendarUnit: exit lComponents.month;
-    NSCalendarUnit.NSSecondCalendarUnit: exit lComponents.second;
-    NSCalendarUnit.NSYearCalendarUnit: exit lComponents.year;
-  end;
-end;
-{$ENDIF}
-
-class method DateTime.TimeSince(aOtherDateTime: DateTime): TimeSpan;
-begin
-  result := (UtcNow-aOtherDateTime);
-end;
-
 operator DateTime.Add(a: DateTime; b: TimeSpan): DateTime;
 begin
   exit new DateTime(a.Ticks + b.Ticks);
@@ -423,6 +448,21 @@ end;
 operator DateTime.Subtract(a: DateTime; b: TimeSpan): DateTime;
 begin
   exit new DateTime(a.Ticks - b.Ticks);
+end;
+
+//
+// Comparing Dates
+//
+
+method DateTime.CompareTo(Value: DateTime): Integer;
+begin
+  {$IF COOPER}
+  exit mapped.compareTo(new DateTime(Value.Year, Value.Month, Value.Day, Value.Hour, Value.Minute, Value.Second));
+  {$ELSEIF ECHOES}
+  exit mapped.CompareTo(Value);
+  {$ELSEIF NOUGAT}
+  exit mapped.compare(new DateTime(Value.Year, Value.Month, Value.Day, Value.Hour, Value.Minute, Value.Second));
+  {$ENDIF}
 end;
 
 operator DateTime.Equal(a: DateTime; b: DateTime): Boolean;
@@ -481,23 +521,6 @@ begin
   if (Object(b) = nil) then exit true;
   {$ENDIF}
   exit a.Ticks >= b.Ticks;
-end;
-
-constructor DateTime(aTicks: Int64);
-begin
-  {$IFDEF COOPER}
-  var lCalendar := Calendar.Instance;
-  var dt := (aTicks - TicksSince1970) / TimeSpan.TicksPerMillisecond;
-  lCalendar.Time := new Date(dt - lCalendar.TimeZone.getOffset(dt));
-   
-  exit lCalendar;
-  {$ELSEIF ECHOES}
-  exit new System.DateTime(aTicks);
-  {$ELSEIF NOUGAT}
-  var dt := NSDate.dateWithTimeIntervalSince1970(Double(aTicks - TicksSince1970) / TimeSpan.TicksPerSecond);
-  
-  exit NSDate.dateWithTimeInterval(-DateTimeHelpers.LocalTimezone.secondsFromGMTForDate(dt)) sinceDate(dt);
-  {$ENDIF}
 end;
 
 end.
