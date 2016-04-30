@@ -52,6 +52,9 @@ type
   {$ENDIF}
 
     class method UrlEncodeString(aString: String): String;
+
+    method GetParentUrl(): Url;
+    method GetSubUrl(aName: String): Url;    
   end;
     
 implementation
@@ -155,6 +158,37 @@ begin
   {$ENDIF}
   {$ELSEIF NOUGAT}
   result := NSString(aString).stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.alphanumericCharacterSet);
+  {$ENDIF}
+end;
+
+method Url.GetParentUrl(): nullable Url;
+begin
+  if Path = '/' then
+    result := nil
+  {$IF COOPER}
+  else if Path.EndsWith('/') then
+    result := mapped.toURI.resolve('..').toURL
+  else
+    result := mapped.toURI.resolve('.').toURL;
+  {$ELSEIF ECHOES}
+  else if Path.EndsWith('/') then
+    result := new Uri(mapped, '..')
+  else
+    result := new Uri(mapped, '.');
+  {$ELSEIF NOUGAT}
+  else
+    result := mapped.URLByDeletingLastPathComponent;
+  {$ENDIF}
+end;
+
+method Url.GetSubUrl(aName: String): Url;
+begin
+  {$IF COOPER}
+  result := mapped.toURI.resolve(aName).toURL
+  {$ELSEIF ECHOES}
+  result := new Uri(mapped, aName);
+  {$ELSEIF NOUGAT}
+  result := mapped.URLByAppendingPathComponent(aName);
   {$ENDIF}
 end;
 
