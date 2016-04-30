@@ -25,6 +25,7 @@ type
     class method FromString(aString: not nullable String): not nullable JsonDocument;
     class method CreateDocument: not nullable JsonDocument;
 
+    constructor;
     constructor(aRoot: not nullable JsonNode);
     
     {method Save(aFile: File);
@@ -66,11 +67,33 @@ type
     property FloatValue: Double read GetFloatValue write SetFloatValue; virtual;
     property BooleanValue: Boolean read GetBooleanValue write SetBooleanValue; virtual;
     property StringValue: String read GetStringValue write SetStringValue; virtual;
+
+    class method Create(aValue: nullable Dictionary<String,JsonNode>): nullable JsonObject;
+    class method Create(aValue: nullable List<JsonNode>): nullable JsonArray;
+    class method Create(aValue: nullable array of JsonNode): nullable JsonArray;
+    class method Create(aValue: nullable String): nullable JsonStringValue;
+    class method Create(aValue: nullable Double): nullable JsonFloatValue;
+    class method Create(aValue: nullable Int64): nullable JsonIntegerValue;
+    class method Create(aValue: nullable Boolean): nullable JsonBooleanValue;
   end;
 
 implementation
 
+uses
+  {$IF ECHOES}
+  System.Linq;
+  {$ELSEIF COOPER}
+  com.remobjects.elements.linq;
+  {$ELSEIF NOUGAT}
+  RemObjects.Elements.Linq;
+  {$ENDIF}
+
 { JsonDocument }
+
+constructor JsonDocument;
+begin
+  fRootNode := new JsonObject();
+end;
 
 constructor JsonDocument(aRoot: not nullable JsonNode);
 begin
@@ -95,7 +118,7 @@ end;
 
 class method JsonDocument.CreateDocument: not nullable JsonDocument;
 begin
-  result := new JsonDocument(new JsonObject());
+  result := new JsonDocument();
 end;
 
 method JsonDocument.{$IF NOUGAT}description: Foundation.NSString{$ELSEIF COOPER}ToString: java.lang.String{$ELSEIF ECHOES}ToString: System.String{$ENDIF};
@@ -229,6 +252,48 @@ begin
     (self as JsonStringValue).Value := aValue
   else
     raise new SugarException("JSON Node is not a string.")
+end;
+
+class method JsonNode.Create(aValue: Dictionary<String,JsonNode>): nullable JsonObject;
+begin
+  if assigned(aValue) then
+    result := new JsonObject(aValue);
+end;
+
+class method JsonNode.Create(aValue: List<JsonNode>): nullable JsonArray;
+begin
+  if assigned(aValue) then
+    result := new JsonArray(aValue);
+end;
+
+class method JsonNode.Create(aValue: array of JsonNode): nullable JsonArray;
+begin
+  if assigned(aValue) then
+    result := new JsonArray(aValue.ToList());
+end;
+
+class method JsonNode.Create(aValue: nullable String): nullable JsonStringValue;
+begin
+  if assigned(aValue) then
+    result := new JsonStringValue(aValue);
+end;
+
+class method JsonNode.Create(aValue: nullable Double): nullable JsonFloatValue;
+begin
+  if assigned(aValue) then
+    result := new JsonFloatValue(aValue);
+end;
+
+class method JsonNode.Create(aValue: nullable Int64): nullable JsonIntegerValue;
+begin
+  if assigned(aValue) then
+    result := new JsonIntegerValue(aValue);
+end;
+
+class method JsonNode.Create(aValue: nullable Boolean): nullable JsonBooleanValue;
+begin
+  if assigned(aValue) then
+    result := new JsonBooleanValue(aValue);
 end;
 
 end.

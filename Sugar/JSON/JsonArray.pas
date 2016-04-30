@@ -17,11 +17,14 @@ uses
 type
   JsonArray = public class (JsonNode, ISequence<JsonNode>)
   private
-    Items: List<JsonNode> := new List<JsonNode>;
+    fItems: List<JsonNode>;
 
     method GetItem(&Index: Integer): JsonNode;
     method SetItem(&Index: Integer; Value: JsonNode);
   public
+    constructor;
+    constructor(aItems: List<JsonNode>);
+  
     method &Add(Value: JsonNode);
     method Insert(&Index: Integer; Value: JsonNode);
     method Clear;
@@ -43,41 +46,51 @@ type
 
     class method Load(JsonString: String): JsonArray;
 
-    property Count: Integer read Items.Count; override;
+    property Count: Integer read fItems.Count; override;
     property Item[&Index: Integer]: JsonNode read GetItem write SetItem; default; override;
   end;
 
 implementation
 
+constructor JsonArray;
+begin
+  fItems := new List<JsonNode>();
+end;
+
+constructor JsonArray(aItems: List<JsonNode>);
+begin
+  fItems := aItems;
+end;
+
 method JsonArray.GetItem(&Index: Integer): JsonNode;
 begin
-  exit Items[&Index];
+  exit fItems[&Index];
 end;
 
 method JsonArray.SetItem(&Index: Integer; Value: JsonNode);
 begin
   SugarArgumentNullException.RaiseIfNil(Value, "Value");
-  Items[&Index] := Value;
+  fItems[&Index] := Value;
 end;
 
 method JsonArray.Add(Value: JsonNode);
 begin
-  Items.Add(Value);
+  fItems.Add(Value);
 end;
 
 method JsonArray.Insert(&Index: Integer; Value: JsonNode);
 begin
-  Items.Insert(&Index, Value);  
+  fItems.Insert(&Index, Value);  
 end;
 
 method JsonArray.Clear;
 begin
-  Items.Clear;
+  fItems.Clear;
 end;
 
 method JsonArray.RemoveAt(&Index: Integer);
 begin
-  Items.RemoveAt(&Index);
+  fItems.RemoveAt(&Index);
 end;
 
 class method JsonArray.Load(JsonString: String): JsonArray;
@@ -100,7 +113,7 @@ end;
 {$IF COOPER}
 method JsonArray.&iterator: java.util.Iterator<JsonNode>;
 begin
-  exit Iterable<JsonNode>(Items).iterator;
+  exit Iterable<JsonNode>(fItems).iterator;
 end;
 {$ELSEIF ECHOES}
 method JsonArray.GetNonGenericEnumerator: System.Collections.IEnumerator;
@@ -110,12 +123,12 @@ end;
 
 method JsonArray.GetEnumerator: System.Collections.Generic.IEnumerator<JsonNode>;
 begin  
-  exit System.Collections.Generic.IEnumerable<JsonNode>(Items).GetEnumerator;
+  exit System.Collections.Generic.IEnumerable<JsonNode>(fItems).GetEnumerator;
 end;
 {$ELSEIF NOUGAT}
 method JsonArray.countByEnumeratingWithState(aState: ^NSFastEnumerationState) objects(stackbuf: ^JsonNode) count(len: NSUInteger): NSUInteger;
 begin
-  exit NSArray(Items).countByEnumeratingWithState(aState) objects(^id(stackbuf)) count(len);
+  exit NSArray(fItems).countByEnumeratingWithState(aState) objects(^id(stackbuf)) count(len);
 end;
 {$ENDIF}
 

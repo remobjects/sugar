@@ -8,14 +8,14 @@ uses
 type
   JsonValue<T> = public abstract class(JsonNode)
   public
-    constructor(aValue: T);
+    constructor(aValue: not nullable T);
 
     method {$IF NOUGAT}description: Foundation.NSString{$ELSEIF COOPER}ToString: java.lang.String{$ELSEIF ECHOES}ToString: System.String{$ENDIF}; override;
     method {$IF NOUGAT}isEqual(Obj: id){$ELSE}&Equals(Obj: Object){$ENDIF}: Boolean; override;
     method {$IF NOUGAT}hash: Foundation.NSUInteger{$ELSEIF COOPER}hashCode: Integer{$ELSEIF ECHOES}GetHashCode: Integer{$ENDIF}; override;
 
-    property Value: T;
-    operator Implicit(aValue: JsonValue<T>): T;
+    property Value: not nullable T;
+    operator Implicit(aValue: JsonValue<T>): not nullable T;
   end;
   
   JsonStringValue = public class(JsonValue<not nullable String>)
@@ -59,7 +59,7 @@ implementation
 
 { JsonValue<T> }
 
-constructor JsonValue<T>(aValue: T);
+constructor JsonValue<T>(aValue: not nullable T);
 begin
   Value := aValue;
 end;
@@ -82,7 +82,7 @@ begin
   exit if self.Value = nil then -1 else self.Value.GetHashCode;
 end;
 
-operator JsonValue<T>.Implicit(aValue: JsonValue<T>): T;
+operator JsonValue<T>.Implicit(aValue: JsonValue<T>): not nullable T;
 begin
   result := aValue:Value;
 end;

@@ -9,14 +9,16 @@ uses
 type
   JsonObject = public class (JsonNode, ISequence<KeyValuePair<String, JsonNode>>)
   private
-    Items: Dictionary<String, JsonNode> := new Dictionary<String, JsonNode>;
+    fItems: Dictionary<String, JsonNode>;
 
     method GetItem(Key: String): nullable JsonNode;
-    method SetItem(Key: String; Value: JsonNode);
     method GetKeys: not nullable sequence of String;
     method GetProperties: sequence of KeyValuePair<String, JsonNode>; iterator;
   public
-    method &Add(Key: String; Value: JsonNode);
+    constructor;
+    constructor(aItems: Dictionary<String, JsonNode>);
+  
+    method &Add(Key: String; Value: nullable JsonNode);
     method Clear;
     method ContainsKey(Key: String): Boolean;
     method &Remove(Key: String): Boolean;
@@ -34,44 +36,48 @@ type
 
     class method Load(JsonString: String): JsonObject;
 
-    property Count: Integer read Items.Count; override;
-    property Item[Key: String]: nullable JsonNode read GetItem write SetItem; default; override;
+    property Count: Integer read fItems.Count; override;
+    property Item[Key: String]: nullable JsonNode read GetItem write Add; default; override;
     property Keys: not nullable sequence of String read GetKeys; override;
     property Properties: sequence of KeyValuePair<String, JsonNode> read GetProperties; 
   end;
 
 implementation
 
+constructor JsonObject;
+begin
+  fItems := new Dictionary<String, JsonNode>();
+end;
+
+constructor JsonObject(aItems: Dictionary<String,JsonNode>);
+begin
+  fItems := aItems;
+end;
+
 method JsonObject.GetItem(Key: String): nullable JsonNode;
 begin
-  if Items.ContainsKey(Key) then
-    exit Items[Key];
+  if fItems.ContainsKey(Key) then
+    exit fItems[Key];
 end;
 
-method JsonObject.SetItem(Key: String; Value: JsonNode);
+method JsonObject.Add(Key: String; Value: nullable JsonNode);
 begin
-  SugarArgumentNullException.RaiseIfNil(Value, "Value");
-  Items[Key] := Value;
-end;
-
-method JsonObject.Add(Key: String; Value: JsonNode);
-begin
-  Items.Add(Key, Value);  
+  fItems[Key] := Value;
 end;
 
 method JsonObject.Clear;
 begin
-  Items.Clear;
+  fItems.Clear;
 end;
 
 method JsonObject.ContainsKey(Key: String): Boolean;
 begin
-  exit Items.ContainsKey(Key);
+  exit fItems.ContainsKey(Key);
 end;
 
 method JsonObject.Remove(Key: String): Boolean;
 begin
-  exit Items.Remove(Key);
+  exit fItems.Remove(Key);
 end;
 
 class method JsonObject.Load(JsonString: String): JsonObject;
@@ -87,7 +93,7 @@ end;
 
 method JsonObject.GetKeys: not nullable sequence of String;
 begin
-  exit Items.Keys as not nullable;
+  exit fItems.Keys as not nullable;
 end;
 
 method JsonObject.ToJson: String;
