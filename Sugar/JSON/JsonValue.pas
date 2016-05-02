@@ -29,7 +29,15 @@ type
   public
     method ToJson: String; override;
     operator Implicit(aValue: Int64): JsonIntegerValue;
+    operator Implicit(aValue: Int32): JsonIntegerValue;
     operator Implicit(aValue: JsonIntegerValue): JsonFloatValue;
+
+    {$IF NOT COOPER}
+    //75131: Can't declare multiple cast operators on Java
+    operator Implicit(aValue: JsonIntegerValue): not nullable Int32;
+    operator Implicit(aValue: JsonIntegerValue): not nullable Double;
+    operator Implicit(aValue: JsonIntegerValue): not nullable Single;
+    {$ENDIF}
     //operator Explicit(aValue: JsonIntegerValue): JsonFloatValue;
     //property IntegerValue: Integer read Value write Value; override;
     //property FloatValue: Double read Value write inherited IntegerValue; override;
@@ -137,10 +145,32 @@ begin
   result := new JsonIntegerValue(aValue);
 end;
 
+operator JsonIntegerValue.Implicit(aValue: Int32): JsonIntegerValue;
+begin
+  result := new JsonIntegerValue(aValue);
+end;
+
 operator JsonIntegerValue.Implicit(aValue: JsonIntegerValue): JsonFloatValue;
 begin
   result := new JsonFloatValue(aValue.Value);
 end;
+
+{$IF NOT COOPER}
+operator JsonIntegerValue.Implicit(aValue: JsonIntegerValue): not nullable Int32;
+begin
+  result := aValue.Value;
+end;
+
+operator JsonIntegerValue.Implicit(aValue: JsonIntegerValue): not nullable Double;
+begin
+  result := aValue.Value;
+end;
+
+operator JsonIntegerValue.Implicit(aValue: JsonIntegerValue): not nullable Single;
+begin
+  result := aValue.Value;
+end;
+{$ENDIF}
 
 {operator JsonIntegerValue.Explicit(aValue: JsonIntegerValue): JsonFloatValue;
 begin
