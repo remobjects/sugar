@@ -139,8 +139,7 @@ end;
 
 method JsonArray.ToStringList: not nullable List<String>;
 begin
-  //result := ToStrings().ToList(); // 74548: Sugar: compiler gets confused between mapped and underlying type.
-  result := ToStrings().ToList() as not nullable List<String>;
+  result := ToStrings().ToList();
 end;
 
 end.
