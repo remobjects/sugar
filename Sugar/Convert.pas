@@ -19,7 +19,8 @@ type
     method ToString(aValue: Byte; aBase: Integer := 10): not nullable String;
     method ToString(aValue: Int32; aBase: Integer := 10): not nullable String;
     method ToString(aValue: Int64; aBase: Integer := 10): not nullable String;
-    method ToString(aValue: Double; aDigitsAfterDecimalPoint: Integer := -1): not nullable String;
+    [Obsolete("use ToStringInvariant")] method ToString(aValue: Double; aDigitsAfterDecimalPoint: Integer := -1): not nullable String;
+    method ToStringInvariant(aValue: Double; aDigitsAfterDecimalPoint: Integer := -1): not nullable String;
     method ToString(aValue: Char): not nullable String;
     method ToString(aValue: Object): not nullable String;
 
@@ -130,6 +131,11 @@ begin
 end;
 
 method Convert.ToString(aValue: Double; aDigitsAfterDecimalPoint: Integer := -1): not nullable String;
+begin
+  result := ToStringInvariant(aValue, aDigitsAfterDecimalPoint);
+end;
+
+method Convert.ToStringInvariant(aValue: Double; aDigitsAfterDecimalPoint: Integer := -1): not nullable String;
 begin
   if Consts.IsNegativeInfinity(aValue) then
     exit "-Infinity";
