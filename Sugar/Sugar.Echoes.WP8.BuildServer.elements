@@ -152,6 +152,7 @@
     <Compile Include="JSON\JsonSerializer.pas" />
     <Compile Include="JSON\JsonTokenizer.pas" />
     <Compile Include="JSON\JsonValue.pas" />
+    <Compile Include="$(MSBuildThisFileDirectory)Locale.pas"/>
   </ItemGroup>
   <ProjectExtensions />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
