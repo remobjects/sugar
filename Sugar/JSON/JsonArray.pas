@@ -139,7 +139,7 @@ end;
 
 method JsonArray.ToStringList: not nullable List<String>;
 begin
-  result := ToStrings().ToList();
+  result := ToStrings().ToList() as not nullable;
 end;
 
 end.

@@ -180,13 +180,9 @@ end;}
 { JsonFloatValue }
 
 method JsonFloatValue.ToJson: String;
-begin // .NET uses current locales; OSX/Java use invariant culture by default.
-  {$IFDEF ECHOES}
-  result := Double(Value).ToString(System.Globalization.NumberFormatInfo.InvariantInfo);
-  {$ELSE}
-  result := String.Format("{0}", Value);
-  {$ENDIF}
-  if not result.Contains(".") then result := result+".0";
+begin
+  result := Convert.ToStringInvariant(Value);
+  if not result.Contains(".") and not result.Contains("N") and not result.Contains("I") then result := result+".0";
 end;
 
 operator JsonFloatValue.Implicit(aValue: Double): JsonFloatValue;

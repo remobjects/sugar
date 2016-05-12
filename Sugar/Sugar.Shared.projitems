@@ -106,6 +106,7 @@
         <Compile Include="$(MSBuildThisFileDirectory)JSON\JsonValue.pas"/>
         <Compile Include="$(MSBuildThisFileDirectory)TimeZone.pas"/>
         <Compile Include="$(MSBuildThisFileDirectory)Dispatch.pas"/>
+        <Compile Include="$(MSBuildThisFileDirectory)Locale.pas"/>
     </ItemGroup>
     <ItemGroup>
         <Folder Include="$(MSBuildThisFileDirectory)Collections\"/>

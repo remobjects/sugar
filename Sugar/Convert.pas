@@ -6,10 +6,9 @@ type
   Convert = public static class 
   private
     {$IF NOUGAT}
-    method ParseNumberInvariant(aValue: not nullable String): NSNumber;
+    method ParseNumber(aValue: not nullable String; aLocale: Locale := nil): NSNumber;
     method ParseInt32(aValue: not nullable String): Int32;  
     method ParseInt64(aValue: not nullable String): Int64; 
-    method ParseDouble(aValue: not nullable String): Double;
     {$ENDIF}
 
     method TrimLeadingZeros(aValue: not nullable String): not nullable String; inline;
@@ -19,7 +18,7 @@ type
     method ToString(aValue: Byte; aBase: Integer := 10): not nullable String;
     method ToString(aValue: Int32; aBase: Integer := 10): not nullable String;
     method ToString(aValue: Int64; aBase: Integer := 10): not nullable String;
-    [Obsolete("use ToStringInvariant")] method ToString(aValue: Double; aDigitsAfterDecimalPoint: Integer := -1): not nullable String;
+    method ToString(aValue: Double; aDigitsAfterDecimalPoint: Integer := -1; aLocale: Locale := nil): not nullable String;
     method ToStringInvariant(aValue: Double; aDigitsAfterDecimalPoint: Integer := -1): not nullable String;
     method ToString(aValue: Char): not nullable String;
     method ToString(aValue: Object): not nullable String;
@@ -42,6 +41,7 @@ type
     method ToDouble(aValue: Byte): Double;
     method ToDouble(aValue: Int32): Double;
     method ToDouble(aValue: Int64): Double;
+    method ToDouble(aValue: not nullable String; aLocale: Locale): Double;
     method ToDoubleInvariant(aValue: not nullable String): Double;
 
     method ToByte(aValue: Boolean): Byte;
@@ -130,13 +130,15 @@ begin
   {$ENDIF}
 end;
 
-method Convert.ToString(aValue: Double; aDigitsAfterDecimalPoint: Integer := -1): not nullable String;
-begin
-  result := ToStringInvariant(aValue, aDigitsAfterDecimalPoint);
-end;
-
 method Convert.ToStringInvariant(aValue: Double; aDigitsAfterDecimalPoint: Integer := -1): not nullable String;
 begin
+  result := ToString(aValue, aDigitsAfterDecimalPoint, Locale.Invariant);
+end;
+
+method Convert.ToString(aValue: Double; aDigitsAfterDecimalPoint: Integer := -1; aLocale: Locale := nil): not nullable String;
+begin
+  if aLocale = nil then aLocale := Locale.Current;
+
   if Consts.IsNegativeInfinity(aValue) then
     exit "-Infinity";
 
@@ -147,7 +149,7 @@ begin
     exit "NaN";
 
   {$IF COOPER}
-  var DecFormat: java.text.DecimalFormat := java.text.DecimalFormat(java.text.DecimalFormat.getInstance(Sugar.Cooper.LocaleUtils.ForLanguageTag("en-US")));
+  var DecFormat := java.text.DecimalFormat(java.text.DecimalFormat.getInstance(aLocale));
   var X := Math.Log10(Math.Abs(aValue));
   var FloatPattern := if aDigitsAfterDecimalPoint < 0 then "#.###############" else "#."+new String('#', aDigitsAfterDecimalPoint);
   var ScientificPattern := FloatPattern+"E00";
@@ -163,15 +165,17 @@ begin
     result := result.Replace("E", "E+");
   {$ELSEIF ECHOES}
   if aDigitsAfterDecimalPoint < 0 then
-    result := System.Convert.ToString(aValue, System.Globalization.CultureInfo.InvariantCulture) as not nullable
+    result := System.Convert.ToString(aValue, aLocale) as not nullable
   else
-    result := aValue.ToString("0."+new String('0', aDigitsAfterDecimalPoint), System.Globalization.CultureInfo.InvariantCulture) as not nullable
+    result := aValue.ToString("0."+new String('0', aDigitsAfterDecimalPoint), aLocale) as not nullable
   {$ELSEIF NOUGAT}
-  if aDigitsAfterDecimalPoint < 0 then
-    result := aValue.ToString.ToUpper()
-  else
-    //{$HIDE NW3}result := NSString.stringWithFormat("%0."+new String('0', aDigitsAfterDecimalPoint)+"f", aValue) as not nullable;{$SHOW NW3}
-    result := NSString.stringWithFormat("%0.*f", aDigitsAfterDecimalPoint, aValue) as not nullable;
+  var numberFormatter := new NSNumberFormatter();
+  numberFormatter.numberStyle := NSNumberFormatterStyle.DecimalStyle;
+  numberFormatter.locale := aLocale;
+  if aDigitsAfterDecimalPoint ≥ 0 then begin
+    numberFormatter.maximumFractionDigits := aDigitsAfterDecimalPoint;
+  end;
+  result := numberFormatter.stringFromNumber(aValue) as not nullable;
   {$ENDIF}
 end;
 
@@ -466,12 +470,17 @@ end;
 
 method Convert.ToDoubleInvariant(aValue: not nullable String): Double;
 begin
+  result := ToDouble(aValue, Locale.Invariant);
+end;
+
+method Convert.ToDouble(aValue: not nullable String; aLocale: Locale): Double;
+begin
   if String.IsNullOrWhiteSpace(aValue) then
     raise new SugarFormatException("Unable to convert string '{0}' to double.", aValue);
 
   {$IF COOPER}
-  var DecFormat: java.text.DecimalFormat := java.text.DecimalFormat(java.text.DecimalFormat.getInstance(Sugar.Cooper.LocaleUtils.ForLanguageTag("en-US")));
-  var Symbols: java.text.DecimalFormatSymbols := java.text.DecimalFormatSymbols.getInstance(Sugar.Cooper.LocaleUtils.ForLanguageTag("en-US"));
+  var DecFormat: java.text.DecimalFormat := java.text.DecimalFormat(java.text.DecimalFormat.getInstance(aLocale));
+  var Symbols: java.text.DecimalFormatSymbols := java.text.DecimalFormatSymbols.getInstance(aLocale);
 
   Symbols.DecimalSeparator := '.';
   Symbols.GroupingSeparator := ',';
@@ -498,9 +507,12 @@ begin
   if Consts.IsInfinity(result) or Consts.IsNaN(result) then
     raise new SugarFormatException("Unable to convert string '{0}' to double.", aValue);
   {$ELSEIF ECHOES}
-  exit System.Convert.ToDouble(aValue, System.Globalization.CultureInfo.InvariantCulture);
+  exit System.Convert.ToDouble(aValue, aLocale);
   {$ELSEIF NOUGAT}
-  exit ParseDouble(aValue);
+  var Number := ParseNumber(aValue, aLocale);
+  if not assigned(Number) then
+    raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);
+  exit Number.doubleValue;
   {$ENDIF}
 end;
 
@@ -649,16 +661,14 @@ begin
 end;
 
 {$IF NOUGAT}
-method Convert.ParseNumberInvariant(aValue: not nullable String): NSNumber;
+method Convert.ParseNumber(aValue: not nullable String; aLocale: Locale := nil): NSNumber;
 begin
   if String.IsNullOrEmpty(aValue) then
     exit nil;
 
   var Formatter := new NSNumberFormatter;
   Formatter.numberStyle := NSNumberFormatterStyle.NSNumberFormatterDecimalStyle;
-  Formatter.decimalSeparator := '.';
-  //Formatter.thousandSeparator := ','; // E44 No member "thousandSeparator" on type "NSNumberFormatter"
-  Formatter.exponentSymbol := 'E';
+  Formatter.locale := aLocale;
   result := Formatter.numberFromString(aValue);
 end;
 
@@ -674,7 +684,7 @@ end;
 
 method Convert.ParseInt64(aValue: not nullable String): Int64;
 begin
-  var Number := ParseNumberInvariant(aValue);
+  var Number := ParseNumber(aValue, Locale.Invariant);
 
   if Number = nil then
     raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);
@@ -688,17 +698,6 @@ begin
 
   raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);
 end;
-
-method Convert.ParseDouble(aValue: not nullable String): Double;
-begin
-  var Number := ParseNumberInvariant(aValue);
-
-  if Number = nil then
-    raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);
-
-  exit Number.doubleValue;
-end;
-
 {$ENDIF}
 
 end.
