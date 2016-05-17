@@ -1,7 +1,12 @@
 ﻿namespace Sugar.Reflection;
 
 interface
-{$IFDEF NETFX_CORE}uses System.Reflection;{$ENDIF}
+
+uses
+  {$IF NETFX_CORE}System.Reflection,{$ENDIF}
+  {$IF ECHOES}System.Linq,{$ENDIF}
+  {$IF COOPER}com.remobjects.elements.linq,{$ENDIF}
+  Sugar.Collections;
 
 {$IF NOUGAT AND (TARGET_OS_IPHONE OR TARGET_IPHONESIMULATOR)} 
 type Protocol = id;
@@ -24,11 +29,19 @@ type
     fProtocol: Protocol;
     fSimpleType: String;
     method GetName: String;
+    method Get_Interfaces: List<Sugar.Reflection.Type>; 
+    method Get_Methods: List<Sugar.Reflection.MethodInfo>;
     {$ENDIF}
+    {$IF NETFX_CORE}
+    method Get_Interfaces: List<Sugar.Reflection.Type>; 
+    method Get_Methods: List<Sugar.Reflection.MethodInfo>;
+    {$ENDIF}
+    
   public
     {$IFDEF NETFX_CORE} 
-    method GetInterfaces: array of Sugar.Reflection.Type; 
-    method GetMethods: array of Sugar.Reflection.MethodInfo; 
+    property Interfaces: List<Sugar.Reflection.Type> read Get_Interfaces; 
+    property Methods: List<Sugar.Reflection.MethodInfo> read Get_Methods; 
+    property Name: String read mapped.Name;
     property BaseType: Sugar.Reflection.Type read mapped.GetTypeInfo().BaseType; 
     property IsClass: Boolean read mapped.GetTypeInfo().IsClass;
     property IsInterface: Boolean read mapped.GetTypeInfo().IsInterface;
@@ -36,8 +49,9 @@ type
     property IsEnum: Boolean read mapped.GetTypeInfo().IsEnum;
     property IsValueType: Boolean read mapped.GetTypeInfo().IsValueType;
     {$ELSEIF ECHOES}
-    method GetInterfaces: array of Sugar.Reflection.Type; mapped to  GetInterfaces();
-    method GetMethods: array of Sugar.Reflection.MethodInfo; mapped to GetMethods();
+    property Interfaces: List<Sugar.Reflection.Type> read mapped.GetInterfaces().ToList();
+    property Methods: List<Sugar.Reflection.MethodInfo> read mapped.GetMethods().ToList();
+    property Name: String read mapped.Name;
     property BaseType: Sugar.Reflection.Type read mapped.BaseType; 
     property IsClass: Boolean read mapped.IsClass;
     property IsInterface: Boolean read mapped.IsInterface;
@@ -46,8 +60,9 @@ type
     property IsValueType: Boolean read mapped.IsValueType;
     {$ENDIF}
     {$IF COOPER}
-    method GetInterfaces: array of Sugar.Reflection.Type; mapped to getInterfaces();
-    method GetMethods: array of Sugar.Reflection.MethodInfo; mapped to getMethods();
+    property Interfaces: List<Sugar.Reflection.Type> read mapped.getInterfaces().ToList() as List<Sugar.Reflection.Type>;
+    property Methods: List<Sugar.Reflection.MethodInfo> read mapped.getMethods().ToList();
+    property Name: String read mapped.Name;
     property BaseType: Sugar.Reflection.Type read mapped.getSuperclass(); 
     property IsClass: Boolean read (not mapped.isInterface()) and (not mapped.isPrimitive());
     property IsInterface: Boolean read mapped.isInterface();
@@ -60,11 +75,11 @@ type
     method initWithClass(aClass: &Class): instancetype;
     method initWithProtocol(aProtocol: id): instancetype;
     method initWithSimpleType(aTypeEncoding: String): instancetype;
-    method GetInterfaces: NSArray<Sugar.Reflection.Type>; 
-    method GetMethods: NSArray<Sugar.Reflection.MethodInfo>;
+    property Interfaces: List<Sugar.Reflection.Type> read Get_Interfaces();
+    property Methods: List<Sugar.Reflection.MethodInfo> read Get_Methods();
     //operator Explicit(aClass: rtl.Class): &Type;
     //operator Explicit(aProtocol: Protocol): &Type;
-    property name: String read getName;
+    property Name: String read getName;
     property BaseType: Sugar.Reflection.Type read if IsClass then new &Type withClass(class_getSuperclass(self)); 
     property IsClass: Boolean read assigned(fClass) or fIsID;
     property IsInterface: Boolean read assigned(fProtocol);
@@ -145,11 +160,11 @@ begin
   // Todo: handle simple types;
 end;
 
-method &Type.GetInterfaces: NSArray<Sugar.Reflection.Type>;
+method &Type.Get_Interfaces: List<Sugar.Reflection.Type>;
 begin
 end;
 
-method &Type.GetMethods: NSArray<Sugar.Reflection.MethodInfo>;
+method &Type.Get_Methods: List<Sugar.Reflection.MethodInfo>;
 begin
   var methodInfos: ^rtl.Method;
   var methodCount: UInt32;
@@ -163,12 +178,12 @@ end;
 
 
 {$IF NETFX_CORE}
-method &Type.GetInterfaces: array of Sugar.Reflection.Type;
+method &Type.Get_Interfaces: List<Sugar.Reflection.Type>;
 begin
   exit System.Linq.Enumerable.ToArray( mapped.GetTypeInfo().ImplementedInterfaces);
 end;
 
-method &Type.GetMethods: array of Sugar.Reflection.MethodInfo;
+method &Type.Get_Methods: List<Sugar.Reflection.MethodInfo>;
 begin
   exit System.Linq.Enumerable.ToArray(System.Linq.Enumerable.OfType<MethodInfo>(mapped.GetTypeInfo().DeclaredMembers));
 end;
