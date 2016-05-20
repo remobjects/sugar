@@ -50,7 +50,7 @@ type
 
     method Sort(Comparison: Comparison<T>);
 
-    method ToArray: array of T;
+    method ToArray: array of T; {$IF COOPER}inline;{$ENDIF}
     
     property Count: Integer read {$IF COOPER}mapped.Size{$ELSEIF ECHOES}mapped.Count{$ELSEIF NOUGAT}mapped.count{$ENDIF};
     property Item[i: Integer]: T read GetItem write SetItem; default;
