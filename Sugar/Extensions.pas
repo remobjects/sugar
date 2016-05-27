@@ -3,6 +3,8 @@
 interface
 
 {$IF COOPER}
+extension method java.lang.Object.«ToString»: String;
+extension method java.lang.Object.«Equals»(aOther: Object): Boolean;
 extension method java.lang.Object.GetHashCode: Integer;
 {$ELSEIF NOUGAT}
 extension method Foundation.NSObject.ToString: String;
@@ -13,6 +15,16 @@ extension method Foundation.NSObject.GetHashCode: Integer;
 implementation
 
 {$IF COOPER}
+extension method java.lang.Object.«ToString»: String;
+begin
+  result := «toString»();
+end;
+
+extension method java.lang.Object.«Equals»(aOther: Object): Boolean;
+begin
+  result := self.equals(aOther)
+end;
+
 extension method java.lang.Object.GetHashCode: Integer;
 begin
   result := hashCode;
