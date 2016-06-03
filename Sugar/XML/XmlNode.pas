@@ -23,7 +23,6 @@ type
 
     method GetNextSibling: XmlNode;
     method GetPreviousSibling: XmlNode;    
-    method SetInnerText(Value: String); empty;
     method GetFirstChild: XmlNode;
     method GetLastChild: XmlNode;
     method GetItem(&Index: Integer): XmlNode;

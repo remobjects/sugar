@@ -16,7 +16,6 @@ uses
 type
   XmlElement = public class (XmlNode)
   private
-   method GetItemByName(&Index: String): XmlElement;
     {$IF NOT NOUGAT}
     property Element: {$IF COOPER}Element{$ELSEIF ECHOES}XElement{$ENDIF} 
                       read Node as{$IF COOPER}Element{$ELSEIF ECHOES}XElement{$ENDIF};
@@ -32,7 +31,7 @@ type
     {$ENDIF}
     property NodeType: XmlNodeType read XmlNodeType.Element; override;
 
-    { Childs }
+    { Children }
 
     method AddChild(aNode: XmlNode);
     method RemoveChild(aNode: XmlNode);
@@ -60,11 +59,13 @@ type
     method GetAttributes: array of XmlAttribute;
 
     { Elements }
+    //method GetElements(): array of XmlElement;
     method GetElementsByTagName(aName: String): array of XmlElement;
     method GetElementsByTagName(aLocalName, NamespaceUri: String): array of XmlElement;
 
-    property ItemByName[&Index: String]: XmlElement read GetItemByName;
+    method GetFirstElementWithName(aName: String): XmlElement;
   end;
+
 implementation
 
 method XmlElement.GetAttributes: array of XmlAttribute;
@@ -399,10 +400,10 @@ begin
 end;
 {$ENDIF}
 
-method XmlElement.GetItemByName(&Index: String): XmlElement;
+method XmlElement.GetFirstElementWithName(aName: String): XmlElement;
 begin 
   for item in ChildNodes do
-    if (item is XmlElement) and item.Name.EqualsIgnoreCase(&Index) then exit XmlElement(item);
+    if (item is XmlElement) and item.Name.EqualsIgnoreCase(aName) then exit XmlElement(item);
   exit nil;
 end;
 
