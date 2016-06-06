@@ -181,7 +181,7 @@ end;}
 
 method JsonFloatValue.ToJson: String;
 begin
-  result := Convert.ToStringInvariant(Value);
+  result := Convert.ToStringInvariant(Value).Replace(",","");
   if not result.Contains(".") and not result.Contains("N") and not result.Contains("I") then result := result+".0";
 end;
 

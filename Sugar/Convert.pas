@@ -137,7 +137,6 @@ end;
 
 method Convert.ToString(aValue: Double; aDigitsAfterDecimalPoint: Integer := -1; aLocale: Locale := nil): not nullable String;
 begin
-  if aLocale = nil then aLocale := Locale.Current;
 
   if Consts.IsNegativeInfinity(aValue) then
     exit "-Infinity";
@@ -149,6 +148,7 @@ begin
     exit "NaN";
 
   {$IF COOPER}
+  if aLocale = nil then aLocale := Locale.Current;
   var DecFormat := java.text.DecimalFormat(java.text.DecimalFormat.getInstance(aLocale));
   var X := Math.Log10(Math.Abs(aValue));
   var FloatPattern := if aDigitsAfterDecimalPoint < 0 then "#.###############" else "#."+new String('#', aDigitsAfterDecimalPoint);
@@ -164,6 +164,7 @@ begin
   if result.IndexOf("E-") > -1 then
     result := result.Replace("E", "E+");
   {$ELSEIF ECHOES}
+  if aLocale = nil then aLocale := Locale.Current;
   if aDigitsAfterDecimalPoint < 0 then
     result := System.Convert.ToString(aValue, aLocale) as not nullable
   else
@@ -171,7 +172,8 @@ begin
   {$ELSEIF NOUGAT}
   var numberFormatter := new NSNumberFormatter();
   numberFormatter.numberStyle := NSNumberFormatterStyle.DecimalStyle;
-  numberFormatter.locale := aLocale;
+  numberFormatter.locale := coalesce(aLocale, Locale.Current);
+  if aLocale = Locale.Invariant then numberFormatter.usesGroupingSeparator := false;
   if aDigitsAfterDecimalPoint ≥ 0 then begin
     numberFormatter.maximumFractionDigits := aDigitsAfterDecimalPoint;
   end;
