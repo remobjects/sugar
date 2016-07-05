@@ -44,7 +44,7 @@
         <Reference Include="AppKit"/>
         <Reference Include="CoreServices"/>
         <Reference Include="Foundation"/>
-        <Reference Include="libNougat"/>
+        <Reference Include="libToffee"/>
         <Reference Include="libxml2"/>
         <Reference Include="rtl"/>
         <Reference Include="CoreFoundation"/>

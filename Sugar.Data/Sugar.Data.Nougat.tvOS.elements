@@ -40,7 +40,7 @@
     </PropertyGroup>
     <ItemGroup>
         <Reference Include="Foundation"/>
-        <Reference Include="libNougat"/>
+        <Reference Include="libToffee"/>
         <Reference Include="libsqlite3"/>
         <Reference Include="libxml2"/>
         <Reference Include="rtl"/>
