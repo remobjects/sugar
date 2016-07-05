@@ -47,7 +47,7 @@
     </PropertyGroup>
     <ItemGroup>
         <Reference Include="Foundation"/>
-        <Reference Include="libNougat"/>
+        <Reference Include="libToffee"/>
         <Reference Include="libxml2"/>
         <Reference Include="rtl"/>
         <Reference Include="UIKit"/>
@@ -56,7 +56,7 @@
     <ItemGroup>
         <Folder Include="Cryptography\"/>
     </ItemGroup>
-    <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Elements\RemObjects.Elements.Nougat.targets"/>
+    <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Elements\RemObjects.Elements.Toffee.targets"/>
     <PropertyGroup>
         <PreBuildEvent/>
     </PropertyGroup>

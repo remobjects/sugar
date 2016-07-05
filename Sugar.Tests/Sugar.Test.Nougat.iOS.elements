@@ -44,7 +44,7 @@
         <Reference Include="libxml2"/>
         <Reference Include="UIKit"/>
         <Reference Include="rtl"/>
-        <Reference Include="libNougat"/>
+        <Reference Include="libToffee"/>
     </ItemGroup>
     <ItemGroup>
         <Compile Include="Main\iOS\Program.pas"/>

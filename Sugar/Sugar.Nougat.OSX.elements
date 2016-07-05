@@ -44,13 +44,13 @@
         <Reference Include="AppKit"/>
         <Reference Include="CoreServices"/>
         <Reference Include="Foundation"/>
-        <Reference Include="libNougat"/>
+        <Reference Include="libToffee"/>
         <Reference Include="libxml2"/>
         <Reference Include="rtl"/>
         <Reference Include="CoreFoundation"/>
     </ItemGroup>
     <ItemGroup/>
-    <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Elements\RemObjects.Elements.Nougat.targets"/>
+    <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Elements\RemObjects.Elements.Toffee.targets"/>
     <PropertyGroup>
         <PreBuildEvent/>
     </PropertyGroup>

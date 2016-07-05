@@ -37,7 +37,7 @@
     <ItemGroup>
         <Reference Include="Foundation"/>
         <Reference Include="libEUnit"/>
-        <Reference Include="libNougat"/>
+        <Reference Include="libToffee"/>
         <Reference Include="libsqlite3">
             <HintPath>C:\Program Files (x86)\RemObjects Software\Elements\Nougat\Libraries\libsqlite3\OS X\libsqlite3.fx</HintPath>
         </Reference>
