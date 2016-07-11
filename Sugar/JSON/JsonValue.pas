@@ -137,7 +137,7 @@ end;
 
 method JsonIntegerValue.ToJson: String;
 begin
-  result := String.Format("{0}", Value);
+  result := Convert.ToString(Value);
 end;
 
 operator JsonIntegerValue.Implicit(aValue: Int64): JsonIntegerValue;
@@ -182,7 +182,7 @@ end;}
 method JsonFloatValue.ToJson: String;
 begin
   result := Convert.ToStringInvariant(Value).Replace(",","");
-  if not result.Contains(".") and not result.Contains("N") and not result.Contains("I") then result := result+".0";
+  if not result.Contains(".") and not result.Contains("E") and not result.Contains("N") and not result.Contains("I") then result := result+".0";
 end;
 
 operator JsonFloatValue.Implicit(aValue: Double): JsonFloatValue;

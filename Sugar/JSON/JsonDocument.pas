@@ -102,18 +102,18 @@ end;
 
 class method JsonDocument.FromFile(aFile: not nullable File): not nullable JsonDocument;
 begin
-  result := new JsonDocument(new JsonDeserializer(aFile.ReadText(Encoding.Default)).Deserialize as JsonObject)
+  result := new JsonDocument(new JsonDeserializer(aFile.ReadText(Encoding.Default)).Deserialize)
 end;
 
 class method JsonDocument.FromBinary(aBinary: not nullable Binary; aEncoding: Encoding := nil): not nullable JsonDocument;
 begin
   if aEncoding = nil then aEncoding := Encoding.Default;
-  result := new JsonDocument(new JsonDeserializer(new String(aBinary.ToArray, aEncoding)).Deserialize as JsonObject);
+  result := new JsonDocument(new JsonDeserializer(new String(aBinary.ToArray, aEncoding)).Deserialize);
 end;
 
 class method JsonDocument.FromString(aString: not nullable String): not nullable JsonDocument;
 begin
-  result := new JsonDocument(new JsonDeserializer(aString).Deserialize as JsonObject)
+  result := new JsonDocument(new JsonDeserializer(aString).Deserialize)
 end;
 
 class method JsonDocument.CreateDocument: not nullable JsonDocument;
