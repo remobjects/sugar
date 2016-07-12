@@ -6,12 +6,12 @@ uses
   Sugar,
   Sugar.Json,
   Sugar.Collections,
-  Sugar.Linq,
   {$IF ECHOES}
   System.Linq;
   {$ELSEIF COOPER}
   com.remobjects.elements.linq;
   {$ELSEIF TOFFEE}
+  Sugar.Linq,
   RemObjects.Elements.Linq;
   {$ENDIF}
 

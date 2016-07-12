@@ -5,7 +5,9 @@ interface
 uses
   Sugar,
   Sugar.Collections,
+  {$IF TOFFEE}
   Sugar.Linq,
+  {$ENDIF}
   Sugar.IO;
 
 type
