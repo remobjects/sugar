@@ -5,6 +5,7 @@ interface
 uses
   Sugar,
   Sugar.Collections,
+  Sugar.Linq,
   Sugar.IO;
 
 type
