@@ -51,6 +51,7 @@ type
     {$ELSEIF ECHOES}
     property Interfaces: List<Sugar.Reflection.Type> read mapped.GetInterfaces().ToList();
     property Methods: List<Sugar.Reflection.MethodInfo> read mapped.GetMethods().ToList();
+    //property Attributes: List<Sugar.Reflection.AttributeInfo> read mapped.().ToList();
     property Name: String read mapped.Name;
     property BaseType: Sugar.Reflection.Type read mapped.BaseType; 
     property IsClass: Boolean read mapped.IsClass;
@@ -62,6 +63,7 @@ type
     {$IF COOPER}
     property Interfaces: List<Sugar.Reflection.Type> read mapped.getInterfaces().ToList() as List<Sugar.Reflection.Type>;
     property Methods: List<Sugar.Reflection.MethodInfo> read mapped.getMethods().ToList();
+    //property Attributes: List<Sugar.Reflection.AttributeInfo> read mapped.().ToList();
     property Name: String read mapped.Name;
     property BaseType: Sugar.Reflection.Type read mapped.getSuperclass(); 
     property IsClass: Boolean read (not mapped.isInterface()) and (not mapped.isPrimitive());
@@ -77,6 +79,7 @@ type
     method initWithSimpleType(aTypeEncoding: String): instancetype;
     property Interfaces: List<Sugar.Reflection.Type> read Get_Interfaces();
     property Methods: List<Sugar.Reflection.MethodInfo> read Get_Methods();
+    //property Attributes: List<Sugar.Reflection.AttributeInfo> read mapped.().ToList();
     //operator Explicit(aClass: rtl.Class): &Type;
     //operator Explicit(aProtocol: Protocol): &Type;
     property Name: String read getName;
