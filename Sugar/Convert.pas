@@ -149,7 +149,7 @@ begin
 
   {$IF COOPER}
   if aLocale = nil then aLocale := Locale.Current;
-  var DecFormat := java.text.DecimalFormat.getInstance(aLocale);
+  var DecFormat := java.text.DecimalFormat(java.text.DecimalFormat.getInstance(aLocale));
   var X := Math.Log10(Math.Abs(aValue));
   var FloatPattern := if aDigitsAfterDecimalPoint < 0 then "#.###############" else "#."+new String('#', aDigitsAfterDecimalPoint);
   var ScientificPattern := FloatPattern+"E00";
