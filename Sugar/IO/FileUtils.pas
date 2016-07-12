@@ -85,7 +85,7 @@ begin
   Origin.CopyAsync(GetFolder(DestFileName), Path.GetFileName(DestFileName), NameCollisionOption.FailIfExists).Await;
   {$ELSEIF ECHOES}
   System.IO.File.Copy(SourceFileName, DestFileName);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   var lError: Foundation.NSError := nil;
   if not NSFileManager.defaultManager.copyItemAtPath(SourceFileName) toPath(DestFileName) error(var lError) then
     raise new SugarNSErrorException(lError);
@@ -104,7 +104,7 @@ begin
   {$ELSEIF ECHOES}
   using fs := System.IO.File.Create(FileName) do
     fs.Close;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   NSFileManager.defaultManager.createFileAtPath(FileName) contents(nil) attributes(nil);
   {$ENDIF}
 end;
@@ -120,7 +120,7 @@ begin
   GetFile(FileName).DeleteAsync.AsTask.Wait;
   {$ELSEIF ECHOES}
   System.IO.File.Delete(FileName);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   var lError: NSError := nil;
   if not NSFileManager.defaultManager.removeItemAtPath(FileName) error(var lError) then
     raise new SugarNSErrorException(lError);
@@ -140,7 +140,7 @@ begin
   end;
   {$ELSEIF ECHOES}
   exit System.IO.File.Exists(FileName);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit NSFileManager.defaultManager.fileExistsAtPath(FileName);
   {$ENDIF}
 end;
@@ -161,7 +161,7 @@ begin
   Delete(SourceFileName);
   {$ELSEIF ECHOES}
   System.IO.File.Move(SourceFileName, DestFileName);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   var lError: Foundation.NSError := nil;
   if not NSFileManager.defaultManager.moveItemAtPath(SourceFileName) toPath(DestFileName) error(var lError) then
     raise new SugarNSErrorException(lError);

@@ -10,7 +10,7 @@ type
 
   Regex = public class mapped to {$IF     COOPER}java.util.regex.Pattern
                                  {$ELSEIF ECHOES}System.Text.RegularExpressions.Regex
-                                 {$ELSEIF NOUGAT}NSRegularExpression{$ENDIF}
+                                 {$ELSEIF TOFFEE}NSRegularExpression{$ENDIF}
   private
     class method OptionsToBitfield(PatternOptions: RegexOptions): Integer;
   public
@@ -32,7 +32,7 @@ begin
   exit java.util.regex.Pattern.compile(Pattern, Bitfield);
   {$ELSEIF ECHOES}
   exit new System.Text.RegularExpressions.Regex(Pattern, System.Text.RegularExpressions.RegexOptions(Bitfield));
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   var Error: NSError;
   exit NSRegularExpression.regularExpressionWithPattern(Pattern)
                            options(NSRegularExpressionOptions(Bitfield))
@@ -53,7 +53,7 @@ begin
   {$ELSEIF ECHOES}
   var FirstMatch: System.Text.RegularExpressions.Match := mapped.Match(Input);
   exit if FirstMatch.Success then FirstMatch else nil;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   var FirstMatch: NSTextCheckingResult := mapped.firstMatchInString(Input)
                                                  options(NSMatchingOptions(0))
                                                  range(NSMakeRange(0, Input.length));
@@ -73,7 +73,7 @@ begin
   var PlatformMatches: System.Text.RegularExpressions.MatchCollection := mapped.Matches(Input);
   for PlatformMatch in PlatformMatches do
     Matches.Add(Match(PlatformMatch));
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   var PlatformMatches: NSArray := mapped.matchesInString(Input)
                                          options(NSMatchingOptions(0))
                                          range(NSMakeRange(0, Input.length));
@@ -90,7 +90,7 @@ begin
   exit mapped.matcher(Input).find();
   {$ELSEIF ECHOES}
   exit mapped.IsMatch(Input);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   var MatchCount: Integer := mapped.numberOfMatchesInString(Input)
                                     options(NSMatchingOptions(0))
                                     range(NSMakeRange(0, Input.length));
@@ -105,19 +105,19 @@ begin
   if RegexOptions.IgnoreCase in PatternOptions then Bitfield := Bitfield or
     {$IF     COOPER}java.util.regex.Pattern.CASE_INSENSITIVE
     {$ELSEIF ECHOES}System.Text.RegularExpressions.RegexOptions.IgnoreCase
-    {$ELSEIF NOUGAT}NSRegularExpressionOptions.NSRegularExpressionCaseInsensitive{$ENDIF};
+    {$ELSEIF TOFFEE}NSRegularExpressionOptions.NSRegularExpressionCaseInsensitive{$ENDIF};
   if RegexOptions.IgnoreWhitespace in PatternOptions then Bitfield := Bitfield or
     {$IF     COOPER}java.util.regex.Pattern.COMMENTS
     {$ELSEIF ECHOES}System.Text.RegularExpressions.RegexOptions.IgnorePatternWhitespace
-    {$ELSEIF NOUGAT}NSRegularExpressionOptions.NSRegularExpressionAllowCommentsAndWhitespace{$ENDIF};
+    {$ELSEIF TOFFEE}NSRegularExpressionOptions.NSRegularExpressionAllowCommentsAndWhitespace{$ENDIF};
   if RegexOptions.Multiline in PatternOptions then Bitfield := Bitfield or
     {$IF     COOPER}java.util.regex.Pattern.MULTILINE
     {$ELSEIF ECHOES}System.Text.RegularExpressions.RegexOptions.Multiline
-    {$ELSEIF NOUGAT}NSRegularExpressionOptions.NSRegularExpressionAnchorsMatchLines{$ENDIF};
+    {$ELSEIF TOFFEE}NSRegularExpressionOptions.NSRegularExpressionAnchorsMatchLines{$ENDIF};
   if RegexOptions.Singleline in PatternOptions then Bitfield := Bitfield or
     {$IF     COOPER}java.util.regex.Pattern.DOTALL
     {$ELSEIF ECHOES}System.Text.RegularExpressions.RegexOptions.Singleline
-    {$ELSEIF NOUGAT}NSRegularExpressionOptions.NSRegularExpressionDotMatchesLineSeparators{$ENDIF};
+    {$ELSEIF TOFFEE}NSRegularExpressionOptions.NSRegularExpressionDotMatchesLineSeparators{$ENDIF};
 
   exit Bitfield;
 end;
@@ -128,7 +128,7 @@ begin
   exit mapped.matcher(Input).replaceAll(Replacement);
   {$ELSEIF ECHOES}
   exit mapped.Replace(Input, Replacement);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit mapped.stringByReplacingMatchesInString(Input)
               options(NSMatchingOptions(0))
               range(NSMakeRange(0, Input.length))

@@ -8,7 +8,7 @@ uses
   {$ELSEIF ECHOES}
   System.Xml.Linq,
   System.Linq,
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   Foundation,
   {$ENDIF}
   Sugar;
@@ -91,7 +91,7 @@ type
     method &equals(arg1: Object): Boolean; override;
     method ToString: java.lang.String; override;
   end;  
-{$ELSEIF NOUGAT}
+{$ELSEIF TOFFEE}
   XmlNode = public class
   private
     fNode: ^libxml.__struct__xmlNode;
@@ -363,7 +363,7 @@ begin
       exit new XmlNode(Node);
   end;
 end;
-{$ELSEIF NOUGAT}
+{$ELSEIF TOFFEE}
 constructor XmlNode(aNode: ^libxml.__struct__xmlNode; aDocument: XmlDocument);
 begin
   fNode := aNode;

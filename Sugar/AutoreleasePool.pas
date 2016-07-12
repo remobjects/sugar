@@ -2,13 +2,13 @@
 
 interface
 
-{$IFNDEF NOUGAT}
+{$IFNDEF TOFFEE}
 method autoreleasepool: {$IF COOPER}java.io.Closeable{$ELSEIF ECHOES}IDisposable{$ENDIF};
 {$ENDIF}
 
 implementation
 
-{$IFNDEF NOUGAT}
+{$IFNDEF TOFFEE}
 type
   DummyAutoreleasePool = class({$IF COOPER}java.io.Closeable{$ELSEIF ECHOES}IDisposable{$ENDIF})
   assembly

@@ -3,7 +3,7 @@
 interface
 
 type
-  Locale = public class mapped to {$IF ECHOES}System.Globalization.CultureInfo{$ELSEIF COOPER}java.util.Locale{$ELSEIF NOUGAT}Foundation.NSLocale{$ENDIF}
+  Locale = public class mapped to {$IF ECHOES}System.Globalization.CultureInfo{$ELSEIF COOPER}java.util.Locale{$ELSEIF TOFFEE}Foundation.NSLocale{$ENDIF}
   private
   protected
   public
@@ -13,7 +13,7 @@ type
     {$ELSEIF ECHOES}
     class property Invariant: Locale read System.Globalization.CultureInfo.InvariantCulture;
     class property Current: Locale read System.Globalization.CultureInfo.CurrentCulture;
-    {$ELSEIF NOUGAT}
+    {$ELSEIF TOFFEE}
     class property Invariant: Locale read NSLocale.systemLocale;
     class property Current: Locale read NSLocale.currentLocale;
     {$ENDIF}

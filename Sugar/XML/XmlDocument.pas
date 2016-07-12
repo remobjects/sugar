@@ -8,7 +8,7 @@ uses
   {$ELSEIF ECHOES}
   System.Xml.Linq,
   System.Linq,
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   Foundation,
   {$ENDIF}
   Sugar,
@@ -22,7 +22,7 @@ type
     property Doc: Document read Node as Document;
     {$ELSEIF ECHOES}
     property Doc: XDocument read Node as XDocument;
-    {$ELSEIF NOUGAT}
+    {$ELSEIF TOFFEE}
     property Doc: ^libxml.__struct__xmlDoc read ^libxml.__struct__xmlDoc(Node);
     method GetDocumentElement: XmlElement;
     method GetDocumentType: XmlDocumentType;
@@ -35,7 +35,7 @@ type
     {$ELSEIF COOPER}
     property DocumentElement: XmlElement read iif(Doc.DocumentElement = nil, nil, new XmlElement(Doc.DocumentElement));
     property DocumentType: XmlDocumentType read iif(Doc.Doctype = nil, nil, new XmlDocumentType(Doc.Doctype));
-    {$ELSEIF NOUGAT}
+    {$ELSEIF TOFFEE}
     property DocumentElement: XmlElement read GetDocumentElement;
     property DocumentType: XmlDocumentType read GetDocumentType;
     {$ENDIF}
@@ -68,7 +68,7 @@ type
     method Save(aFile: File);
     method Save(aFile: File; XmlDeclaration: XmlDocumentDeclaration);
     method Save(aFile: File; Version: String; Encoding: String; Standalone: Boolean);
-    {$IF NOUGAT}finalizer;{$ENDIF}
+    {$IF TOFFEE}finalizer;{$ENDIF}
   end;
 
   XmlDocumentDeclaration = public class
@@ -472,7 +472,7 @@ begin
   Doc.Save(aFile);
   {$ENDIF}
 end;
-{$ELSEIF NOUGAT}
+{$ELSEIF TOFFEE}
 method XmlDocument.AddChild(Node: XmlNode);
 begin
   SugarArgumentNullException.RaiseIfNil(Node, "Node");

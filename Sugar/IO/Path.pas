@@ -145,7 +145,7 @@ begin
   exit System.IO.Path.GetFullPath(RelativePath)  as not nullable;
   {$ELSEIF ECHOES}
   exit System.IO.Path.GetFullPath(RelativePath) as not nullable;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit (RelativePath as NSString).stringByStandardizingPath;
   {$ENDIF}
 end;

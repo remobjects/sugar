@@ -7,11 +7,11 @@ type
   MethodInfo = public class mapped to java.lang.reflect.Method
   {$ELSEIF ECHOES}
   MethodInfo = public class mapped to System.Reflection.MethodInfo
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   MethodInfo = public class
   {$ENDIF}
   private
-    {$IF NOUGAT}
+    {$IF TOFFEE}
     //fClass: Sugar.Reflection.Type;
     fMethod: rtl.Method;
     method getReturnType: &Type;
@@ -42,7 +42,7 @@ type
     property IsAbstract: Boolean read java.lang.reflect.Modifier.isAbstract(mapped.getModifiers);
     property Parameters: array of Sugar.Reflection.ParameterInfo read getParameters;
     {$ENDIF}
-    {$IF NOUGAT}
+    {$IF TOFFEE}
     method initWithClass(aClass: Sugar.Reflection.Type) &method(aMethod: rtl.Method): instancetype;
     property Name: String read NSStringFromSelector(&Selector);
     property &Selector: SEL read method_getName(fMethod);
@@ -58,7 +58,7 @@ type
 
 implementation
 
-{$IF NOUGAT}
+{$IF TOFFEE}
 method MethodInfo.initWithClass(aClass: Sugar.Reflection.Type) &method(aMethod: rtl.Method): instancetype;
 begin
   self := inherited init;

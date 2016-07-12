@@ -10,14 +10,14 @@ uses
   System.Security.Cryptography;
 {$ELSEIF COOPER}
   java.security;
-{$ELSEIF NOUGAT}
+{$ELSEIF TOFFEE}
   rtl;
 {$ENDIF}
 
 type  
   DigestAlgorithm = public (MD5, SHA1, SHA256, SHA384, SHA512); 
 
-  MessageDigest = public class {$IF COOPER}mapped to java.security.MessageDigest{$ELSEIF NETFX_CORE}mapped to CryptographicHash{$ELSEIF ECHOES}mapped to System.Security.Cryptography.HashAlgorithm{$ELSEIF NOUGAT}{$ENDIF}
+  MessageDigest = public class {$IF COOPER}mapped to java.security.MessageDigest{$ELSEIF NETFX_CORE}mapped to CryptographicHash{$ELSEIF ECHOES}mapped to System.Security.Cryptography.HashAlgorithm{$ELSEIF TOFFEE}{$ENDIF}
   public
     constructor(Algorithm: DigestAlgorithm);
 
@@ -78,7 +78,7 @@ begin
     else
       raise new SugarNotImplementedException;
   end;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   case Algorithm of
     DigestAlgorithm.MD5: result := new MD5;
     DigestAlgorithm.SHA1: result := new SHA1;
@@ -110,7 +110,7 @@ begin
   mapped.Append(Buffer);
   {$ELSEIF ECHOES}
   mapped.TransformBlock(Data, Offset, Count, nil, 0);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   {$ENDIF}
 end;
 
@@ -150,7 +150,7 @@ begin
   mapped.TransformFinalBlock(Data, Offset, Count);
   result := mapped.Hash;
   mapped.Initialize;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   {$ENDIF}
 end;
 
@@ -175,7 +175,7 @@ begin
   mapped.GetValueAndReset;
   {$ELSEIF ECHOES}  
   mapped.Initialize;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   {$ENDIF}
 end;
 

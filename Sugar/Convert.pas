@@ -5,7 +5,7 @@ interface
 type
   Convert = public static class 
   private
-    {$IF NOUGAT}
+    {$IF TOFFEE}
     method ParseNumber(aValue: not nullable String; aLocale: Locale := nil): NSNumber;
     method ParseInt32(aValue: not nullable String): Int32;  
     method ParseInt64(aValue: not nullable String): Int64; 
@@ -87,7 +87,7 @@ end;
 
 method Convert.ToString(aValue: Byte; aBase: Integer := 10): not nullable String;
 begin
-  {$IF COOPER OR NOUGAT}
+  {$IF COOPER OR TOFFEE}
   case aBase of
     2: exit ToBinaryString(aValue);
     8: exit ToOctalString(aValue);
@@ -102,7 +102,7 @@ end;
 
 method Convert.ToString(aValue: Int32; aBase: Integer := 10): not nullable String;
 begin
-  {$IF COOPER OR NOUGAT}
+  {$IF COOPER OR TOFFEE}
   case aBase of
     2: exit ToBinaryString(aValue);
     8: exit ToOctalString(aValue);
@@ -117,7 +117,7 @@ end;
 
 method Convert.ToString(aValue: Int64; aBase: Integer := 10): not nullable String;
 begin
-  {$IF COOPER OR NOUGAT}
+  {$IF COOPER OR TOFFEE}
   case aBase of
     2: exit ToBinaryString(aValue);
     8: exit ToOctalString(aValue);
@@ -169,7 +169,7 @@ begin
     result := System.Convert.ToString(aValue, aLocale) as not nullable
   else
     result := aValue.ToString("0."+new String('0', aDigitsAfterDecimalPoint), aLocale) as not nullable
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   var numberFormatter := new NSNumberFormatter();
   numberFormatter.numberStyle := NSNumberFormatterStyle.DecimalStyle;
   numberFormatter.locale := coalesce(aLocale, Locale.Current);
@@ -183,7 +183,7 @@ end;
 
 method Convert.ToString(aValue: Char): not nullable String;
 begin
-  {$IF COOPER OR NOUGAT}
+  {$IF COOPER OR TOFFEE}
   //74584: Two more bogus nullable warnings
   exit Sugar.String(aValue);
   {$ELSEIF ECHOES}
@@ -204,7 +204,7 @@ end;
 
 method Convert.ToInt32(aValue: Byte): Int32;
 begin
-  {$IF COOPER OR NOUGAT}
+  {$IF COOPER OR TOFFEE}
   exit Int32(aValue);
   {$ELSEIF ECHOES}
   exit System.Convert.ToInt32(aValue);
@@ -216,7 +216,7 @@ begin
   if (aValue > Consts.MaxInteger) or (aValue < Consts.MinInteger) then
     raise new SugarArgumentOutOfRangeException(ErrorMessage.TYPE_RANGE_ERROR, "Int32");
 
-  {$IF COOPER OR NOUGAT}
+  {$IF COOPER OR TOFFEE}
   exit Int32(aValue);
   {$ELSEIF ECHOES}
   exit System.Convert.ToInt32(aValue);
@@ -235,7 +235,7 @@ end;
 
 method Convert.ToInt32(aValue: Char): Int32;
 begin
-  {$IF COOPER OR NOUGAT}
+  {$IF COOPER OR TOFFEE}
   exit ord(aValue);
   {$ELSEIF ECHOES}
   exit System.Convert.ToInt32(aValue);
@@ -248,7 +248,7 @@ begin
   exit Integer.parseInt(aValue);
   {$ELSEIF ECHOES}
   exit System.Convert.ToInt32(aValue);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit ParseInt32(aValue);
   {$ENDIF}
 end;
@@ -363,7 +363,7 @@ begin
   exit Integer.parseInt(aValue, 16);
   {$ELSEIF ECHOES}
   exit Int32.Parse(aValue, System.Globalization.NumberStyles.HexNumber);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   var scanner: NSScanner := NSScanner.scannerWithString(aValue);
   scanner.scanHexInt(var result);
   {$ENDIF}
@@ -375,7 +375,7 @@ begin
   exit Long.parseLong(aValue, 16);
   {$ELSEIF ECHOES}
   exit Int64.Parse(aValue, System.Globalization.NumberStyles.HexNumber);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   var scanner: NSScanner := NSScanner.scannerWithString(aValue);
   scanner.scanHexLongLong(var result);
   {$ENDIF}
@@ -388,7 +388,7 @@ end;
 
 method Convert.ToInt64(aValue: Byte): Int64;
 begin
-  {$IF COOPER OR NOUGAT}
+  {$IF COOPER OR TOFFEE}
   exit Int64(aValue);
   {$ELSEIF ECHOES}
   exit System.Convert.ToInt64(aValue);
@@ -397,7 +397,7 @@ end;
 
 method Convert.ToInt64(aValue: Int32): Int64;
 begin
-  {$IF COOPER OR NOUGAT}
+  {$IF COOPER OR TOFFEE}
   exit Int64(aValue);
   {$ELSEIF ECHOES}
   exit System.Convert.ToInt64(aValue);
@@ -414,7 +414,7 @@ end;
 
 method Convert.ToInt64(aValue: Char): Int64;
 begin
-  {$IF COOPER OR NOUGAT}
+  {$IF COOPER OR TOFFEE}
   exit ord(aValue);
   {$ELSEIF ECHOES}
   exit System.Convert.ToInt64(aValue);
@@ -433,7 +433,7 @@ begin
   exit Long.parseLong(aValue);
   {$ELSEIF ECHOES}
   exit System.Convert.ToInt64(aValue);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit ParseInt64(aValue);
   {$ENDIF}
 end;
@@ -445,7 +445,7 @@ end;
 
 method Convert.ToDouble(aValue: Byte): Double;
 begin
-  {$IF COOPER OR NOUGAT}
+  {$IF COOPER OR TOFFEE}
   exit Double(aValue);
   {$ELSEIF ECHOES}
   exit System.Convert.ToDouble(aValue);
@@ -454,7 +454,7 @@ end;
 
 method Convert.ToDouble(aValue: Int32): Double;
 begin
-  {$IF COOPER OR NOUGAT}
+  {$IF COOPER OR TOFFEE}
   exit Double(aValue);
   {$ELSEIF ECHOES}
   exit System.Convert.ToDouble(aValue);
@@ -463,7 +463,7 @@ end;
 
 method Convert.ToDouble(aValue: Int64): Double;
 begin
-  {$IF COOPER OR NOUGAT}
+  {$IF COOPER OR TOFFEE}
   exit Double(aValue);
   {$ELSEIF ECHOES}
   exit System.Convert.ToDouble(aValue);
@@ -510,7 +510,7 @@ begin
     raise new SugarFormatException("Unable to convert string '{0}' to double.", aValue);
   {$ELSEIF ECHOES}
   exit System.Convert.ToDouble(aValue, aLocale);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   var Number := ParseNumber(aValue, aLocale);
   if not assigned(Number) then
     raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);
@@ -556,7 +556,7 @@ begin
   if (Number > 255) or (Number < 0) then
     raise new SugarArgumentOutOfRangeException(ErrorMessage.TYPE_RANGE_ERROR, "Byte");
 
-  {$IF COOPER OR NOUGAT}
+  {$IF COOPER OR TOFFEE}
   exit ord(aValue);
   {$ELSEIF ECHOES}
   exit System.Convert.ToByte(aValue);
@@ -575,7 +575,7 @@ begin
   exit Byte.parseByte(aValue);
   {$ELSEIF ECHOES}
   exit System.Convert.ToByte(aValue);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   var Number: Int32 := ParseInt32(aValue);
   exit ToByte(Number);
   {$ENDIF}
@@ -591,7 +591,7 @@ begin
   if (aValue > Consts.MaxChar) or (aValue < Consts.MinChar) then
     raise new SugarArgumentOutOfRangeException(ErrorMessage.TYPE_RANGE_ERROR, "Char");
 
-  {$IF COOPER OR NOUGAT}
+  {$IF COOPER OR TOFFEE}
   exit chr(aValue);
   {$ELSEIF ECHOES}
   exit System.Convert.ToChar(aValue);
@@ -603,7 +603,7 @@ begin
   if (aValue > Consts.MaxChar) or (aValue < Consts.MinChar) then
     raise new SugarArgumentOutOfRangeException(ErrorMessage.TYPE_RANGE_ERROR, "Char");
 
-  {$IF COOPER OR NOUGAT}
+  {$IF COOPER OR TOFFEE}
   exit chr(aValue);
   {$ELSEIF ECHOES}
   exit System.Convert.ToChar(aValue);
@@ -616,7 +616,7 @@ begin
   exit chr(Integer(aValue));
   {$ELSEIF ECHOES}
   exit System.Convert.ToChar(aValue);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit chr(aValue);
   {$ENDIF}
 end;
@@ -662,7 +662,7 @@ begin
   raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);
 end;
 
-{$IF NOUGAT}
+{$IF TOFFEE}
 method Convert.ParseNumber(aValue: not nullable String; aLocale: Locale := nil): NSNumber;
 begin
   if String.IsNullOrEmpty(aValue) then

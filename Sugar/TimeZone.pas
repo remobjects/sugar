@@ -3,7 +3,7 @@
 interface
 
 type
-  TimeZone = public class mapped to {$IFDEF ECHOES}System.TimeZoneInfo{$ELSEIF NOUGAT}NSTimeZone{$ELSEIF COOPER}java.util.TimeZone{$ENDIF}
+  TimeZone = public class mapped to {$IFDEF ECHOES}System.TimeZoneInfo{$ELSEIF TOFFEE}NSTimeZone{$ELSEIF COOPER}java.util.TimeZone{$ENDIF}
   private
     class method get_LocalTimeZone: not nullable TimeZone; 
     class method get_UtcTimeZone: not nullable TimeZone;
@@ -35,7 +35,7 @@ begin
   raise new NotSupportedException();
   {$ELSEIF ECHOES}
   result := System.TimeZoneInfo.GetSystemTimeZones().Select(tz -> tz.Id) as not nullable;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   result := NSTimeZone.knownTimeZoneNames as not nullable;
   {$ENDIF}
 end;
@@ -46,7 +46,7 @@ begin
   result := java.util.TimeZone.getTimeZone(aAbbreviation);
   {$ELSEIF ECHOES}
    raise new NotSupportedException();
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   result := NSTimeZone.timeZoneWithAbbreviation(aAbbreviation);
   {$ENDIF}
 end;
@@ -60,7 +60,7 @@ begin
   raise new NotSupportedException();
   {$ELSEIF ECHOES}
   result := System.TimeZoneInfo.FindSystemTimeZoneById(aName);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   result := NSTimeZone.timeZoneWithName(aName);
   {$ENDIF}
 end;
@@ -71,7 +71,7 @@ begin
   result := java.util.TimeZone.getDefault() as not nullable;
   {$ELSEIF ECHOES}
   result := System.TimeZoneInfo.Local as not nullable;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   result := NSTimeZone.localTimeZone as not nullable;
   {$ENDIF}
 end;
@@ -82,7 +82,7 @@ begin
   result := java.util.TimeZone.getTimeZone("UTC") as not nullable;
   {$ELSEIF ECHOES}
   result := System.TimeZoneInfo.Utc as not nullable;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   result := NSTimeZone.timeZoneWithAbbreviation("UTC") as not nullable;
   {$ENDIF}
 end;

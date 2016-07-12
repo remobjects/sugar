@@ -6,11 +6,11 @@ type
   GuidFormat = public enum (&Default, Braces, Parentheses);
 
   {$IF ECHOES}[System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Auto, Size := 1)]{$ENDIF}
-  Guid = public {$IF COOPER}class mapped to java.util.UUID{$ELSEIF ECHOES}record mapped to System.Guid{$ELSEIF NOUGAT}class{$ENDIF}
+  Guid = public {$IF COOPER}class mapped to java.util.UUID{$ELSEIF ECHOES}record mapped to System.Guid{$ELSEIF TOFFEE}class{$ENDIF}
   private
     {$IF ECHOES}
     class method Exchange(Value: array of Byte; Index1, Index2: Integer);
-    {$ELSEIF NOUGAT}
+    {$ELSEIF TOFFEE}
     fData: array of Byte;
     method AppendRange(Data: NSMutableString; Range: NSRange);
     class method InternalParse(Data: String): array of Byte;
@@ -38,7 +38,7 @@ type
     method ToString: java.lang.String; override;
     {$ELSEIF ECHOES}
     method ToString: System.String; override;
-    {$ELSEIF NOUGAT}
+    {$ELSEIF TOFFEE}
     method description: NSString; override;
     {$ENDIF}    
   end;
@@ -52,7 +52,7 @@ begin
   exit new java.util.UUID(0, 0);
   {$ELSEIF ECHOES}
   exit mapped.Empty;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   fData := new Byte[16];
   memset(fData, 0, 16); 
   {$ENDIF}
@@ -69,7 +69,7 @@ begin
   Exchange(Value, 4, 5);
   Exchange(Value, 6, 7);
   exit new System.Guid(Value);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   fData := new Byte[16];
   memcpy(fData, Value, 16); 
   {$ENDIF}
@@ -79,7 +79,7 @@ method Guid.CompareTo(Value: Guid): Integer;
 begin
   {$IF COOPER OR ECHOES}
   exit mapped.CompareTo(Value);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit memcmp(fData, Value.fData, 16);
   {$ENDIF}
 end;
@@ -88,7 +88,7 @@ method Guid.Equals(Value: Guid): Boolean;
 begin
   {$IF COOPER OR ECHOES}
   exit mapped.Equals(Value);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit CompareTo(Value) = 0;
   {$ENDIF}
 end;
@@ -99,7 +99,7 @@ begin
   exit mapped.randomUUID;
   {$ELSEIF ECHOES}
   exit mapped.NewGuid;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   var UUID: CFUUIDRef := CFUUIDCreate(kCFAllocatorDefault);
   var RefBytes: CFUUIDBytes := CFUUIDGetUUIDBytes(UUID);
   CFRelease(UUID);
@@ -129,7 +129,7 @@ begin
   exit mapped.fromString(Value);
   {$ELSEIF ECHOES}
   exit new System.Guid(Value);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   var Data := InternalParse(Value);
   exit new Guid(Data);
   {$ENDIF}
@@ -141,7 +141,7 @@ begin
   exit new java.util.UUID(0, 0);
   {$ELSEIF ECHOES}
   exit mapped.Empty;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit new Guid;
   {$ENDIF}
 end;
@@ -167,7 +167,7 @@ begin
   Exchange(Value, 6, 7);
 
   exit Value;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   result := new Byte[16];
   memcpy(result, fData, 16);
   {$ENDIF}
@@ -195,7 +195,7 @@ begin
   end;
 
   exit result.ToUpper;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   var GuidString := new NSMutableString();
 
   AppendRange(GuidString, NSMakeRange(0, 3));
@@ -235,7 +235,7 @@ begin
   Value[Index1] := Value[Index2];
   Value[Index2] := Temp;
 end;
-{$ELSEIF NOUGAT}
+{$ELSEIF TOFFEE}
 method Guid.AppendRange(Data: NSMutableString; Range: NSRange);
 begin
   for i: Integer := Range.location to Range.length do

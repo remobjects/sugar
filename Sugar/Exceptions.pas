@@ -3,12 +3,12 @@
 interface
 
 type 
-  SugarException = public class({$IF NOUGAT}Foundation.NSException{$ELSE}Exception{$ENDIF})
+  SugarException = public class({$IF TOFFEE}Foundation.NSException{$ELSE}Exception{$ENDIF})
   public
     constructor;
     constructor(aMessage: String);
     constructor(aFormat: String; params aParams: array of Object);
-  {$IF NOUGAT}
+  {$IF TOFFEE}
     constructor withError(aError: NSError);
     property Message: String read reason;
   {$ENDIF}
@@ -52,7 +52,7 @@ type
     class method RaiseIfMissing;
   end;
 
-  {$IF NOUGAT}
+  {$IF TOFFEE}
   SugarNSErrorException = public class(SugarException)
   public
     constructor(Error: Foundation.NSError);
@@ -87,7 +87,7 @@ type
 
 implementation
 
-{$IF NOUGAT}
+{$IF TOFFEE}
 constructor SugarNSErrorException(Error: Foundation.NSError);
 begin
   inherited constructor(Error.localizedDescription);
@@ -101,14 +101,14 @@ end;
 
 constructor SugarException(aMessage: String);
 begin
-  {$IF NOUGAT}
+  {$IF TOFFEE}
   inherited initWithName('SugarException') reason(aMessage) userInfo(nil);
   {$ELSE}
   inherited constructor(aMessage);
   {$ENDIF}
 end;
 
-{$IF NOUGAT}
+{$IF TOFFEE}
 constructor SugarException withError(aError: NSError);
 begin
   inherited initWithName('SugarException') reason(aError.description) userInfo(nil);

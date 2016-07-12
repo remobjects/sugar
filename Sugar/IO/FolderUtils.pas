@@ -17,7 +17,7 @@ type
     {$IF COOPER}
     method RecursiveDelete(Item: java.io.File);
     method ListItems(FolderName: java.io.File; AllFolders: Boolean; FilesOnly: Boolean): array of String;
-    {$ELSEIF NOUGAT}
+    {$ELSEIF TOFFEE}
     method ListItems(FolderName: String; AllFolders: Boolean; FilesOnly: Boolean): array of String;
     {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
     method GetFolder(FolderName: String): StorageFolder;
@@ -53,7 +53,7 @@ begin
   ParentFolder.CreateFolderAsync(FolderName, CreationCollisionOption.FailIfExists).Await;
   {$ELSEIF ECHOES}
   System.IO.Directory.CreateDirectory(FolderName);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   var lError: NSError := nil;
   if not NSFileManager.defaultManager.createDirectoryAtPath(FolderName) withIntermediateDirectories(false) attributes(nil) error(var lError) then
     raise new SugarNSErrorException(lError);
@@ -85,7 +85,7 @@ begin
   GetFolder(FolderName).DeleteAsync.AsTask.Wait;  
   {$ELSEIF ECHOES}
   System.IO.Directory.Delete(FolderName, true);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   var lError: NSError := nil;
   if not NSFileManager.defaultManager.removeItemAtPath(FolderName) error(var lError) then
     raise new SugarNSErrorException(lError);
@@ -107,7 +107,7 @@ begin
   end;
   {$ELSEIF ECHOES}
   exit System.IO.Directory.Exists(FolderName);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   var RetVal: Boolean := false;
   result := NSFileManager.defaultManager.fileExistsAtPath(FolderName) isDirectory(@RetVal) and RetVal;
   {$ENDIF}
@@ -129,7 +129,7 @@ begin
 
   exit Items.ToArray;
 end;
-{$ELSEIF NOUGAT}
+{$ELSEIF TOFFEE}
 class method FolderUtils.ListItems(FolderName: String; AllFolders: Boolean; FilesOnly: Boolean): array of String;
 begin
   var Enumerator := NSFileManager.defaultManager.enumeratorAtPath(FolderName);
@@ -180,7 +180,7 @@ begin
   exit Items.ToArray;
   {$ELSEIF ECHOES}
   exit System.IO.Directory.GetFiles(FolderName, "*", iif(AllFolders, System.IO.SearchOption.AllDirectories, System.IO.SearchOption.TopDirectoryOnly));
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit ListItems(FolderName, AllFolders, true);
   {$ENDIF}
 end;
@@ -206,7 +206,7 @@ begin
   exit Items.ToArray;  
   {$ELSEIF ECHOES}
   exit System.IO.Directory.GetDirectories(FolderName, "*", iif(AllFolders, System.IO.SearchOption.AllDirectories, System.IO.SearchOption.TopDirectoryOnly));
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit ListItems(FolderName, AllFolders, false);
   {$ENDIF}
 end;

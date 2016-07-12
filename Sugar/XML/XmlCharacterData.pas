@@ -7,7 +7,7 @@ uses
   org.w3c.dom,
   {$ELSEIF ECHOES}
   System.Xml.Linq,
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   Foundation,
   {$ENDIF}
   Sugar;
@@ -15,7 +15,7 @@ uses
 type
   XmlCharacterData = public class (XmlNode)
   private
-    {$IF NOUGAT}
+    {$IF TOFFEE}
     method GetData: String;
     method SetData(aValue: String);
     method GetLength: Integer;
@@ -32,7 +32,7 @@ type
     {$ELSEIF COOPER}
     property Data: String read CharacterData.Data write SetData;
     property Length: Integer read CharacterData.Length;
-    {$ELSEIF NOUGAT}
+    {$ELSEIF TOFFEE}
     property Data: String read GetData write SetData;
     property Length: Integer read GetLength;
     {$ENDIF}
@@ -48,7 +48,7 @@ type
   public
     property Name: String read "#CDATA"; override;
     property NodeType: XmlNodeType read XmlNodeType.CDATA; override;
-    {$IF NOUGAT}property LocalName: String read "#CDATA"; override;{$ENDIF}
+    {$IF TOFFEE}property LocalName: String read "#CDATA"; override;{$ENDIF}
   end;
 
   XmlComment = public class (XmlCharacterData)
@@ -63,19 +63,19 @@ type
   public
     property Name: String read "#comment"; override;
     property NodeType: XmlNodeType read XmlNodeType.Comment; override;
-    {$IF NOUGAT}property LocalName: String read "#comment"; override;{$ENDIF}
+    {$IF TOFFEE}property LocalName: String read "#comment"; override;{$ENDIF}
   end;
 
   XmlText = public class (XmlCharacterData)
   public
     property Name: String read "#text"; override;
     property NodeType: XmlNodeType read XmlNodeType.Text; override;
-    {$IF NOUGAT}property LocalName: String read "#text"; override;{$ENDIF}
+    {$IF TOFFEE}property LocalName: String read "#text"; override;{$ENDIF}
   end;
 
 implementation
 
-{$IF NOUGAT}
+{$IF TOFFEE}
 method XmlCharacterData.GetData: String;
 begin
   exit Value;
@@ -110,7 +110,7 @@ begin
   Value := Value + aValue;
   {$ELSEIF COOPER} 
   CharacterData.AppendData(aValue);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   var lData: NSMutableString := NSMutableString.stringWithString(Data);
   lData.appendString(aValue);
   Value := lData;
@@ -126,7 +126,7 @@ begin
     raise new SugarArgumentOutOfRangeException(String.Format(ErrorMessage.OUT_OF_RANGE_ERROR, Offset, Count, CharacterData.Length));
 
   CharacterData.DeleteData(Offset, Count);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   var lData: NSMutableString := NSMutableString.stringWithString(Data);
   lData.deleteCharactersInRange(NSMakeRange(Offset, Count));
   Value := lData;
@@ -140,7 +140,7 @@ begin
   Value := System.String(Value).Insert(Offset, aValue);
   {$ELSEIF COOPER} 
   CharacterData.InsertData(Offset, aValue);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   var lData: NSMutableString := NSMutableString.stringWithString(Data);
   lData.insertString(aValue) atIndex(Offset);
   Value := lData;
@@ -157,7 +157,7 @@ begin
     raise new SugarArgumentOutOfRangeException(String.Format(ErrorMessage.OUT_OF_RANGE_ERROR, Offset, Count, CharacterData.Length));
 
   CharacterData.ReplaceData(Offset, Count, WithValue);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   var lData: NSMutableString := NSMutableString.stringWithString(Data);
   lData.replaceCharactersInRange(NSMakeRange(Offset, Count)) withString(WithValue);
   Value := lData;
@@ -173,7 +173,7 @@ begin
     raise new SugarArgumentOutOfRangeException(String.Format(ErrorMessage.OUT_OF_RANGE_ERROR, Offset, Count, CharacterData.Length));
 
   exit CharacterData.substringData(Offset, Count);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   if (Offset < 0) or (Count < 0) then
     raise new SugarArgumentException(ErrorMessage.NEGATIVE_VALUE_ERROR, "Offset and Count");
 

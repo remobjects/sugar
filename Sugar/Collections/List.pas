@@ -7,13 +7,13 @@ uses
   System.Linq,
   {$ELSEIF COOPER}
   com.remobjects.elements.linq,
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   RemObjects.Elements.Linq,
   {$ENDIF}
   Sugar;
 
 type  
-  List<T> = public class (sequence of T) mapped to {$IF COOPER}java.util.ArrayList<T>{$ELSEIF ECHOES}System.Collections.Generic.List<T>{$ELSEIF NOUGAT}Foundation.NSMutableArray where T is class;{$ENDIF}
+  List<T> = public class (sequence of T) mapped to {$IF COOPER}java.util.ArrayList<T>{$ELSEIF ECHOES}System.Collections.Generic.List<T>{$ELSEIF TOFFEE}Foundation.NSMutableArray where T is class;{$ENDIF}
   private
   public
     method SetItem(&Index: Integer; Value: T);
@@ -52,10 +52,10 @@ type
 
     method ToArray: array of T; {$IF COOPER}inline;{$ENDIF}
     
-    property Count: Integer read {$IF COOPER}mapped.Size{$ELSEIF ECHOES}mapped.Count{$ELSEIF NOUGAT}mapped.count{$ENDIF};
+    property Count: Integer read {$IF COOPER}mapped.Size{$ELSEIF ECHOES}mapped.Count{$ELSEIF TOFFEE}mapped.count{$ENDIF};
     property Item[i: Integer]: T read GetItem write SetItem; default;
 
-    {$IF NOUGAT}
+    {$IF TOFFEE}
     operator Implicit(aArray: NSArray<T>): List<T>;
     {$ENDIF}
   end;
@@ -64,7 +64,7 @@ type
   Action<T> = public block (Obj: T);
   Comparison<T> = public block (x: T; y: T): Integer;
 
-  {$IF NOUGAT}
+  {$IF TOFFEE}
   NullHelper = public static class
   public
     method ValueOf(Value: id): id;
@@ -80,7 +80,7 @@ type
     method TrueForAll<T>(aSelf: List<T>;Match: Predicate<T>): Boolean;
     method FindAll<T>(aSelf: List<T>;Match: Predicate<T>): List<T>;
     method InsertRange<T>(aSelf: List<T>; &Index: Integer; Items: array oF T);
-    {$IFDEF NOUGAT}
+    {$IFDEF TOFFEE}
     method LastIndexOf<T>(aSelf: NSArray; aItem: T): Integer;
     method ToArray<T>(aSelf: NSArray): array of T;
     method ToArrayReverse<T>(aSelf: NSArray): array of T;
@@ -99,7 +99,7 @@ begin
   result := new java.util.ArrayList<T>(Items);
   {$ELSEIF ECHOES}
   exit new System.Collections.Generic.List<T>(Items);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   result := new Foundation.NSMutableArray withArray(Items);
   {$ENDIF}
 end;
@@ -110,7 +110,7 @@ begin
   result := new java.util.ArrayList<T>(java.util.Arrays.asList(anArray));
   {$ELSEIF ECHOES}
   exit new System.Collections.Generic.List<T>(anArray);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   result := Foundation.NSMutableArray.arrayWithObjects(^id(@anArray[0])) count(length(anArray));
   {$ENDIF}
 end;
@@ -119,14 +119,14 @@ method List<T>.Add(anItem: T);
 begin
   {$IF COOPER OR ECHOES}
   mapped.Add(anItem);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   mapped.addObject(NullHelper.ValueOf(anItem));
   {$ENDIF}
 end;
 
 method List<T>.SetItem(&Index: Integer; Value: T);
 begin
-  {$IF NOUGAT}
+  {$IF TOFFEE}
   mapped[&Index] := NullHelper.ValueOf(Value);
   {$ELSE}  
   mapped[&Index] := Value;
@@ -135,7 +135,7 @@ end;
 
 method List<T>.GetItem(&Index: Integer): T;
 begin
-  {$IF NOUGAT}
+  {$IF TOFFEE}
   exit NullHelper.ValueOf(mapped.objectAtIndex(&Index));
   {$ELSE}  
   exit mapped[&Index];
@@ -148,7 +148,7 @@ begin
   mapped.AddAll(Items);
   {$ELSEIF ECHOES}
   mapped.AddRange(Items);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   mapped.addObjectsFromArray(Items);
   {$ENDIF}
 end;
@@ -164,7 +164,7 @@ begin
   mapped.Clear;
   {$ELSEIF ECHOES}
   mapped.Clear;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   mapped.RemoveAllObjects;
   {$ENDIF}
 end;
@@ -175,7 +175,7 @@ begin
   exit mapped.Contains(anItem);
   {$ELSEIF ECHOES}
   exit mapped.Contains(anItem);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit mapped.ContainsObject(NullHelper.ValueOf(anItem));
   {$ENDIF}
 end;
@@ -226,7 +226,7 @@ begin
   exit mapped.IndexOf(anItem);
   {$ELSEIF ECHOES}
   exit mapped.IndexOf(anItem);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   var lIndex := mapped.indexOfObject(NullHelper.ValueOf(anItem));
   exit if lIndex = NSNotFound then -1 else Integer(lIndex);
   {$ENDIF}
@@ -238,7 +238,7 @@ begin
   mapped.Add(&Index, anItem);
   {$ELSEIF ECHOES}
   mapped.Insert(&Index, anItem);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   mapped.insertObject(NullHelper.ValueOf(anItem)) atIndex(&Index);
   {$ENDIF}
 end;
@@ -249,7 +249,7 @@ begin
   mapped.AddAll(&Index, Items);
   {$ELSEIF ECHOES}
   mapped.InsertRange(&Index, Items);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   mapped.insertObjects(Items) atIndexes(new NSIndexSet withIndexesInRange(NSMakeRange(&Index, Items.Count)));
   {$ENDIF}
 end;
@@ -265,7 +265,7 @@ begin
   exit mapped.LastIndexOf(anItem);
   {$ELSEIF ECHOES}
   exit mapped.LastIndexOf(anItem);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit ListHelpers.LastIndexOf(self, anItem);
   {$ENDIF}
 end;
@@ -276,7 +276,7 @@ begin
   exit mapped.Remove(Object(anItem));
   {$ELSEIF ECHOES}
   exit mapped.Remove(anItem);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   var lIndex := IndexOf(anItem);
   if lIndex <> -1 then begin
     RemoveAt(lIndex);
@@ -293,7 +293,7 @@ begin
   mapped.remove(&Index);
   {$ELSEIF ECHOES}
   mapped.RemoveAt(&Index);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   mapped.removeObjectAtIndex(&Index);
   {$ENDIF}
 end;
@@ -304,7 +304,7 @@ begin
   mapped.subList(&Index, &Index+aCount).clear;
   {$ELSEIF ECHOES}
   mapped.RemoveRange(&Index, aCount);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   mapped.removeObjectsInRange(Foundation.NSMakeRange(&Index, aCount));
   {$ENDIF}
 end;
@@ -315,7 +315,7 @@ begin
   java.util.Collections.sort(mapped, new class java.util.Comparator<T>(compare := (x, y) -> Comparison(x, y)));
   {$ELSEIF ECHOES} 
   mapped.Sort((x, y) -> Comparison(x, y));
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   mapped.sortUsingComparator((x, y) -> begin
                                          var lResult := Comparison(x, y);
                                          exit if lResult < 0 then NSComparisonResult.NSOrderedAscending else if lResult = 0 then NSComparisonResult.NSOrderedSame else NSComparisonResult.NSOrderedDescending;
@@ -329,12 +329,12 @@ begin
   exit mapped.toArray(new T[0]);
   {$ELSEIF ECHOES}
   exit mapped.ToArray;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit ListHelpers.ToArray<T>(self);
   {$ENDIF}
 end;
 
-{$IF NOUGAT}
+{$IF TOFFEE}
 operator List<T>.Implicit(aArray: NSArray<T>): List<T>;
 begin
   if aArray is NSMutableArray then
@@ -346,7 +346,7 @@ end;
 
 { NullHelper }
 
-{$IF NOUGAT}
+{$IF TOFFEE}
 class method NullHelper.ValueOf(Value: id): id;
 begin
   exit if Value = NSNull.null then nil else if Value = nil then NSNull.null else Value;
@@ -435,7 +435,7 @@ begin
     aSelf.Insert(&Index, Items[i]);
 end;
 
-{$IFDEF NOUGAT}
+{$IFDEF TOFFEE}
 
 method ListHelpers.LastIndexOf<T>(aSelf: NSArray; aItem: T): Integer;
 begin

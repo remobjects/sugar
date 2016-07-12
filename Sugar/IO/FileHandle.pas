@@ -13,7 +13,7 @@ type
   FileOpenMode = public (&ReadOnly, &Create, ReadWrite);
   SeekOrigin = public (&Begin, Current, &End);
 
-  FileHandle = public class mapped to {$IF COOPER}java.io.RandomAccessFile{$ELSEIF WINDOWS_PHONE OR NETFX_CORE}Stream{$ELSEIF ECHOES}System.IO.FileStream{$ELSEIF NOUGAT}NSFileHandle{$ENDIF}
+  FileHandle = public class mapped to {$IF COOPER}java.io.RandomAccessFile{$ELSEIF WINDOWS_PHONE OR NETFX_CORE}Stream{$ELSEIF ECHOES}System.IO.FileStream{$ELSEIF TOFFEE}NSFileHandle{$ENDIF}
   private
     method GetLength: Int64;
     method SetLength(value: Int64);
@@ -63,7 +63,7 @@ begin
                                          else System.IO.FileMode.OpenOrCreate;
                                        end;
   exit new System.IO.FileStream(FileName, lMode, lAccess);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   case Mode of
     FileOpenMode.ReadOnly: result := NSFileHandle.fileHandleForReadingAtPath(FileName);
     FileOpenMode.ReadWrite: result :=  NSFileHandle.fileHandleForUpdatingAtPath(FileName);
@@ -92,7 +92,7 @@ begin
   {$ELSEIF ECHOES}
   var lMode: System.IO.FileAccess := if Mode = FileOpenMode.ReadOnly then System.IO.FileAccess.Read else System.IO.FileAccess.ReadWrite;
   exit new System.IO.FileStream(System.String(aFile), System.IO.FileMode.Open, lMode);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   case Mode of
     FileOpenMode.ReadOnly: exit NSFileHandle.fileHandleForReadingAtPath(aFile);
     FileOpenMode.ReadWrite: exit NSFileHandle.fileHandleForUpdatingAtPath(aFile);
@@ -108,7 +108,7 @@ begin
   mapped.Dispose;
   {$ELSEIF ECHOES}
   mapped.Close;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   mapped.closeFile;
   {$ENDIF}
 end;
@@ -121,7 +121,7 @@ begin
   mapped.Flush;
   {$ELSEIF ECHOES}
   mapped.Flush;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   mapped.synchronizeFile;
   {$ENDIF}
 end;
@@ -165,7 +165,7 @@ begin
   exit mapped.Read(Buffer, Offset, Count);
   {$ELSEIF ECHOES}
   exit mapped.Read(Buffer, Offset, Count);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   var Bin := mapped.readDataOfLength(Count);
   Bin.getBytes(@Buffer[Offset]) length(Bin.length);
 
@@ -199,7 +199,7 @@ begin
   mapped.Write(Buffer, Offset, Count);
   {$ELSEIF ECHOES}
   mapped.Write(Buffer, Offset, Count);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   var Bin := new NSData withBytes(@Buffer[Offset]) length(Count);
   mapped.writeData(Bin);
   {$ENDIF}
@@ -233,7 +233,7 @@ begin
   mapped.Seek(Offset, System.IO.SeekOrigin(Origin));
   {$ELSEIF ECHOES}
   mapped.Seek(Offset, System.IO.SeekOrigin(Origin));
-  {$ELSEIF NOUGAT}  
+  {$ELSEIF TOFFEE}  
   case Origin of
     SeekOrigin.Begin: mapped.seekToFileOffset(Offset);
     SeekOrigin.Current: mapped.seekToFileOffset(Position + Offset);
@@ -250,7 +250,7 @@ begin
   exit mapped.Length;
   {$ELSEIF ECHOES}
   exit mapped.Length;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   var Origin := mapped.offsetInFile;
   result := mapped.seekToEndOfFile;
   mapped.seekToFileOffset(Origin);
@@ -270,7 +270,7 @@ begin
     Seek(Origin, SeekOrigin.Begin);
   {$ELSEIF ECHOES}
   mapped.SetLength(value);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   var Origin := mapped.offsetInFile;
   mapped.truncateFileAtOffset(value);
   if Origin > value then
@@ -288,7 +288,7 @@ begin
   exit mapped.Position;
   {$ELSEIF ECHOES}
   exit mapped.Position;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit mapped.offsetInFile;
   {$ENDIF}
 end;
@@ -301,7 +301,7 @@ begin
   mapped.Position := value;
   {$ELSEIF ECHOES}
   mapped.Position := value;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   Seek(value, SeekOrigin.Begin);
   {$ENDIF}
 end;

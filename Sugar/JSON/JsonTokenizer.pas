@@ -57,7 +57,7 @@ begin
   System.arraycopy(CharData, 0, fData, 0, CharData.Length);
   {$ELSEIF ECHOES}
   Array.Copy(CharData, 0, fData, 0, CharData.Length);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   rtl.memset(@fData[0], 0, fData.length);
   memcpy(@fData[0], @CharData[0], sizeOf(Char) * CharData.Length);
   {$ENDIF} 

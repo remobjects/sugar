@@ -59,7 +59,7 @@ type
     {$ELSEIF ECHOES}
     var Response: HttpWebResponse;
     constructor(aResponse: HttpWebResponse);
-    {$ELSEIF NOUGAT}
+    {$ELSEIF TOFFEE}
     var Data: NSData;
     constructor(aData: NSData; aResponse: NSHTTPURLResponse);
     {$ENDIF}
@@ -230,7 +230,7 @@ begin
     Headers[k.ToString] := aResponse.Headers[k];
   {$ENDIF}
 end;
-{$ELSEIF NOUGAT}
+{$ELSEIF TOFFEE}
 constructor HttpResponse(aData: NSData; aResponse: NSHTTPURLResponse);
 begin
   Data := aData;
@@ -254,7 +254,7 @@ begin
     var responseString := new System.IO.StreamReader(Response.GetResponseStream(), aEncoding).ReadToEnd();
     contentCallback(new HttpResponseContent<String>(Content := responseString))
   end;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   var s := new Foundation.NSString withData(Data) encoding(aEncoding.AsNSStringEncoding); // todo: test this
   if assigned(s) then
     contentCallback(new HttpResponseContent<String>(Content := s))
@@ -284,7 +284,7 @@ begin
     Response.GetResponseStream().CopyTo(allData);
     contentCallback(new HttpResponseContent<Binary>(Content := allData));
   end;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   contentCallback(new HttpResponseContent<Binary>(Content := Data.mutableCopy));
   {$ENDIF}
 end;
@@ -365,7 +365,7 @@ begin
     end;
   end;
   {$ENDIF}
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   async begin
     var error: NSError;
     if Data.writeToFile(aTargetFile) options(NSDataWritingOptions.NSDataWritingAtomic) error(var error) then
@@ -384,7 +384,7 @@ begin
   result := new String(GetContentAsBinarySynchronous().ToArray, aEncoding);
   {$ELSEIF ECHOES}
   result := new System.IO.StreamReader(Response.GetResponseStream(), aEncoding).ReadToEnd() as not nullable;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   var s := new Foundation.NSString withData(Data) encoding(aEncoding.AsNSStringEncoding); // todo: test this
   if assigned(s) then
     exit s as not nullable
@@ -409,7 +409,7 @@ begin
   var allData := new System.IO.MemoryStream();
   Response.GetResponseStream().CopyTo(allData);
   result := allData as not nullable;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   result := Data.mutableCopy as not nullable;
   {$ENDIF}
 end;
@@ -501,7 +501,7 @@ begin
     on E: Exception do
       ResponseCallback(new HttpResponse withException(E));
   end;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   try
     var nsUrlRequest := new NSMutableURLRequest withURL(aRequest.Url) cachePolicy(NSURLRequestCachePolicy.ReloadIgnoringLocalAndRemoteCacheData) timeoutInterval(30);
   
@@ -598,7 +598,7 @@ begin
       raise new SugarIOException("Unable to complete request. Error code: {0}", webResponse.StatusCode);
     result := new HttpResponse(webResponse);
   end;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   var nsUrlRequest := new NSMutableURLRequest withURL(aRequest.Url) cachePolicy(NSURLRequestCachePolicy.ReloadIgnoringLocalAndRemoteCacheData) timeoutInterval(30);
 
   //nsUrlRequest.AllowAutoRedirect := aRequest.FollowRedirects;
@@ -838,7 +838,7 @@ begin
 
     exit new HttpResponse<Binary>(new Binary(Content));
   end;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   var lError: NSError := nil;
   var lRequest := new NSURLRequest withURL(anUrl) cachePolicy(NSURLRequestCachePolicy.ReloadIgnoringLocalAndRemoteCacheData) timeoutInterval(30);
   var lResponse: NSURLResponse;

@@ -8,7 +8,7 @@ uses
   {$IF COOPER}com.remobjects.elements.linq,{$ENDIF}
   Sugar.Collections;
 
-{$IF NOUGAT AND (TARGET_OS_IPHONE OR TARGET_IPHONESIMULATOR)} 
+{$IF TOFFEE AND (TARGET_OS_IPHONE OR TARGET_IPHONESIMULATOR)} 
 type Protocol = id;
 {$ENDIF}
 
@@ -19,11 +19,11 @@ type
   {$IF COOPER}
   &Type = public class mapped to java.lang.Class
   {$ENDIF}
-  {$IF NOUGAT}
+  {$IF TOFFEE}
   &Type = public class
   {$ENDIF}
   private
-    {$IF NOUGAT}
+    {$IF TOFFEE}
     fIsID: Boolean;
     fClass: &Class;
     fProtocol: Protocol;
@@ -72,7 +72,7 @@ type
     property IsEnum: Boolean read mapped.isEnum();
     property IsValueType: Boolean read mapped.isPrimitive();
     {$ENDIF}
-    {$IF NOUGAT}
+    {$IF TOFFEE}
     method initWithID: instancetype;
     method initWithClass(aClass: &Class): instancetype;
     method initWithProtocol(aProtocol: id): instancetype;
@@ -94,7 +94,7 @@ type
 
 implementation
 
-{$IF NOUGAT}
+{$IF TOFFEE}
 method &Type.initWithID: instancetype;
 begin
   self := inherited init;

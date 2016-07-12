@@ -3,12 +3,12 @@
 interface
 
 type
-  Range = public record {$IF NOUGAT}mapped to Foundation.NSRange{$ENDIF}
+  Range = public record {$IF TOFFEE}mapped to Foundation.NSRange{$ENDIF}
   public
     class method MakeRange(aLocation, aLength: Integer): Range;
 
-    property Location: Integer {$IF NOUGAT}read mapped.location write mapped.location{$ENDIF};
-    property Length: Integer {$IF NOUGAT} read mapped.length write mapped.length{$ENDIF};
+    property Location: Integer {$IF TOFFEE}read mapped.location write mapped.location{$ENDIF};
+    property Length: Integer {$IF TOFFEE} read mapped.length write mapped.length{$ENDIF};
   end;
 
   RangeHelper = public static class
@@ -16,13 +16,13 @@ type
     method Validate(aRange: Range; BufferSize: Integer);
   end;
 
-  Binary = public class {$IF ECHOES}mapped to System.IO.MemoryStream{$ELSEIF NOUGAT}mapped to Foundation.NSMutableData{$ENDIF}
+  Binary = public class {$IF ECHOES}mapped to System.IO.MemoryStream{$ELSEIF TOFFEE}mapped to Foundation.NSMutableData{$ENDIF}
   {$IF COOPER}
   private
     fData: java.io.ByteArrayOutputStream := new java.io.ByteArrayOutputStream();
   {$ENDIF}
   public
-    constructor; {$IF NOUGAT OR ECHOES}mapped to constructor();{$ELSE}empty;{$ENDIF}
+    constructor; {$IF TOFFEE OR ECHOES}mapped to constructor();{$ELSE}empty;{$ENDIF}
     constructor(anArray: array of Byte);
     constructor(Bin: Binary);    
 
@@ -40,9 +40,9 @@ type
     method &Write(Bin: Binary);
 
     method ToArray: array of Byte;
-    property Length: Integer read {$IF COOPER}fData.size{$ELSEIF ECHOES}mapped.Length{$ELSEIF NOUGAT}mapped.length{$ENDIF};
+    property Length: Integer read {$IF COOPER}fData.size{$ELSEIF ECHOES}mapped.Length{$ELSEIF TOFFEE}mapped.length{$ENDIF};
     
-    {$IF NOUGAT}
+    {$IF TOFFEE}
     operator Implicit(aData: NSData): Binary;
     {$ENDIF}
   end;
@@ -88,7 +88,7 @@ begin
   var ms := new System.IO.MemoryStream;
   ms.Write(anArray, 0, anArray.Length);
   exit ms;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit NSMutableData.dataWithBytes(anArray) length(length(anArray)); 
   {$ENDIF}  
 end;
@@ -102,7 +102,7 @@ begin
   var ms := new System.IO.MemoryStream;
   System.IO.MemoryStream(Bin).WriteTo(ms);
   exit ms;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit NSMutableData.dataWithData(Bin);
   {$ENDIF} 
 end;
@@ -117,7 +117,7 @@ begin
   Clear;
   if Bin <> nil then
     System.IO.MemoryStream(Bin).WriteTo(System.IO.MemoryStream(self));
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   mapped.setData(Bin);
   {$ENDIF}
 end;
@@ -135,7 +135,7 @@ begin
   {$ELSEIF ECHOES}
   mapped.Position := Range.Location;
   mapped.Read(result, 0, Range.Length);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   mapped.getBytes(result) range(Range);
   {$ENDIF}
 end;
@@ -164,7 +164,7 @@ begin
   {$ELSEIF ECHOES}
   mapped.Seek(0, System.IO.SeekOrigin.End);
   mapped.Write(Buffer, Offset, Count);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   mapped.appendBytes(@Buffer[Offset]) length(Count);
   {$ENDIF}  
 end;
@@ -184,7 +184,7 @@ begin
   SugarArgumentNullException.RaiseIfNil(Bin, "Bin");
   {$IF COOPER OR ECHOES}
   &Write(Bin.ToArray, Bin.Length);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   mapped.appendData(Bin);
   {$ENDIF}  
 end;
@@ -195,7 +195,7 @@ begin
   exit fData.toByteArray;
   {$ELSEIF ECHOES}
   exit mapped.ToArray;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   result := new Byte[mapped.length];
   mapped.getBytes(result) length(mapped.length);
   {$ENDIF}  
@@ -208,12 +208,12 @@ begin
   {$ELSEIF ECHOES}
   mapped.SetLength(0);
   mapped.Position := 0;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   mapped.setLength(0);
   {$ENDIF}  
 end;
 
-{$IF NOUGAT}
+{$IF TOFFEE}
 operator Binary.Implicit(aData: NSData): Binary;
 begin
   if aData is NSMutableData then

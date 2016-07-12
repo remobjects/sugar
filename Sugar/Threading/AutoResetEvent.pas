@@ -19,7 +19,7 @@ type
     method WaitOne; mapped to WaitOne;
     method WaitOne(Timeout: Integer): Boolean; mapped to WaitOne(Timeout);
   end;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   AutoResetEvent = public class 
   end;
   {$ENDIF}

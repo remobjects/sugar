@@ -30,7 +30,7 @@ type
     {$ELSEIF ECHOES}
     method GetNonGenericEnumerator: System.Collections.IEnumerator; implements System.Collections.IEnumerable.GetEnumerator;
     method GetEnumerator: System.Collections.Generic.IEnumerator<KeyValuePair<String, JsonNode>>;
-    {$ELSEIF NOUGAT}
+    {$ELSEIF TOFFEE}
     method countByEnumeratingWithState(aState: ^NSFastEnumerationState) objects(stackbuf: ^KeyValuePair<String,JsonNode>) count(len: NSUInteger): NSUInteger;
     {$ENDIF}
 
@@ -124,7 +124,7 @@ begin
   var props := GetProperties;
   exit props.GetEnumerator;
 end;
-{$ELSEIF NOUGAT}
+{$ELSEIF TOFFEE}
 method JsonObject.countByEnumeratingWithState(aState: ^NSFastEnumerationState) objects(stackbuf: ^KeyValuePair<String,JsonNode>) count(len: NSUInteger): NSUInteger;
 begin
   if aState^.state <> 0 then

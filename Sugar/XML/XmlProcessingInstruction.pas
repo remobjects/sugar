@@ -7,7 +7,7 @@ uses
   org.w3c.dom,
   {$ELSEIF ECHOES}
   System.Xml.Linq,
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   Foundation,
   {$ENDIF}
   Sugar;
@@ -28,7 +28,7 @@ type
     property Target: String read ProcessingInstruction.Target;
     property NodeType: XmlNodeType read XmlNodeType.ProcessingInstruction; override;
   end;
-{$ELSEIF NOUGAT}
+{$ELSEIF TOFFEE}
   XmlProcessingInstruction = public class (XmlNode)
   public
     property Data: String read Value write Value;

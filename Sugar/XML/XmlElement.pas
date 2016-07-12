@@ -8,7 +8,7 @@ uses
   {$ELSEIF ECHOES}
   System.Xml.Linq,
   System.Linq,
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   Foundation,
   {$ENDIF}
   Sugar;
@@ -16,11 +16,11 @@ uses
 type
   XmlElement = public class (XmlNode)
   private
-    {$IF NOT NOUGAT}
+    {$IF NOT TOFFEE}
     property Element: {$IF COOPER}Element{$ELSEIF ECHOES}XElement{$ENDIF} 
                       read Node as{$IF COOPER}Element{$ELSEIF ECHOES}XElement{$ENDIF};
     {$ENDIF}
-    {$IF NOUGAT}
+    {$IF TOFFEE}
     method CopyNS(aNode: XmlAttribute);
     {$ENDIF}
   public
@@ -85,7 +85,7 @@ begin
   result := new XmlAttribute[items.Length];
   for i: Integer := 0 to items.Length-1 do
     result[i] := new XmlAttribute(items[i]);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   var List := new Sugar.Collections.List<XmlAttribute>;
   var ChildPtr := Node^.properties;
   while ChildPtr <> nil do begin
@@ -115,7 +115,7 @@ begin
     RemoveChild(aNode);
 
   Element.Add(aNode.Node);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   if aNode.Node^.parent <> nil then
     libxml.xmlUnlinkNode(libxml.xmlNodePtr(aNode.Node));
 
@@ -130,7 +130,7 @@ begin
   Element.removeChild(aNode.Node);
   {$ELSEIF ECHOES}
   (aNode.Node as XNode):&Remove;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   libxml.xmlUnlinkNode(libxml.xmlNodePtr(aNode.Node));
   //libxml.xmlFreeNode(libxml.xmlNodePtr(aNode.Node));
   {$ENDIF}  
@@ -148,7 +148,7 @@ begin
     RemoveChild(WithNode);
 
   (aNode.Node as XNode):ReplaceWith(WithNode.Node);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   libxml.xmlReplaceNode(libxml.xmlNodePtr(aNode.Node), libxml.xmlNodePtr(WithNode.Node));
   {$ENDIF}
 end;
@@ -169,12 +169,12 @@ begin
     exit nil;
 
   var Attr := {$IF COOPER}Element.GetAttributeNode(aName){$ELSEIF ECHOES}Element.Attribute(System.String(aName))
-              {$ELSEIF NOUGAT}libxml.xmlHasProp(libxml.xmlNodePtr(Node), XmlChar.FromString(aName)){$ENDIF};
+              {$ELSEIF TOFFEE}libxml.xmlHasProp(libxml.xmlNodePtr(Node), XmlChar.FromString(aName)){$ENDIF};
 
   if Attr = nil then
     exit nil;
 
-  exit new XmlAttribute({$IF NOUGAT}^libxml.__struct__xmlNode(Attr), OwnerDocument{$ELSE}Attr{$ENDIF});
+  exit new XmlAttribute({$IF TOFFEE}^libxml.__struct__xmlNode(Attr), OwnerDocument{$ELSE}Attr{$ENDIF});
 end;
 
 method XmlElement.GetAttributeNode(aLocalName: String; NamespaceUri: String): XmlAttribute;
@@ -184,12 +184,12 @@ begin
 
   var Attr := {$IF COOPER} Element.getAttributeNodeNS(NamespaceUri, aLocalName)
               {$ELSEIF ECHOES}Element.Attribute(XNamespace(NamespaceUri) + aLocalName)
-              {$ELSEIF NOUGAT}libxml.xmlHasNsProp(libxml.xmlNodePtr(Node), XmlChar.FromString(aLocalName), XmlChar.FromString(NamespaceUri)){$ENDIF};
+              {$ELSEIF TOFFEE}libxml.xmlHasNsProp(libxml.xmlNodePtr(Node), XmlChar.FromString(aLocalName), XmlChar.FromString(NamespaceUri)){$ENDIF};
 
   if Attr = nil then
     exit nil;
 
-  exit new XmlAttribute({$IF NOUGAT}^libxml.__struct__xmlNode(Attr), OwnerDocument{$ELSE}Attr{$ENDIF});
+  exit new XmlAttribute({$IF TOFFEE}^libxml.__struct__xmlNode(Attr), OwnerDocument{$ELSE}Attr{$ENDIF});
 end;
 
 method XmlElement.SetAttribute(aName: String; aValue: String);
@@ -205,7 +205,7 @@ begin
   Element.SetAttribute(aName, aValue);
   {$ELSEIF ECHOES}
   Element.SetAttributeValue(aName, aValue);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   libxml.xmlSetProp(libxml.xmlNodePtr(Node), XmlChar.FromString(aName), XmlChar.FromString(aValue));
   {$ENDIF}  
 end;
@@ -224,7 +224,7 @@ begin
   Element.setAttributeNS(NamespaceUri, aLocalName, aValue);
   {$ELSEIF ECHOES}
   Element.SetAttributeValue(XNamespace(NamespaceUri) + aLocalName, aValue);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   var ns := libxml.xmlSearchNsByHref(libxml.xmlDocPtr(Node^.doc), libxml.xmlNodePtr(Node), XmlChar.FromString(NamespaceUri));
 
   //no namespace with specified uri
@@ -249,7 +249,7 @@ begin
     Existing.Remove;
 
   Element.Add(Node.Node);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   AddChild(Node);
   CopyNS(Node);
   {$ENDIF}
@@ -264,7 +264,7 @@ begin
   Element.RemoveAttribute(aName);
   {$ELSEIF ECHOES}
   Element.SetAttributeValue(aName, nil);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   libxml.xmlUnsetProp(libxml.xmlNodePtr(Node), XmlChar.FromString(aName));
   {$ENDIF}  
 end;
@@ -278,7 +278,7 @@ begin
   Element.removeAttributeNS(NamespaceUri, aLocalName);
   {$ELSEIF ECHOES}
   Element.SetAttributeValue(XNamespace(NamespaceUri) + aLocalName, nil);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   var Attr := libxml.xmlHasNsProp(libxml.xmlNodePtr(Node), XmlChar.FromString(aLocalName), XmlChar.FromString(NamespaceUri));
 
   if Attr = nil then
@@ -302,7 +302,7 @@ begin
   Element.removeAttributeNode(Node.Node as Attr);
   {$ELSEIF ECHOES}
   XAttribute(Node.Node).Remove;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   libxml.xmlRemoveProp(libxml.xmlAttrPtr(Node.Node));
   {$ENDIF}
 end;
@@ -336,7 +336,7 @@ begin
   result := new XmlElement[items.Length];
   for I: Integer := 0 to items.Length - 1 do
     result[I] := new XmlElement(items[I]);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit new XmlNodeList(self).ElementsByName(aLocalName, NamespaceUri);
   {$ENDIF}
 end;
@@ -356,12 +356,12 @@ begin
   result := new XmlElement[items.Length];
   for I: Integer := 0 to items.Length - 1 do
     result[I] := new XmlElement(items[I]);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit new XmlNodeList(self).ElementsByName(aName);
   {$ENDIF}
 end;
 
-{$IF NOUGAT}
+{$IF TOFFEE}
 method XmlElement.CopyNS(aNode: XmlAttribute);
 begin
   //nothing to copy

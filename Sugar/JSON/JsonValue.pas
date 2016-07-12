@@ -10,9 +10,9 @@ type
   public
     constructor(aValue: not nullable T);
 
-    method {$IF NOUGAT}description: Foundation.NSString{$ELSEIF COOPER}ToString: java.lang.String{$ELSEIF ECHOES}ToString: System.String{$ENDIF}; override;
-    method {$IF NOUGAT}isEqual(Obj: id){$ELSE}&Equals(Obj: Object){$ENDIF}: Boolean; override;
-    method {$IF NOUGAT}hash: Foundation.NSUInteger{$ELSEIF COOPER}hashCode: Integer{$ELSEIF ECHOES}GetHashCode: Integer{$ENDIF}; override;
+    method {$IF TOFFEE}description: Foundation.NSString{$ELSEIF COOPER}ToString: java.lang.String{$ELSEIF ECHOES}ToString: System.String{$ENDIF}; override;
+    method {$IF TOFFEE}isEqual(Obj: id){$ELSE}&Equals(Obj: Object){$ENDIF}: Boolean; override;
+    method {$IF TOFFEE}hash: Foundation.NSUInteger{$ELSEIF COOPER}hashCode: Integer{$ELSEIF ECHOES}GetHashCode: Integer{$ENDIF}; override;
 
     property Value: not nullable T;
     operator Implicit(aValue: JsonValue<T>): not nullable T;
@@ -72,12 +72,12 @@ begin
   Value := aValue;
 end;
 
-method JsonValue<T>.{$IF NOUGAT}description: Foundation.NSString{$ELSEIF COOPER}ToString: java.lang.String{$ELSEIF ECHOES}ToString: System.String{$ENDIF};
+method JsonValue<T>.{$IF TOFFEE}description: Foundation.NSString{$ELSEIF COOPER}ToString: java.lang.String{$ELSEIF ECHOES}ToString: System.String{$ENDIF};
 begin
-  result := Value.{$IF NOUGAT}description{$ELSEIF COOPER}ToString{$ELSEIF ECHOES}ToString{$ENDIF};
+  result := Value.{$IF TOFFEE}description{$ELSEIF COOPER}ToString{$ELSEIF ECHOES}ToString{$ENDIF};
 end;
 
-method JsonValue<T>.{$IF NOUGAT}isEqual(Obj: id){$ELSE}&Equals(Obj: Object){$ENDIF}: Boolean;
+method JsonValue<T>.{$IF TOFFEE}isEqual(Obj: id){$ELSE}&Equals(Obj: Object){$ENDIF}: Boolean;
 begin
   if (Obj = nil) or (not (Obj is JsonValue<T>)) then
     exit false;
@@ -85,7 +85,7 @@ begin
   exit self.Value.Equals(JsonValue<T>(Obj).Value);
 end;
 
-method JsonValue<T>.{$IF NOUGAT}hash: Foundation.NSUInteger{$ELSEIF COOPER}hashCode: Integer{$ELSEIF ECHOES}GetHashCode: Integer{$ENDIF};
+method JsonValue<T>.{$IF TOFFEE}hash: Foundation.NSUInteger{$ELSEIF COOPER}hashCode: Integer{$ELSEIF ECHOES}GetHashCode: Integer{$ENDIF};
 begin
   exit if self.Value = nil then -1 else self.Value.GetHashCode;
 end;

@@ -9,7 +9,7 @@ type
   Match = public class {$IF     COOPER}mapped to java.util.regex.Matcher
                        {$ELSEIF ECHOES}mapped to System.Text.RegularExpressions.Match{$ENDIF}
   protected
-    {$IF NOUGAT}
+    {$IF TOFFEE}
     fInput: String;
     fMatch: NSTextCheckingResult;
     {$ENDIF}
@@ -19,7 +19,7 @@ type
     method GetStart: Integer;
     method GetText: String;
   public
-    {$IF NOUGAT}
+    {$IF TOFFEE}
     constructor(PlatformMatch: NSTextCheckingResult; Input: String);
     {$ENDIF}
     method FindNext: Match;
@@ -33,7 +33,7 @@ end;
 
 implementation
 
-{$IF NOUGAT}
+{$IF TOFFEE}
 constructor Match(PlatformMatch: NSTextCheckingResult; Input: String);
 begin
   fMatch := PlatformMatch;
@@ -48,7 +48,7 @@ begin
   {$ELSEIF ECHOES}
   var NextMatch: System.Text.RegularExpressions.Match := mapped.NextMatch();
   exit if NextMatch.Success then NextMatch else nil;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   var Offset: Integer := fMatch.range.location + fMatch.range.length;
   var NextMatch: NSTextCheckingResult := fMatch.regularExpression.
     firstMatchInString(fInput)
@@ -64,7 +64,7 @@ begin
   exit mapped.end() - 1;
   {$ELSEIF ECHOES}
   exit mapped.Index + mapped.Length - 1;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit fMatch.range.location + fMatch.range.length - 1;
   {$ENDIF}
 end;
@@ -78,7 +78,7 @@ begin
   GroupCount := mapped.groupCount() + 1;
   {$ELSEIF ECHOES}
   GroupCount := mapped.Groups.Count;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   GroupCount := fMatch.numberOfRanges;
   {$ENDIF}
 
@@ -90,7 +90,7 @@ begin
       {$ELSEIF ECHOES}
       if mapped.Groups.Item[I].Success then
         new &Group(mapped.Groups.Item[I].Index, mapped.Groups.Item[I].Length, mapped.Groups.Item[I].Value)
-      {$ELSEIF NOUGAT}
+      {$ELSEIF TOFFEE}
       if fMatch.rangeAtIndex(I).location <> NSNotFound then
         new &Group(fMatch.rangeAtIndex(I).location,
                    fMatch.rangeAtIndex(I).length,
@@ -108,7 +108,7 @@ begin
   exit mapped.end() - mapped.start();
   {$ELSEIF ECHOES}
   exit mapped.Length;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit fMatch.range.length;
   {$ENDIF}
 end;
@@ -119,7 +119,7 @@ begin
   exit mapped.start();
   {$ELSEIF ECHOES}
   exit mapped.Index;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit fMatch.range.location;
   {$ENDIF}
 end;
@@ -130,7 +130,7 @@ begin
   exit mapped.group();
   {$ELSEIF ECHOES}
   exit mapped.Value;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit fInput.substringWithRange(fMatch.range);
   {$ENDIF}
 end;

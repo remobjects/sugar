@@ -39,7 +39,7 @@ begin
   raise new SugarNotSupportedException("GetEnvironmentVariable not supported on this platfrom");
   {$ELSEIF ECHOES}
   exit System.Environment.GetEnvironmentVariable(Name);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit Foundation.NSProcessInfo.processInfo:environment:objectForKey(Name);
   {$ENDIF}
 end;
@@ -50,7 +50,7 @@ begin
   exit System.getProperty("line.separator");
   {$ELSEIF ECHOES}
   exit System.Environment.NewLine;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit Sugar.String(#10);
   {$ENDIF}
 end;
@@ -97,7 +97,7 @@ begin
   {$ELSEIF ECHOES}
   exit System.Environment.OSVersion.Platform.ToString();
   {$ELSEIF OSX}
-  exit "OS X";
+  exit "macOS";
   {$ELSEIF IOS}
   exit "iOS";
   {$ELSEIF WATCHOS}
@@ -117,7 +117,7 @@ begin
   exit "6.2";
   {$ELSEIF ECHOES}
   exit System.Environment.OSVersion.Version.ToString;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit NSProcessInfo.processInfo.operatingSystemVersionString;
   {$ENDIF}
 end;
@@ -174,7 +174,7 @@ begin
   exit System.Environment.CurrentDirectory; 
   {$ELSEIF ECHOES}
   exit System.Environment.CurrentDirectory;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit Foundation.NSFileManager.defaultManager().currentDirectoryPath;
   {$ENDIF}
 end;

@@ -80,7 +80,7 @@ begin
 
       // format argument
       var arg := args[n];
-      var str := if not assigned(arg) then '' else {$IF NOUGAT}arg.description{$ELSE}arg.ToString{$ENDIF};  
+      var str := if not assigned(arg) then '' else {$IF TOFFEE}arg.description{$ELSE}arg.ToString{$ENDIF};  
 
       // pad formatted string and append to sb
       if width > length(str) then begin

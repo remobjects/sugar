@@ -3,7 +3,7 @@
 interface
 
 type
-  HashSet<T> = public class mapped to {$IF COOPER}java.util.HashSet<T>{$ELSEIF ECHOES}System.Collections.Generic.HashSet<T>{$ELSEIF NOUGAT}Foundation.NSMutableSet{$ENDIF}
+  HashSet<T> = public class mapped to {$IF COOPER}java.util.HashSet<T>{$ELSEIF ECHOES}System.Collections.Generic.HashSet<T>{$ELSEIF TOFFEE}Foundation.NSMutableSet{$ENDIF}
   public
     constructor; mapped to constructor();
     constructor(&Set: HashSet<T>);
@@ -20,9 +20,9 @@ type
     method IsSupersetOf(&Set: HashSet<T>): Boolean;
     method SetEquals(&Set: HashSet<T>): Boolean;
 
-    property Count: Integer read {$IF ECHOES OR NOUGAT}mapped.Count{$ELSE}mapped.size{$ENDIF};
+    property Count: Integer read {$IF ECHOES OR TOFFEE}mapped.Count{$ELSE}mapped.size{$ENDIF};
 
-    {$IF NOUGAT}
+    {$IF TOFFEE}
     operator Implicit(aSet: NSSet<T>): HashSet<T>;
     {$ENDIF}
   end;
@@ -45,7 +45,7 @@ begin
   exit new java.util.HashSet<T>(&Set);
   {$ELSEIF ECHOES}
   exit new System.Collections.Generic.HashSet<T>(&Set);
-  {$ELSEIF NOUGAT}  
+  {$ELSEIF TOFFEE}  
   var NewSet := new Foundation.NSMutableSet();
   NewSet.setSet(&Set);
   exit NewSet;
@@ -56,7 +56,7 @@ method HashSet<T>.&Add(Item: T): Boolean;
 begin
   {$IF COOPER OR ECHOES}
   exit mapped.Add(Item);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   var lSize := mapped.count;
   mapped.addObject(NullHelper.ValueOf(Item));
   exit lSize < mapped.count;
@@ -67,7 +67,7 @@ method HashSet<T>.Contains(Item: T): Boolean;
 begin
   {$IF COOPER OR ECHOES}
   exit mapped.Contains(Item);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit mapped.containsObject(NullHelper.ValueOf(Item));
   {$ENDIF}
 end;
@@ -76,7 +76,7 @@ method HashSet<T>.&Remove(Item: T): Boolean;
 begin
   {$IF COOPER OR ECHOES}
   exit mapped.Remove(Item);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   var lSize := mapped.count;
   mapped.removeObject(NullHelper.ValueOf(Item));
   exit lSize > mapped.count;
@@ -94,7 +94,7 @@ begin
   mapped.retainAll(&Set);
   {$ELSEIF ECHOES}
   mapped.IntersectWith(&Set);
-  {$ELSEIF NOUGAT}  
+  {$ELSEIF TOFFEE}  
   mapped.intersectSet(&Set);
   {$ENDIF}
 end;
@@ -105,7 +105,7 @@ begin
   mapped.addAll(&Set);
   {$ELSEIF ECHOES}
   mapped.UnionWith(&Set);
-  {$ELSEIF NOUGAT}  
+  {$ELSEIF TOFFEE}  
   mapped.unionSet(&Set);
   {$ENDIF}
 end;
@@ -116,7 +116,7 @@ begin
   exit mapped.equals(&Set);
   {$ELSEIF ECHOES}
   exit mapped.SetEquals(&Set);
-  {$ELSEIF NOUGAT}  
+  {$ELSEIF TOFFEE}  
   exit mapped.isEqualToSet(&Set);
   {$ENDIF}
 end;
@@ -131,7 +131,7 @@ begin
   exit HashsetHelpers.IsSubsetOf(self, &Set);
 end;
 
-{$IF NOUGAT}
+{$IF TOFFEE}
 operator HashSet<T>.Implicit(aSet: NSSet<T>): HashSet<T>;
 begin
   if aSet is NSMutableArray then

@@ -32,7 +32,7 @@ type
     {method Save(aFile: File);
     method Save(aFile: File; XmlDeclaration: XmlDocumentDeclaration);
     method Save(aFile: File; Version: String; Encoding: String; Standalone: Boolean);}
-    method {$IF NOUGAT}description: Foundation.NSString{$ELSEIF COOPER}ToString: java.lang.String{$ELSEIF ECHOES}ToString: System.String{$ENDIF}; override;
+    method {$IF TOFFEE}description: Foundation.NSString{$ELSEIF COOPER}ToString: java.lang.String{$ELSEIF ECHOES}ToString: System.String{$ENDIF}; override;
     method ToJson: String;
 
     [Obsolete("Use Root: JsonNode, instead")] property RootObject: not nullable JsonObject read fRootNode as JsonObject;
@@ -58,7 +58,7 @@ type
   protected
   public
     method ToJson: String; virtual; abstract;
-    method {$IF NOUGAT}description: Foundation.NSString{$ELSEIF COOPER}ToString: java.lang.String{$ELSEIF ECHOES}ToString: System.String{$ENDIF}; override;
+    method {$IF TOFFEE}description: Foundation.NSString{$ELSEIF COOPER}ToString: java.lang.String{$ELSEIF ECHOES}ToString: System.String{$ENDIF}; override;
 
     property Count: Integer read 1; virtual;
     property Item[Key: String]: nullable JsonNode read CantGetItem write CantSetItem; default; virtual;
@@ -85,7 +85,7 @@ uses
   System.Linq;
   {$ELSEIF COOPER}
   com.remobjects.elements.linq;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   RemObjects.Elements.Linq;
   {$ENDIF}
 
@@ -122,7 +122,7 @@ begin
   result := new JsonDocument();
 end;
 
-method JsonDocument.{$IF NOUGAT}description: Foundation.NSString{$ELSEIF COOPER}ToString: java.lang.String{$ELSEIF ECHOES}ToString: System.String{$ENDIF};
+method JsonDocument.{$IF TOFFEE}description: Foundation.NSString{$ELSEIF COOPER}ToString: java.lang.String{$ELSEIF ECHOES}ToString: System.String{$ENDIF};
 begin
   result := fRootNode.ToJson();
 end;
@@ -149,7 +149,7 @@ end;
 
 { JsonNode }
 
-method JsonNode.{$IF NOUGAT}description: Foundation.NSString{$ELSEIF COOPER}ToString: java.lang.String{$ELSEIF ECHOES}ToString: System.String{$ENDIF};
+method JsonNode.{$IF TOFFEE}description: Foundation.NSString{$ELSEIF COOPER}ToString: java.lang.String{$ELSEIF ECHOES}ToString: System.String{$ENDIF};
 begin
   result := ToJson();
 end;

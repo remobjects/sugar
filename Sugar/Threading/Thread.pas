@@ -11,37 +11,37 @@ type
   Thread = public class mapped to java.lang.Thread
   {$ELSEIF ECHOES}
   Thread = public class mapped to System.Threading.Thread
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   Thread = public class mapped to Foundation.NSThread
   {$ENDIF}
   private   
     method GetPriority: ThreadPriority;
     method SetPriority(Value: ThreadPriority);
     method GetCallStack: List<String>;
-    {$IF NOUGAT}method GetThreadID: IntPtr;{$ENDIF}
+    {$IF TOFFEE}method GetThreadID: IntPtr;{$ENDIF}
   public
     method Start; mapped to Start;
     method &Join; {$IF COOPER OR ECHOES} mapped to &Join;{$ENDIF}
     method &Join(Timeout: Integer);  {$IF COOPER OR ECHOES}mapped to &Join(Timeout);{$ENDIF}
     {$HIDE W28}
-    method Abort; mapped to {$IF ECHOES}Abort{$ELSEIF COOPER}stop{$ELSEIF NOUGAT}cancel{$ENDIF};
+    method Abort; mapped to {$IF ECHOES}Abort{$ELSEIF COOPER}stop{$ELSEIF TOFFEE}cancel{$ENDIF};
     {$SHOW W28}
-    class method Sleep(aTimeout: Integer); mapped to {$IF COOPER OR ECHOES}Sleep(aTimeout){$ELSEIF NOUGAT}sleepForTimeInterval(aTimeout / 1000){$ENDIF};
+    class method Sleep(aTimeout: Integer); mapped to {$IF COOPER OR ECHOES}Sleep(aTimeout){$ELSEIF TOFFEE}sleepForTimeInterval(aTimeout / 1000){$ENDIF};
 
     //property State: ThreadState read GetState write SetState;
-    property IsAlive: Boolean read {$IF COOPER OR ECHOES}mapped.IsAlive{$ELSEIF NOUGAT}mapped.isExecuting{$ENDIF};
-    property Name: String read mapped.Name write {$IF COOPER OR ECHOES}mapped.Name{$ELSEIF NOUGAT}mapped.setName{$ENDIF};
+    property IsAlive: Boolean read {$IF COOPER OR ECHOES}mapped.IsAlive{$ELSEIF TOFFEE}mapped.isExecuting{$ENDIF};
+    property Name: String read mapped.Name write {$IF COOPER OR ECHOES}mapped.Name{$ELSEIF TOFFEE}mapped.setName{$ENDIF};
 
     {$IF COOPER OR ECHOES}
     property ThreadId: Int64 read {$IF COOPER}mapped.Id{$ELSEIF ECHOES}mapped.ManagedThreadId{$ENDIF};
-    {$ELSEIF NOUGAT}    
+    {$ELSEIF TOFFEE}    
     property ThreadId: IntPtr read GetThreadID;
     {$ENDIF}
 
     property Priority: ThreadPriority read GetPriority write SetPriority;
     property CallStack: List<String> read GetCallStack;
 
-    {$IF NOUGAT}class property MainThread: Thread read mapped.mainThread;{$ENDIF}
+    {$IF TOFFEE}class property MainThread: Thread read mapped.mainThread;{$ENDIF}
     class property CurrentThread: Thread read mapped.currentThread; 
 
   end;
@@ -101,7 +101,7 @@ begin
   {$ENDIF}
 end;
 
-{$IF NOUGAT}
+{$IF TOFFEE}
 method Thread.GetThreadID: IntPtr;
 begin
   // Todo
@@ -122,7 +122,7 @@ method Thread.GetCallStack: List<String>;
 begin
   {$IF COOPER}
   {$ELSEIF ECHOES}
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   result := mapped.callStackSymbols as List<String>;
   {$ENDIF}
 end;

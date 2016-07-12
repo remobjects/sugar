@@ -2,7 +2,7 @@
 
 interface
 
-{$IFNDEF NOUGAT}
+{$IFNDEF TOFFEE}
   {$ERROR This unit is intended for Nougat only}
 {$ENDIF}
 {$CROSSPLATFORM OFF}

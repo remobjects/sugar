@@ -6,7 +6,7 @@ interface
 extension method java.lang.Object.«ToString»: String;
 extension method java.lang.Object.«Equals»(aOther: Object): Boolean;
 extension method java.lang.Object.GetHashCode: Integer;
-{$ELSEIF NOUGAT}
+{$ELSEIF TOFFEE}
 extension method Foundation.NSObject.ToString: String;
 extension method Foundation.NSObject.Equals(Obj: Object): Boolean;
 extension method Foundation.NSObject.GetHashCode: Integer;
@@ -29,7 +29,7 @@ extension method java.lang.Object.GetHashCode: Integer;
 begin
   result := hashCode;
 end;
-{$ELSEIF NOUGAT}
+{$ELSEIF TOFFEE}
 extension method Foundation.NSObject.ToString: String;
 begin
   result := description;

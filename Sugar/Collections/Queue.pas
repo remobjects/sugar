@@ -6,7 +6,7 @@ uses
   Sugar;
 
 type
-  Queue<T> = public class mapped to {$IF COOPER}java.util.LinkedList<T>{$ELSEIF ECHOES}System.Collections.Generic.Queue<T>{$ELSEIF NOUGAT}Foundation.NSMutableArray{$ENDIF}
+  Queue<T> = public class mapped to {$IF COOPER}java.util.LinkedList<T>{$ELSEIF ECHOES}System.Collections.Generic.Queue<T>{$ELSEIF TOFFEE}Foundation.NSMutableArray{$ENDIF}
   public
     constructor; mapped to constructor();
 
@@ -18,7 +18,7 @@ type
     method Dequeue: T;
     method ToArray: array of T;
 
-    property Count: Integer read {$IF COOPER}mapped.size{$ELSEIF ECHOES OR NOUGAT}mapped.Count{$ENDIF};
+    property Count: Integer read {$IF COOPER}mapped.size{$ELSEIF ECHOES OR TOFFEE}mapped.Count{$ENDIF};
   end;
 
 implementation
@@ -27,7 +27,7 @@ method Queue<T>.Contains(Item: T): Boolean;
 begin
   {$IF COOPER OR ECHOES}
   exit mapped.Contains(Item);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit mapped.containsObject(NullHelper.ValueOf(Item));
   {$ENDIF}
 end;
@@ -36,7 +36,7 @@ method Queue<T>.Clear;
 begin
   {$IF COOPER OR ECHOES}
   mapped.Clear;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   mapped.removeAllObjects;
   {$ENDIF}
 end;
@@ -49,7 +49,7 @@ begin
   exit mapped.poll;
   {$ELSEIF ECHOES}
   exit mapped.Dequeue;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   if self.Count = 0 then
     raise new SugarInvalidOperationException(ErrorMessage.COLLECTION_EMPTY);
   result := NullHelper.ValueOf(mapped.objectAtIndex(0));
@@ -63,7 +63,7 @@ begin
   mapped.add(Item);
   {$ELSEIF ECHOES}
   mapped.Enqueue(Item);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   mapped.addObject(NullHelper.ValueOf(Item));
   {$ENDIF}
 end;
@@ -76,7 +76,7 @@ begin
     raise new SugarInvalidOperationException(ErrorMessage.COLLECTION_EMPTY);
     {$ENDIF}
   exit mapped.Peek;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   if self.Count = 0 then
     raise new SugarInvalidOperationException(ErrorMessage.COLLECTION_EMPTY);
   exit NullHelper.ValueOf(mapped.objectAtIndex(0));
@@ -89,7 +89,7 @@ begin
   exit mapped.toArray(new T[0]);
   {$ELSEIF ECHOES}
   exit mapped.ToArray;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit ListHelpers.ToArray<T>(self);
   {$ENDIF}
 end;

@@ -7,14 +7,14 @@ uses
   org.w3c.dom,
   {$ELSEIF ECHOES}
   System.Xml.Linq,
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   Foundation,
   {$ENDIF}
   Sugar;
 
 type
   XmlAttribute = public class (XmlNode)
-  {$IF NOT NOUGAT}
+  {$IF NOT TOFFEE}
   private
     property &Attribute: {$IF COOPER}Attr{$ELSEIF ECHOES}XAttribute{$ENDIF} 
                          read Node as {$IF COOPER}Attr{$ELSEIF ECHOES}XAttribute{$ENDIF};
@@ -29,7 +29,7 @@ type
 
     {$IF ECHOES}
     property OwnerElement: XmlElement read iif(Attribute.Parent = nil, nil, new XmlElement(Attribute.Parent));
-    {$ELSEIF NOUGAT}
+    {$ELSEIF TOFFEE}
     property OwnerElement: XmlElement read iif(Node^.parent = nil, nil, new XmlElement(^libxml.__struct__xmlNode(Node^.parent), OwnerDocument));
     {$ELSEIF COOPER}
     property OwnerElement: XmlElement read iif(Attribute.OwnerElement = nil, nil, new XmlElement(Attribute.OwnerElement));

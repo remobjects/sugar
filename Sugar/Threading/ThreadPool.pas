@@ -39,7 +39,7 @@ type
     {$ENDIF}
   end;
   {$ENDIF}
-  {$IF NOUGAT}
+  {$IF TOFFEE}
   ThreadPool = public static class
   end;
   {$ENDIF}

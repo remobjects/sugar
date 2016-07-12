@@ -7,7 +7,7 @@ uses
   System.IO,
   {$ELSEIF COOPER}
   {$ELSEIF ECHOES}
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   {$ENDIF}
   
   Sugar,
@@ -17,12 +17,12 @@ uses
   Sugar.Collections;
 
 type
-  Folder = public class mapped to {$IF WINDOWS_PHONE OR NETFX_CORE}Windows.Storage.StorageFolder{$ELSEIF ECHOES}System.String{$ELSEIF COOPER}java.lang.String{$ELSEIF NOUGAT}Foundation.NSString{$ENDIF}
+  Folder = public class mapped to {$IF WINDOWS_PHONE OR NETFX_CORE}Windows.Storage.StorageFolder{$ELSEIF ECHOES}System.String{$ELSEIF COOPER}java.lang.String{$ELSEIF TOFFEE}Foundation.NSString{$ENDIF}
   private
     class method GetSeparator: Char;
     {$IF COOPER}
     property JavaFile: java.io.File read new java.io.File(mapped);
-    {$ELSEIF NOUGAT}
+    {$ELSEIF TOFFEE}
     method Combine(BasePath: String; SubPath: String): String;
     {$ENDIF}
     
@@ -57,11 +57,11 @@ type
     property &Extension: not nullable String read Sugar.IO.Path.GetExtension(FullPath);
   end;
 
-  {$IF COOPER OR NOUGAT}
+  {$IF COOPER OR TOFFEE}
   FolderHelper = public static class
   public
     {$IF COOPER}method DeleteFolder(Value: java.io.File);{$ENDIF}
-    {$IF NOUGAT}method IsDirectory(Value: String): Boolean;{$ENDIF}
+    {$IF TOFFEE}method IsDirectory(Value: String): Boolean;{$ENDIF}
   end;
   {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
   FolderHelper = public static class
@@ -376,7 +376,7 @@ begin
 
   result := NewName;
 end;
-{$ELSEIF NOUGAT}
+{$ELSEIF TOFFEE}
 method Folder.CreateFile(FileName: String; FailIfExists: Boolean := false): File;
 begin
   var NewFileName := Combine(mapped, FileName);

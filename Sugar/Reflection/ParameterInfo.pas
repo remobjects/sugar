@@ -9,7 +9,7 @@ type
   {$IF COOPER}
   ParameterInfo = public class
   {$ENDIF}
-  {$IF NOUGAT}
+  {$IF TOFFEE}
   ParameterInfo = public class
   {$ENDIF}
   private
@@ -31,7 +31,7 @@ type
     property ParameterType: Sugar.Reflection.Type;
     property CustomAttributes: array of Object;
     {$ENDIF}
-    {$IF NOUGAT}
+    {$IF TOFFEE}
     method initWithIndex(aPosition: Int32) &type(aType: Sugar.Reflection.Type): instancetype;
     property Name: String read nil;
     property Position: Integer; readonly;
@@ -42,7 +42,7 @@ type
 
 implementation
 
-{$IF NOUGAT}
+{$IF TOFFEE}
 method ParameterInfo.initWithIndex(aPosition: Integer) &type(aType: &Type): instancetype;
 begin
   self := inherited init;

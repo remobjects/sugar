@@ -12,7 +12,7 @@ uses
   Sugar.Collections;
 
 type
-  File = public class mapped to {$IF WINDOWS_PHONE OR NETFX_CORE}Windows.Storage.StorageFile{$ELSEIF ECHOES}System.String{$ELSEIF COOPER}java.lang.String{$ELSEIF NOUGAT}NSString{$ENDIF}
+  File = public class mapped to {$IF WINDOWS_PHONE OR NETFX_CORE}Windows.Storage.StorageFile{$ELSEIF ECHOES}System.String{$ELSEIF COOPER}java.lang.String{$ELSEIF TOFFEE}NSString{$ENDIF}
   private
     method getDateModified: DateTime;
     method getDateCreated: DateTime;    
@@ -88,7 +88,7 @@ begin
   dest.close;
   {$ELSEIF ECHOES}
   System.IO.File.Copy(mapped, lNewFile);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   var lError: Foundation.NSError := nil;
   if not NSFileManager.defaultManager.copyItemAtPath(mapped) toPath(lNewFile) error(var lError) then
     raise new SugarNSErrorException(lError);
@@ -107,7 +107,7 @@ begin
   mapped.DeleteAsync.AsTask.Wait;
   {$ELSEIF ECHOES}
   System.IO.File.Delete(mapped);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   var lError: NSError := nil;
   if not NSFileManager.defaultManager.removeItemAtPath(mapped) error(var lError) then
     raise new SugarNSErrorException(lError);
@@ -136,7 +136,7 @@ begin
   {$ELSEIF ECHOES}
   System.IO.File.Move(mapped, NewPathAndName);
   result :=  NewPathAndName;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   var lError: Foundation.NSError := nil;
   if not NSFileManager.defaultManager.moveItemAtPath(mapped) toPath(NewPathAndName) error(var lError) then
     raise new SugarNSErrorException(lError);
@@ -188,7 +188,7 @@ begin
   result := mapped.DateCreated.UtcDateTime;
   {$ELSEIF ECHOES}
   result := System.IO.File.GetCreationTimeUtc(mapped);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   result := NSFileManager.defaultManager.attributesOfItemAtPath(self.FullPath) error(nil):valueForKey(NSFileCreationDate)
   {$ENDIF}
 end;
@@ -203,7 +203,7 @@ begin
   result := mapped.GetBasicPropertiesAsync().Await().DateModified.UtcDateTime;
   {$ELSEIF ECHOES}
   result := System.IO.File.GetLastWriteTimeUtc(mapped);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   result := NSFileManager.defaultManager.attributesOfItemAtPath(self.FullPath) error(nil):valueForKey(NSFileModificationDate)
   {$ENDIF}
 end;

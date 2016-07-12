@@ -6,7 +6,7 @@ uses
   Sugar;
 
 type
-  Stack<T> = public class mapped to {$IF COOPER}java.util.Stack<T>{$ELSEIF ECHOES}System.Collections.Generic.Stack<T>{$ELSEIF NOUGAT}Foundation.NSMutableArray{$ENDIF}
+  Stack<T> = public class mapped to {$IF COOPER}java.util.Stack<T>{$ELSEIF ECHOES}System.Collections.Generic.Stack<T>{$ELSEIF TOFFEE}Foundation.NSMutableArray{$ENDIF}
   public
     constructor; mapped to constructor();
 
@@ -17,9 +17,9 @@ type
     method Push(Item: T);
     method ToArray: array of T;
 
-    property Count: Integer read {$IF COOPER}mapped.size{$ELSEIF ECHOES OR NOUGAT}mapped.Count{$ENDIF};
+    property Count: Integer read {$IF COOPER}mapped.size{$ELSEIF ECHOES OR TOFFEE}mapped.Count{$ENDIF};
   end;
-  {$IFDEF NOUGAT}
+  {$IFDEF TOFFEE}
   StackHelpers = public static class
   private
   public
@@ -82,12 +82,12 @@ begin
   exit ListHelpers.ToArrayReverse<T>(self, new T[Count]);
   {$ELSEIF ECHOES}
   exit mapped.ToArray;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit ListHelpers.ToArrayReverse<T>(self);
   {$ENDIF}
 end;
 
-{$IFDEF NOUGAT}
+{$IFDEF TOFFEE}
 method StackHelpers.Peek<T>(aStack: Foundation.NSMutableArray): T;
 begin
   var n := aStack.lastObject;

@@ -15,7 +15,7 @@ type
     class method colorWithRGBAPercentage(aRed, aGreen, aBlue, aAlpha: Single): Color;
     class method colorWithRGBA256(aRed, aGreen, aBlue, aAlpha: Byte): Color;
   end;
-  {$ELSE NOUGAT}
+  {$ELSE TOFFEE}
     
     {$IF IOS OR TVOS}
     Color = public class mapped to UIKit.UIColor

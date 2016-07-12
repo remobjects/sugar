@@ -4,7 +4,7 @@ interface
 
 
 type
-  TimeSpan = public record mapped to {$IFDEF ECHOES}System.TimeSpan{$ELSEIF NOUGAT}NSTimeInterval{$ELSE}Int64{$ENDIF}
+  TimeSpan = public record mapped to {$IFDEF ECHOES}System.TimeSpan{$ELSEIF TOFFEE}NSTimeInterval{$ELSE}Int64{$ENDIF}
   private
     method get_TotalMilliSeconds: Double;
     method get_Days: Integer;
@@ -77,7 +77,7 @@ begin
   exit new System.TimeSpan(aTicks);
   {$ELSEIF COOPER}
   exit aTicks / 1000;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit aTicks / Double(TicksPerSecond);
   {$ELSE}
   {$ERROR Unknown platform}
@@ -120,7 +120,7 @@ begin
   exit mapped.Ticks;
   {$ELSEIF COOPER}
   exit mapped * 1000;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit Int64(mapped * TicksPerSecond);
   {$ELSE}
   {$ERROR Unknown platform}
@@ -158,7 +158,7 @@ begin
   exit mapped + System.TimeSpan(ts);
   {$ELSEIF COOPER}
   exit mapped + Int64(ts);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit mapped + NSTimeInterval(ts);
   {$ELSE}
   {$ERROR Unknown platform}
@@ -171,7 +171,7 @@ begin
   exit mapped - System.TimeSpan(ts);
   {$ELSEIF COOPER}
   exit mapped - Int64(ts);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit mapped - NSTimeInterval(ts);
   {$ELSE}
   {$ERROR Unknown platform}
@@ -184,7 +184,7 @@ begin
   exit - mapped;
   {$ELSEIF COOPER}
   exit - mapped;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit - mapped;
   {$ELSE}
   {$ERROR Unknown platform}
@@ -222,7 +222,7 @@ begin
   exit System.TimeSpan.FromTicks(d);
   {$ELSEIF COOPER}
   exit d / 1000;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit double(d) / TicksPerSecond;
   {$ELSE}
   {$ERROR Unknown platform}
@@ -235,7 +235,7 @@ begin
   exit System.TimeSpan(a) = System.TimeSpan(b);
   {$ELSEIF COOPER}
   exit Int64(a) = Int64(b);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit NSTimeInterval(a) = NSTimeInterval(b);
   {$ELSE}
   {$ERROR Unknown platform}
@@ -248,7 +248,7 @@ begin
   exit System.TimeSpan(a) <> System.TimeSpan(b);
   {$ELSEIF COOPER}
   exit Int64(a) <> Int64(b);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit NSTimeInterval(a) <> NSTimeInterval(b);
   {$ELSE}
   {$ERROR Unknown platform}
@@ -261,7 +261,7 @@ begin
   exit System.TimeSpan(a) + System.TimeSpan(b);
   {$ELSEIF COOPER}
   exit Int64(a) + Int64(b);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit NSTimeInterval(a) + NSTimeInterval(b);
   {$ELSE}
   {$ERROR Unknown platform}
@@ -274,7 +274,7 @@ begin
   exit System.TimeSpan(a) - System.TimeSpan(b);
   {$ELSEIF COOPER}
   exit Int64(a) - Int64(b);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit NSTimeInterval(a) - NSTimeInterval(b);
   {$ELSE}
   {$ERROR Unknown platform}
@@ -292,7 +292,7 @@ begin
   exit -System.TimeSpan(a);
   {$ELSEIF COOPER}
   exit -Int64(a);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit -NSTimeInterval(a);
   {$ELSE}
   {$ERROR Unknown platform}
@@ -305,7 +305,7 @@ begin
   exit System.TimeSpan(a) < System.TimeSpan(b);
   {$ELSEIF COOPER}
   exit Int64(a) < Int64(b);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit NSTimeInterval(a) < NSTimeInterval(b);
   {$ELSE}
   {$ERROR Unknown platform}
@@ -318,7 +318,7 @@ begin
   exit System.TimeSpan(a) <= System.TimeSpan(b);
   {$ELSEIF COOPER}
   exit Int64(a) <= Int64(b);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit NSTimeInterval(a) <= NSTimeInterval(b);
   {$ELSE}
   {$ERROR Unknown platform}
@@ -331,7 +331,7 @@ begin
   exit System.TimeSpan(a) > System.TimeSpan(b);
   {$ELSEIF COOPER}
   exit Int64(a) > Int64(b);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit NSTimeInterval(a) > NSTimeInterval(b);
   {$ELSE}
   {$ERROR Unknown platform}
@@ -344,7 +344,7 @@ begin
   exit System.TimeSpan(a) >= System.TimeSpan(b);
   {$ELSEIF COOPER}
   exit Int64(a) >= Int64(b);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit NSTimeInterval(a) >= NSTimeInterval(b);
   {$ELSE}
   {$ERROR Unknown platform}

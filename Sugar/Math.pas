@@ -72,7 +72,7 @@ type
     class method Tanh(d: Double): Double; mapped to Tanh(d);
     class method Truncate(d: Double): Double; mapped to Truncate(d);
   {$ENDIF}
-  {$IF NOUGAT}
+  {$IF TOFFEE}
   Math = public class mapped to Object
   public    
     class method Abs(value: Double): Double;
@@ -161,7 +161,7 @@ begin
   exit Int64(Floor(a + 0.499999999999999999));
 end;
 
-{$IF COOPER or NOUGAT}
+{$IF COOPER or TOFFEE}
 class method Math.Sign(d: Double): Integer;
 begin
   if Consts.IsNaN(d) then
@@ -173,7 +173,7 @@ begin
 end;
 {$ENDIF}
 
-{$IF NOUGAT}
+{$IF TOFFEE}
 class method Math.Pow(x, y: Double): Double;
 begin
   if (x = -1) and Consts.IsInfinity(y) then

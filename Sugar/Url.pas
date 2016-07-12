@@ -32,7 +32,7 @@ type
     property QueryString: String read GetQueryString;
     property Fragment: String read GetFragment;
     property UserInfo: String read GetUserInfo;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   Url = public class mapped to Foundation.NSURL
   private
     method GetUserInfo: String;
@@ -59,7 +59,7 @@ type
     
 implementation
 
-{$IF NOUGAT}
+{$IF TOFFEE}
 method Url.description: NSString;
 begin
   exit mapped.absoluteString;
@@ -131,7 +131,7 @@ begin
   exit new java.net.URI(UriString).toURL; //URI performs validation
   {$ELSEIF ECHOES}
   exit new System.Uri(UriString);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   var Value := Foundation.NSURL.URLWithString(UriString);
   if Value = nil then
     raise new SugarArgumentException("Url was not in correct format");
@@ -156,7 +156,7 @@ begin
   {$ELSE}
   result := System.Web.HttpUtility.UrlEncode(aString);
   {$ENDIF}
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   result := NSString(aString).stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.alphanumericCharacterSet);
   {$ENDIF}
 end;
@@ -175,7 +175,7 @@ begin
     result := new Uri(mapped, '..')
   else
     result := new Uri(mapped, '.');
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   else
     result := mapped.URLByDeletingLastPathComponent;
   {$ENDIF}
@@ -187,7 +187,7 @@ begin
   result := mapped.toURI.resolve(aName).toURL
   {$ELSEIF ECHOES}
   result := new Uri(mapped, aName);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   result := mapped.URLByAppendingPathComponent(aName);
   {$ENDIF}
 end;

@@ -3,7 +3,7 @@
 interface
 
 type
-  String = public class mapped to {$IF COOPER}java.lang.String{$ELSEIF ECHOES}System.String{$ELSEIF NOUGAT}Foundation.NSString{$ENDIF}
+  String = public class mapped to {$IF COOPER}java.lang.String{$ELSEIF ECHOES}System.String{$ELSEIF TOFFEE}Foundation.NSString{$ENDIF}
   private
     method get_Chars(aIndex: Int32): Char;
     class method Compare(Value1, Value2: String): Integer;
@@ -74,7 +74,7 @@ begin
   exit new java.lang.String(Value);
   {$ELSEIF ECHOES}
   exit new System.String(Value);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit new Foundation.NSString withCharacters(Value) length(length(Value));
   {$ENDIF}
 end;
@@ -93,7 +93,7 @@ begin
   exit new java.lang.String(Value, Offset, Count);
   {$ELSEIF ECHOES}
   exit new System.String(Value, Offset, Count);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit new Foundation.NSString withCharacters(@Value[Offset]) length(Count);
   {$ENDIF}
 end;
@@ -107,7 +107,7 @@ begin
   result := new java.lang.String(chars);
   {$ELSEIF ECHOES}
   result := new System.String(aChar, aCount);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   result := Foundation.NSString("").stringByPaddingToLength(aCount) withString(Foundation.NSString.stringWithFormat("%c", aChar)) startingAtIndex(0);
   {$ENDIF}
 end;
@@ -121,7 +121,7 @@ begin
   result := mapped.charAt(aIndex);
   {$ELSEIF ECHOES}
   result := mapped[aIndex];
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   result := mapped.characterAtIndex(aIndex);
   {$ENDIF}
 end;
@@ -132,7 +132,7 @@ begin
   result := (java.lang.String(Value1)+java.lang.String(Value2)) as not nullable;
   {$ELSEIF ECHOES}
   result := (System.String(Value1)+System.String(Value2)) as not nullable;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   result := (NSString(Value1) + NSString(Value2)) as not nullable;
   {$ENDIF}
 end;
@@ -143,7 +143,7 @@ begin
   exit new java.lang.String(Value);
   {$ELSEIF ECHOES}
   exit new System.String(Value, 1);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   if Value = #0 then
     exit NSString.stringWithFormat(#0) as not nullable;
 
@@ -153,8 +153,8 @@ end;
 
 class method String.Compare(Value1: String; Value2: String): Integer;
 begin
-  var First := {$IF COOPER}java.lang.String{$ELSEIF ECHOES}System.String{$ELSEIF NOUGAT}Foundation.NSString{$ENDIF}(Value1);
-  var Second := {$IF COOPER}java.lang.String{$ELSEIF ECHOES}System.String{$ELSEIF NOUGAT}Foundation.NSString{$ENDIF}(Value2);
+  var First := {$IF COOPER}java.lang.String{$ELSEIF ECHOES}System.String{$ELSEIF TOFFEE}Foundation.NSString{$ENDIF}(Value1);
+  var Second := {$IF COOPER}java.lang.String{$ELSEIF ECHOES}System.String{$ELSEIF TOFFEE}Foundation.NSString{$ENDIF}(Value2);
 
   if (First = nil) and (Second = nil) then
     exit 0;
@@ -165,13 +165,13 @@ begin
   if not assigned(Second) then
     exit 1;
 
-  exit {$IF COOPER}First.compareTo(Second){$ELSEIF ECHOES}First.CompareTo(Second){$ELSEIF NOUGAT}First.compare(Second){$ENDIF};
+  exit {$IF COOPER}First.compareTo(Second){$ELSEIF ECHOES}First.CompareTo(Second){$ELSEIF TOFFEE}First.compare(Second){$ENDIF};
 end;
 
 class operator String.Equal(Value1: String; Value2: String): Boolean;
 begin
-  var First := {$IF COOPER}java.lang.String{$ELSEIF ECHOES}System.String{$ELSEIF NOUGAT}Foundation.NSString{$ENDIF}(Value1);
-  var Second := {$IF COOPER}java.lang.String{$ELSEIF ECHOES}System.String{$ELSEIF NOUGAT}Foundation.NSString{$ENDIF}(Value2);
+  var First := {$IF COOPER}java.lang.String{$ELSEIF ECHOES}System.String{$ELSEIF TOFFEE}Foundation.NSString{$ENDIF}(Value1);
+  var Second := {$IF COOPER}java.lang.String{$ELSEIF ECHOES}System.String{$ELSEIF TOFFEE}Foundation.NSString{$ENDIF}(Value2);
 
   if (First = nil) and (Second = nil) then
     exit true;
@@ -179,7 +179,7 @@ begin
   if (First = nil) or (Second = nil) then
     exit false;
 
-  exit {$IF COOPER}First.compareTo(Second){$ELSEIF ECHOES}First.CompareTo(Second){$ELSEIF NOUGAT}First.compare(Second){$ENDIF} = 0;  
+  exit {$IF COOPER}First.compareTo(Second){$ELSEIF ECHOES}First.CompareTo(Second){$ELSEIF TOFFEE}First.compare(Second){$ENDIF} = 0;  
 end;
 
 class operator String.NotEqual(Value1: String; Value2: String): Boolean;
@@ -218,7 +218,7 @@ begin
   result := java.lang.Character.isWhitespace(Value);
   {$ELSEIF ECHOES}
   result := Char.IsWhiteSpace(Value);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   result := Foundation.NSCharacterSet.whitespaceAndNewlineCharacterSet.characterIsMember(Value);
   {$ENDIF}
 end;
@@ -249,7 +249,7 @@ begin
   exit mapped.compareTo(Value);
   {$ELSEIF ECHOES}
   exit mapped.Compare(mapped, Value, StringComparison.Ordinal);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit mapped.compare(Value);
   {$ENDIF}
 end;
@@ -260,7 +260,7 @@ begin
   exit mapped.compareToIgnoreCase(Value);
   {$ELSEIF ECHOES}
   exit mapped.Compare(mapped, Value, StringComparison.OrdinalIgnoreCase);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit mapped.caseInsensitiveCompare(Value);
   {$ENDIF}
 end;
@@ -271,7 +271,7 @@ begin
   exit mapped.equals(Value);
   {$ELSEIF ECHOES}
   exit mapped.Equals(Value, StringComparison.Ordinal);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit mapped.compare(Value) = 0;
   {$ENDIF}
 end;
@@ -282,7 +282,7 @@ begin
   exit mapped.equalsIgnoreCase(Value);
   {$ELSEIF ECHOES}
   exit mapped.Equals(Value, StringComparison.OrdinalIgnoreCase);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit mapped.caseInsensitiveCompare(Value) = 0;
   {$ENDIF}
 end;
@@ -294,7 +294,7 @@ begin
 
   {$IF COOPER OR ECHOES}
   exit mapped.Contains(Value);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit mapped.rangeOfString(Value).location <> NSNotFound;
   {$ENDIF}
 end;
@@ -309,7 +309,7 @@ begin
 
   {$IF COOPER OR ECHOES}
   exit mapped.IndexOf(Value);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   var r := mapped.rangeOfString(Value);
   exit if (r.location = NSNotFound) and (r.length = 0) then -1 else Int32(r.location);
   {$ENDIF}
@@ -325,7 +325,7 @@ begin
 
   {$IF COOPER OR ECHOES}
   exit mapped.LastIndexOf(Value);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   var r := mapped.rangeOfString(Value) options(NSStringCompareOptions.NSBackwardsSearch);
   exit if (r.location = NSNotFound) and (r.length = 0) then -1 else Int32(r.location);
   {$ENDIF}
@@ -335,7 +335,7 @@ method String.Substring(StartIndex: Int32): not nullable String;
 begin
   {$IF COOPER OR ECHOES}
   exit mapped.Substring(StartIndex) as not nullable;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit mapped.substringFromIndex(StartIndex) as not nullable;
   {$ENDIF}
 end;
@@ -349,7 +349,7 @@ begin
   exit mapped.substring(StartIndex, StartIndex + aLength) as not nullable;
   {$ELSEIF ECHOES}
   exit mapped.Substring(StartIndex, aLength) as not nullable;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   result := mapped.substringWithRange(Foundation.NSMakeRange(StartIndex, aLength));
   {$ENDIF}
 end;
@@ -363,7 +363,7 @@ begin
   exit mapped.split(java.util.regex.Pattern.quote(Separator));
   {$ELSEIF ECHOES}
   exit mapped.Split([Separator], StringSplitOptions.None);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   var Items := mapped.componentsSeparatedByString(Separator);
   result := new String[Items.count];
   for i: Integer := 0 to Items.count - 1 do
@@ -380,7 +380,7 @@ begin
     NewValue := "";
   {$IF COOPER OR ECHOES}
   exit mapped.Replace(OldValue, NewValue) as not nullable;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit mapped.stringByReplacingOccurrencesOfString(OldValue) withString(NewValue);
   {$ENDIF}
 end;
@@ -391,7 +391,7 @@ begin
   exit mapped.toLowerCase as not nullable;
   {$ELSEIF ECHOES}
   exit mapped.ToLower as not nullable;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit mapped.lowercaseString;
   {$ENDIF}
 end;
@@ -402,7 +402,7 @@ begin
   exit mapped.toUpperCase as not nullable;
   {$ELSEIF ECHOES}
   exit mapped.ToUpper as not nullable;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit mapped.uppercaseString;
   {$ENDIF}
 end;
@@ -413,7 +413,7 @@ begin
   result := mapped.trim() as not nullable; // trims #$00-#$20
   {$ELSEIF ECHOES}
   result := mapped.Trim() as not nullable; // Trim() does include CR/LF and Unicode whitespace
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   result := mapped.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet);
   {$ENDIF}
 end;
@@ -424,7 +424,7 @@ begin
   result := mapped.trim(aCharacters) as not nullable;
   {$ELSEIF ECHOES}
   result := mapped.Trim(aCharacters) as not nullable;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   var lCharacterString := '';
   for each c in aCharacters do
     lCharacterString := lCharacterString+c;
@@ -439,7 +439,7 @@ begin
 
   {$IF COOPER OR ECHOES}
   exit mapped.StartsWith(Value);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit mapped.hasPrefix(Value);
   {$ENDIF}
 end;
@@ -451,7 +451,7 @@ begin
 
   {$IF COOPER OR ECHOES}
   exit mapped.EndsWith(Value);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit mapped.hasSuffix(Value);
   {$ENDIF}
 end;
@@ -462,7 +462,7 @@ begin
   exit mapped.ToCharArray;
   {$ELSEIF ECHOES}
   exit mapped.ToCharArray;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   result := new Char[mapped.length];
   mapped.getCharacters(result) range(NSMakeRange(0, mapped.length));
   {$ENDIF}
@@ -474,7 +474,7 @@ begin
   exit mapped.getBytes("UTF-8");
   {$ELSEIF ECHOES}
   exit System.Text.Encoding.UTF8.GetBytes(mapped);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   var Data := Binary(mapped.dataUsingEncoding(NSStringEncoding.NSUTF8StringEncoding));
   exit Data.ToArray;
   {$ENDIF}

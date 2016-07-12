@@ -3,15 +3,15 @@
 interface
 
 type
-  StringBuilder = public class mapped to {$IF COOPER}java.lang.StringBuilder{$ELSEIF ECHOES}System.Text.StringBuilder{$ELSEIF NOUGAT}Foundation.NSMutableString{$ENDIF}
+  StringBuilder = public class mapped to {$IF COOPER}java.lang.StringBuilder{$ELSEIF ECHOES}System.Text.StringBuilder{$ELSEIF TOFFEE}Foundation.NSMutableString{$ENDIF}
   private
     method get_Chars(&Index : Integer): Char;
     method set_Chars(&Index : Integer; Value: Char);
     method set_Length(Value: Integer);
   public
     constructor; mapped to constructor();
-    constructor(Capacity: Integer); mapped to {$IF COOPER OR ECHOES}constructor(Capacity){$ELSEIF NOUGAT}stringWithCapacity(Capacity){$ENDIF};
-    constructor(Data: String); mapped to {$IF COOPER OR ECHOES}constructor(Data){$ELSEIF NOUGAT}stringWithString(Data){$ENDIF};
+    constructor(Capacity: Integer); mapped to {$IF COOPER OR ECHOES}constructor(Capacity){$ELSEIF TOFFEE}stringWithCapacity(Capacity){$ENDIF};
+    constructor(Data: String); mapped to {$IF COOPER OR ECHOES}constructor(Data){$ELSEIF TOFFEE}stringWithString(Data){$ENDIF};
 
     method Append(Value: String): StringBuilder;
     method Append(Value: String; StartIndex, Count: Integer): StringBuilder;
@@ -44,7 +44,7 @@ begin
   exit mapped;
   {$ELSEIF ECHOES}
   exit mapped.Append(Value, RepeatCount);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   for i: Int32 := 1 to RepeatCount do
     mapped.appendString(Value);
 
@@ -59,7 +59,7 @@ begin
 
   {$IF COOPER OR ECHOES}
   exit mapped.Append(Value);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   mapped.appendString(Value);
   exit mapped;
   {$ENDIF}
@@ -80,7 +80,7 @@ begin
   exit mapped.append(Value, startIndex, startIndex + count);
   {$ELSEIF ECHOES}
   exit mapped.Append(Value, StartIndex, Count);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   mapped.appendString(Value.Substring(StartIndex, Count));
   exit mapped;
   {$ENDIF}
@@ -97,7 +97,7 @@ begin
   exit mapped;
   {$ELSEIF ECHOES}
   exit mapped.AppendLine(Value);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   mapped.appendString(Value);
   mapped.appendString(Environment.NewLine);
   exit mapped;
@@ -111,7 +111,7 @@ begin
   exit mapped;
   {$ELSEIF ECHOES}
   exit mapped.AppendLine;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   mapped.appendString(Environment.NewLine);
   exit mapped;
   {$ENDIF}
@@ -123,7 +123,7 @@ begin
   mapped.SetLength(0);
   {$ELSEIF ECHOES}
   mapped.Length := 0;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   mapped.SetString("");
   {$ENDIF}
 end;
@@ -137,7 +137,7 @@ begin
   exit mapped.delete(StartIndex, StartIndex + Count);
   {$ELSEIF ECHOES}
    exit mapped.&Remove(StartIndex, Count);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   mapped.deleteCharactersInRange(NSMakeRange(StartIndex, Count));
   exit mapped;
   {$ENDIF}
@@ -152,7 +152,7 @@ begin
   exit mapped.charAt(&Index);
   {$ELSEIF ECHOES}
   exit mapped.Chars[&Index];
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   result := mapped.characterAtIndex(&Index);
   {$ENDIF}
 end;
@@ -164,7 +164,7 @@ begin
 
   {$IF COOPER OR ECHOES}
   exit mapped.Insert(Offset, Value);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   mapped.insertString(Value) atIndex(Offset);
   exit mapped;
   {$ENDIF}
@@ -183,7 +183,7 @@ begin
   {$ELSEIF ECHOES}
   mapped.Remove(StartIndex, Count);
   exit mapped.Insert(StartIndex, Value);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   mapped.replaceCharactersInRange(NSMakeRange(StartIndex, Count)) withString(Value);
   exit mapped;
   {$ENDIF}
@@ -198,7 +198,7 @@ begin
   mapped.setCharAt(&Index,Value);
   {$ELSEIF ECHOES}
   mapped.Chars[&Index] := Value;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   mapped.replaceCharactersInRange(NSMakeRange(&Index, &Index)) withString(Value); 
   {$ENDIF}
 end;
@@ -209,7 +209,7 @@ begin
   mapped.setLength(Value);
   {$ELSEIF ECHOES}
   mapped.Length := Value;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   if Value > mapped.length then
     Append(#0, Value - mapped.length)
   else
@@ -223,7 +223,7 @@ begin
   exit mapped.substring(StartIndex);
   {$ELSEIF ECHOES}
   exit mapped.ToString(StartIndex, Length - StartIndex);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit mapped.substringFromIndex(StartIndex);
   {$ENDIF}
 end;
@@ -237,7 +237,7 @@ begin
   exit mapped.substring(StartIndex, StartIndex + Count);
   {$ELSEIF ECHOES}
   exit mapped.ToString(StartIndex, Count);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit mapped.substringWithRange(NSMakeRange(StartIndex, Count));
   {$ENDIF}
 end;

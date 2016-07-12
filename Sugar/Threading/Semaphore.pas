@@ -19,7 +19,7 @@ type
     method WaitOne; mapped to WaitOne;
     method WaitOne(aTimeout: Integer); mapped to WaitOne(aTimeout);
   end;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   Semaphore = public class mapped to Foundation.NSRecursiveLock
     method Leave; mapped to unlock;
     method Leave(aReleaseCount: Integer);
@@ -30,7 +30,7 @@ type
 
 implementation
 
-{$IF NOUGAT}
+{$IF TOFFEE}
 method Semaphore.Leave(aReleaseCount: Integer);
 begin
   for i: Int32 := 0 to aReleaseCount-1 do mapped.unlock;

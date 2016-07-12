@@ -42,7 +42,7 @@ constructor Random;
 begin
   {$IF ECHOES}
   constructor(System.DateTime.Now.Ticks);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   var interval: rtl.__struct_timeval;
   gettimeofday(@interval, nil);  
   constructor(interval.tv_usec * interval.tv_sec);

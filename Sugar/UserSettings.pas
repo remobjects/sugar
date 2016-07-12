@@ -11,7 +11,7 @@ type
   UserSettings = public class {$IF COOPER}{$IF NOT ANDROID}mapped to java.util.prefs.Preferences{$ENDIF}
   {$ELSEIF ECHOES}
   mapped to {$IF WINDOWS_PHONE}System.IO.IsolatedStorage.IsolatedStorageSettings{$ELSEIF NETFX_CORE}Windows.Storage.ApplicationDataContainer{$ELSE}System.Configuration.Configuration{$ENDIF}
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   mapped to Foundation.NSUserDefaults
   {$ENDIF}
   private
@@ -20,7 +20,7 @@ type
     property Instance: android.content.SharedPreferences read write;
     constructor;
     constructor(anInstance: android.content.SharedPreferences);
-    {$ELSEIF NOUGAT}
+    {$ELSEIF TOFFEE}
     method Exists(Key: String): Boolean;
     {$ENDIF}
   public
@@ -49,7 +49,7 @@ type
   public
       method GetConfiguration: System.Configuration.Configuration;
   end;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   UserSettingsHelper = public static class
   public
     method GetBundleIdentifier: String;
@@ -70,7 +70,7 @@ begin
   mapped.Values.Clear;
   {$ELSEIF ECHOES}
   mapped.AppSettings.Settings.Clear;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   mapped.removePersistentDomainForName(UserSettingsHelper.GetBundleIdentifier);
   mapped.synchronize;
   {$ENDIF}
@@ -90,7 +90,7 @@ begin
   exit Windows.Storage.ApplicationData.Current.LocalSettings;
   {$ELSEIF ECHOES}
   exit UserSettingsHelper.GetConfiguration;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit mapped.standardUserDefaults;
   {$ENDIF}
 end;
@@ -113,7 +113,7 @@ begin
   exit mapped.Values.Keys.ToArray;
   {$ELSEIF ECHOES}
   exit mapped.AppSettings.Settings.AllKeys;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   mapped.synchronize;
   var lValues := mapped.persistentDomainForName(UserSettingsHelper.GetBundleIdentifier):allKeys;
   if lValues = nil then
@@ -143,7 +143,7 @@ begin
   {$ELSEIF ECHOES}
   if not Boolean.TryParse(mapped.AppSettings.Settings[Key]:Value, out Result) then
     exit DefaultValue;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   result := iif(Exists(Key), mapped.boolForKey(Key), DefaultValue);
   {$ENDIF}
 end;
@@ -166,7 +166,7 @@ begin
   {$ELSEIF ECHOES}
   if not Double.TryParse(mapped.AppSettings.Settings[Key]:Value, out Result) then
     exit DefaultValue;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   result := iif(Exists(Key), mapped.doubleForKey(Key), DefaultValue);
   {$ENDIF}
 end;
@@ -189,7 +189,7 @@ begin
   {$ELSEIF ECHOES}  
   if not Integer.TryParse(mapped.AppSettings.Settings[Key]:Value, out Result) then
     exit DefaultValue;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   result := iif(Exists(Key), mapped.integerForKey(Key), DefaultValue);
   {$ENDIF}
 end;
@@ -214,7 +214,7 @@ begin
     exit DefaultValue;
 
   exit mapped.AppSettings.Settings[Key].Value;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   if Exists(Key) then
     exit mapped.stringForKey(Key)
   else
@@ -235,7 +235,7 @@ begin
   mapped.Values.Remove(key);
   {$ELSEIF ECHOES}
   mapped.AppSettings.Settings.Remove(Key);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   mapped.removeObjectForKey(Key);
   {$ENDIF}
 end;
@@ -250,7 +250,7 @@ begin
   {$ELSEIF NETFX_CORE}
   {$ELSEIF ECHOES}
   mapped.Save(System.Configuration.ConfigurationSaveMode.Modified);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   mapped.synchronize;
   {$ENDIF}
 end;
@@ -268,7 +268,7 @@ begin
   mapped.Values[Key] := Value;
   {$ELSEIF ECHOES}
   &Write(Key, Value.ToString);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   mapped.setBool(Value) forKey(Key);
   {$ENDIF}
 end;
@@ -286,7 +286,7 @@ begin
   mapped.Values[Key] := Value;
   {$ELSEIF ECHOES}
   &Write(Key, Value.ToString);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   mapped.setDouble(Value) forKey(Key);
   {$ENDIF}
 end;
@@ -304,7 +304,7 @@ begin
   mapped.Values[Key] := Value;
   {$ELSEIF ECHOES}
   &Write(Key, Value.ToString);
-  {$ELSEIF NOUGAT}  
+  {$ELSEIF TOFFEE}  
   mapped.setInteger(Value) forKey(Key);
   {$ENDIF}
 end;
@@ -325,7 +325,7 @@ begin
     mapped.AppSettings.Settings.Add(Key, Value)
   else
     mapped.AppSettings.Settings[Key].Value := Value.ToString;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   mapped.setObject(Value) forKey(Key);
   {$ENDIF}
 end;
@@ -338,7 +338,7 @@ begin
 
   exit Instance;
 end;
-{$ELSEIF NOUGAT}
+{$ELSEIF TOFFEE}
 method UserSettings.Exists(Key: String): Boolean;
 begin
   SugarArgumentNullException.RaiseIfNil(Key, "Key");

@@ -3,7 +3,7 @@
 interface
 
 type
-  Encoding = public class {$IF COOPER}mapped to java.nio.charset.Charset{$ELSEIF ECHOES}mapped to System.Text.Encoding{$ELSEIF NOUGAT}mapped to Foundation.NSNumber{$ENDIF}
+  Encoding = public class {$IF COOPER}mapped to java.nio.charset.Charset{$ELSEIF ECHOES}mapped to System.Text.Encoding{$ELSEIF TOFFEE}mapped to Foundation.NSNumber{$ENDIF}
   private
     method GetName: String;
   public
@@ -27,7 +27,7 @@ type
     class property UTF16BE: Encoding read GetEncoding("UTF-16BE");
 
     class property &Default: Encoding read UTF8;
-    {$IF NOUGAT}
+    {$IF TOFFEE}
     method AsNSStringEncoding: NSStringEncoding;
     class method FromNSStringEncoding(aEncoding: NSStringEncoding): Encoding;
     {$ENDIF}
@@ -60,7 +60,7 @@ begin
   exit GetChars(Value, 0, Value.length);
   {$ELSEIF ECHOES}
   exit mapped.GetChars(Value);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit GetString(Value).ToCharArray;
   {$ENDIF}
 end;
@@ -84,14 +84,14 @@ begin
   exit mapped.name;
   {$ELSEIF ECHOES}
   exit mapped.WebName;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   var lName := CFStringConvertEncodingToIANACharSetName(CFStringConvertNSStringEncodingToEncoding(mapped.unsignedIntValue));
   if assigned(lName) then
     result := bridge<NSString>(lName, BridgeMode.Transfer);
   {$ENDIF}  
 end;
 
-{$IF NOUGAT}
+{$IF TOFFEE}
 method Encoding.AsNSStringEncoding: NSStringEncoding;
 begin
   result := (self as NSNumber).unsignedIntegerValue as NSStringEncoding;
@@ -137,7 +137,7 @@ begin
     result := System.Text.Encoding.GetEncoding(aName);
   {$ELSEIF ECHOES}
   result := System.Text.Encoding.GetEncoding(aName);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   var lEncoding := NSStringEncoding.UTF8StringEncoding;
   case aName of
     'UTF8','UTF-8': lEncoding := NSStringEncoding.UTF8StringEncoding;
@@ -183,7 +183,7 @@ begin
   Buffer.get(result);
   {$ELSEIF ECHOES}
   exit System.Text.Encoding(aEncoding).GetBytes(Value, Offset, Count);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit GetBytes(aEncoding, new String(Value, Offset, Count));
   {$ENDIF}
 end;
@@ -206,7 +206,7 @@ begin
   Buffer.get(result);
   {$ELSEIF ECHOES}
   exit System.Text.Encoding(aEncoding).GetBytes(Value);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   result := ((Value as NSString).dataUsingEncoding(aEncoding.AsNSStringEncoding) allowLossyConversion(true) as Binary).ToArray;
   if not assigned(result) then
     raise new SugarFormatException("Unable to convert data");
@@ -225,7 +225,7 @@ begin
   Buffer.get(result);
   {$ELSEIF ECHOES}
   exit System.Text.Encoding(aEncoding).GetChars(Value, Offset, Count);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   exit GetString(aEncoding, Value, Offset, Count).ToCharArray;
   {$ENDIF}
 end;
@@ -248,7 +248,7 @@ begin
   result := Buffer.toString;
   {$ELSEIF ECHOES}
   result := System.Text.Encoding(aEncoding).GetString(Value, Offset, Count);
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   result := new NSString withBytes(@Value[Offset]) length(Count) encoding(aEncoding.AsNSStringEncoding);
   if not assigned(result) then
     raise new SugarFormatException("Unable to convert input data");

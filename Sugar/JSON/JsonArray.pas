@@ -11,7 +11,7 @@ uses
   System.Linq;
   {$ELSEIF COOPER}
   com.remobjects.elements.linq;
-  {$ELSEIF NOUGAT}
+  {$ELSEIF TOFFEE}
   RemObjects.Elements.Linq;
   {$ENDIF}
 
@@ -41,7 +41,7 @@ type
     {$ELSEIF ECHOES}
     method GetNonGenericEnumerator: System.Collections.IEnumerator; implements System.Collections.IEnumerable.GetEnumerator;
     method GetEnumerator: System.Collections.Generic.IEnumerator<JsonNode>;
-    {$ELSEIF NOUGAT}
+    {$ELSEIF TOFFEE}
     method countByEnumeratingWithState(aState: ^NSFastEnumerationState) objects(stackbuf: ^JsonNode) count(len: NSUInteger): NSUInteger;
     {$ENDIF}
 
@@ -126,7 +126,7 @@ method JsonArray.GetEnumerator: System.Collections.Generic.IEnumerator<JsonNode>
 begin  
   exit System.Collections.Generic.IEnumerable<JsonNode>(fItems).GetEnumerator;
 end;
-{$ELSEIF NOUGAT}
+{$ELSEIF TOFFEE}
 method JsonArray.countByEnumeratingWithState(aState: ^NSFastEnumerationState) objects(stackbuf: ^JsonNode) count(len: NSUInteger): NSUInteger;
 begin
   exit NSArray(fItems).countByEnumeratingWithState(aState) objects(^id(stackbuf)) count(len);
