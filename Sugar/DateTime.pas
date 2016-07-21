@@ -211,7 +211,7 @@ begin
                     else    
                       new java.text.SimpleDateFormat(DateFormatter.Format(Format), Sugar.Cooper.LocaleUtils.ForLanguageTag(Culture));
   lFormatter.timeZone := coalesce(aTimeZone, TimeZone.Utc);
-  exit lFormatter.format(mapped.Time);
+  result := lFormatter.format(mapped.Time);
   {$ELSEIF ECHOES}
   if Format = "" then
     exit "";
@@ -242,7 +242,7 @@ begin
   {$IF COOPER}
   var lFormatter := java.text.DateFormat.getDateInstance(java.text.DateFormat.SHORT);
   lFormatter.timeZone := coalesce(aTimeZone, TimeZone.Utc);
-  lFormatter.format(mapped.Time);
+  result := lFormatter.format(mapped.Time);
   {$ELSEIF ECHOES}
     {$IF WINDOWS_PHONE OR NETFX_CORE}
     result := mapped.ToString;
@@ -263,7 +263,7 @@ begin
   {$IF COOPER}
   var lFormatter := java.text.DateFormat.getTimeInstance(java.text.DateFormat.SHORT);
   lFormatter.timeZone := coalesce(aTimeZone, TimeZone.Utc);
-  lFormatter.format(mapped.Time);
+  result := lFormatter.format(mapped.Time);
   {$ELSEIF ECHOES}
     {$IF WINDOWS_PHONE OR NETFX_CORE}
     result := mapped.ToString();
@@ -284,7 +284,7 @@ begin
   {$IF COOPER}
   var lFormatter := java.text.DateFormat.getDateInstance(java.text.DateFormat.SHORT);
   lFormatter.timeZone := coalesce(aTimeZone, TimeZone.Utc);
-  lFormatter.format(mapped.Time);
+  result := lFormatter.format(mapped.Time);
   {$ELSEIF ECHOES}
     {$IF WINDOWS_PHONE OR NETFX_CORE}
     result := ToShortDateString();
@@ -305,7 +305,7 @@ begin
   {$IF COOPER}
   var lFormatter := java.text.DateFormat.getDateInstance(java.text.DateFormat.LONG);
   lFormatter.timeZone := coalesce(aTimeZone, TimeZone.Utc);
-  lFormatter.format(mapped.Time);
+  result := lFormatter.format(mapped.Time);
   {$ELSEIF ECHOES}
     {$IF WINDOWS_PHONE OR NETFX_CORE}
     result := mapped.ToString;
