@@ -22,6 +22,9 @@ type
     constructor(aUrl: not nullable Url); // log
     constructor(aUrl: not nullable Url; aMode: HttpRequestMode); // log  := HttpRequestMode.Ge
     operator Implicit(aUrl: not nullable Url): HttpRequest;
+    
+    [ToString]
+    method ToString: String;
   end;
   
   HttpRequestMode = public enum (Get, Post, Head, Put, Delete, Patch, Options, Trace);
@@ -142,6 +145,11 @@ end;
 operator HttpRequest.Implicit(aUrl: not nullable Url): HttpRequest;
 begin
   result := new HttpRequest(aUrl, HttpRequestMode.Get);
+end;
+
+method HttpRequest.ToString: String;
+begin
+  result := Url.ToString();
 end;
 
 { HttpRequestContent }
@@ -441,8 +449,13 @@ begin
       lConnection.getOutputStream().flush();
     end;
 
-    var lResponse := if lConnection.ResponseCode >= 300 then new HttpResponse withException(new SugarIOException("Unable to complete request. Error code: {0}", lConnection.responseCode)) else new HttpResponse(lConnection);
-    responseCallback(lResponse);
+    try
+      var lResponse := if lConnection.ResponseCode >= 300 then new HttpResponse withException(new SugarIOException("Unable to complete request. Error code: {0}", lConnection.responseCode)) else new HttpResponse(lConnection);
+      responseCallback(lResponse);
+    except
+      on E: Exception do
+        responseCallback(new HttpResponse withException(E));
+    end;
 
   except
     on E: Exception do
