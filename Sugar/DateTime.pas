@@ -72,6 +72,7 @@ type
     property Year: Integer read {$IF COOPER}mapped.get(Calendar.YEAR){$ELSEIF ECHOES}mapped.Year{$ELSEIF TOFFEE}DateTimeHelpers.GetComponent(mapped, NSCalendarUnit.NSYearCalendarUnit){$ENDIF};
     property Month: Integer read {$IF COOPER}mapped.get(Calendar.MONTH)+1{$ELSEIF ECHOES}mapped.Month{$ELSEIF TOFFEE}DateTimeHelpers.GetComponent(mapped, NSCalendarUnit.NSMonthCalendarUnit){$ENDIF};    
     property Day: Integer read {$IF COOPER}mapped.get(Calendar.DAY_OF_MONTH){$ELSEIF ECHOES}mapped.Day{$ELSEIF TOFFEE}DateTimeHelpers.GetComponent(mapped, NSCalendarUnit.NSDayCalendarUnit){$ENDIF};
+    property DayOfWeek: Integer read {$IF COOPER}mapped.get(Calendar.DAY_OF_WEEK){$ELSEIF ECHOES}Int(mapped.DayOfWeek)+1{$ELSEIF TOFFEE}DateTimeHelpers.GetComponent(mapped, NSCalendarUnit.NSWeekdayCalendarUnit){$ENDIF};
     property Date: DateTime read {$IF COOPER OR TOFFEE}new DateTime(self.Year, self.Month, self.Day, 0, 0, 0){$ELSEIF ECHOES}mapped.Date{$ENDIF};  
     
     class property Today: DateTime read {$IF COOPER OR TOFFEE}UtcNow.Date{$ELSEIF ECHOES}mapped.Today{$ENDIF};
