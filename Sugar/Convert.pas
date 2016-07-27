@@ -151,7 +151,7 @@ begin
   if aLocale = nil then aLocale := Locale.Current;
   var DecFormat := java.text.DecimalFormat(java.text.DecimalFormat.getInstance(aLocale));
   var X := Math.Log10(Math.Abs(aValue));
-  var FloatPattern := if aDigitsAfterDecimalPoint < 0 then "#.###############" else "#."+new String('#', aDigitsAfterDecimalPoint);
+  var FloatPattern := if aDigitsAfterDecimalPoint < 0 then "#.###############" else if aDigitsAfterDecimalPoint = 0 then "#" else "#."+new String('0', aDigitsAfterDecimalPoint);
   var ScientificPattern := FloatPattern+"E00";
 
   if Math.Sign(X) > 0 then
@@ -176,6 +176,7 @@ begin
   if aLocale = Locale.Invariant then numberFormatter.usesGroupingSeparator := false;
   if aDigitsAfterDecimalPoint ≥ 0 then begin
     numberFormatter.maximumFractionDigits := aDigitsAfterDecimalPoint;
+    numberFormatter.minimumFractionDigits := aDigitsAfterDecimalPoint;
   end;
   result := numberFormatter.stringFromNumber(aValue) as not nullable;
   {$ENDIF}
