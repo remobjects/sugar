@@ -297,7 +297,11 @@ begin
   {$IF COOPER}
   exit mapped.equalsIgnoreCase(Value); // aready invariant, on Java
   {$ELSEIF ECHOES}
+  {$IF WINDOWS_PHONE OR NETFX_CORE}
+  exit mapped.Equals(Value, StringComparison.OrdinalIgnoreCase); {$HINT TODO}
+  {$ELSE}
   exit mapped.Equals(Value, StringComparison.InvariantCultureIgnoreCase);
+  {$ENDIF}
   {$ELSEIF TOFFEE}
   exit mapped.compare(Value) options(NSStringCompareOptions.CaseInsensitiveSearch) range(NSMakeRange(0, length(self))) locale(Locale.Invariant) = 0;
   {$ENDIF}
