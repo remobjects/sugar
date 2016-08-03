@@ -90,7 +90,7 @@ begin
     if lIndex > -1 then
       result := FileName.Substring(0, lIndex)
     else
-      result := FileName+Folder.Separator+'..' // "fake" parent folder by appending ..
+      result := ""
       
   end;
 end;
