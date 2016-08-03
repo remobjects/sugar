@@ -432,7 +432,11 @@ begin
   {$IF COOPER}
   exit mapped.toLowerCase(aLocale) as not nullable;
   {$ELSEIF ECHOES}
+  {$IF WINDOWS_PHONE OR NETFX_CORE}
+  exit mapped.ToLower as not nullable; {$HINT TODO}
+  {$ELSE}
   exit mapped.ToLower(aLocale) as not nullable;
+  {$ENDIF}
   {$ELSEIF TOFFEE}
   exit mapped.lowercaseStringWithLocale(aLocale);
   {$ENDIF}
@@ -465,7 +469,11 @@ begin
   {$IF COOPER}
   exit mapped.toUpperCase(aLocale) as not nullable;
   {$ELSEIF ECHOES}
+  {$IF WINDOWS_PHONE OR NETFX_CORE}
+  exit mapped.ToUpper as not nullable; {$HINT TODO}
+  {$ELSE}
   exit mapped.ToUpper(aLocale) as not nullable;
+  {$ENDIF}
   {$ELSEIF TOFFEE}
   exit mapped.uppercaseStringWithLocale(aLocale);
   {$ENDIF}
