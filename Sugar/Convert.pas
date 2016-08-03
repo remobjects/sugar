@@ -150,19 +150,9 @@ begin
   {$IF COOPER}
   if aLocale = nil then aLocale := Locale.Current;
   var DecFormat := java.text.DecimalFormat(java.text.DecimalFormat.getInstance(aLocale));
-  var X := Math.Log10(Math.Abs(aValue));
   var FloatPattern := if aDigitsAfterDecimalPoint < 0 then "#.###############" else if aDigitsAfterDecimalPoint = 0 then "#" else "#."+new String('0', aDigitsAfterDecimalPoint);
-  var ScientificPattern := FloatPattern+"E00";
-
-  if Math.Sign(X) > 0 then
-    DecFormat.applyPattern(if Math.Abs(X) >= 15 then ScientificPattern else FloatPattern)
-  else
-    DecFormat.applyPattern(if Math.Abs(X) >= 5 then ScientificPattern else FloatPattern);
-
+  DecFormat.applyPattern(FloatPattern);
   result := DecFormat.format(aValue) as not nullable;
-
-  if result.IndexOf("E-") > -1 then
-    result := result.Replace("E", "E+");
   {$ELSEIF ECHOES}
   if aLocale = nil then aLocale := Locale.Current;
   if aDigitsAfterDecimalPoint < 0 then
@@ -654,10 +644,10 @@ end;
 
 method Convert.ToBoolean(aValue: not nullable String): Boolean;
 begin  
-  if (aValue = nil) or (aValue.EqualsIgnoreCase(Consts.FalseString)) then 
+  if (aValue = nil) or (aValue.EqualsIgnoringCaseInvariant(Consts.FalseString)) then 
     exit false;
 
-  if aValue.EqualsIgnoreCase(Consts.TrueString) then
+  if aValue.EqualsIgnoringCaseInvariant(Consts.TrueString) then
     exit true;  
   
   raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);
