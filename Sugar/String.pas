@@ -273,7 +273,7 @@ end;
 method String.Equals(Value: String): Boolean;
 begin
   {$IF COOPER}
-  exit mapped.equals(Value);
+  exit mapped.equals(Value); {$HINT needs to take locale into account!}
   {$ELSEIF ECHOES}
   exit mapped.Equals(Value, StringComparison.Ordinal);
   {$ELSEIF TOFFEE}
@@ -284,7 +284,7 @@ end;
 method String.EqualsIgnoringCase(Value: String): Boolean;
 begin
   {$IF COOPER}
-  exit mapped.equalsIgnoreCase(Value);
+  exit mapped.equalsIgnoreCase(Value); {$HINT needs to take locale into account!}
   {$ELSEIF ECHOES}
   exit mapped.Equals(Value, StringComparison.OrdinalIgnoreCase);
   {$ELSEIF TOFFEE}
@@ -295,7 +295,7 @@ end;
 method String.EqualsIgnoringCaseInvariant(Value: String): Boolean;
 begin
   {$IF COOPER}
-  exit self.ToLowerInvariant.Equals(Value:ToLowerInvariant);
+  exit mapped.equalsIgnoreCase(Value); // aready invariant, on Java
   {$ELSEIF ECHOES}
   exit mapped.Equals(Value, StringComparison.InvariantCultureIgnoreCase);
   {$ELSEIF TOFFEE}
@@ -404,7 +404,7 @@ end;
 method String.ToLower: not nullable String;
 begin
   {$IF COOPER}
-  exit mapped.toLowerCase as not nullable;
+  exit mapped.toLowerCase(Locale.Current) as not nullable;
   {$ELSEIF ECHOES}
   exit mapped.ToLower as not nullable;
   {$ELSEIF TOFFEE}
@@ -437,7 +437,7 @@ end;
 method String.ToUpper: not nullable String;
 begin
   {$IF COOPER}
-  exit mapped.toUpperCase as not nullable;
+  exit mapped.toUpperCase(Locale.Current) as not nullable;
   {$ELSEIF ECHOES}
   exit mapped.ToUpper as not nullable;
   {$ELSEIF TOFFEE}
