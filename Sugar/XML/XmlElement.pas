@@ -403,7 +403,7 @@ end;
 method XmlElement.GetFirstElementWithName(aName: String): XmlElement;
 begin 
   for item in ChildNodes do
-    if (item is XmlElement) and item.Name.EqualsIgnoreCase(aName) then exit XmlElement(item);
+    if (item is XmlElement) and item.Name.EqualsIgnoringCaseInvariant(aName) then exit XmlElement(item);
   exit nil;
 end;
 

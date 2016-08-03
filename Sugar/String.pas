@@ -30,7 +30,8 @@ type
     method CompareTo(Value: String): Integer;
     method CompareToIgnoreCase(Value: String): Integer;
     method &Equals(Value: String): Boolean;
-    method EqualsIgnoreCase(Value: String): Boolean;
+    method EqualsIgnoringCase(Value: String): Boolean;
+    method EqualsIgnoringCaseInvariant(Value: String): Boolean;
     method Contains(Value: String): Boolean;
     method IndexOf(Value: String): Int32;
     method LastIndexOf(Value: String): Int32;
@@ -39,7 +40,11 @@ type
     method Split(Separator: String): array of String;
     method Replace(OldValue, NewValue: String): not nullable String;
     method ToLower: not nullable String;
+    method ToLowerInvariant: not nullable String;
+    method ToLower(aLocale: Locale): not nullable String;
     method ToUpper: not nullable String;
+    method ToUpperInvariant: not nullable String;
+    method ToUpper(aLocale: Locale): not nullable String;
     method Trim: not nullable String;
     //method Trim(aCharacters: array of Char): not nullable String;
     method StartsWith(Value: String): Boolean;
@@ -276,7 +281,7 @@ begin
   {$ENDIF}
 end;
 
-method String.EqualsIgnoreCase(Value: String): Boolean;
+method String.EqualsIgnoringCase(Value: String): Boolean;
 begin
   {$IF COOPER}
   exit mapped.equalsIgnoreCase(Value);
@@ -284,6 +289,17 @@ begin
   exit mapped.Equals(Value, StringComparison.OrdinalIgnoreCase);
   {$ELSEIF TOFFEE}
   exit mapped.caseInsensitiveCompare(Value) = 0;
+  {$ENDIF}
+end;
+
+method String.EqualsIgnoringCaseInvariant(Value: String): Boolean;
+begin
+  {$IF COOPER}
+  exit self.ToLowerInvariant.Equals(Value:ToLowerInvariant);
+  {$ELSEIF ECHOES}
+  exit mapped.Equals(Value, StringComparison.InvariantCultureIgnoreCase);
+  {$ELSEIF TOFFEE}
+  exit mapped.compare(Value) options(NSStringCompareOptions.CaseInsensitiveSearch) range(NSMakeRange(0, length(self))) locale(Locale.Invariant) = 0;
   {$ENDIF}
 end;
 
@@ -396,6 +412,28 @@ begin
   {$ENDIF}
 end;
 
+method String.ToLowerInvariant: not nullable String;
+begin
+  {$IF COOPER}
+  exit mapped.toLowerCase(Locale.Invariant) as not nullable;
+  {$ELSEIF ECHOES}
+  exit mapped.ToLowerInvariant as not nullable;
+  {$ELSEIF TOFFEE}
+  exit mapped.lowercaseStringWithLocale(Locale.Invariant);
+  {$ENDIF}
+end;
+
+method String.ToLower(aLocale: Locale): not nullable String;
+begin
+  {$IF COOPER}
+  exit mapped.toLowerCase(aLocale) as not nullable;
+  {$ELSEIF ECHOES}
+  exit mapped.ToLower(aLocale) as not nullable;
+  {$ELSEIF TOFFEE}
+  exit mapped.lowercaseStringWithLocale(aLocale);
+  {$ENDIF}
+end;
+
 method String.ToUpper: not nullable String;
 begin
   {$IF COOPER}
@@ -404,6 +442,28 @@ begin
   exit mapped.ToUpper as not nullable;
   {$ELSEIF TOFFEE}
   exit mapped.uppercaseString;
+  {$ENDIF}
+end;
+
+method String.ToUpperInvariant: not nullable String;
+begin
+  {$IF COOPER}
+  exit mapped.toUpperCase(Locale.Invariant) as not nullable;
+  {$ELSEIF ECHOES}
+  exit mapped.ToUpperInvariant as not nullable;
+  {$ELSEIF TOFFEE}
+  exit mapped.uppercaseStringWithLocale(Locale.Invariant);
+  {$ENDIF}
+end;
+
+method String.ToUpper(aLocale: Locale): not nullable String;
+begin
+  {$IF COOPER}
+  exit mapped.toUpperCase(aLocale) as not nullable;
+  {$ELSEIF ECHOES}
+  exit mapped.ToUpper(aLocale) as not nullable;
+  {$ELSEIF TOFFEE}
+  exit mapped.uppercaseStringWithLocale(aLocale);
   {$ENDIF}
 end;
 
