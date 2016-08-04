@@ -20,7 +20,7 @@ type
 
     {$IF COOPER}
     property Name: String read mapped.DisplayName;
-    property Identifier: String read mapped.ID;
+    property Identifier: String read mapped.getID;
     property OffsetToUTC: TimeSpan read TimeSpan.FromMilliseconds(mapped.RawOffset);
     {$ELSEIF ECHOES}
     property Name: String read mapped.DisplayName;
