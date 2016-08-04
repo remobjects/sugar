@@ -24,7 +24,9 @@ type
     property OffsetToUTC: TimeSpan read TimeSpan.FromMilliseconds(mapped.RawOffset);
     {$ELSEIF ECHOES}
     property Name: String read mapped.DisplayName;
+    {$IF NOT WINDOWS_PHONE AND NOT NETFX_CORE}
     property Identifier: String read mapped.Id;
+    {$ENDIF}
     property OffsetToUTC: TimeSpan read mapped.BaseUtcOffset;
     {$ELSEIF TOFFEE}
     property Name: String read mapped.name;
