@@ -17,6 +17,20 @@ type
     //class property TimeZone[aAbbreviation: String]: nullable TimeZone read get_TimeZoneWithAbreviation;
     class property TimeZoneByName[aName: String]: nullable TimeZone read get_TimeZoneWithName;
     class property TimeZoneNames: not nullable sequence of String read get_TimeZoneNames;
+
+    {$IF COOPER}
+    property Name: String read mapped.DisplayName;
+    property Identifier: String read mapped.ID;
+    property OffsetToUTC: TimeSpan read TimeSpan.FromMilliseconds(mapped.RawOffset);
+    {$ELSEIF ECHOES}
+    property Name: String read mapped.DisplayName;
+    property Identifier: String read mapped.Id;
+    property OffsetToUTC: TimeSpan read mapped.BaseUtcOffset;
+    {$ELSEIF TOFFEE}
+    property Name: String read mapped.name;
+    property Identifier: String read mapped.abbreviation;
+    property OffsetToUTC: TimeSpan read TimeSpan.FromSeconds(mapped.secondsFromGMT);
+    {$ENDIF}
   end;
 
 implementation

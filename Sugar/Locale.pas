@@ -17,6 +17,14 @@ type
     class property Invariant: Locale read NSLocale.systemLocale;
     class property Current: Locale read NSLocale.currentLocale;
     {$ENDIF}
+
+    {$IF COOPER}
+    property Identifier: String read mapped.toString;
+    {$ELSEIF ECHOES}
+    property Identifier: String read mapped.Name;
+    {$ELSEIF TOFFEE}
+    property Identifier: String read mapped.localeIdentifier;
+    {$ENDIF}
   end;
 
 implementation
