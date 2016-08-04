@@ -740,7 +740,7 @@ begin
   {$ELSEIF ECHOES}
   exit System.Runtime.InteropServices.Marshal.PtrToStringUni(SQLiteHelpers.sqlite3_column_name16(fRes, aIndex));
   {$ELSEIF COCOA}
-  exit NSString.stringWithCString(^AnsiChar(sqlite3_column_name16(^sqlite3_stmt(fRes), aIndex)) ) encoding(NSStringEncoding.NSUTF16StringEncoding);
+  exit new NSString withCstring(^AnsiChar(sqlite3_column_name(^sqlite3_stmt(fRes), aIndex)) ) encoding( {$IFDEF OSX}NSStringEncoding.NSUTF8StringEncoding{$ELSE}NSStringEncoding.NSUTF16StringEncoding{$ENDIF});
   {$ELSEIF ANDROID}
   exit mapped.ColumnName[aIndex];
   {$ELSE}
