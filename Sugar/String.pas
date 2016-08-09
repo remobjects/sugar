@@ -305,7 +305,8 @@ begin
   exit mapped.Equals(Value, StringComparison.InvariantCultureIgnoreCase);
   {$ENDIF}
   {$ELSEIF TOFFEE}
-  exit mapped.compare(Value) options(NSStringCompareOptions.CaseInsensitiveSearch) range(NSMakeRange(0, length(self))) locale(Locale.Invariant) = 0;
+  // RemObjects.Elements.System.length as workaround for issue in 8.3; not needed in 8.4
+  exit mapped.compare(Value) options(NSStringCompareOptions.CaseInsensitiveSearch) range(NSMakeRange(0, RemObjects.Elements.System.length(self))) locale(Locale.Invariant) = 0;
   {$ENDIF}
 end;
 
