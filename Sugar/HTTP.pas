@@ -439,7 +439,7 @@ method Http.ExecuteRequest(aRequest: not nullable HttpRequest; ResponseCallback:
 begin
   {$IF COOPER}
   async try
-    var lConnection := java.net.URL(aRequest.URL).openConnection as java.net.HttpURLConnection;
+    var lConnection := java.net.URL(aRequest.Url).openConnection as java.net.HttpURLConnection;
 
     for each k in aRequest.Headers.Keys do
       lConnection.setRequestProperty(k, aRequest.Headers[k]);

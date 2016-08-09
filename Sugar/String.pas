@@ -3,6 +3,8 @@
 interface
 
 type
+  PlatformString = {$IF ECHOES}System.String{$ELSEIF TOFFEE}Foundation.NSString{$ELSEIF COOPER}java.lang.String{$ELSEIF ISLAND}RemObjects.Elements.System.String{$ENDIF};
+
   String = public class mapped to {$IF COOPER}java.lang.String{$ELSEIF ECHOES}System.String{$ELSEIF TOFFEE}Foundation.NSString{$ENDIF}
   private
     method get_Chars(aIndex: Int32): Char;
