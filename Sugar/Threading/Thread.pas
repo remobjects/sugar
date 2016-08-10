@@ -44,6 +44,7 @@ type
     {$IF TOFFEE}class property MainThread: Thread read mapped.mainThread;{$ENDIF}
     class property CurrentThread: Thread read mapped.currentThread; 
 
+    class method &Async(aBlock: block);
   end;
 
   ThreadState = public enum(
@@ -125,6 +126,11 @@ begin
   {$ELSEIF TOFFEE}
   result := mapped.callStackSymbols as List<String>;
   {$ENDIF}
+end;
+
+class method Thread.Async(aBlock: block);
+begin
+  async aBlock();
 end;
 
 end.
