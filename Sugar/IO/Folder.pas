@@ -28,6 +28,7 @@ type
     
     method __Exists: Boolean; // Workaround for 74547: Mapped types: static methods can be called with class type as parameter
     method __CreateFolder(FailIfExists: Boolean := false);
+    method DoGetFiles(aFolder: Folder; aList: List<File>);
   public
     constructor(aPath: not nullable String);
 
@@ -38,6 +39,7 @@ type
 
     method GetFile(FileName: String): File;
     method GetFiles: not nullable List<File>;
+    method GetFiles(aRecursive: Boolean): not nullable List<File>;
     method GetSubfolders: not nullable List<Folder>;
 
     class method CreateFolder(FolderName: Folder; FailIfExists: Boolean := false): Folder;
@@ -104,6 +106,19 @@ begin
   result.__CreateFolder(FailIfExists);
 end;
 
+method Folder.DoGetFiles(aFolder: Folder; aList: List<File>);
+begin
+  aList.AddRange(aFolder.GetFiles);
+  for each f in aFolder.getSubFolders() do
+    DoGetFiles(f, aList);
+end;
+
+method Folder.GetFiles(aRecursive: Boolean): not nullable List<File>;
+begin
+  if not aRecursive then exit GetFiles();
+  result := new List<File>();
+  DoGetFiles(self, result)
+end;
 
 {$IF WINDOWS_PHONE OR NETFX_CORE}
 class method FolderHelper.GetFile(Folder: Windows.Storage.StorageFolder; FileName: String): Windows.Storage.StorageFile;
