@@ -569,7 +569,7 @@ end;
 method Http.ExecuteRequestSynchronous(aRequest: not nullable HttpRequest): not nullable HttpResponse;
 begin
   {$IF COOPER}
-  var lConnection := java.net.URL(aRequest.URL).openConnection as java.net.HttpURLConnection;
+  var lConnection := java.net.URL(aRequest.Url).openConnection as java.net.HttpURLConnection;
   
   for each k in aRequest.Headers.Keys do
     lConnection.setRequestProperty(k, aRequest.Headers[k]);
@@ -638,7 +638,7 @@ begin
   for each k in aRequest.Headers.Keys do
     nsUrlRequest.setValue(aRequest.Headers[k]) forHTTPHeaderField(k);
 
- var nsUrlResponse : NSURLResponse;
+  var nsUrlResponse : NSURLResponse;
   var error: NSError;
   {$HIDE W28}
   // we're aware it's deprecated. but async calls do have their use in console apps.
