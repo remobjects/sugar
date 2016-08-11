@@ -261,7 +261,7 @@ begin
     {$ENDIF}
   {$ELSEIF ECHOES}
     {$IF WINDOWS_PHONE}
-    exit CompoilerSubMode.WindowsPhone;
+    exit CompilerSubMode.WindowsPhone;
     {$ELSEIF NETFX_CORE}
     exit CompilerSubMode.WinRT;
     {$ELSE}
