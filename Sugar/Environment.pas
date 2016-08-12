@@ -26,6 +26,7 @@ type
     [System.Runtime.InteropServices.DllImport("libc")]
     class method uname(buf: IntPtr): Integer; external;
     class method unameWrapper: String;
+    class var unameResult: String;
     {$ENDIF}
   public
     property NewLine: String read GetNewLine;
@@ -151,17 +152,20 @@ end;
 {$IF ECHOES}
 class method Environment.unameWrapper: String;
 begin
-  var lBuffer := IntPtr.Zero;
-  try
-    lBuffer := System.Runtime.InteropServices.Marshal.AllocHGlobal(8192);
-    // This is a hacktastic way of getting sysname from uname ()
-    if uname(lBuffer) ≠ 0 then
-        result := System.Runtime.InteropServices.Marshal.PtrToStringAnsi(lBuffer);
-  except
-  finally
-    if lBuffer ≠ IntPtr.Zero then
-      System.Runtime.InteropServices.Marshal.FreeHGlobal(lBuffer);
+  if not assigned(unameResult) then begin
+    var lBuffer := IntPtr.Zero;
+    try
+      lBuffer := System.Runtime.InteropServices.Marshal.AllocHGlobal(8192);
+      // This is a hacktastic way of getting sysname from uname ()
+      if uname(lBuffer) ≠ 0 then
+        unameResult := System.Runtime.InteropServices.Marshal.PtrToStringAnsi(lBuffer);
+    except
+    finally
+      if lBuffer ≠ IntPtr.Zero then
+        System.Runtime.InteropServices.Marshal.FreeHGlobal(lBuffer);
+    end;
   end;
+  result : unameResult;
 end;
 {$ENDIF}
 
