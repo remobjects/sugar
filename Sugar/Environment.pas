@@ -165,7 +165,7 @@ begin
         System.Runtime.InteropServices.Marshal.FreeHGlobal(lBuffer);
     end;
   end;
-  result : unameResult;
+  result := unameResult;
 end;
 {$ENDIF}
 
