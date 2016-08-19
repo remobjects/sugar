@@ -326,7 +326,7 @@ end;
 method List<T>.ToArray: array of T;
 begin
   {$IF COOPER}
-  exit mapped.toArray(new T[0]);
+  exit mapped.toArray(new T[mapped.size()]); 
   {$ELSEIF ECHOES}
   exit mapped.ToArray;
   {$ELSEIF TOFFEE}
