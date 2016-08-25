@@ -41,8 +41,10 @@ type
     method ToDouble(aValue: Byte): Double;
     method ToDouble(aValue: Int32): Double;
     method ToDouble(aValue: Int64): Double;
+    method TryToDouble(aValue: not nullable String; aLocale: Locale): nullable Double;
+    method TryToDoubleInvariant(aValue: not nullable String): nullable Double; inline;
     method ToDouble(aValue: not nullable String; aLocale: Locale): Double;
-    method ToDoubleInvariant(aValue: not nullable String): Double;
+    method ToDoubleInvariant(aValue: not nullable String): Double; inline;
 
     method ToByte(aValue: Boolean): Byte;
     method ToByte(aValue: Double): Byte;
@@ -466,10 +468,24 @@ begin
   result := ToDouble(aValue, Locale.Invariant);
 end;
 
+method Convert.TryToDoubleInvariant(aValue: not nullable String): nullable Double;
+begin
+  result := TryToDouble(aValue, Locale.Invariant);
+end;
+
 method Convert.ToDouble(aValue: not nullable String; aLocale: Locale): Double;
 begin
+  var lResult := TryToDouble(aValue, aLocale);
+  if assigned(lResult) then
+    result := lResult
+  else
+    raise new SugarFormatException(String.Format("Invalid double value '{0}' for locale {1}", aValue, aLocale.Identifier));
+end;
+
+method Convert.TryToDouble(aValue: not nullable String; aLocale: Locale): nullable Double;
+begin
   if String.IsNullOrWhiteSpace(aValue) then
-    raise new SugarFormatException("Unable to convert string '{0}' to double.", aValue);
+    exit nil;
 
   {$IF COOPER}
   var DecFormat: java.text.DecimalFormat := java.text.DecimalFormat(java.text.DecimalFormat.getInstance(aLocale));
@@ -495,17 +511,17 @@ begin
   result := DecFormat.parse(aValue, Position).doubleValue;
 
   if Position.Index < aValue.Length then
-    raise new SugarFormatException("Unable to convert string '{0}' to double.", aValue);
+    exit nil;
 
   if Consts.IsInfinity(result) or Consts.IsNaN(result) then
-    raise new SugarFormatException("Unable to convert string '{0}' to double.", aValue);
+    exit nil;
   {$ELSEIF ECHOES}
-  exit System.Convert.ToDouble(aValue, aLocale);
+  var lResult: Double;
+  if Double.TryParse(aValue, System.Globalization.NumberStyles.Any, aLocale, out lResult) then
+    exit valueOrDefault(lResult); 
   {$ELSEIF TOFFEE}
   var Number := ParseNumber(aValue, aLocale);
-  if not assigned(Number) then
-    raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);
-  exit Number.doubleValue;
+  exit Number:doubleValue;
   {$ENDIF}
 end;
 
