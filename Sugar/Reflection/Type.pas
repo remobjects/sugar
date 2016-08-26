@@ -83,7 +83,7 @@ type
     //operator Explicit(aClass: rtl.Class): &Type;
     //operator Explicit(aProtocol: Protocol): &Type;
     property Name: String read getName;
-    property BaseType: Sugar.Reflection.Type read if IsClass then new &Type withClass(class_getSuperclass(self)); 
+    property BaseType: Sugar.Reflection.Type read if IsClass then new &Type withClass(class_getSuperclass(fClass)); 
     property IsClass: Boolean read assigned(fClass) or fIsID;
     property IsInterface: Boolean read assigned(fProtocol);
     property IsArray: Boolean read false;
@@ -171,10 +171,10 @@ method &Type.Get_Methods: List<Sugar.Reflection.MethodInfo>;
 begin
   var methodInfos: ^rtl.Method;
   var methodCount: UInt32;
-  methodInfos := class_copyMethodList(self, var methodCount);
+  methodInfos := class_copyMethodList(fClass, var methodCount);
   result := NSMutableArray.arrayWithCapacity(methodCount);
   for i: Int32 := 0 to methodCount-1 do
-    NSMutableArray(result).addObject(new Sugar.Reflection.MethodInfo withClass(self) &method(methodInfos[i]));
+    NSMutableArray(result).addObject(new Sugar.Reflection.MethodInfo withClass(fClass) &method(methodInfos[i]));
 end;
 
 {$ENDIF}
