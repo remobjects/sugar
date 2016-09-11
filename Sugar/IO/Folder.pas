@@ -47,6 +47,7 @@ type
     class method DeleteFolder(FolderName: Folder);
     class method Exists(FolderName: Folder): Boolean;
     class method GetFiles(FolderName: Folder): not nullable List<File>;
+    class method GetSubfolders(FolderName: Folder): not nullable List<Folder>;
 
     class method UserHomeFolder: Folder;
 
@@ -100,6 +101,11 @@ end;
 class method Folder.GetFiles(FolderName: Folder): not nullable List<File>;
 begin
   result := FolderName.GetFiles();
+end;
+
+class method Folder.GetSubfolders(FolderName: Folder): not nullable List<Folder>;
+begin
+  result := FolderName.GetSubfolders();
 end;
 
 method Folder.CreateSubfolder(SubfolderName: String; FailIfExists: Boolean := false): Folder;
