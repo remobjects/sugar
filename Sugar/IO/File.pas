@@ -32,7 +32,7 @@ type
     method Rename(NewName: not nullable String): not nullable File;
 
     class method Exists(FileName: not nullable File): Boolean; inline;
-    class method DeleteFile(FileName: not nullable File); inline;
+    class method Delete(FileName: not nullable File); inline;
 
     {$IF WINDOWS_PHONE OR NETFX_CORE}
     property FullPath: not nullable String read mapped.Path;
@@ -115,7 +115,7 @@ begin
   {$ENDIF}
 end;
 
-class method File.DeleteFile(FileName: not nullable File);
+class method File.Delete(FileName: not nullable File);
 begin
   FileName.Delete()
 end;

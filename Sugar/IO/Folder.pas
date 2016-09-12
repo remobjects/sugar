@@ -31,7 +31,7 @@ type
     constructor(aPath: not nullable String);
 
     method Exists: Boolean; // Workaround for 74547: Mapped types: static methods can be called with class type as parameter
-    method CreateFolder(FailIfExists: Boolean := false);
+    method Create(FailIfExists: Boolean := false);
     method CreateFile(FileName: String; FailIfExists: Boolean := false): File;
     method CreateSubfolder(SubfolderName: String; FailIfExists: Boolean := false): Folder;
 
@@ -43,10 +43,10 @@ type
     method GetFiles(aRecursive: Boolean): not nullable List<File>;
     method GetSubfolders: not nullable List<Folder>;
 
-    class method CreateFolder(FolderName: Folder; FailIfExists: Boolean := false): Folder;
-    class method DeleteFolder(FolderName: Folder);
+    class method Create(FolderName: Folder; FailIfExists: Boolean := false): Folder;
+    class method Delete(FolderName: Folder);
     class method Exists(FolderName: Folder): Boolean;
-    class method GetFiles(FolderName: Folder): not nullable List<File>;
+    class method GetFiles(FolderName: Folder; aRecursive: Boolean := false): not nullable List<File>;
     class method GetSubfolders(FolderName: Folder): not nullable List<Folder>;
 
     class method UserHomeFolder: Folder;
@@ -98,9 +98,9 @@ begin
   result := FolderName.Exists;
 end;
 
-class method Folder.GetFiles(FolderName: Folder): not nullable List<File>;
+class method Folder.GetFiles(FolderName: Folder; aRecursive: Boolean := false): not nullable List<File>;
 begin
-  result := FolderName.GetFiles();
+  result := if aRecursive then FolderName.GetFiles(true) else FolderName.GetFiles(); // latter is optimized
 end;
 
 class method Folder.GetSubfolders(FolderName: Folder): not nullable List<Folder>;
@@ -111,16 +111,16 @@ end;
 method Folder.CreateSubfolder(SubfolderName: String; FailIfExists: Boolean := false): Folder;
 begin
   result := new Folder(Sugar.IO.Path.Combine(self.FullPath, SubfolderName));
-  result.CreateFolder(FailIfExists);
+  result.Create(FailIfExists);
 end;
 
-class method Folder.CreateFolder(FolderName: Folder; FailIfExists: Boolean := false): Folder;
+class method Folder.Create(FolderName: Folder; FailIfExists: Boolean := false): Folder;
 begin
   result := Folder(FolderName);
-  result.CreateFolder(FailIfExists);
+  result.Create(FailIfExists);
 end;
 
-class method Folder.DeleteFolder(FolderName: Folder);
+class method Folder.Delete(FolderName: Folder);
 begin
   FolderName.Delete();
 end;
@@ -188,7 +188,7 @@ begin
   end;
 end;
 
-method Folder.CreateFolder(FailIfExists: Boolean := false);
+method Folder.Create(FailIfExists: Boolean := false);
 begin
   mapped.CreateFolderAsync(self.FullPath, iif(FailIfExists, Windows.Storage.CreationCollisionOption.FailIfExists, Windows.Storage.CreationCollisionOption.OpenIfExists)).Await();
 end;
@@ -260,7 +260,7 @@ begin
   result := System.IO.Directory.Exists(mapped);
 end;
 
-method Folder.CreateFolder(FailIfExists: Boolean := false);
+method Folder.Create(FailIfExists: Boolean := false);
 begin
   if System.IO.Directory.Exists(mapped) then begin
     if FailIfExists then
@@ -341,7 +341,7 @@ begin
   result := JavaFile.exists;
 end;
 
-method Folder.CreateFolder(FailIfExists: Boolean := false);
+method Folder.Create(FailIfExists: Boolean := false);
 begin
   var lFile := JavaFile;
   if lFile.exists then begin
@@ -448,7 +448,7 @@ begin
   result := NSFileManager.defaultManager.fileExistsAtPath(self) isDirectory(var isDirectory) and isDirectory;
 end;
 
-method Folder.CreateFolder(FailIfExists: Boolean := false);
+method Folder.Create(FailIfExists: Boolean := false);
 begin
   var isDirectory := false;
   if NSFileManager.defaultManager.fileExistsAtPath(mapped) isDirectory(var isDirectory) then begin
