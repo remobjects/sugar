@@ -34,6 +34,11 @@ type
     method &Equals(Value: String): Boolean;
     method EqualsIgnoringCase(Value: String): Boolean;
     method EqualsIgnoringCaseInvariant(Value: String): Boolean;
+
+    class method &Equals(ValueA: String; ValueB: String): Boolean;
+    class method EqualsIgnoringCase(ValueA: String; ValueB: String): Boolean;
+    class method EqualsIgnoringCaseInvariant(ValueA: String; ValueB: String): Boolean;
+
     method Contains(Value: String): Boolean;
     method IndexOf(Value: String): Int32;
     method LastIndexOf(Value: String): Int32;
@@ -308,6 +313,27 @@ begin
   // RemObjects.Elements.System.length as workaround for issue in 8.3; not needed in 8.4
   exit mapped.compare(Value) options(NSStringCompareOptions.CaseInsensitiveSearch) range(NSMakeRange(0, RemObjects.Elements.System.length(self))) locale(Locale.Invariant) = 0;
   {$ENDIF}
+end;
+
+class method String.Equals(ValueA: String; ValueB: String): Boolean;
+begin
+  if ValueA = ValueB then exit true;
+  if (ValueA = nil) or (ValueB = nil) then exit false;
+  result := ValueA.Equals(ValueB);
+end;
+
+class method String.EqualsIgnoringCase(ValueA: String; ValueB: String): Boolean;
+begin
+  if ValueA = ValueB then exit true;
+  if (ValueA = nil) or (ValueB = nil) then exit false;
+  result := ValueA.EqualsIgnoringCase(ValueB);
+end;
+
+class method String.EqualsIgnoringCaseInvariant(ValueA: String; ValueB: String): Boolean;
+begin
+  if ValueA = ValueB then exit true;
+  if (ValueA = nil) or (ValueB = nil) then exit false;
+  result := ValueA.EqualsIgnoringCaseInvariant(ValueB);
 end;
 
 method String.Contains(Value: String): Boolean;

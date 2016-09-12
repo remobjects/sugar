@@ -31,6 +31,9 @@ type
     method Open(Mode: FileOpenMode): not nullable FileHandle;
     method Rename(NewName: not nullable String): not nullable File;
 
+    class method &Copy(FileName: not nullable File; NewPathAndName: not nullable File): not nullable File;
+    class method Move(FileName: not nullable File; NewPathAndName: not nullable File): not nullable File;
+    class method Rename(FileName: not nullable File; NewName: not nullable String): not nullable File;
     class method Exists(FileName: not nullable File): Boolean; inline;
     class method Delete(FileName: not nullable File); inline;
 
@@ -64,7 +67,7 @@ end;
 
 method File.&Copy(NewPathAndName: not nullable File): not nullable File;
 begin
-  exit self.&Copy(new Folder(Sugar.IO.Path.GetParentDirectory(NewPathAndName.FullPath)), Sugar.IO.Path.GetFileName(NewPathAndName.Name));
+  result := self.&Copy(new Folder(Sugar.IO.Path.GetParentDirectory(NewPathAndName.FullPath)), Sugar.IO.Path.GetFileName(NewPathAndName.Name));
 end;
 
 method File.&Copy(Destination: not nullable Folder; NewName: not nullable String): not nullable File;
@@ -96,6 +99,11 @@ begin
   {$ENDIF}
   result := lNewFile as not nullable;
   {$ENDIF}
+end;
+
+class method File.Copy(FileName: not nullable File; NewPathAndName: not nullable File): not nullable File;
+begin
+  result := FileName.Copy(NewPathAndName);
 end;
 
 method File.Delete;
@@ -152,7 +160,12 @@ end;
 
 method File.Move(DestinationFolder: not nullable Folder; NewName: not nullable String): not nullable File;
 begin
-  exit Move(new File(Sugar.IO.Path.Combine(DestinationFolder.FullPath, NewName)));
+  result := Move(new File(Sugar.IO.Path.Combine(DestinationFolder.FullPath, NewName)));
+end;
+
+class method File.Move(FileName: not nullable File; NewPathAndName: not nullable File): not nullable File;
+begin
+  result := FileName.Move(NewPathAndName);
 end;
 
 method File.Rename(NewName: not nullable String): not nullable File;
@@ -161,27 +174,32 @@ begin
   exit Move(lNewFile);
 end;
 
+class method File.Rename(FileName: not nullable File; NewName: not nullable String): not nullable File;
+begin
+  result := FileName.Rename(NewName);
+end;
+
 method File.Open(Mode: FileOpenMode): not nullable FileHandle;
 begin
   if not Exists then
     raise new SugarFileNotFoundException(FullPath);
 
-  exit FileHandle.FromFile(mapped, Mode) as not nullable;
+  result := FileHandle.FromFile(mapped, Mode) as not nullable;
 end;
 
 method File.ReadText(Encoding: Encoding := nil): String;
 begin
-  exit FileUtils.ReadText(self.FullPath, Encoding);
+  result := FileUtils.ReadText(self.FullPath, Encoding);
 end;
 
 method File.ReadBytes: array of Byte;
 begin
-  exit FileUtils.ReadBytes(self.FullPath);
+  result := FileUtils.ReadBytes(self.FullPath);
 end;
 
 method File.ReadBinary: Binary;
 begin
-  exit FileUtils.ReadBinary(self.FullPath);
+  result := FileUtils.ReadBinary(self.FullPath);
 end;
 
 method File.getDateCreated: DateTime;
