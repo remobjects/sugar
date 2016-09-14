@@ -17,7 +17,9 @@ type
     constructor(Value: array of Char; Offset: Integer; Count: Integer);
     constructor(aChar: Char; aCount: Integer);
 
-    class operator Add(Value1: String; Value2: String): not nullable String;
+    class operator &Add(Value1: String; Value2: String): not nullable String;
+    class operator &Add(Value1: String; Value2: Object): not nullable String;
+    class operator &Add(Value1: Object; Value2: String): not nullable String;
     class operator Implicit(Value: Char): String;
     class operator Greater(Value1, Value2: String): Boolean;
     class operator Less(Value1, Value2: String): Boolean;
@@ -149,6 +151,16 @@ begin
   {$ELSEIF TOFFEE}
   result := (NSString(Value1) + NSString(Value2)) as not nullable;
   {$ENDIF}
+end;
+
+class operator String.Add(Value1: String; Value2: Object): not nullable String;
+begin
+  result := Value1 + Value2.ToString;
+end;
+
+class operator String.Add(Value1: Object; Value2: String): not nullable String;
+begin
+  result := Value1.ToString + Value2;
 end;
 
 class operator String.Implicit(Value: Char): String;
