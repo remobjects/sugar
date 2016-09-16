@@ -777,7 +777,7 @@ begin
     result := false
   else begin
     if IgnoreCase then
-      result := (mapped.compare(Value) options(NSStringCompareOptions.NSCaseInsensitiveSearch) range(NSMakeRange(0, Value.length)) = NSComparisonResult.NSOrderedSame);
+      result := (mapped.compare(Value) options(NSStringCompareOptions.NSCaseInsensitiveSearch) range(NSMakeRange(0, Value.length)) = NSComparisonResult.NSOrderedSame)
     else
       result := mapped.hasPrefix(Value);   
   end;
