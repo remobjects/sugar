@@ -3,7 +3,7 @@
 interface
 
 type
-  PlatformString = {$IF ECHOES}System.String{$ELSEIF TOFFEE}Foundation.NSString{$ELSEIF COOPER}java.lang.String{$ELSEIF ISLAND}RemObjects.Elements.System.String{$ENDIF};
+  PlatformString = public {$IF ECHOES}System.String{$ELSEIF TOFFEE}Foundation.NSString{$ELSEIF COOPER}java.lang.String{$ELSEIF ISLAND}RemObjects.Elements.System.String{$ENDIF};
 
   [assembly:DefaultStringType("Sugar", typeOf(Sugar.String))]
 
@@ -174,12 +174,12 @@ end;
 
 class operator String.Add(Value1: String; Value2: Object): not nullable String;
 begin
-  result := Value1 + Value2.ToString;
+  result := (Value1 + coalesce(Value1, "").ToString) as not nullable;
 end;
 
 class operator String.Add(Value1: Object; Value2: String): not nullable String;
 begin
-  result := Value1.ToString + Value2;
+  result := (coalesce(Value1, "").ToString + Value2) as not nullable;
 end;
 
 class operator String.Implicit(Value: Char): String;
