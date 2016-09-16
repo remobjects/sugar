@@ -98,6 +98,7 @@
     <Compile Include="Collections\List.pas" />
     <Compile Include="Collections\Queue.pas" />
     <Compile Include="Collections\Stack.pas" />
+    <Compile Include="Collections\LINQ.pas"/>
     <Compile Include="Color.pas" />
     <None Include="Cryptography\Cipher.pas" />
     <Compile Include="Cryptography\MessageDigest.pas" />
