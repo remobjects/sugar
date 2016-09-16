@@ -156,8 +156,7 @@ begin
     var lBuffer := IntPtr.Zero;
     try
       lBuffer := System.Runtime.InteropServices.Marshal.AllocHGlobal(8192);
-      // This is a hacktastic way of getting sysname from uname ()
-      if uname(lBuffer) ≠ 0 then
+      if uname(lBuffer) = 0 then
         unameResult := System.Runtime.InteropServices.Marshal.PtrToStringAnsi(lBuffer);
     except
     finally
