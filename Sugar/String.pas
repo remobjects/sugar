@@ -32,6 +32,7 @@ type
     class method CharacterIsWhiteSpace(Value: Char): Boolean;
     class method IsNullOrEmpty(Value: String): Boolean;
     class method IsNullOrWhiteSpace(Value: String): Boolean;
+    class method &Join(Separator: String; Values: array of String): String; 
 
     method CompareTo(Value: String): Integer;
     method CompareToIgnoreCase(Value: String): Integer;
@@ -44,12 +45,24 @@ type
     class method EqualsIgnoringCaseInvariant(ValueA: String; ValueB: String): Boolean;
 
     method Contains(Value: String): Boolean;
-    method IndexOf(Value: String): Int32;
+    method IndexOf(Value: Char): Int32; inline;
+    method IndexOf(Value: String): Int32; inline;
+    method IndexOf(Value: Char; StartIndex: Integer): Integer; 
+    method IndexOf(Value: String; StartIndex: Integer): Integer; 
+    method IndexOfAny(const AnyOf: array of Char): Integer; 
+    method IndexOfAny(const AnyOf: array of Char; StartIndex: Integer): Integer;     
+    method LastIndexOf(Value: Char): Integer;
     method LastIndexOf(Value: String): Int32;
+    method LastIndexOf(Value: Char; StartIndex: Integer): Integer; 
+    method LastIndexOf(const Value: String; StartIndex: Integer): Integer; 
     method Substring(StartIndex: Int32): not nullable String;
     method Substring(StartIndex: Int32; aLength: Int32): not nullable String;
     method Split(Separator: String): array of String;
     method Replace(OldValue, NewValue: String): not nullable String;
+    method PadStart(TotalWidth: Integer): String; inline; 
+    method PadStart(TotalWidth: Integer; PaddingChar: Char): String; 
+    method PadEnd(TotalWidth: Integer): String; inline; 
+    method PadEnd(TotalWidth: Integer; PaddingChar: Char): String;     
     method ToLower: not nullable String;
     method ToLowerInvariant: not nullable String;
     method ToLower(aLocale: Locale): not nullable String;
@@ -57,9 +70,15 @@ type
     method ToUpperInvariant: not nullable String;
     method ToUpper(aLocale: Locale): not nullable String;
     method Trim: not nullable String;
-    //method Trim(aCharacters: array of Char): not nullable String;
-    method StartsWith(Value: String): Boolean;
-    method EndsWith(Value: String): Boolean;
+    method TrimEnd: not nullable String; inline; 
+    method TrimStart: not nullable String; inline; 
+    method Trim(const TrimChars: array of Char): not nullable String; 
+    method TrimEnd(const TrimChars: array of Char): not nullable String; 
+    method TrimStart(const TrimChars: array of Char): not nullable String; 
+    method StartsWith(Value: String): Boolean; inline;
+    method StartsWith(Value: String; IgnoreCase: Boolean): Boolean; 
+    method EndsWith(Value: String): Boolean; inline;
+    method EndsWith(Value: String; IgnoreCase: Boolean): Boolean; 
     method ToByteArray: array of Byte;
     method ToByteArray(aEncoding: {not nullable} Encoding): array of Byte;
     method ToCharArray: array of Char;
@@ -362,7 +381,26 @@ begin
   {$ENDIF}
 end;
 
+method String.IndexOf(Value: Char): Int32;
+begin
+  result := IndexOf(Value, 0);
+end;
+
 method String.IndexOf(Value: String): Int32;
+begin
+  result := IndexOf(Value, 0);
+end;
+
+method String.IndexOf(Value: Char; StartIndex: Integer): Integer;
+begin
+  {$IF COOPER OR ECHOES}
+  result := mapped.indexOf(Value, StartIndex);
+  {$ELSEIF TOFFEE}
+  result := IndexOf(NSString(Value), StartIndex);
+  {$ENDIF}
+end;
+
+method String.IndexOf(Value: String; StartIndex: Integer): Integer;
 begin
   if Value = nil then
     raise new SugarArgumentNullException("Value");
@@ -371,10 +409,47 @@ begin
     exit 0;
 
   {$IF COOPER OR ECHOES}
-  exit mapped.IndexOf(Value);
+  result := mapped.indexOf(Value, StartIndex);
   {$ELSEIF TOFFEE}
-  var r := mapped.rangeOfString(Value);
-  exit if (r.location = NSNotFound) and (r.length = 0) then -1 else Int32(r.location);
+  var r := mapped.rangeOfString(Value) options(NSStringCompareOptions.NSLiteralSearch) range(NSMakeRange(StartIndex, mapped.length - StartIndex));
+  result := if r.location = NSNotFound then -1 else r.location;
+  {$ENDIF}
+end;
+
+method String.IndexOfAny(const AnyOf: array of Char): Integer; 
+begin
+  {$IF COOPER OR TOFFEE}
+  result := IndexOfAny(AnyOf, 0);
+  {$ELSEIF ECHOES}
+  result := mapped.IndexOfAny(AnyOf);
+  {$ENDIF}
+end;
+
+method String.IndexOfAny(const AnyOf: array of Char; StartIndex: Integer): Integer; 
+begin
+  {$IF COOPER}
+  for i: Integer := StartIndex to mapped.length - 1 do begin
+     for each c: Char in AnyOf do begin
+       if mapped.charAt(i) = c then
+         exit i;
+     end;
+  end;
+  result := -1;
+  {$ELSEIF ECHOES}
+  result := mapped.IndexOfAny(AnyOf, StartIndex);
+  {$ELSEIF TOFFEE}
+  var lChars := NSCharacterSet.characterSetWithCharactersInString(new Foundation.NSString withCharacters(AnyOf) length(AnyOf.length));
+  var r := mapped.rangeOfCharacterFromSet(lChars) options(NSStringCompareOptions.NSLiteralSearch) range(NSMakeRange(StartIndex, mapped.length - StartIndex));
+  result := if r.location = NSNotFound then -1 else r.location;
+  {$ENDIF}
+end;
+
+method String.LastIndexOf(Value: Char): Integer;
+begin
+  {$IF COOPER OR ECHOES}
+  result := mapped.lastIndexOf(Value);
+  {$ELSEIF TOFFEE}
+  result := LastIndexOf(NSString(Value));
   {$ENDIF}
 end;
 
@@ -394,8 +469,30 @@ begin
   {$ENDIF}
 end;
 
+method String.LastIndexOf(Value: Char; StartIndex: Integer): Integer;
+begin
+  {$IF COOPER OR ECHOES}
+  result := mapped.lastIndexOf(Value, StartIndex);
+  {$ELSEIF TOFFEE}
+  result := LastIndexOf(NSString(Value), StartIndex);
+  {$ENDIF}
+end;
+
+method String.LastIndexOf(const Value: String; StartIndex: Integer): Integer;
+begin
+  {$IF COOPER OR ECHOES}
+  result := mapped.lastIndexOf(Value, StartIndex);
+  {$ELSEIF TOFFEE}
+  var r:= mapped.rangeOfString(Value) options(NSStringCompareOptions.NSLiteralSearch or NSStringCompareOptions.NSBackwardsSearch) range(NSMakeRange(StartIndex, StartIndex + 1));
+  exit if (r.location = NSNotFound) and (r.length = 0) then -1 else Int32(r.location);  
+  {$ENDIF}  
+end;
+
 method String.Substring(StartIndex: Int32): not nullable String;
 begin
+  if (StartIndex < 0) then
+    raise new SugarArgumentOutOfRangeException(ErrorMessage.NEGATIVE_VALUE_ERROR, "StartIndex");
+
   {$IF COOPER OR ECHOES}
   exit mapped.Substring(StartIndex) as not nullable;
   {$ELSEIF TOFFEE}
@@ -445,6 +542,57 @@ begin
   exit mapped.Replace(OldValue, NewValue) as not nullable;
   {$ELSEIF TOFFEE}
   exit mapped.stringByReplacingOccurrencesOfString(OldValue) withString(NewValue);
+  {$ENDIF}
+end;
+
+{$IF COOPER}
+function StringOfChar(Value: Char; Count: Integer): String;
+begin
+  var sb := new StringBuilder(Count);
+  for i: Integer := 0 to Count - 1 do
+    sb.append(Value);
+  
+  result := sb.toString;
+end;
+{$ENDIF}
+
+method String.PadStart(TotalWidth: Integer): String;
+begin
+  result := PadStart(TotalWidth, ' ');
+end;
+
+method String.PadStart(TotalWidth: Integer; PaddingChar: Char): String;
+begin
+  {$IF COOPER}
+  var lTotal := TotalWidth - mapped.length;
+  if lTotal < 0 then
+    result := self
+  else
+    result := StringOfChar(PaddingChar, lTotal) + self;
+  {$ELSEIF ECHOES}
+  result := mapped.PadLeft(TotalWidth, PaddingChar);
+  {$ELSEIF TOFFEE}
+  result := mapped.stringByPaddingToLength(TotalWidth) withString(PaddingChar) startingAtIndex(0);
+  {$ENDIF}
+end;
+
+method String.PadEnd(TotalWidth: Integer): String;
+begin
+  result := PadEnd(TotalWidth, ' ');
+end;
+
+method String.PadEnd(TotalWidth: Integer; PaddingChar: Char): String;
+begin
+  {$IF COOPER}
+  var lTotal := TotalWidth - mapped.length;
+  if lTotal < 0 then
+    result := self
+  else
+    result := self + StringOfChar(PaddingChar, lTotal);
+  {$ELSEIF ECHOES}
+   result := mapped.PadRight(TotalWidth, PaddingChar);
+  {$ELSEIF TOFFEE}
+  result := mapped.stringByPaddingToLength(TotalWidth) withString(PaddingChar) startingAtIndex(mapped.length);
   {$ENDIF}
 end;
 
@@ -533,41 +681,138 @@ begin
   {$ENDIF}
 end;
 
-(*method String.Trim(aCharacters: array of Char): not nullable String;
+method String.TrimEnd: not nullable String;
+begin
+  result := TrimEnd([' ']);
+end;
+
+method String.TrimStart: not nullable String;
+begin
+  result := TrimStart([' ']);
+end;
+
+method String.Trim(const TrimChars: array of Char): not nullable String;
 begin
   {$IF COOPER}
-  result := mapped.trim(aCharacters) as not nullable;
+  var lStr := TrimStart(TrimChars);
+  result := lStr.TrimEnd(TrimChars);
   {$ELSEIF ECHOES}
-  result := mapped.Trim(aCharacters) as not nullable;
+  result := mapped.Trim(TrimChars) as not nullable;
   {$ELSEIF TOFFEE}
-  var lCharacterString := '';
-  for each c in aCharacters do
-    lCharacterString := lCharacterString+c;
-  result := mapped.stringByTrimmingCharactersInSet(NSCharacterSet.characterSetWithCharactersInString(lCharacterString));
+  result := mapped.stringByTrimmingCharactersInSet(NSCharacterSet.characterSetWithCharactersInString(new Foundation.NSString withCharacters(TrimChars) length(TrimChars.length)));
   {$ENDIF}
-end;*)
+end;
+
+{$IF COOPER}
+function CharIsAnyOf(Value: Char; AnyOf: array of Char): Boolean;
+begin
+  for each c: Char in AnyOf do
+    if c = Value then
+      exit true;
+
+  result := false;
+end;
+{$ENDIF}
+
+method String.TrimEnd(const TrimChars: array of Char): not nullable String;
+begin
+  {$IF COOPER}
+  if (self = nil) or (mapped.length = 0) then
+    exit self;
+  var i: Integer := mapped.length - 1;
+  while (i >= 0) and CharIsAnyOf(mapped.charAt(i), TrimChars) do
+    dec(i);
+
+  result := mapped.substring(0, i) as not nullable;
+  {$ELSEIF ECHOES}
+  result := mapped.TrimEnd(TrimChars) as not nullable;
+  {$ELSEIF TOFFEE}
+  var lCharacters := NSCharacterSet.characterSetWithCharactersInString(new Foundation.NSString withCharacters(TrimChars) length(TrimChars.length));
+  var lLastWanted := mapped.rangeOfCharacterFromSet(lCharacters.invertedSet) options(NSStringCompareOptions.NSBackwardsSearch);                                                               
+  result := if lLastWanted.location = NSNotFound then self else mapped.substringToIndex(lLastWanted.location + 1) as not nullable;
+  {$ENDIF}
+end;
+
+method String.TrimStart(const TrimChars: array of Char): not nullable String;
+begin
+  {$IF COOPER}
+  if (self = nil) or (mapped.length = 0) then
+    exit self;
+  var i: Integer := 0;
+  while (i <= mapped.length) and CharIsAnyOf(mapped.charAt(i), TrimChars) do
+    inc(i);
+
+  result := mapped.substring(i) as not nullable;
+  {$ELSEIF ECHOES}
+  result := mapped.TrimStart(TrimChars) as not nullable;
+  {$ELSEIF TOFFEE}
+  var lCharacters := NSCharacterSet.characterSetWithCharactersInString(new Foundation.NSString withCharacters(TrimChars) length(TrimChars.length));
+  var lFirstWanted := mapped.rangeOfCharacterFromSet(lCharacters.invertedSet);  
+  result := if lFirstWanted.location = NSNotFound then self else mapped.substringFromIndex(lFirstWanted.location);
+  {$ENDIF}
+end;
 
 method String.StartsWith(Value: String): Boolean;
 begin
-  if Value.Length = 0 then
+  result := StartsWith(Value, False);
+end;
+
+method String.StartsWith(Value: String; IgnoreCase: Boolean): Boolean;
+begin
+   if Value.Length = 0 then
     exit true;
 
-  {$IF COOPER OR ECHOES}
-  exit mapped.StartsWith(Value);
+  {$IF COOPER}
+  if IgnoreCase then
+    result := mapped.regionMatches(IgnoreCase, 0, Value, 0, mapped.length)
+  else
+    result := mapped.StartsWith(Value);  
+  {$ELSEIF ECHOES}
+  if IgnoreCase then
+    result := mapped.StartsWith(Value, StringComparison.OrdinalIgnoreCase)
+  else 
+    result := mapped.StartsWith(Value);
   {$ELSEIF TOFFEE}
-  exit mapped.hasPrefix(Value);
+  if Value.Length > mapped.length then
+    result := false
+  else begin
+    if IgnoreCase then
+      result := (mapped.compare(Value) options(NSStringCompareOptions.NSCaseInsensitiveSearch) range(NSMakeRange(0, Value.length)) = NSComparisonResult.NSOrderedSame);
+    else
+      result := mapped.hasPrefix(Value);   
+  end;
   {$ENDIF}
 end;
 
 method String.EndsWith(Value: String): Boolean;
 begin
+  result := EndsWith(Value, False);
+end;
+
+method String.EndsWith(Value: String; IgnoreCase: Boolean): Boolean;
+begin
   if Value.Length = 0 then
     exit true;
 
-  {$IF COOPER OR ECHOES}
-  exit mapped.EndsWith(Value);
+  {$IF COOPER}
+  if IgnoreCase then
+    result := mapped.toUpperCase.endsWith(PlatformString(Value).toUpperCase)
+  else
+    result := mapped.endsWith(Value);
+  {$ELSEIF ECHOES}
+  if IgnoreCase then
+    result := mapped.EndsWith(Value, StringComparison.OrdinalIgnoreCase)
+  else
+    result := mapped.EndsWith(Value);
   {$ELSEIF TOFFEE}
-  exit mapped.hasSuffix(Value);
+  if Value.Length > mapped.length then
+    result := false
+  else begin
+    if IgnoreCase then 
+      result := (mapped.compare(Value) options(NSStringCompareOptions.NSCaseInsensitiveSearch) range(NSMakeRange(mapped.length - Value.length + 1, mapped.length - 1)) = NSComparisonResult.NSOrderedSame)
+    else
+      result := mapped.hasSuffix(Value);
+  end;
   {$ENDIF}
 end;
 
@@ -598,6 +843,27 @@ end;
 method String.ToByteArray(aEncoding: {not nullable} Encoding): array of Byte;
 begin
   result := aEncoding.GetBytes(self);
+end;
+
+class method String.Join(Separator: String; Values: array of String): String;
+begin
+  {$IF COOPER}
+  var sb := new StringBuilder;
+  for i: Integer := 0 to Values.length - 1 do begin
+     if i <> 0 then
+      sb.append(Separator);
+    sb.append(Values[i]);
+  end;
+  result := sb.toString;
+  {$ELSEIF ECHOES}
+  result := System.String.Join(Separator, Values);
+  {$ELSEIF TOFFEE}
+  var lArray := new NSMutableArray(Values.length);
+  for i: Integer := 0 to Values.length - 1 do
+    lArray.addObject(Values[i]);
+
+  result := lArray.componentsJoinedByString(Separator);
+  {$ENDIF}
 end;
 
 end.
