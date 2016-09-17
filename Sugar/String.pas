@@ -396,7 +396,7 @@ begin
   {$IF COOPER OR ECHOES}
   result := mapped.indexOf(Value, StartIndex);
   {$ELSEIF TOFFEE}
-  result := IndexOf(NSString(Value), StartIndex);
+  result := IndexOf(Value.description, StartIndex);
   {$ENDIF}
 end;
 
@@ -449,7 +449,7 @@ begin
   {$IF COOPER OR ECHOES}
   result := mapped.lastIndexOf(Value);
   {$ELSEIF TOFFEE}
-  result := LastIndexOf(NSString(Value));
+  result := LastIndexOf(Value.description);
   {$ENDIF}
 end;
 
@@ -474,7 +474,7 @@ begin
   {$IF COOPER OR ECHOES}
   result := mapped.lastIndexOf(Value, StartIndex);
   {$ELSEIF TOFFEE}
-  result := LastIndexOf(NSString(Value), StartIndex);
+  result := LastIndexOf(Value.description), StartIndex);
   {$ENDIF}
 end;
 
