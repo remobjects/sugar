@@ -474,7 +474,7 @@ begin
   {$IF COOPER OR ECHOES}
   result := mapped.lastIndexOf(Value, StartIndex);
   {$ELSEIF TOFFEE}
-  result := LastIndexOf(Value.description), StartIndex);
+  result := LastIndexOf(Value.description, StartIndex);
   {$ENDIF}
 end;
 
@@ -483,7 +483,7 @@ begin
   {$IF COOPER OR ECHOES}
   result := mapped.lastIndexOf(Value, StartIndex);
   {$ELSEIF TOFFEE}
-  var r:= mapped.rangeOfString(Value) options(NSStringCompareOptions.NSLiteralSearch or NSStringCompareOptions.NSBackwardsSearch) range(NSMakeRange(StartIndex, StartIndex + 1));
+  var r:= mapped.rangeOfString(Value) options(NSStringCompareOptions.NSLiteralSearch or NSStringCompareOptions.NSBackwardsSearch) range(NSMakeRange(StartIndex, mapped.length - StartIndex));
   exit if (r.location = NSNotFound) and (r.length = 0) then -1 else Int32(r.location);  
   {$ENDIF}  
 end;
