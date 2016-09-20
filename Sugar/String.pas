@@ -590,9 +590,9 @@ begin
   else
     result := self + StringOfChar(PaddingChar, lTotal);
   {$ELSEIF ECHOES}
-   result := mapped.PadRight(TotalWidth, PaddingChar);
+  result := mapped.PadRight(TotalWidth, PaddingChar);
   {$ELSEIF TOFFEE}
-  result := mapped.stringByPaddingToLength(TotalWidth) withString(PaddingChar) startingAtIndex(mapped.length);
+  result := mapped.stringByPaddingToLength(TotalWidth) withString(PaddingChar) startingAtIndex(0);
   {$ENDIF}
 end;
 
