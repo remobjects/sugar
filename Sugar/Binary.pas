@@ -217,9 +217,9 @@ end;
 operator Binary.Implicit(aData: NSData): Binary;
 begin
   if aData is NSMutableData then
-    result := Binary(aData)
+    result := aData as NSMutableData
   else
-    result := Binary(aData:mutableCopy);
+    result := aData:mutableCopy;
 end;
 {$ENDIF}
 
