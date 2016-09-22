@@ -474,7 +474,7 @@ begin
   {$IF COOPER OR ECHOES}
   result := mapped.lastIndexOf(Value, StartIndex);
   {$ELSEIF TOFFEE}
-  result := LastIndexOf(Value.description, StartIndex);
+  result := LastIndexOf(String(Value.description), StartIndex);
   {$ENDIF}
 end;
 
@@ -483,7 +483,6 @@ begin
   {$IF COOPER OR ECHOES}
   result := mapped.lastIndexOf(Value, StartIndex);
   {$ELSEIF TOFFEE}
-  var r:= mapped.rangeOfString(Value) options(NSStringCompareOptions.NSLiteralSearch or NSStringCompareOptions.NSBackwardsSearch) range(NSMakeRange(StartIndex, mapped.length - StartIndex));
   exit if (r.location = NSNotFound) and (r.length = 0) then -1 else Int32(r.location);  
   {$ENDIF}  
 end;
@@ -572,7 +571,14 @@ begin
   {$ELSEIF ECHOES}
   result := mapped.PadLeft(TotalWidth, PaddingChar);
   {$ELSEIF TOFFEE}
-  result := mapped.stringByPaddingToLength(TotalWidth) withString(PaddingChar) startingAtIndex(0);
+  var lTotal: Integer := TotalWidth - mapped.length;
+  if lTotal > 0 then begin
+    var lChars := NSString.stringWithFormat("%c", PaddingChar);
+    lChars := lChars.stringByPaddingToLength(lTotal) withString(PaddingChar) startingAtIndex(0);
+    result := lChars + self;
+  end
+  else
+    result := self;
   {$ENDIF}
 end;
 
@@ -808,8 +814,8 @@ begin
   if Value.Length > mapped.length then
     result := false
   else begin
-    if IgnoreCase then 
-      result := (mapped.compare(Value) options(NSStringCompareOptions.NSCaseInsensitiveSearch) range(NSMakeRange(mapped.length - Value.length + 1, mapped.length - 1)) = NSComparisonResult.NSOrderedSame)
+    if IgnoreCase then
+      result := (mapped.compare(Value) options(NSStringCompareOptions.NSCaseInsensitiveSearch) range(NSMakeRange(mapped.length - Value.length, value.length)) = NSComparisonResult.NSOrderedSame)
     else
       result := mapped.hasSuffix(Value);
   end;
