@@ -396,7 +396,7 @@ begin
   {$IF COOPER OR ECHOES}
   result := mapped.indexOf(Value, StartIndex);
   {$ELSEIF TOFFEE}
-  result := IndexOf(Value.description, StartIndex);
+  result := IndexOf(NSString.stringWithFormat("%c", Char), StartIndex);
   {$ENDIF}
 end;
 
@@ -449,7 +449,7 @@ begin
   {$IF COOPER OR ECHOES}
   result := mapped.lastIndexOf(Value);
   {$ELSEIF TOFFEE}
-  result := LastIndexOf(Value.description);
+  result := LastIndexOf(NSString.stringWithFormat("%c", Char));
   {$ENDIF}
 end;
 
@@ -474,7 +474,7 @@ begin
   {$IF COOPER OR ECHOES}
   result := mapped.lastIndexOf(Value, StartIndex);
   {$ELSEIF TOFFEE}
-  result := LastIndexOf(String(Value.description), StartIndex);
+  result := LastIndexOf(NSString.stringWithFormat("%c", Char), StartIndex);
   {$ENDIF}
 end;
 
@@ -483,6 +483,7 @@ begin
   {$IF COOPER OR ECHOES}
   result := mapped.lastIndexOf(Value, StartIndex);
   {$ELSEIF TOFFEE}
+  var r:= mapped.rangeOfString(Value) options(NSStringCompareOptions.NSLiteralSearch or NSStringCompareOptions.NSBackwardsSearch) range(NSMakeRange(StartIndex, mapped.length - StartIndex));
   exit if (r.location = NSNotFound) and (r.length = 0) then -1 else Int32(r.location);  
   {$ENDIF}  
 end;
