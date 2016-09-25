@@ -79,7 +79,6 @@ type
     method GetContentAsJson(contentCallback: not nullable HttpContentResponseBlock<JsonDocument>);
     method SaveContentAsFile(aTargetFile: File; contentCallback: not nullable HttpContentResponseBlock<File>);
 
-  unit
     {$IF NOT ECHOES OR (NOT WINDOWS_PHONE AND NOT NETFX_CORE)}
     method GetContentAsStringSynchronous(aEncoding: Encoding := nil): not nullable String;
     method GetContentAsBinarySynchronous: not nullable Binary;
