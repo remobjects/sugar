@@ -174,7 +174,7 @@ end;
 
 class operator String.Add(Value1: String; Value2: Object): not nullable String;
 begin
-  result := (Value1 + coalesce(Value1, "").ToString) as not nullable;
+  result := (Value1 + coalesce(Value2, "").ToString) as not nullable;
 end;
 
 class operator String.Add(Value1: Object; Value2: String): not nullable String;
