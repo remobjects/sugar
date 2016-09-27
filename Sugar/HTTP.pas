@@ -578,9 +578,9 @@ begin
     lConnection.getOutputStream().flush();
   end;
   
-  if lConnection.ResponseCode >= 300 then
-    raise new SugarIOException("Unable to complete request. Error code: {0}", lConnection.responseCode);
   result := new HttpResponse(lConnection);
+  if lConnection.ResponseCode >= 300 then
+    raise new HttpException(String.Format("Unable to complete request. Error code: {0}", lConnection.responseCode), result;
   {$ELSEIF ECHOES}
   using webRequest := System.Net.WebRequest.Create(aRequest.Url) as HttpWebRequest do begin
     {$IF NOT NETFX_CORE}
@@ -679,13 +679,21 @@ begin
   var nsHttpUrlResponse := NSHTTPURLResponse(nsUrlResponse);
   if assigned(data) and assigned(nsHttpUrlResponse) and not assigned(error) then begin
     if nsHttpUrlResponse.statusCode >= 300 then
-      raise new SugarIOException("Unable to complete request. Error code: {0}", nsHttpUrlResponse.statusCode);
+      raise new HttpException(String.Format("Unable to complete request. Error code: {0}", nsHttpUrlResponse.statusCode), nsHttpUrlResponse);
     result := new HttpResponse(data, nsHttpUrlResponse);
   end
-  else if assigned(error) then
-    raise new SugarException withError(error)
-  else
-    raise new SugarException("Request failed without providing an error.");
+  else if assigned(error) then begin
+    if assigned(nsHttpUrlResponse) then
+      raise new HttpException(error.description, nsHttpUrlResponse)
+    else
+      raise new SugarException withError(error)
+  end
+  else begin
+    if assigned(nsHttpUrlResponse) then
+      raise new HttpException(String.Format("Request failed without providing an error. Error code: {0}", nsHttpUrlResponse.statusCode), nsHttpUrlResponse)
+    else
+      raise new SugarException("Request failed without providing an error.");
+  end;
   {$ENDIF}
 end;
 {$ENDIF}
