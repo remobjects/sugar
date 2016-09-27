@@ -608,11 +608,17 @@ begin
       end;
     end;
 
-    var webResponse := webRequest.GetResponse() as HttpWebResponse;
+    try
+      var webResponse := webRequest.GetResponse() as HttpWebResponse;
+      result := new HttpResponse(webResponse);
+      if webResponse.StatusCode >= 300 then
+        raise new HttpException(String.Format("Unable to complete request. Error code: {0}", webResponse.StatusCode), result);
+    except
+      on E: System.Net.WebException do begin
+        raise new HttpException(E.Message, new HttpResponse(E.Response as HttpWebResponse));
+      end;
+    end;
 
-    if webResponse.StatusCode >= 300 then
-      raise new SugarIOException("Unable to complete request. Error code: {0}", webResponse.StatusCode);
-    result := new HttpResponse(webResponse);
   end;
   {$ELSEIF TOFFEE}
   var nsUrlRequest := new NSMutableURLRequest withURL(aRequest.Url) cachePolicy(NSURLRequestCachePolicy.ReloadIgnoringLocalAndRemoteCacheData) timeoutInterval(30);

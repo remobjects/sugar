@@ -32,6 +32,18 @@ type
 
   SugarIOException = public class(SugarException);
 
+  HttpException = public class(SugarException)
+  assembly
+    constructor(aMessage: String; aResponse: HttpResponse);
+    begin
+      inherited constructor(aMessage);
+      Response := aResponse;
+    end;
+  public
+    property Response: HttpResponse; readonly;
+   
+  end;
+  
   SugarFileNotFoundException = public class (SugarException)
   public
     property FileName: String read write; readonly;
