@@ -580,7 +580,7 @@ begin
   
   result := new HttpResponse(lConnection);
   if lConnection.ResponseCode >= 300 then
-    raise new HttpException(String.Format("Unable to complete request. Error code: {0}", lConnection.responseCode), result;
+    raise new HttpException(String.Format("Unable to complete request. Error code: {0}", lConnection.responseCode), result);
   {$ELSEIF ECHOES}
   using webRequest := System.Net.WebRequest.Create(aRequest.Url) as HttpWebRequest do begin
     {$IF NOT NETFX_CORE}
