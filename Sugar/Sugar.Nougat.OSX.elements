@@ -16,6 +16,7 @@
         <CreateHeaderFile>False</CreateHeaderFile>
         <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
         <CrossPlatform>True</CrossPlatform>
+        <MangleTypeNames>True</MangleTypeNames>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
         <Optimize>False</Optimize>
