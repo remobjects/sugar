@@ -15,6 +15,7 @@ type
     method GetItem(Key: T): U;
     method SetItem(Key: T; Value: U);
     constructor; mapped to constructor();
+    constructor(aCapacity: Integer);
     {$IFNDEF ECHOES}
     method GetSequence: sequence of KeyValuePair<T,U>;
     {$ENDIF}
@@ -54,6 +55,17 @@ type
   
 
 implementation
+
+constructor Dictionary<T,U>(aCapacity: Integer);
+begin
+  {$IF COOPER}
+  result := new java.util.HashMap<T,U>(aCapacity);
+  {$ELSEIF ECHOES}
+  result := new System.Collections.Generic.Dictionary<T,U>(aCapacity); 
+  {$ELSEIF TOFFEE}
+  result := new Foundation.NSMutableDictionary withCapacity(aCapacity);
+  {$ENDIF}
+end;
 
 method Dictionary<T, U>.Add(Key: T; Value: U);
 begin
