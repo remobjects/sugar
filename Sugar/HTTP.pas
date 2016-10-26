@@ -234,10 +234,10 @@ begin
   Code := Int32(aResponse.StatusCode);
   Headers := new Dictionary<String,String>();
   {$IF WINDOWS_PHONE OR NETFX_CORE}
-  for each k: String in aResponse.Headers.AllKeys do
+  for each k: String in aResponse.Headers:AllKeys do
     Headers[k.ToString] := aResponse.Headers[k];
   {$ELSE}
-  for each k: String in aResponse.Headers.Keys do
+  for each k: String in aResponse.Headers:Keys do
     Headers[k.ToString] := aResponse.Headers[k];
   {$ENDIF}
 end;
@@ -615,7 +615,10 @@ begin
         raise new HttpException(String.Format("Unable to complete request. Error code: {0}", webResponse.StatusCode), result);
     except
       on E: System.Net.WebException do begin
-        raise new HttpException(E.Message, new HttpResponse(E.Response as HttpWebResponse));
+        if E.Response is HttpWebResponse then
+          raise new HttpException(E.Message, new HttpResponse(E.Response as HttpWebResponse))
+        else
+          raise new HttpException(E.Message);
       end;
     end;
 
