@@ -867,7 +867,7 @@ begin
   {$ELSEIF ECHOES}
   result := System.String.Join(Separator, Values);
   {$ELSEIF TOFFEE}
-  var lArray := new NSMutableArray(Values.length);
+  var lArray := new NSMutableArray withCapacity(Values.length);
   for i: Integer := 0 to Values.length - 1 do
     lArray.addObject(Values[i]);
 
