@@ -95,7 +95,7 @@ begin
   exit mapped;
   {$ELSEIF ECHOES OR ISLAND}
   if assigned(Value) then
-    mapped.AppendLine(Value);
+    mapped.AppendLine(Value)
   else
     mapped.AppendLine();
   exit mapped
