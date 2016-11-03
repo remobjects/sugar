@@ -88,17 +88,20 @@ end;
 
 method StringBuilder.AppendLine(Value: String): StringBuilder;
 begin
-  if Value = nil then
-    exit;
-
   {$IF COOPER}
-  mapped.append(Value);
+  if assigned(Value) then
+    mapped.append(Value);
   mapped.append(Environment.NewLine);
   exit mapped;
-  {$ELSEIF ECHOES}
-  exit mapped.AppendLine(Value);
+  {$ELSEIF ECHOES OR ISLAND}
+  if assigned(Value) then
+    mapped.AppendLine(Value);
+  else
+    mapped.AppendLine();
+  exit mapped
   {$ELSEIF TOFFEE}
-  mapped.appendString(Value);
+  if assigned(Value) then
+    mapped.appendString(Value);
   mapped.appendString(Environment.NewLine);
   exit mapped;
   {$ENDIF}
