@@ -152,7 +152,7 @@ begin
   {$IF COOPER}
   if aLocale = nil then aLocale := Locale.Current;
   var DecFormat := java.text.DecimalFormat(java.text.DecimalFormat.getInstance(aLocale));
-  var FloatPattern := if aDigitsAfterDecimalPoint < 0 then "#.###############" else if aDigitsAfterDecimalPoint = 0 then "#" else "#."+new String('0', aDigitsAfterDecimalPoint);
+  var FloatPattern := if aDigitsAfterDecimalPoint < 0 then "#.###############" else if aDigitsAfterDecimalPoint = 0 then "0" else "0."+new String('0', aDigitsAfterDecimalPoint);
   DecFormat.applyPattern(FloatPattern);
   result := DecFormat.format(aValue) as not nullable;
   {$ELSEIF ECHOES}
