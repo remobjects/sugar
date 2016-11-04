@@ -6,7 +6,9 @@ type
   Convert = public static class 
   private
     {$IF TOFFEE}
-    method ParseNumber(aValue: not nullable String; aLocale: Locale := nil): NSNumber;
+    method TryParseNumber(aValue: not nullable String; aLocale: Locale := nil): NSNumber;
+    method TryParseInt32(aValue: not nullable String): nullable Int32;  
+    method TryParseInt64(aValue: not nullable String): nullable Int64; 
     method ParseInt32(aValue: not nullable String): Int32;  
     method ParseInt64(aValue: not nullable String): Int64; 
     {$ENDIF}
@@ -29,6 +31,7 @@ type
     method ToInt32(aValue: Double): Int32;
     method ToInt32(aValue: Char): Int32;
     method ToInt32(aValue: not nullable String): Int32;
+    method TryToInt32(aValue: not nullable String): nullable Int32;
 
     method ToInt64(aValue: Boolean): Int64;
     method ToInt64(aValue: Byte): Int64;
@@ -36,6 +39,7 @@ type
     method ToInt64(aValue: Double): Int64;
     method ToInt64(aValue: Char): Int64;
     method ToInt64(aValue: not nullable String): Int64;
+    method TryToInt64(aValue: not nullable String): nullable Int64;
 
     method ToDouble(aValue: Boolean): Double;
     method ToDouble(aValue: Byte): Double;
@@ -246,6 +250,29 @@ begin
   {$ENDIF}
 end;
 
+method Convert.TryToInt32(aValue: not nullable String): nullable Int32;
+begin
+  if length(aValue) = 0 then
+    exit nil;
+
+  {$IF COOPER}
+  try
+    exit Integer.parseInt(aValue);
+  except
+    on E: NumberFormatException do
+      exit nil;
+  end;
+  {$ELSEIF ECHOES OR ISLAND}
+  var lResult: Int32;
+  if Int32.TryParse(aValue, out lResult) then
+    exit lResult
+  else
+    exit nil;
+  {$ELSEIF TOFFEE}
+  exit TryParseInt32(aValue);
+  {$ENDIF}
+end;
+
 method Convert.DigitForValue(aValue: Int32): Char;
 begin
   result := chr(55 + aValue + (((aValue - 10) shr 31) and -7)); // don't ask me how this works but it does.
@@ -416,9 +443,6 @@ end;
 
 method Convert.ToInt64(aValue: not nullable String): Int64;
 begin
-  if aValue = nil then
-    exit 0;
-
   if String.IsNullOrWhiteSpace(aValue) then
     raise new SugarFormatException("Unable to convert string '{0}' to int64.", aValue);
 
@@ -428,6 +452,29 @@ begin
   exit System.Convert.ToInt64(aValue);
   {$ELSEIF TOFFEE}
   exit ParseInt64(aValue);
+  {$ENDIF}
+end;
+
+method Convert.TryToInt64(aValue: not nullable String): nullable Int64;
+begin
+  if length(aValue) = 0 then
+    exit nil;
+
+  {$IF COOPER}
+  try
+    exit Long.parseLong(aValue);
+  except
+    on E: NumberFormatException do
+      exit nil;
+  end;
+  {$ELSEIF ECHOES OR ISLAND}
+  var lResult: Int64;
+  if Int64.TryParse(aValue, out lResult) then
+    exit lResult
+  else
+    exit nil;
+  {$ELSEIF TOFFEE}
+  exit TryParseInt64(aValue);
   {$ENDIF}
 end;
 
@@ -520,7 +567,7 @@ begin
   if Double.TryParse(aValue, System.Globalization.NumberStyles.Any, aLocale, out lResult) then
     exit valueOrDefault(lResult); 
   {$ELSEIF TOFFEE}
-  var Number := ParseNumber(aValue, aLocale);
+  var Number := TryParseNumber(aValue, aLocale);
   exit Number:doubleValue;
   {$ENDIF}
 end;
@@ -670,7 +717,7 @@ begin
 end;
 
 {$IF TOFFEE}
-method Convert.ParseNumber(aValue: not nullable String; aLocale: Locale := nil): NSNumber;
+method Convert.TryParseNumber(aValue: not nullable String; aLocale: Locale := nil): NSNumber;
 begin
   if String.IsNullOrEmpty(aValue) then
     exit nil;
@@ -681,22 +728,22 @@ begin
   result := Formatter.numberFromString(aValue);
 end;
 
-method Convert.ParseInt32(aValue: not nullable String): Int32;
+method Convert.TryParseInt32(aValue: not nullable String): nullable Int32;
 begin
-  var Number := ParseInt64(aValue);
-
-  if (Number > Consts.MaxInteger) or (Number < Consts.MinInteger) then
-    raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);
-
-  exit Int32(Number);
+  var i64 := TryParseInt64(aValue);
+  if assigned(i64) then begin
+    if (i64 > Consts.MaxInteger) or (i64 < Consts.MinInteger) then
+      exit nil;
+    exit Int32(i64);
+  end;
 end;
 
-method Convert.ParseInt64(aValue: not nullable String): Int64;
+method Convert.TryParseInt64(aValue: not nullable String): nullable Int64;
 begin
-  var Number := ParseNumber(aValue, Locale.Invariant);
+  var Number := TryParseNumber(aValue, Locale.Invariant);
 
   if Number = nil then
-    raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);
+    exit nil;
 
   var obj: id := Number;
   var NumberType := CFNumberGetType(CFNumberRef(obj));
@@ -704,8 +751,22 @@ begin
   if NumberType in [CFNumberType.kCFNumberIntType, CFNumberType.kCFNumberNSIntegerType, CFNumberType.kCFNumberSInt8Type, CFNumberType.kCFNumberSInt32Type,
                     CFNumberType.kCFNumberSInt16Type, CFNumberType.kCFNumberShortType, CFNumberType.kCFNumberSInt64Type, CFNumberType.kCFNumberCharType] then
     exit Number.longLongValue;
+end;
 
-  raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);
+method Convert.ParseInt32(aValue: not nullable String): Int32;
+begin
+  var Number := TryParseInt32(aValue);
+  if not assigned(Number) then
+    raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);
+  exit Number as not nullable;
+end;
+
+method Convert.ParseInt64(aValue: not nullable String): Int64;
+begin
+  var Number := TryParseInt64(aValue);
+  if not assigned(Number) then
+    raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);
+  exit Number as not nullable;
 end;
 {$ENDIF}
 
