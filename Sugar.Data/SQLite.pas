@@ -302,7 +302,7 @@ begin
     (if aCreateIfNeeded then SQLiteHelpers.SQLITE_OPEN_CREATE else 0), nil);
   SQLiteHelpers.Throw(fHandle, lRes);
   {$ELSEIF COCOA}
-  var lRes:= sqlite3_open_v2(NSString(aFilename), ^^sqlite3_(@fHandle),
+  var lRes:= sqlite3_open_v2(NSString(aFilename), ^^sqlite3(@fHandle),
     (if aReadOnly then SQLITE_OPEN_READONLY else SQLITE_OPEN_READWRITE) or
     (if aCreateIfNeeded then SQLITE_OPEN_CREATE else 0), nil);
   SQLiteHelpers.Throw(fHandle, lRes);
@@ -364,7 +364,7 @@ begin
   {$IFDEF COCOA}
   var res: IntPtr := nil;
   var data := NSString(aSQL).UTF8String;
-  SQLiteHelpers.Throw(fHandle, sqlite3_prepare_v2(^sqlite3_(fHandle), data, strlen(data), ^^sqlite3_stmt(@res), nil));
+  SQLiteHelpers.Throw(fHandle, sqlite3_prepare_v2(^sqlite3(fHandle), data, strlen(data), ^^sqlite3_stmt(@res), nil));
   for i: Integer := 0 to length(aArgs) -1 do begin
     var o := aArgs[i];
     if o = nil then
@@ -436,7 +436,7 @@ begin
     SQLiteHelpers.Throw(fHandle, &step);
     exit 0;
   end;
-  var revs := {$IFDEF ECHOES}SQLiteHelpers.sqlite3_last_insert_rowid(fHandle){$ELSE}sqlite3_last_insert_rowid(^sqlite3_(fHandle)){$ENDIF};
+  var revs := {$IFDEF ECHOES}SQLiteHelpers.sqlite3_last_insert_rowid(fHandle){$ELSE}sqlite3_last_insert_rowid(^sqlite3(fHandle)){$ENDIF};
   {$IFDEF ECHOES}SQLiteHelpers.sqlite3_finalize(res){$ELSE} sqlite3_finalize(^sqlite3_stmt(res)){$ENDIF};
   exit revs;
   {$ELSEIF ANDROID}
@@ -463,7 +463,7 @@ begin
     SQLiteHelpers.Throw(fHandle, &step);
     exit 0;
   end;
-  var revs := {$IFDEF ECHOES}SQLiteHelpers.sqlite3_changes(fHandle){$ELSE}sqlite3_changes(^sqlite3_(fHandle)){$ENDIF};
+  var revs := {$IFDEF ECHOES}SQLiteHelpers.sqlite3_changes(fHandle){$ELSE}sqlite3_changes(^sqlite3(fHandle)){$ENDIF};
   {$IFDEF ECHOES}SQLiteHelpers.sqlite3_finalize(res){$ELSE} sqlite3_finalize(^sqlite3_stmt(res)){$ENDIF};
   exit revs;
 
@@ -500,7 +500,7 @@ begin
   fHandle := nil;
   {$ELSEIF NOUGAT}
   if fHandle <> IntPtr(0) then 
-    sqlite3_close_v2(^sqlite3_(fHandle));
+    sqlite3_close_v2(^sqlite3(fHandle));
   fHandle := IntPtr(0);
   {$ELSE}
   {$ERROR Unsupported platform}
@@ -792,7 +792,7 @@ begin
       {$ELSE}
       if handle = IntPtr(nil) then 
         raise new SQLiteException('SQL error or missing database ');
-      var err := ^Char(sqlite3_errmsg16(^sqlite3_(handle)));
+      var err := ^Char(sqlite3_errmsg16(^sqlite3(handle)));
       var plen := 0;
       while err[plen] <> #0 do inc(plen);
 
