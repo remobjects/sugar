@@ -221,12 +221,12 @@ end;
 {$IF COOPER}
 method Guid.ToString: java.lang.String;
 begin
-  exit ToString(GuidFormat.Default);
+  exit self.ToString(GuidFormat.Default);
 end;
 {$ELSEIF ECHOES}
 method Guid.ToString: System.String;
 begin
-  exit ToString(GuidFormat.Default);
+  exit self.ToString(GuidFormat.Default);
 end;
 
 class method Guid.Exchange(Value: array of Byte; Index1: Integer; Index2: Integer);
@@ -244,7 +244,7 @@ end;
 
 method Guid.description: NSString;
 begin
-  exit ToString(GuidFormat.Default);
+  exit self.ToString(GuidFormat.Default);
 end;
 
 class method Guid.InternalParse(Data: String): array of Byte;
