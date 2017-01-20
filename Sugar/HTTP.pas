@@ -102,7 +102,7 @@ type
     {$IF TOFFEE}
     property Session := NSURLSession.sessionWithConfiguration(NSURLSessionConfiguration.defaultSessionConfiguration); lazy;
     {$ENDIF}
-
+    method StringForRequestType(aMode: HttpRequestMode): String;
   public
     //method ExecuteRequest(aUrl: not nullable Url; ResponseCallback: not nullable HttpResponseBlock);
     method ExecuteRequest(aRequest: not nullable HttpRequest; ResponseCallback: not nullable HttpResponseBlock);
@@ -438,12 +438,27 @@ end;
 
 { Http }
 
+method Http.StringForRequestType(aMode: HttpRequestMode): String;
+begin
+  case aMode of
+    HttpRequestMode.Get: result := 'GET';
+    HttpRequestMode.Post: result := 'POST';
+    HttpRequestMode.Head: result := 'HEAD';
+    HttpRequestMode.Put: result := 'PUT';
+    HttpRequestMode.Delete: result := 'DELETE';
+    HttpRequestMode.Patch: result := 'PATCH';
+    HttpRequestMode.Options: result := 'OPTIONS';
+    HttpRequestMode.Trace: result := 'TRACE';
+  end;
+end;
+
 method Http.ExecuteRequest(aRequest: not nullable HttpRequest; ResponseCallback: not nullable HttpResponseBlock);
 begin
   {$IF COOPER}
   async try
     var lConnection := java.net.URL(aRequest.Url).openConnection as java.net.HttpURLConnection;
 
+    lConnection.RequestMethod := StringForRequestType(aRequest.Mode);
     for each k in aRequest.Headers.Keys do
       lConnection.setRequestProperty(k, aRequest.Headers[k]);
     
@@ -469,16 +484,7 @@ begin
     {$IF NOT NETFX_CORE}
     webRequest.AllowAutoRedirect := aRequest.FollowRedirects;
     {$ENDIF}
-    case aRequest.Mode of
-      HttpRequestMode.Get: webRequest.Method := 'GET';
-      HttpRequestMode.Post: webRequest.Method := 'POST';
-      HttpRequestMode.Head: webRequest.Method := 'HEAD';
-      HttpRequestMode.Put: webRequest.Method := 'PUT';
-      HttpRequestMode.Delete: webRequest.Method := 'DELETE';
-      HttpRequestMode.Patch: webRequest.Method := 'PATCH';
-      HttpRequestMode.Options: webRequest.Method := 'OPTIONS';
-      HttpRequestMode.Trace: webRequest.Method := 'TRACE';
-    end;
+    webRequest.Method := StringForRequestType(aRequest.Mode);
 
     for each k in aRequest.Headers.Keys do
       webRequest.Headers[k] := aRequest.Headers[k];
@@ -523,17 +529,7 @@ begin
   
     //nsUrlRequest.AllowAutoRedirect := aRequest.FollowRedirects;
     nsUrlRequest.allowsCellularAccess := aRequest.AllowCellularAccess;
-    
-    case aRequest.Mode of
-      HttpRequestMode.Get: nsUrlRequest.HTTPMethod := 'GET';
-      HttpRequestMode.Post: nsUrlRequest.HTTPMethod := 'POST';
-      HttpRequestMode.Head: nsUrlRequest.HTTPMethod := 'HEAD';
-      HttpRequestMode.Put: nsUrlRequest.HTTPMethod := 'PUT';
-      HttpRequestMode.Delete: nsUrlRequest.HTTPMethod := 'DELETE';
-      HttpRequestMode.Patch: nsUrlRequest.HTTPMethod := 'PATCH';
-      HttpRequestMode.Options: nsUrlRequest.HTTPMethod := 'OPTIONS';
-      HttpRequestMode.Trace: nsUrlRequest.HTTPMethod := 'TRACE';
-    end;
+    nsUrlRequest.HTTPMethod := StringForRequestType(aRequest.Mode);
   
     if assigned(aRequest.Content) then
       nsUrlRequest.HTTPBody := (aRequest.Content as IHttpRequestContent).GetContentAsBinary();
@@ -570,6 +566,7 @@ begin
   {$IF COOPER}
   var lConnection := java.net.URL(aRequest.Url).openConnection as java.net.HttpURLConnection;
   
+  lConnection.RequestMethod := StringForRequestType(aRequest.Mode);
   for each k in aRequest.Headers.Keys do
     lConnection.setRequestProperty(k, aRequest.Headers[k]);
     
@@ -586,16 +583,7 @@ begin
     {$IF NOT NETFX_CORE}
     webRequest.AllowAutoRedirect := aRequest.FollowRedirects;
     {$ENDIF}
-    case aRequest.Mode of
-      HttpRequestMode.Get: webRequest.Method := 'GET';
-      HttpRequestMode.Post: webRequest.Method := 'POST';
-      HttpRequestMode.Head: webRequest.Method := 'HEAD';
-      HttpRequestMode.Put: webRequest.Method := 'PUT';
-      HttpRequestMode.Delete: webRequest.Method := 'DELETE';
-      HttpRequestMode.Patch: webRequest.Method := 'PATCH';
-      HttpRequestMode.Options: webRequest.Method := 'OPTIONS';
-      HttpRequestMode.Trace: webRequest.Method := 'TRACE';
-    end;
+    webRequest.Method := StringForRequestType(aRequest.Mode);
     
     for each k in aRequest.Headers.Keys do
       webRequest.Headers[k] := aRequest.Headers[k];
@@ -628,17 +616,7 @@ begin
 
   //nsUrlRequest.AllowAutoRedirect := aRequest.FollowRedirects;
   nsUrlRequest.allowsCellularAccess := aRequest.AllowCellularAccess;
-  
-  case aRequest.Mode of
-    HttpRequestMode.Get: nsUrlRequest.HTTPMethod := 'GET';
-    HttpRequestMode.Post: nsUrlRequest.HTTPMethod := 'POST';
-    HttpRequestMode.Head: nsUrlRequest.HTTPMethod := 'HEAD';
-    HttpRequestMode.Put: nsUrlRequest.HTTPMethod := 'PUT';
-    HttpRequestMode.Delete: nsUrlRequest.HTTPMethod := 'DELETE';
-    HttpRequestMode.Patch: nsUrlRequest.HTTPMethod := 'PATCH';
-    HttpRequestMode.Options: nsUrlRequest.HTTPMethod := 'OPTIONS';
-    HttpRequestMode.Trace: nsUrlRequest.HTTPMethod := 'TRACE';
-  end;
+  nsUrlRequest.HTTPMethod := StringForRequestType(aRequest.Mode);
 
   if assigned(aRequest.Content) then
     nsUrlRequest.HTTPBody := (aRequest.Content as IHttpRequestContent).GetContentAsBinary();
