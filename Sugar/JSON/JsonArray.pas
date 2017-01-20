@@ -25,7 +25,7 @@ type
   public
     constructor;
     constructor(aItems: List<JsonNode>);
-  
+
     method &Add(Value: JsonNode);
     method Insert(&Index: Integer; Value: JsonNode);
     method Clear;
@@ -35,7 +35,7 @@ type
     method ToStringList: not nullable List<String>;
 
     method ToJson: String; override;
-     
+
     {$IF COOPER}
     method &iterator: java.util.&Iterator<JsonNode>;
     {$ELSEIF ECHOES}
@@ -81,7 +81,7 @@ end;
 
 method JsonArray.Insert(&Index: Integer; Value: JsonNode);
 begin
-  fItems.Insert(&Index, Value);  
+  fItems.Insert(&Index, Value);
 end;
 
 method JsonArray.Clear;
@@ -123,7 +123,7 @@ begin
 end;
 
 method JsonArray.GetEnumerator: System.Collections.Generic.IEnumerator<JsonNode>;
-begin  
+begin
   exit System.Collections.Generic.IEnumerable<JsonNode>(fItems).GetEnumerator;
 end;
 {$ELSEIF TOFFEE}

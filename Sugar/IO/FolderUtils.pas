@@ -44,7 +44,7 @@ begin
   if Exists(FolderName) then
     raise new SugarIOException(ErrorMessage.FOLDER_EXISTS, FolderName);
 
-  {$IF COOPER}  
+  {$IF COOPER}
   if not (new java.io.File(FolderName).mkdir) then
     raise new SugarIOException(ErrorMessage.FOLDER_CREATE_ERROR, FolderName);
   {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
@@ -70,7 +70,7 @@ begin
   end;
 
   if not Item.delete then
-    raise new SugarIOException(ErrorMessage.FOLDER_DELETE_ERROR, Item.Name);  
+    raise new SugarIOException(ErrorMessage.FOLDER_DELETE_ERROR, Item.Name);
 end;
 {$ENDIF}
 
@@ -79,10 +79,10 @@ begin
   if not Exists(FolderName) then
     raise new SugarIOException(ErrorMessage.FOLDER_NOTFOUND, FolderName);
 
-  {$IF COOPER}  
+  {$IF COOPER}
   RecursiveDelete(new java.io.File(FolderName));
-  {$ELSEIF WINDOWS_PHONE OR NETFX_CORE} 
-  GetFolder(FolderName).DeleteAsync.AsTask.Wait;  
+  {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
+  GetFolder(FolderName).DeleteAsync.AsTask.Wait;
   {$ELSEIF ECHOES}
   System.IO.Directory.Delete(FolderName, true);
   {$ELSEIF TOFFEE}
@@ -96,10 +96,10 @@ class method FolderUtils.Exists(FolderName: String): Boolean;
 begin
   SugarArgumentNullException.RaiseIfNil(FolderName, "FolderName");
 
-  {$IF COOPER}  
+  {$IF COOPER}
   var lFile := new java.io.File(FolderName);
   exit lFile.exists and lFile.isDirectory;
-  {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}  
+  {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
   try
     exit GetFolder(FolderName) <> nil;
   except
@@ -203,7 +203,7 @@ begin
       Items.AddRange(GetFolders(Folders.Item[i].Path, AllFolders));
   end;
 
-  exit Items.ToArray;  
+  exit Items.ToArray;
   {$ELSEIF ECHOES}
   exit System.IO.Directory.GetDirectories(FolderName, "*", iif(AllFolders, System.IO.SearchOption.AllDirectories, System.IO.SearchOption.TopDirectoryOnly));
   {$ELSEIF TOFFEE}

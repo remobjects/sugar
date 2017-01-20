@@ -22,7 +22,7 @@ type
     fNode: XObject;
 
     method GetNextSibling: XmlNode;
-    method GetPreviousSibling: XmlNode;    
+    method GetPreviousSibling: XmlNode;
     method GetFirstChild: XmlNode;
     method GetLastChild: XmlNode;
     method GetItem(&Index: Integer): XmlNode;
@@ -31,7 +31,7 @@ type
     method SetValue(Value: String); empty;
   protected
     class method CreateCompatibleNode(Node: XNode): XmlNode;
-  assembly or protected 
+  assembly or protected
     property Node: XObject read fNode;
     constructor(aNode: XObject);
   public
@@ -39,7 +39,7 @@ type
     property Value: String read nil write SetValue; virtual;
     property LocalName: String read Name; virtual;
     property NodeType: XmlNodeType read XmlNodeType.None; virtual;
-    
+
     [Obsolete('Use OwnerDocument property instead.')]
     property Document: XmlDocument read iif(Node.Document = nil, nil, new XmlDocument(Node.Document));
     property OwnerDocument: XmlDocument read iif(Node.Document = nil, nil, new XmlDocument(Node.Document));
@@ -67,7 +67,7 @@ type
   protected
     method ConvertNodeList(List: NodeList): array of XmlNode;
     class method CreateCompatibleNode(Node: Node): XmlNode;
-  assembly or protected 
+  assembly or protected
     property Node: Node read fNode;
     constructor(aNode: Node);
   public
@@ -75,7 +75,7 @@ type
     property Value: String read Node.TextContent write SetValue; virtual;
     property LocalName: String read iif(Node.LocalName = nil, Node.NodeName, Node.LocalName); virtual;
     property NodeType: XmlNodeType read XmlNodeType.None; virtual;
-    
+
     property Document: XmlDocument read iif(Node.OwnerDocument = nil, nil, new XmlDocument(Node.OwnerDocument));
     property OwnerDocument: XmlDocument read iif(Node.OwnerDocument = nil, nil, new XmlDocument(Node.OwnerDocument));
     property Parent: XmlNode read GetParent;
@@ -90,7 +90,7 @@ type
 
     method &equals(arg1: Object): Boolean; override;
     method ToString: java.lang.String; override;
-  end;  
+  end;
 {$ELSEIF TOFFEE}
   XmlNode = public class
   private
@@ -110,7 +110,7 @@ type
   protected
     class method CreateCompatibleNode(Node: ^libxml.__struct__xmlNode; Doc: XmlDocument): XmlNode;
     class method IsNode(Node: ^libxml.__struct__xmlNode): Boolean;
-  assembly or protected 
+  assembly or protected
     property Node: ^libxml.__struct__xmlNode read fNode write fNode;
     constructor(aNode: ^libxml.__struct__xmlNode; aDocument: XmlDocument);
   public
@@ -118,7 +118,7 @@ type
     property Value: String read GetValue write SetValue; virtual;
     property LocalName: String read GetLocalName; virtual;
     property NodeType: XmlNodeType read XmlNodeType.None; virtual;
-    
+
     [Obsolete('Use OwnerDocument property instead.')]
     property Document: XmlDocument read fDocument protected write fDocument;
     property OwnerDocument: XmlDocument read fDocument protected write fDocument;
@@ -131,7 +131,7 @@ type
     property Item[&Index: Integer]: XmlNode read GetItem; default; virtual;
     property ChildCount: Integer read GetChildCount; virtual;
     property ChildNodes: array of XmlNode read GetChildNodes; virtual;
-    
+
     method isEqual(obj: id): Boolean; override;
     method description: NSString; override;
   end;
@@ -161,7 +161,7 @@ type
     method Match(Element: XmlNode; LocalName: String; NamespaceUri: String): Boolean;
     method ListElementsByName(Element: XmlNode; LocalName: String; NamespaceUri: String): Sugar.Collections.List<XmlElement>;
   public
-    constructor(RootElement: XmlNode); 
+    constructor(RootElement: XmlNode);
     method ElementsByName(Name: String): array of XmlElement;
     method ElementsByName(LocalName: String; NamespaceUri: String): array of XmlElement;
   end;
@@ -261,7 +261,7 @@ begin
   if obj = nil then
     exit false;
 
-  if obj is not XmlNode then 
+  if obj is not XmlNode then
     exit false;
 
   exit fNode.Equals(XmlNode(obj).Node);
@@ -281,7 +281,7 @@ begin
 end;
 
 method XmlNode.ConvertNodeList(List: NodeList): array of XmlNode;
-begin  
+begin
   if List = nil then
     exit nil;
 
@@ -409,7 +409,7 @@ end;
 method XmlNode.GetParent: XmlNode;
 begin
   result := CreateCompatibleNode(^libxml.__struct__xmlNode(Node^.parent), OwnerDocument);
-  
+
   if assigned(result) and result.isEqual(OwnerDocument) then
     exit nil;
 end;
@@ -499,7 +499,7 @@ begin
   if Node = nil then
     exit false;
 
-  exit not (Node^.type in [libxml.xmlElementType.XML_ATTRIBUTE_DECL, libxml.xmlElementType.XML_ELEMENT_DECL, libxml.xmlElementType.XML_ENTITY_DECL, 
+  exit not (Node^.type in [libxml.xmlElementType.XML_ATTRIBUTE_DECL, libxml.xmlElementType.XML_ELEMENT_DECL, libxml.xmlElementType.XML_ENTITY_DECL,
   libxml.xmlElementType.XML_NAMESPACE_DECL, libxml.xmlElementType.XML_XINCLUDE_END, libxml.xmlElementType.XML_XINCLUDE_START]);
 end;
 
@@ -557,7 +557,7 @@ begin
     exit false;
 
   var Ns := new XmlNamespace(Element.Node);
-  if NamespaceUri = nil then 
+  if NamespaceUri = nil then
     exit LocalName = Ns.LocalName
   else
     exit (LocalName = Ns.LocalName) and (NamespaceUri = Ns.Uri);

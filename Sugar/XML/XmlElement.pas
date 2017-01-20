@@ -17,7 +17,7 @@ type
   XmlElement = public class (XmlNode)
   private
     {$IF NOT TOFFEE}
-    property Element: {$IF COOPER}Element{$ELSEIF ECHOES}XElement{$ENDIF} 
+    property Element: {$IF COOPER}Element{$ELSEIF ECHOES}XElement{$ENDIF}
                       read Node as{$IF COOPER}Element{$ELSEIF ECHOES}XElement{$ENDIF};
     {$ENDIF}
     {$IF TOFFEE}
@@ -54,7 +54,7 @@ type
 
     method HasAttribute(aName: String): Boolean;
     method HasAttribute(aLocalName, NamespaceUri: String): Boolean;
-    
+
     property Attributes[aName: String]: XmlAttribute read GetAttributeNode(aName);
     method GetAttributes: array of XmlAttribute;
 
@@ -89,10 +89,10 @@ begin
   var List := new Sugar.Collections.List<XmlAttribute>;
   var ChildPtr := Node^.properties;
   while ChildPtr <> nil do begin
-    List.Add(new XmlAttribute(^libxml.__struct__xmlNode(ChildPtr), OwnerDocument));    
+    List.Add(new XmlAttribute(^libxml.__struct__xmlNode(ChildPtr), OwnerDocument));
     ChildPtr := ^libxml.__struct__xmlAttr(ChildPtr^.next);
   end;
-  
+
   result := List.ToArray;
   {$ENDIF}
 end;
@@ -133,7 +133,7 @@ begin
   {$ELSEIF TOFFEE}
   libxml.xmlUnlinkNode(libxml.xmlNodePtr(aNode.Node));
   //libxml.xmlFreeNode(libxml.xmlNodePtr(aNode.Node));
-  {$ENDIF}  
+  {$ENDIF}
 end;
 
 method XmlElement.ReplaceChild(aNode: XmlNode; WithNode: XmlNode);
@@ -207,7 +207,7 @@ begin
   Element.SetAttributeValue(aName, aValue);
   {$ELSEIF TOFFEE}
   libxml.xmlSetProp(libxml.xmlNodePtr(Node), XmlChar.FromString(aName), XmlChar.FromString(aValue));
-  {$ENDIF}  
+  {$ENDIF}
 end;
 
 method XmlElement.SetAttribute(aLocalName: String; NamespaceUri: String; aValue: String);
@@ -232,7 +232,7 @@ begin
     raise new SugarException("Namespace with specified URI not found");
 
   libxml.xmlSetNsProp(libxml.xmlNodePtr(Node), ns, XmlChar.FromString(aLocalName), XmlChar.FromString(aValue));
-  {$ENDIF}  
+  {$ENDIF}
 end;
 
 method XmlElement.SetAttributeNode(Node: XmlAttribute);
@@ -244,7 +244,7 @@ begin
   Element.setAttributeNode(Node.Node as Attr);
   {$ELSEIF ECHOES}
   var Existing := Element.Attribute(XAttribute(Node.Node).Name);
-  
+
   if Existing <> nil then
     Existing.Remove;
 
@@ -266,7 +266,7 @@ begin
   Element.SetAttributeValue(aName, nil);
   {$ELSEIF TOFFEE}
   libxml.xmlUnsetProp(libxml.xmlNodePtr(Node), XmlChar.FromString(aName));
-  {$ENDIF}  
+  {$ENDIF}
 end;
 
 method XmlElement.RemoveAttribute(aLocalName: String; NamespaceUri: String);
@@ -285,20 +285,20 @@ begin
     exit;
 
   libxml.xmlRemoveProp(Attr);
-  {$ENDIF}  
+  {$ENDIF}
 end;
 
 method XmlElement.RemoveAttributeNode(Node: XmlAttribute);
 begin
   SugarArgumentNullException.RaiseIfNil(Node, "Node");
-  
+
   if Node.OwnerElement = nil then
     raise new SugarInvalidOperationException("Unable to remove attribute that has no parent element");
 
   if not Node.OwnerElement.Equals(self) then
     raise new SugarInvalidOperationException("Unable to remove attribute that does not belong to this element");
-  
-  {$IF COOPER}  
+
+  {$IF COOPER}
   Element.removeAttributeNode(Node.Node as Attr);
   {$ELSEIF ECHOES}
   XAttribute(Node.Node).Remove;
@@ -326,7 +326,7 @@ begin
   var items := Element.GetElementsByTagNameNS(NamespaceUri, aLocalName);
   if items = nil then
     exit [];
-  
+
   result := new XmlElement[items.length];
   for i: Integer := 0 to items.length-1 do
     result[i] := new XmlElement(items.Item(i));
@@ -347,7 +347,7 @@ begin
   var items := Element.GetElementsByTagName(aName);
   if items = nil then
     exit [];
-  
+
   result := new XmlElement[items.length];
   for i: Integer := 0 to items.length-1 do
     result[i] := new XmlElement(items.Item(i));
@@ -386,7 +386,7 @@ begin
       else
         aNode.Node^.ns := nil; //else this ns is wrong
         //maybe should be exception here
-      
+
       //we must release this ns
       libxml.xmlFreeNs(libxml.xmlNsPtr(curr));
       exit;
@@ -401,7 +401,7 @@ end;
 {$ENDIF}
 
 method XmlElement.GetFirstElementWithName(aName: String): XmlElement;
-begin 
+begin
   for item in ChildNodes do
     if (item is XmlElement) and item.Name.EqualsIgnoringCaseInvariant(aName) then exit XmlElement(item);
   exit nil;

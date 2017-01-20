@@ -16,7 +16,7 @@ type
 {$IF COOPER OR ECHOES}
   XmlProcessingInstruction = public class (XmlNode)
   private
-    property ProcessingInstruction: {$IF COOPER}ProcessingInstruction{$ELSEIF ECHOES}XProcessingInstruction{$ENDIF} 
+    property ProcessingInstruction: {$IF COOPER}ProcessingInstruction{$ELSEIF ECHOES}XProcessingInstruction{$ENDIF}
                                     read Node as {$IF COOPER}ProcessingInstruction{$ELSEIF ECHOES}XProcessingInstruction{$ENDIF};
     {$IF COOPER}method SetData(aValue: String);{$ENDIF}
   public

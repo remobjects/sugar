@@ -9,7 +9,7 @@ uses
 
 type
   {$IF COOPER}
-  ThreadPool = public static class 
+  ThreadPool = public static class
   private
     var fExecutor: ThreadPoolExecutor := new ThreadPoolExecutor(4, 1000, 0, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>()); readonly;
   public

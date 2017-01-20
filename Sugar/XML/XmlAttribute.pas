@@ -16,7 +16,7 @@ type
   XmlAttribute = public class (XmlNode)
   {$IF NOT TOFFEE}
   private
-    property &Attribute: {$IF COOPER}Attr{$ELSEIF ECHOES}XAttribute{$ENDIF} 
+    property &Attribute: {$IF COOPER}Attr{$ELSEIF ECHOES}XAttribute{$ENDIF}
                          read Node as {$IF COOPER}Attr{$ELSEIF ECHOES}XAttribute{$ENDIF};
   {$ENDIF}
   public
@@ -33,7 +33,7 @@ type
     property OwnerElement: XmlElement read iif(Node^.parent = nil, nil, new XmlElement(^libxml.__struct__xmlNode(Node^.parent), OwnerDocument));
     {$ELSEIF COOPER}
     property OwnerElement: XmlElement read iif(Attribute.OwnerElement = nil, nil, new XmlElement(Attribute.OwnerElement));
-    {$ENDIF}    
+    {$ENDIF}
   end;
 implementation
 

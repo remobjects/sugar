@@ -18,7 +18,7 @@ type
   public
     method Exists(aFile: File): Boolean;
   {$ENDIF}
-  public    
+  public
     method &Copy(SourceFileName: String; DestFileName: String);
     method &Create(FileName: String);
     method Delete(FileName: String);

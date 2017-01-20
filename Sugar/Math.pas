@@ -18,13 +18,13 @@ type
     class method Cos(d: Double): Double; mapped to cos(d);
     class method Cosh(d: Double): Double; mapped to cosh(d);
     class method Exp(d: Double): Double; mapped to exp(d);
-    class method Floor(d: Double): Double; mapped to floor(d);   
-    class method IEEERemainder(x, y: Double): Double; mapped to IEEEremainder(x, y); 
+    class method Floor(d: Double): Double; mapped to floor(d);
+    class method IEEERemainder(x, y: Double): Double; mapped to IEEEremainder(x, y);
     class method Log(d: Double): Double; mapped to log(d);
     class method Log10(d: Double): Double; mapped to log10(d);
-    class method Max(a,b: Double): Double; mapped to max(a,b);   
-    class method Max(a,b: Integer): Integer; mapped to max(a,b);   
-    class method Max(a,b: Int64): Int64; mapped to max(a,b);   
+    class method Max(a,b: Double): Double; mapped to max(a,b);
+    class method Max(a,b: Integer): Integer; mapped to max(a,b);
+    class method Max(a,b: Int64): Int64; mapped to max(a,b);
     class method Min(a,b: Double): Double; mapped to min(a,b);
     class method Min(a,b: Integer): Integer; mapped to min(a,b);
     class method Min(a,b: Int64): Int64; mapped to min(a,b);
@@ -40,7 +40,7 @@ type
   {$ENDIF}
   {$IF ECHOES}
   Math = public class mapped to System.Math
-  public    
+  public
     class method Abs(d: Double): Double; mapped to Abs(d);
     class method Abs(i: Int64): Int64; mapped to Abs(i);
     class method Abs(i: Integer): Integer; mapped to Abs(i);
@@ -53,12 +53,12 @@ type
     class method Cosh(d: Double): Double; mapped to Cosh(d);
     class method Exp(d: Double): Double; mapped to Exp(d);
     class method Floor(d: Double): Double; mapped to Floor(d);
-    class method IEEERemainder(x, y: Double): Double; mapped to IEEERemainder(x, y); 
+    class method IEEERemainder(x, y: Double): Double; mapped to IEEERemainder(x, y);
     class method Log(d: Double): Double; mapped to Log(d);
     class method Log10(d: Double): Double; mapped to Log10(d);
-    class method Max(a,b: Double): Double; mapped to Max(a,b);   
-    class method Max(a,b: Integer): Integer; mapped to Max(a,b);   
-    class method Max(a,b: Int64): Int64; mapped to Max(a,b);   
+    class method Max(a,b: Double): Double; mapped to Max(a,b);
+    class method Max(a,b: Integer): Integer; mapped to Max(a,b);
+    class method Max(a,b: Int64): Int64; mapped to Max(a,b);
     class method Min(a,b: Double): Double; mapped to Min(a,b);
     class method Min(a,b: Integer): Integer; mapped to Min(a,b);
     class method Min(a,b: Int64): Int64; mapped to Min(a,b);
@@ -74,10 +74,10 @@ type
   {$ENDIF}
   {$IF TOFFEE}
   Math = public class mapped to Object
-  public    
+  public
     class method Abs(value: Double): Double;
-    class method Abs(i: Int64): Int64; 
-    class method Abs(i: Integer): Integer; 
+    class method Abs(i: Int64): Int64;
+    class method Abs(i: Integer): Integer;
     class method Acos(d: Double): Double;
     class method Asin(d: Double): Double;
     class method Atan(d: Double): Double;
@@ -87,15 +87,15 @@ type
     class method Cosh(d: Double): Double;
     class method Exp(d: Double): Double;
     class method Floor(d: Double): Double;
-    class method IEEERemainder(x, y: Double): Double; 
+    class method IEEERemainder(x, y: Double): Double;
     class method Log(a: Double): Double;
     class method Log10(a: Double): Double;
-    class method Max(a,b: Double): Double;    
-    class method Max(a,b: Integer): Integer;    
-    class method Max(a,b: Int64): Int64;  
+    class method Max(a,b: Double): Double;
+    class method Max(a,b: Integer): Integer;
+    class method Max(a,b: Int64): Int64;
     class method Min(a,b: Double): Double;
     class method Min(a,b: Integer): Integer;
-    class method Min(a,b: Int64): Int64; 
+    class method Min(a,b: Int64): Int64;
     class method Pow(x, y: Double): Double;
     class method Round(a: Double): Int64;
     class method Sign(d: Double): Integer;
@@ -179,37 +179,37 @@ begin
   if (x = -1) and Consts.IsInfinity(y) then
     exit Consts.NaN;
 
-  exit rtl.pow(x,y);  
+  exit rtl.pow(x,y);
 end;
 
 class method Math.Acos(d: Double): Double;
 begin
-  exit rtl.acos(d);   
+  exit rtl.acos(d);
 end;
 
 class method Math.Cos(d: Double): Double;
 begin
-  exit rtl.cos(d);   
+  exit rtl.cos(d);
 end;
 
 class method Math.Ceiling(d: Double): Double;
 begin
-  exit rtl.ceil(d);   
+  exit rtl.ceil(d);
 end;
 
 class method Math.Cosh(d: Double): Double;
 begin
-  exit rtl.cosh(d);   
+  exit rtl.cosh(d);
 end;
 
 class method Math.Asin(d: Double): Double;
 begin
-  exit rtl.asin(d);   
+  exit rtl.asin(d);
 end;
 
 class method Math.Atan(d: Double): Double;
 begin
-  exit rtl.atan(d);   
+  exit rtl.atan(d);
 end;
 
 class method Math.Atan2(x,y: Double): Double;
@@ -217,77 +217,77 @@ begin
   if Consts.IsInfinity(x) and Consts.IsInfinity(y) then
     exit Consts.NaN;
 
-  exit rtl.atan2(x,y);   
+  exit rtl.atan2(x,y);
 end;
 
 class method Math.Abs(value: Double): Double;
 begin
-  exit rtl.fabs(value);   
+  exit rtl.fabs(value);
 end;
 
 class method Math.Exp(d: Double): Double;
 begin
-  exit rtl.exp(d);   
+  exit rtl.exp(d);
 end;
 
 class method Math.Floor(d: Double): Double;
 begin
-  exit rtl.floor(d);   
+  exit rtl.floor(d);
 end;
 
 class method Math.IEEERemainder(x,y: Double): Double;
 begin
-  exit rtl.remainder(x,y);   
+  exit rtl.remainder(x,y);
 end;
 
 class method Math.Log(a: Double): Double;
 begin
-  exit rtl.log(a);   
+  exit rtl.log(a);
 end;
 
 class method Math.Log10(a: Double): Double;
 begin
-  exit rtl.log10(a);   
+  exit rtl.log10(a);
 end;
 
 class method Math.Max(a,b: Int64): Int64;
 begin
-  exit iif(a > b, a, b);   
+  exit iif(a > b, a, b);
 end;
 
 class method Math.Min(a,b: Int64): Int64;
 begin
-  exit iif(a < b, a, b);   
+  exit iif(a < b, a, b);
 end;
 
 class method Math.Sin(x: Double): Double;
 begin
-  exit rtl.sin(x);  
+  exit rtl.sin(x);
 end;
 
 class method Math.Sinh(x: Double): Double;
 begin
-  exit rtl.sinh(x);  
+  exit rtl.sinh(x);
 end;
 
 class method Math.Sqrt(d: Double): Double;
 begin
-  exit rtl.sqrt(d);  
+  exit rtl.sqrt(d);
 end;
 
 class method Math.Tan(d: Double): Double;
 begin
-  exit rtl.tan(d);  
+  exit rtl.tan(d);
 end;
 
 class method Math.Tanh(d: Double): Double;
 begin
-  exit rtl.tanh(d);  
+  exit rtl.tanh(d);
 end;
 
 class method Math.Truncate(d: Double): Double;
 begin
-  exit rtl.trunc(d);  
+  exit rtl.trunc(d);
 end;
 
 class method Math.Abs(i: Int64): Int64;

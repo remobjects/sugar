@@ -24,10 +24,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -42,7 +42,7 @@ interface
 
 type
   StringFormatter = public static class
-  private   
+  private
     class method ParseDecimal(aString: String; var ptr: Int32): Int32;
     class method ParseFormatSpecifier(aString: String; var ptr: Int32; out n: Int32; out width: Int32; out left_align: Boolean; out aFormat: String);
   public
@@ -55,7 +55,7 @@ class method StringFormatter.FormatString(aFormat: String; params args: array of
 begin
   if aFormat = nil then raise new SugarArgumentNullException('aFormat');
   if args = nil then raise new SugarArgumentNullException('args');
-  var sb := new StringBuilder(); 
+  var sb := new StringBuilder();
   var ptr: Int32 := 0;
   var start: Int32 := ptr;
   while ptr < aFormat.Length do begin
@@ -80,7 +80,7 @@ begin
 
       // format argument
       var arg := args[n];
-      var str := if not assigned(arg) then '' else {$IF TOFFEE}arg.description{$ELSE}arg.ToString{$ENDIF};  
+      var str := if not assigned(arg) then '' else {$IF TOFFEE}arg.description{$ELSE}arg.ToString{$ENDIF};
 
       // pad formatted string and append to sb
       if width > length(str) then begin
@@ -150,8 +150,8 @@ begin
   else begin
     aFormat := nil;
   end;
-  if ((ptr >= max)) or (aString[ptr] ≠ '}') then 
-    raise new SugarFormatException(ErrorMessage.FORMAT_ERROR); 
+  if ((ptr >= max)) or (aString[ptr] ≠ '}') then
+    raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);
   inc(ptr);
 end;
 

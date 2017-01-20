@@ -16,7 +16,7 @@ type
     method GetFileName(FileName: not nullable String): not nullable String;
     method GetFileNameWithoutExtension(FileName: not nullable String): not nullable String;
     method GetFullPath(RelativePath: not nullable String): not nullable String;
-    
+
     property DirectorySeparatorChar: Char read Folder.Separator;
   end;
 
@@ -66,7 +66,7 @@ method Path.GetParentDirectory(FileName: not nullable String): nullable String;
 begin
   if length(FileName) = 0 then
     raise new SugarArgumentException("Invalid arguments");
-    
+
   var LastChar := FileName[FileName.Length - 1];
 
   if LastChar = Folder.Separator then
@@ -83,15 +83,15 @@ begin
       result := FileName.Substring(0, lIndex)
     else
       result := nil; // network share has no parent folder
-    
+
   end
   else begin
-  
+
     if lIndex > -1 then
       result := FileName.Substring(0, lIndex)
     else
       result := ""
-      
+
   end;
 end;
 
@@ -99,7 +99,7 @@ method Path.GetExtension(FileName: not nullable String): not nullable String;
 begin
   FileName := GetFileName(FileName);
   var lIndex := FileName.LastIndexOf(".");
-  
+
   if (lIndex <> -1) and (lIndex < FileName.Length - 1) then
     exit FileName.Substring(lIndex);
 
@@ -117,10 +117,10 @@ begin
     FileName := FileName.Substring(0, FileName.Length - 1);
 
   var lIndex := FileName.LastIndexOf(Folder.Separator);
-  
+
   if (lIndex <> -1) and (lIndex < FileName.Length - 1) then
     exit FileName.Substring(lIndex + 1);
-  
+
   exit FileName;
 end;
 
@@ -128,7 +128,7 @@ method Path.GetFileNameWithoutExtension(FileName: not nullable String): not null
 begin
   FileName := GetFileName(FileName);
   var lIndex := FileName.LastIndexOf(".");
-  
+
   if lIndex <> -1 then
     exit FileName.Substring(0, lIndex);
 
@@ -138,7 +138,7 @@ end;
 method Path.GetFullPath(RelativePath: not nullable String): not nullable String;
 begin
   {$IF COOPER}
-  exit new java.io.File(RelativePath).AbsolutePath as not nullable;  
+  exit new java.io.File(RelativePath).AbsolutePath as not nullable;
   {$ELSEIF NETFX_CORE}
   exit RelativePath; //api has no such function
   {$ELSEIF WINDOWS_PHONE}

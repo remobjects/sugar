@@ -28,11 +28,11 @@ type
     class operator Equal(Value1, Value2: String): Boolean;
     class operator NotEqual(Value1, Value2: String): Boolean;
 
-    class method Format(aFormat: String; params aParams: array of Object): not nullable String;    
+    class method Format(aFormat: String; params aParams: array of Object): not nullable String;
     class method CharacterIsWhiteSpace(Value: Char): Boolean;
     class method IsNullOrEmpty(Value: String): Boolean;
     class method IsNullOrWhiteSpace(Value: String): Boolean;
-    class method &Join(Separator: String; Values: array of String): String; 
+    class method &Join(Separator: String; Values: array of String): String;
 
     method CompareTo(Value: String): Integer;
     method CompareToIgnoreCase(Value: String): Integer;
@@ -47,22 +47,22 @@ type
     method Contains(Value: String): Boolean;
     method IndexOf(Value: Char): Int32; inline;
     method IndexOf(Value: String): Int32; inline;
-    method IndexOf(Value: Char; StartIndex: Integer): Integer; 
-    method IndexOf(Value: String; StartIndex: Integer): Integer; 
-    method IndexOfAny(const AnyOf: array of Char): Integer; 
-    method IndexOfAny(const AnyOf: array of Char; StartIndex: Integer): Integer;     
+    method IndexOf(Value: Char; StartIndex: Integer): Integer;
+    method IndexOf(Value: String; StartIndex: Integer): Integer;
+    method IndexOfAny(const AnyOf: array of Char): Integer;
+    method IndexOfAny(const AnyOf: array of Char; StartIndex: Integer): Integer;
     method LastIndexOf(Value: Char): Integer;
     method LastIndexOf(Value: String): Int32;
-    method LastIndexOf(Value: Char; StartIndex: Integer): Integer; 
-    method LastIndexOf(const Value: String; StartIndex: Integer): Integer; 
+    method LastIndexOf(Value: Char; StartIndex: Integer): Integer;
+    method LastIndexOf(const Value: String; StartIndex: Integer): Integer;
     method Substring(StartIndex: Int32): not nullable String;
     method Substring(StartIndex: Int32; aLength: Int32): not nullable String;
     method Split(Separator: String): array of String;
     method Replace(OldValue, NewValue: String): not nullable String;
-    method PadStart(TotalWidth: Integer): String; inline; 
-    method PadStart(TotalWidth: Integer; PaddingChar: Char): String; 
-    method PadEnd(TotalWidth: Integer): String; inline; 
-    method PadEnd(TotalWidth: Integer; PaddingChar: Char): String;     
+    method PadStart(TotalWidth: Integer): String; inline;
+    method PadStart(TotalWidth: Integer; PaddingChar: Char): String;
+    method PadEnd(TotalWidth: Integer): String; inline;
+    method PadEnd(TotalWidth: Integer; PaddingChar: Char): String;
     method ToLower: not nullable String;
     method ToLowerInvariant: not nullable String;
     method ToLower(aLocale: Locale): not nullable String;
@@ -70,15 +70,15 @@ type
     method ToUpperInvariant: not nullable String;
     method ToUpper(aLocale: Locale): not nullable String;
     method Trim: not nullable String;
-    method TrimEnd: not nullable String; inline; 
-    method TrimStart: not nullable String; inline; 
-    method Trim(const TrimChars: array of Char): not nullable String; 
-    method TrimEnd(const TrimChars: array of Char): not nullable String; 
-    method TrimStart(const TrimChars: array of Char): not nullable String; 
+    method TrimEnd: not nullable String; inline;
+    method TrimStart: not nullable String; inline;
+    method Trim(const TrimChars: array of Char): not nullable String;
+    method TrimEnd(const TrimChars: array of Char): not nullable String;
+    method TrimStart(const TrimChars: array of Char): not nullable String;
     method StartsWith(Value: String): Boolean; inline;
-    method StartsWith(Value: String; IgnoreCase: Boolean): Boolean; 
+    method StartsWith(Value: String; IgnoreCase: Boolean): Boolean;
     method EndsWith(Value: String): Boolean; inline;
-    method EndsWith(Value: String; IgnoreCase: Boolean): Boolean; 
+    method EndsWith(Value: String; IgnoreCase: Boolean): Boolean;
     method ToByteArray: array of Byte;
     method ToByteArray(aEncoding: {not nullable} Encoding): array of Byte;
     method ToCharArray: array of Char;
@@ -96,7 +96,7 @@ begin
 
   if Encoding = nil then
     Encoding := Encoding.Default;
-    
+
   exit Encoding.GetString(Value);
 end;
 
@@ -224,7 +224,7 @@ begin
   if (First = nil) or (Second = nil) then
     exit false;
 
-  exit {$IF COOPER}First.compareTo(Second){$ELSEIF ECHOES}First.CompareTo(Second){$ELSEIF TOFFEE}First.compare(Second){$ENDIF} = 0;  
+  exit {$IF COOPER}First.compareTo(Second){$ELSEIF ECHOES}First.CompareTo(Second){$ELSEIF TOFFEE}First.compare(Second){$ENDIF} = 0;
 end;
 
 class operator String.NotEqual(Value1: String; Value2: String): Boolean;
@@ -416,7 +416,7 @@ begin
   {$ENDIF}
 end;
 
-method String.IndexOfAny(const AnyOf: array of Char): Integer; 
+method String.IndexOfAny(const AnyOf: array of Char): Integer;
 begin
   {$IF COOPER OR TOFFEE}
   result := IndexOfAny(AnyOf, 0);
@@ -425,7 +425,7 @@ begin
   {$ENDIF}
 end;
 
-method String.IndexOfAny(const AnyOf: array of Char; StartIndex: Integer): Integer; 
+method String.IndexOfAny(const AnyOf: array of Char; StartIndex: Integer): Integer;
 begin
   {$IF COOPER}
   for i: Integer := StartIndex to mapped.length - 1 do begin
@@ -486,8 +486,8 @@ begin
     result := -1;
   {$ELSEIF TOFFEE}
   var r:= mapped.rangeOfString(Value) options(NSStringCompareOptions.NSLiteralSearch or NSStringCompareOptions.NSBackwardsSearch) range(NSMakeRange(0, StartIndex + 1));
-  exit if (r.location = NSNotFound) and (r.length = 0) then -1 else Int32(r.location);  
-  {$ENDIF}  
+  exit if (r.location = NSNotFound) and (r.length = 0) then -1 else Int32(r.location);
+  {$ENDIF}
 end;
 
 method String.Substring(StartIndex: Int32): not nullable String;
@@ -521,7 +521,7 @@ begin
   if IsNullOrEmpty(Separator) then
     exit [mapped];
 
-  {$IF COOPER}  
+  {$IF COOPER}
   exit mapped.split(java.util.regex.Pattern.quote(Separator));
   {$ELSEIF ECHOES}
   exit mapped.Split([Separator], StringSplitOptions.None);
@@ -553,7 +553,7 @@ begin
   var sb := new StringBuilder(Count);
   for i: Integer := 0 to Count - 1 do
     sb.append(Value);
-  
+
   result := sb.toString;
 end;
 {$ENDIF}
@@ -737,7 +737,7 @@ begin
   result := mapped.TrimEnd(TrimChars) as not nullable;
   {$ELSEIF TOFFEE}
   var lCharacters := NSCharacterSet.characterSetWithCharactersInString(new Foundation.NSString withCharacters(TrimChars) length(TrimChars.length));
-  var lLastWanted := mapped.rangeOfCharacterFromSet(lCharacters.invertedSet) options(NSStringCompareOptions.NSBackwardsSearch);                                                               
+  var lLastWanted := mapped.rangeOfCharacterFromSet(lCharacters.invertedSet) options(NSStringCompareOptions.NSBackwardsSearch);
   result := if lLastWanted.location = NSNotFound then self else mapped.substringToIndex(lLastWanted.location + 1) as not nullable;
   {$ENDIF}
 end;
@@ -756,7 +756,7 @@ begin
   result := mapped.TrimStart(TrimChars) as not nullable;
   {$ELSEIF TOFFEE}
   var lCharacters := NSCharacterSet.characterSetWithCharactersInString(new Foundation.NSString withCharacters(TrimChars) length(TrimChars.length));
-  var lFirstWanted := mapped.rangeOfCharacterFromSet(lCharacters.invertedSet);  
+  var lFirstWanted := mapped.rangeOfCharacterFromSet(lCharacters.invertedSet);
   result := if lFirstWanted.location = NSNotFound then self else mapped.substringFromIndex(lFirstWanted.location);
   {$ENDIF}
 end;
@@ -775,11 +775,11 @@ begin
   if IgnoreCase then
     result := mapped.regionMatches(IgnoreCase, 0, Value, 0, Value.length)
   else
-    result := mapped.StartsWith(Value);  
+    result := mapped.StartsWith(Value);
   {$ELSEIF ECHOES}
   if IgnoreCase then
     result := mapped.StartsWith(Value, StringComparison.OrdinalIgnoreCase)
-  else 
+  else
     result := mapped.StartsWith(Value);
   {$ELSEIF TOFFEE}
   if Value.Length > mapped.length then
@@ -788,7 +788,7 @@ begin
     if IgnoreCase then
       result := (mapped.compare(Value) options(NSStringCompareOptions.NSCaseInsensitiveSearch) range(NSMakeRange(0, Value.length)) = NSComparisonResult.NSOrderedSame)
     else
-      result := mapped.hasPrefix(Value);   
+      result := mapped.hasPrefix(Value);
   end;
   {$ENDIF}
 end;

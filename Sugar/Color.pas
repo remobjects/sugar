@@ -6,9 +6,9 @@ type
   {$IF ECHOES}
   Color = public static class
   public
-    class method colorWithRGBAPercentage(aRed, aGreen, aBlue, aAlpha: Single): {$IF WINDOWS_PHONE}System.Windows.Media.Color{$ELSEIF NETFX_CORE}Windows.UI.Color{$ELSE}System.Drawing.Color{$ENDIF}; 
-    class method colorWithRGBA256(aRed, aGreen, aBlue, aAlpha: Byte): {$IF WINDOWS_PHONE}System.Windows.Media.Color{$ELSEIF NETFX_CORE}Windows.UI.Color{$ELSE}System.Drawing.Color{$ENDIF}; 
-  end;    
+    class method colorWithRGBAPercentage(aRed, aGreen, aBlue, aAlpha: Single): {$IF WINDOWS_PHONE}System.Windows.Media.Color{$ELSEIF NETFX_CORE}Windows.UI.Color{$ELSE}System.Drawing.Color{$ENDIF};
+    class method colorWithRGBA256(aRed, aGreen, aBlue, aAlpha: Byte): {$IF WINDOWS_PHONE}System.Windows.Media.Color{$ELSEIF NETFX_CORE}Windows.UI.Color{$ELSE}System.Drawing.Color{$ENDIF};
+  end;
   {$ELSEIF COOPER}
   Color = public record mapped to Int64
   public
@@ -16,7 +16,7 @@ type
     class method colorWithRGBA256(aRed, aGreen, aBlue, aAlpha: Byte): Color;
   end;
   {$ELSE TOFFEE}
-    
+
     {$IF IOS OR TVOS}
     Color = public class mapped to UIKit.UIColor
     public

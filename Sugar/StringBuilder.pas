@@ -16,8 +16,8 @@ type
     method Append(Value: String): StringBuilder;
     method Append(Value: String; StartIndex, Count: Integer): StringBuilder;
     method Append(Value: Char; RepeatCount: Integer): StringBuilder;
-    method AppendLine: StringBuilder; 
-    method AppendLine(Value: String): StringBuilder; 
+    method AppendLine: StringBuilder;
+    method AppendLine(Value: String): StringBuilder;
 
     method Clear;
     method Delete(StartIndex, Count: Integer): StringBuilder;
@@ -38,7 +38,7 @@ begin
     raise new SugarArgumentOutOfRangeException(ErrorMessage.NEGATIVE_VALUE_ERROR, "Number of repeats");
 
   {$IF COOPER}
-  for i: Int32 := 1 to RepeatCount do 
+  for i: Int32 := 1 to RepeatCount do
     mapped.append(Value);
 
   exit mapped;
@@ -202,7 +202,7 @@ begin
   {$ELSEIF ECHOES}
   mapped.Chars[&Index] := Value;
   {$ELSEIF TOFFEE}
-  mapped.replaceCharactersInRange(NSMakeRange(&Index, &Index)) withString(Value); 
+  mapped.replaceCharactersInRange(NSMakeRange(&Index, &Index)) withString(Value);
   {$ENDIF}
 end;
 

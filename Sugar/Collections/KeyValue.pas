@@ -5,17 +5,17 @@ interface
 uses
   Sugar;
 
-type  
+type
   KeyValuePair<T, U> = public class
   public
     constructor(aKey: T; aValue: U);
-    method {$IF TOFFEE}isEqual(obj: id){$ELSE}&Equals(Obj: Object){$ENDIF}: Boolean; override;    
+    method {$IF TOFFEE}isEqual(obj: id){$ELSE}&Equals(Obj: Object){$ENDIF}: Boolean; override;
     method {$IF COOPER}ToString: java.lang.String{$ELSEIF ECHOES}ToString: System.String{$ELSEIF TOFFEE}description: Foundation.NSString{$ENDIF}; override;
     method {$IF COOPER}hashCode: Integer{$ELSEIF ECHOES}GetHashCode: Integer{$ELSEIF TOFFEE}hash: Foundation.NSUInteger{$ENDIF}; override;
 
     property Key: T read write; readonly;
     property Value: U read write; readonly;
-    
+
     method GetTuple: tuple of (T,U);
   end;
 
@@ -33,7 +33,7 @@ begin
     raise new SugarArgumentNullException("Key");
 
   Key := aKey;
-  Value := aValue;  
+  Value := aValue;
 end;
 
 method KeyValuePair<T, U>.{$IF TOFFEE}isEqual(obj: id){$ELSE}&Equals(Obj: Object){$ENDIF}: Boolean;

@@ -25,7 +25,7 @@ type
     TicksPerMinute: Int64 = TicksPerSecond * 60;
     TicksPerHour: Int64 = TicksPerMinute * 60;
     TicksPerDay: Int64 = TicksPerHour * 24;
-    
+
 
     property Days: Integer read get_Days;
     property Hours: Integer read get_Hours;
@@ -54,7 +54,7 @@ type
     class method FromSeconds(d: Double): TimeSpan;
     class method FromMilliseconds(d: Double): TimeSpan;
     class method FromTicks(d: Int64): TimeSpan;
-    
+
     class operator Equal(a,b: TimeSpan): Boolean;
     class operator NotEqual(a,b: TimeSpan): Boolean;
 
@@ -96,7 +96,7 @@ end;
 
 method TimeSpan.get_TotalSeconds: Double;
 begin
-  exit Double(Ticks) / TicksPerSecond; 
+  exit Double(Ticks) / TicksPerSecond;
 end;
 
 method TimeSpan.get_TotalMinutes: Double;
@@ -207,7 +207,7 @@ begin
 end;
 
 class method TimeSpan.FromSeconds(d: Double): TimeSpan;
-begin  
+begin
   exit FromTicks(Int64(d * TicksPerSecond));
 end;
 
@@ -353,7 +353,7 @@ end;
 
 method TimeSpan.get_TotalMilliSeconds: Double;
 begin
-  exit Double(Ticks) / TicksPerMillisecond; 
+  exit Double(Ticks) / TicksPerMillisecond;
 end;
 
 end.

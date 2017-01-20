@@ -45,7 +45,7 @@ begin
   exit new java.util.HashSet<T>(&Set);
   {$ELSEIF ECHOES}
   exit new System.Collections.Generic.HashSet<T>(&Set);
-  {$ELSEIF TOFFEE}  
+  {$ELSEIF TOFFEE}
   var NewSet := new Foundation.NSMutableSet();
   NewSet.setSet(&Set);
   exit NewSet;
@@ -94,7 +94,7 @@ begin
   mapped.retainAll(&Set);
   {$ELSEIF ECHOES}
   mapped.IntersectWith(&Set);
-  {$ELSEIF TOFFEE}  
+  {$ELSEIF TOFFEE}
   mapped.intersectSet(&Set);
   {$ENDIF}
 end;
@@ -105,7 +105,7 @@ begin
   mapped.addAll(&Set);
   {$ELSEIF ECHOES}
   mapped.UnionWith(&Set);
-  {$ELSEIF TOFFEE}  
+  {$ELSEIF TOFFEE}
   mapped.unionSet(&Set);
   {$ENDIF}
 end;
@@ -116,7 +116,7 @@ begin
   exit mapped.equals(&Set);
   {$ELSEIF ECHOES}
   exit mapped.SetEquals(&Set);
-  {$ELSEIF TOFFEE}  
+  {$ELSEIF TOFFEE}
   exit mapped.isEqualToSet(&Set);
   {$ENDIF}
 end;
@@ -145,7 +145,7 @@ end;
 
 class method HashsetHelpers.Foreach<T>(aSelf: HashSet<T>; aAction: Action<T>);
 begin
-  for each el in aSelf do 
+  for each el in aSelf do
     aAction(el);
 end;
 
@@ -157,11 +157,11 @@ begin
   if aSelf.Count > aSet.Count then
     exit false;
 
-  for each el in aSelf do 
+  for each el in aSelf do
     if not aSet.Contains(el) then
       exit false;
 
-  exit true; 
+  exit true;
 end;
 
 end.

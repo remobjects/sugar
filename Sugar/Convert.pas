@@ -3,14 +3,14 @@
 interface
 
 type
-  Convert = public static class 
+  Convert = public static class
   private
     {$IF TOFFEE}
     method TryParseNumber(aValue: not nullable String; aLocale: Locale := nil): NSNumber;
-    method TryParseInt32(aValue: not nullable String): nullable Int32;  
-    method TryParseInt64(aValue: not nullable String): nullable Int64; 
-    method ParseInt32(aValue: not nullable String): Int32;  
-    method ParseInt64(aValue: not nullable String): Int64; 
+    method TryParseInt32(aValue: not nullable String): nullable Int32;
+    method TryParseInt64(aValue: not nullable String): nullable Int64;
+    method ParseInt32(aValue: not nullable String): Int32;
+    method ParseInt64(aValue: not nullable String): Int64;
     {$ENDIF}
 
     method TrimLeadingZeros(aValue: not nullable String): not nullable String; inline;
@@ -68,7 +68,7 @@ type
     method ToBoolean(aValue: Int64): Boolean;
     method ToBoolean(aValue: Byte): Boolean;
     method ToBoolean(aValue: not nullable String): Boolean;
-    
+
     //method ToHexString(aValue: Int32; aWidth: Integer := 0): not nullable String;
     method ToHexString(aValue: UInt64; aWidth: Integer := 0): not nullable String;
     method ToHexString(aData: array of Byte; aOffset: Integer; aCount: Integer): not nullable String;
@@ -196,7 +196,7 @@ end;
 
 method Convert.ToInt32(aValue: Boolean): Int32;
 begin
-  result := if aValue then 1 else 0; 
+  result := if aValue then 1 else 0;
 end;
 
 method Convert.ToInt32(aValue: Byte): Int32;
@@ -359,7 +359,7 @@ method Convert.HexStringToByteArray(aData: not nullable String): array of Byte;
   begin
     var Value := ord(C);
     result := Value - (if Value < 58 then 48 else if Value < 97 then 55 else 87);
-    
+
     if (result > 15) or (result < 0) then
       raise new SugarFormatException("{0}. Invalid character: [{1}]", ErrorMessage.FORMAT_ERROR, C);
   end;
@@ -543,7 +543,7 @@ begin
   Symbols.ExponentSeparator := 'E';
   DecFormat.setParseIntegerOnly(false);
   var Position := new java.text.ParsePosition(0);
-  
+
   aValue := aValue.Trim.ToUpper;
   {$IF ANDROID}
   if aValue.Length > 1 then begin
@@ -551,7 +551,7 @@ begin
     if DecimalIndex = -1 then
       DecimalIndex := aValue.Length;
 
-    aValue := aValue[0] + aValue.Substring(1, DecimalIndex - 1).Replace(",", "") + aValue.Substring(DecimalIndex);    
+    aValue := aValue[0] + aValue.Substring(1, DecimalIndex - 1).Replace(",", "") + aValue.Substring(DecimalIndex);
   end;
   {$ENDIF}
 
@@ -565,7 +565,7 @@ begin
   {$ELSEIF ECHOES}
   var lResult: Double;
   if Double.TryParse(aValue, System.Globalization.NumberStyles.Any, aLocale, out lResult) then
-    exit valueOrDefault(lResult); 
+    exit valueOrDefault(lResult);
   {$ELSEIF TOFFEE}
   var Number := TryParseNumber(aValue, aLocale);
   exit Number:doubleValue;
@@ -706,13 +706,13 @@ begin
 end;
 
 method Convert.ToBoolean(aValue: not nullable String): Boolean;
-begin  
-  if (aValue = nil) or (aValue.EqualsIgnoringCaseInvariant(Consts.FalseString)) then 
+begin
+  if (aValue = nil) or (aValue.EqualsIgnoringCaseInvariant(Consts.FalseString)) then
     exit false;
 
   if aValue.EqualsIgnoringCaseInvariant(Consts.TrueString) then
-    exit true;  
-  
+    exit true;
+
   raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);
 end;
 

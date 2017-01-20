@@ -88,7 +88,7 @@ begin
   var lName := CFStringConvertEncodingToIANACharSetName(CFStringConvertNSStringEncodingToEncoding(mapped.unsignedIntValue));
   if assigned(lName) then
     result := bridge<NSString>(lName, BridgeMode.Transfer);
-  {$ENDIF}  
+  {$ENDIF}
 end;
 
 {$IF TOFFEE}
@@ -148,9 +148,9 @@ begin
     'UTF32LE','UTF-32LE': lEncoding := NSStringEncoding.UTF32LittleEndianStringEncoding;
     'UTF32BE','UTF-32BE': lEncoding := NSStringEncoding.UTF32BigEndianStringEncoding;
     'US-ASCII', 'ASCII','UTF-ASCII': lEncoding := NSStringEncoding.ASCIIStringEncoding;
-    else begin 
+    else begin
       var lH := CFStringConvertIANACharSetNameToEncoding(bridge<CFStringRef>(aName));
-      if lH = kCFStringEncodingInvalidId then 
+      if lH = kCFStringEncodingInvalidId then
         raise new SugarArgumentException();
       lEncoding := CFStringConvertEncodingToNSStringEncoding(lH) as NSStringEncoding;
     end;

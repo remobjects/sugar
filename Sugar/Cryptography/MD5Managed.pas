@@ -7,8 +7,8 @@
 // System.Security.Cryptography.MD5CryptoServiceProvider.cs
 //
 //Original Authors:
-//	Matthew S. Ford (Matthew.S.Ford@Rose-Hulman.Edu)
-//	Sebastien Pouliot (sebastien@ximian.com)
+//  Matthew S. Ford (Matthew.S.Ford@Rose-Hulman.Edu)
+//  Sebastien Pouliot (sebastien@ximian.com)
 //
 // Copyright 2001 by Matthew S. Ford.
 // Copyright (C) 2004-2005 Novell, Inc (http://www.novell.com)
@@ -20,10 +20,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -44,28 +44,28 @@ type
     Count: UInt64;
     _ProcessingBuffer: array of Byte; // Used to start data when passed less than a block worth.
     _ProcessingBufferCount: Int32; // Counts how much data we have stored that still needs processed.
-    const BLOCK_SIZE_BYTES: Int32 = 64;    
+    const BLOCK_SIZE_BYTES: Int32 = 64;
   private
     method ProcessBlock(InputBuffer: array of Byte; InputOffset: Integer);
     method ProcessFinalBlock(InputBuffer: array of Byte; InputOffset: Integer; InputCount: Integer);
     method AddLength(Length: UInt64; Buffer: array of Byte; Position: Integer);
     class var K: array of UInt32 := [
-			$d76aa478, $e8c7b756, $242070db, $c1bdceee,
-			$f57c0faf, $4787c62a, $a8304613, $fd469501, 
-			$698098d8, $8b44f7af, $ffff5bb1, $895cd7be,
-			$6b901122, $fd987193, $a679438e, $49b40821,
-			$f61e2562, $c040b340, $265e5a51, $e9b6c7aa,
-			$d62f105d, $02441453, $d8a1e681, $e7d3fbc8,
-			$21e1cde6, $c33707d6, $f4d50d87, $455a14ed,
-			$a9e3e905, $fcefa3f8, $676f02d9, $8d2a4c8a,
-			$fffa3942, $8771f681, $6d9d6122, $fde5380c,
-			$a4beea44, $4bdecfa9, $f6bb4b60, $bebfbc70,
-			$289b7ec6, $eaa127fa, $d4ef3085, $04881d05,
-			$d9d4d039, $e6db99e5, $1fa27cf8, $c4ac5665,
-			$f4292244, $432aff97, $ab9423a7, $fc93a039,
-			$655b59c3, $8f0ccc92, $ffeff47d, $85845dd1,
-			$6fa87e4f, $fe2ce6e0, $a3014314, $4e0811a1,
-			$f7537e82, $bd3af235, $2ad7d2bb, $eb86d391]; readonly;
+      $d76aa478, $e8c7b756, $242070db, $c1bdceee,
+      $f57c0faf, $4787c62a, $a8304613, $fd469501,
+      $698098d8, $8b44f7af, $ffff5bb1, $895cd7be,
+      $6b901122, $fd987193, $a679438e, $49b40821,
+      $f61e2562, $c040b340, $265e5a51, $e9b6c7aa,
+      $d62f105d, $02441453, $d8a1e681, $e7d3fbc8,
+      $21e1cde6, $c33707d6, $f4d50d87, $455a14ed,
+      $a9e3e905, $fcefa3f8, $676f02d9, $8d2a4c8a,
+      $fffa3942, $8771f681, $6d9d6122, $fde5380c,
+      $a4beea44, $4bdecfa9, $f6bb4b60, $bebfbc70,
+      $289b7ec6, $eaa127fa, $d4ef3085, $04881d05,
+      $d9d4d039, $e6db99e5, $1fa27cf8, $c4ac5665,
+      $f4292244, $432aff97, $ab9423a7, $fc93a039,
+      $655b59c3, $8f0ccc92, $ffeff47d, $85845dd1,
+      $6fa87e4f, $fe2ce6e0, $a3014314, $4e0811a1,
+      $f7537e82, $bd3af235, $2ad7d2bb, $eb86d391]; readonly;
   public
     constructor;
     finalizer;

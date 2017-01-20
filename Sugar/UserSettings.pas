@@ -128,7 +128,7 @@ end;
 method UserSettings.&Read(Key: String; DefaultValue: Boolean): Boolean;
 begin
   SugarArgumentNullException.RaiseIfNil(Key, "Key");
-  {$IF ANDROID}  
+  {$IF ANDROID}
   exit Instance.getBoolean(Key, DefaultValue);
   {$ELSEIF COOPER}
   exit mapped.getBoolean(Key, DefaultValue);
@@ -136,7 +136,7 @@ begin
   if not mapped.TryGetValue<Boolean>(Key, out result) then
     exit DefaultValue;
   {$ELSEIF NETFX_CORE}
-  if not mapped.Values.ContainsKey(Key) then 
+  if not mapped.Values.ContainsKey(Key) then
     exit DefaultValue;
 
   exit Boolean(mapped.Values[Key]);
@@ -151,7 +151,7 @@ end;
 method UserSettings.&Read(Key: String; DefaultValue: Double): Double;
 begin
   SugarArgumentNullException.RaiseIfNil(Key, "Key");
-  {$IF ANDROID}  
+  {$IF ANDROID}
   exit Double.longBitsToDouble(Instance.getLong(Key, Double.doubleToRawLongBits(DefaultValue)));
   {$ELSEIF COOPER}
   exit mapped.getDouble(Key, DefaultValue);
@@ -159,7 +159,7 @@ begin
   if not mapped.TryGetValue<Double>(Key, out result) then
     exit DefaultValue;
   {$ELSEIF NETFX_CORE}
-  if not mapped.Values.ContainsKey(Key) then 
+  if not mapped.Values.ContainsKey(Key) then
     exit DefaultValue;
 
   exit Double(mapped.Values[Key]);
@@ -174,7 +174,7 @@ end;
 method UserSettings.&Read(Key: String; DefaultValue: Integer): Integer;
 begin
   SugarArgumentNullException.RaiseIfNil(Key, "Key");
-  {$IF ANDROID}  
+  {$IF ANDROID}
   exit Instance.getInt(Key, DefaultValue);
   {$ELSEIF COOPER}
   exit mapped.getInt(Key, DefaultValue);
@@ -182,11 +182,11 @@ begin
   if not mapped.TryGetValue<Integer>(Key, out result) then
     exit DefaultValue;
   {$ELSEIF NETFX_CORE}
-  if not mapped.Values.ContainsKey(Key) then 
+  if not mapped.Values.ContainsKey(Key) then
     exit DefaultValue;
 
   exit Integer(mapped.Values[Key]);
-  {$ELSEIF ECHOES}  
+  {$ELSEIF ECHOES}
   if not Integer.TryParse(mapped.AppSettings.Settings[Key]:Value, out Result) then
     exit DefaultValue;
   {$ELSEIF TOFFEE}
@@ -197,7 +197,7 @@ end;
 method UserSettings.&Read(Key: String; DefaultValue: String): String;
 begin
   SugarArgumentNullException.RaiseIfNil(Key, "Key");
-  {$IF ANDROID}  
+  {$IF ANDROID}
   exit Instance.getString(Key, DefaultValue);
   {$ELSEIF COOPER}
   exit mapped.get(Key, DefaultValue);
@@ -205,7 +205,7 @@ begin
   if not mapped.TryGetValue<String>(Key, out result) then
     exit DefaultValue;
   {$ELSEIF NETFX_CORE}
-  if not mapped.Values.ContainsKey(Key) then 
+  if not mapped.Values.ContainsKey(Key) then
     exit DefaultValue;
 
   exit String(mapped.Values[Key]);
@@ -225,7 +225,7 @@ end;
 method UserSettings.&Remove(Key: String);
 begin
   SugarArgumentNullException.RaiseIfNil(Key, "Key");
-  {$IF ANDROID}  
+  {$IF ANDROID}
   Instance.edit.remove(Key).apply;
   {$ELSEIF COOPER}
   mapped.remove(Key);
@@ -258,7 +258,7 @@ end;
 method UserSettings.&Write(Key: String; Value: Boolean);
 begin
   SugarArgumentNullException.RaiseIfNil(Key, "Key");
-  {$IF ANDROID}  
+  {$IF ANDROID}
   Instance.edit.putBoolean(Key, Value).apply;
   {$ELSEIF COOPER}
   mapped.putBoolean(Key, Value);
@@ -294,7 +294,7 @@ end;
 method UserSettings.&Write(Key: String; Value: Integer);
 begin
   SugarArgumentNullException.RaiseIfNil(Key, "Key");
-  {$IF ANDROID}  
+  {$IF ANDROID}
   Instance.edit.putInt(Key, Value).apply;
   {$ELSEIF COOPER}
   mapped.putInt(Key, Value);
@@ -304,7 +304,7 @@ begin
   mapped.Values[Key] := Value;
   {$ELSEIF ECHOES}
   &Write(Key, Value.ToString);
-  {$ELSEIF TOFFEE}  
+  {$ELSEIF TOFFEE}
   mapped.setInteger(Value) forKey(Key);
   {$ENDIF}
 end;
@@ -312,7 +312,7 @@ end;
 method UserSettings.&Write(Key: String; Value: String);
 begin
   SugarArgumentNullException.RaiseIfNil(Key, "Key");
-  {$IF ANDROID}  
+  {$IF ANDROID}
   Instance.edit.putString(Key, Value).apply;
   {$ELSEIF COOPER}
   mapped.put(Key, Value);

@@ -14,8 +14,8 @@ uses
   rtl;
 {$ENDIF}
 
-type  
-  DigestAlgorithm = public (MD5, SHA1, SHA256, SHA384, SHA512); 
+type
+  DigestAlgorithm = public (MD5, SHA1, SHA256, SHA384, SHA512);
 
   MessageDigest = public class {$IF COOPER}mapped to java.security.MessageDigest{$ELSEIF NETFX_CORE}mapped to CryptographicHash{$ELSEIF ECHOES}mapped to System.Security.Cryptography.HashAlgorithm{$ELSEIF TOFFEE}{$ENDIF}
   public
@@ -173,7 +173,7 @@ begin
   mapped.reset;
   {$ELSEIF NETFX_CORE}
   mapped.GetValueAndReset;
-  {$ELSEIF ECHOES}  
+  {$ELSEIF ECHOES}
   mapped.Initialize;
   {$ELSEIF TOFFEE}
   {$ENDIF}

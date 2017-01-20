@@ -13,7 +13,7 @@ type
     property Port: Int32 read mapped.Port;
     property Path: String read mapped.Path;
     property QueryString: String read mapped.Query;
-    property Fragment: String read mapped.toURI.Fragment;    
+    property Fragment: String read mapped.toURI.Fragment;
     property UserInfo: String read mapped.UserInfo;
   {$ELSEIF ECHOES}
   Url = public class mapped to System.Uri
@@ -47,16 +47,16 @@ type
     property QueryString: String read mapped.query;
     property Fragment: String read mapped.fragment;
     property UserInfo: String read GetUserInfo;
-    
+
     method description: NSString; override; inline;
   {$ENDIF}
 
     class method UrlEncodeString(aString: String): String;
 
     method GetParentUrl(): Url;
-    method GetSubUrl(aName: String): Url;    
+    method GetSubUrl(aName: String): Url;
   end;
-    
+
 implementation
 
 {$IF TOFFEE}

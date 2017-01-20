@@ -8,7 +8,7 @@ uses
   {$IF COOPER}com.remobjects.elements.linq,{$ENDIF}
   Sugar.Collections;
 
-{$IF TOFFEE AND (TARGET_OS_IPHONE OR TARGET_IPHONESIMULATOR)} 
+{$IF TOFFEE AND (TARGET_OS_IPHONE OR TARGET_IPHONESIMULATOR)}
 type Protocol = id;
 {$ENDIF}
 
@@ -29,20 +29,20 @@ type
     fProtocol: Protocol;
     fSimpleType: String;
     method GetName: String;
-    method Get_Interfaces: List<Sugar.Reflection.Type>; 
+    method Get_Interfaces: List<Sugar.Reflection.Type>;
     method Get_Methods: List<Sugar.Reflection.MethodInfo>;
     {$ENDIF}
     {$IF NETFX_CORE}
-    method Get_Interfaces: List<Sugar.Reflection.Type>; 
+    method Get_Interfaces: List<Sugar.Reflection.Type>;
     method Get_Methods: List<Sugar.Reflection.MethodInfo>;
     {$ENDIF}
-    
+
   public
-    {$IFDEF NETFX_CORE} 
-    property Interfaces: List<Sugar.Reflection.Type> read Get_Interfaces; 
-    property Methods: List<Sugar.Reflection.MethodInfo> read Get_Methods; 
+    {$IFDEF NETFX_CORE}
+    property Interfaces: List<Sugar.Reflection.Type> read Get_Interfaces;
+    property Methods: List<Sugar.Reflection.MethodInfo> read Get_Methods;
     property Name: String read mapped.Name;
-    property BaseType: Sugar.Reflection.Type read mapped.GetTypeInfo().BaseType; 
+    property BaseType: Sugar.Reflection.Type read mapped.GetTypeInfo().BaseType;
     property IsClass: Boolean read mapped.GetTypeInfo().IsClass;
     property IsInterface: Boolean read mapped.GetTypeInfo().IsInterface;
     property IsArray: Boolean read mapped.IsArray;
@@ -53,7 +53,7 @@ type
     property Methods: List<Sugar.Reflection.MethodInfo> read mapped.GetMethods().ToList();
     //property Attributes: List<Sugar.Reflection.AttributeInfo> read mapped.().ToList();
     property Name: String read mapped.Name;
-    property BaseType: Sugar.Reflection.Type read mapped.BaseType; 
+    property BaseType: Sugar.Reflection.Type read mapped.BaseType;
     property IsClass: Boolean read mapped.IsClass;
     property IsInterface: Boolean read mapped.IsInterface;
     property IsArray: Boolean read mapped.IsArray;
@@ -65,7 +65,7 @@ type
     property Methods: List<Sugar.Reflection.MethodInfo> read mapped.getMethods().ToList();
     //property Attributes: List<Sugar.Reflection.AttributeInfo> read mapped.().ToList();
     property Name: String read mapped.Name;
-    property BaseType: Sugar.Reflection.Type read mapped.getSuperclass(); 
+    property BaseType: Sugar.Reflection.Type read mapped.getSuperclass();
     property IsClass: Boolean read (not mapped.isInterface()) and (not mapped.isPrimitive());
     property IsInterface: Boolean read mapped.isInterface();
     property IsArray: Boolean read mapped.isArray();
@@ -83,7 +83,7 @@ type
     //operator Explicit(aClass: rtl.Class): &Type;
     //operator Explicit(aProtocol: Protocol): &Type;
     property Name: String read getName;
-    property BaseType: Sugar.Reflection.Type read if IsClass then new &Type withClass(class_getSuperclass(fClass)); 
+    property BaseType: Sugar.Reflection.Type read if IsClass then new &Type withClass(class_getSuperclass(fClass));
     property IsClass: Boolean read assigned(fClass) or fIsID;
     property IsInterface: Boolean read assigned(fProtocol);
     property IsArray: Boolean read false;

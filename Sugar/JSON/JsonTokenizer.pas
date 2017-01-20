@@ -29,7 +29,7 @@ type
     constructor (aJson: String; SkipWhitespaces: Boolean);
 
     method Next: Boolean;
-    
+
     property Json: String; readonly;
 
     property Row: Integer read fLastRow + 1;
@@ -60,7 +60,7 @@ begin
   {$ELSEIF TOFFEE}
   rtl.memset(@fData[0], 0, fData.length);
   memcpy(@fData[0], @CharData[0], sizeOf(Char) * CharData.Length);
-  {$ENDIF} 
+  {$ENDIF}
   Token := JsonTokenKind.BOF;
 end;
 
@@ -194,7 +194,7 @@ begin
 
   if (fData[lPosition] = 'e') or (fData[lPosition] = 'E') then begin
     inc(lPosition);
-    
+
     if (fData[lPosition] = '-') or (fData[lPosition] = '+') then
       inc(lPosition);
 
@@ -213,7 +213,7 @@ begin
   var lPosition := fPos + 1;
 
   while (fData[lPosition] <> #0) and (fData[lPosition] <> '"') do begin
-    
+
     if fData[lPosition] = '\' then begin
       inc(lPosition);
 
@@ -234,7 +234,7 @@ begin
               end;
       end;
     end
-    else 
+    else
       sb.Append(fData[lPosition]);
 
     inc(lPosition);
@@ -246,7 +246,7 @@ begin
 end;
 
 method JsonTokenizer.ParseIdentifier;
-begin  
+begin
   var lPosition := fPos + 1;
 
   while CharIsIdentifier(fData[lPosition]) do
@@ -254,9 +254,9 @@ begin
 
   fLength := lPosition - fPos;
   Value := new String(fData, fPos, fLength);
-  case Value of 
+  case Value of
     JsonConsts.NULL_VALUE: Token := JsonTokenKind.Null;
-    JsonConsts.TRUE_VALUE: Token := JsonTokenKind.True;    
+    JsonConsts.TRUE_VALUE: Token := JsonTokenKind.True;
     JsonConsts.FALSE_VALUE: Token := JsonTokenKind.False;
     else Token := JsonTokenKind.Identifier;
   end;

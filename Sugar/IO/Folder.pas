@@ -3,13 +3,13 @@
 interface
 
 uses
-  {$IF WINDOWS_PHONE OR NETFX_CORE}  
+  {$IF WINDOWS_PHONE OR NETFX_CORE}
   System.IO,
   {$ELSEIF COOPER}
   {$ELSEIF ECHOES}
   {$ELSEIF TOFFEE}
   {$ENDIF}
-  
+
   Sugar,
   {$IF COOPER}
   com.remobjects.elements.linq,
@@ -25,7 +25,7 @@ type
     {$ELSEIF TOFFEE}
     method Combine(BasePath: String; SubPath: String): String;
     {$ENDIF}
-    
+
     method DoGetFiles(aFolder: Folder; aList: List<File>);
   public
     constructor(aPath: not nullable String);
@@ -78,7 +78,7 @@ type
   {$ENDIF}
 
   {$IF WINDOWS_PHONE OR NETFX_CORE}
-  extension method Windows.Foundation.IAsyncOperation<TResult>.Await<TResult>: TResult;  
+  extension method Windows.Foundation.IAsyncOperation<TResult>.Await<TResult>: TResult;
   {$ENDIF}
 
 
@@ -482,7 +482,7 @@ begin
 end;
 
 class method FolderHelper.IsDirectory(Value: String): Boolean;
-begin  
+begin
   Foundation.NSFileManager.defaultManager.fileExistsAtPath(Value) isDirectory(@Result);
 end;
 
@@ -524,7 +524,7 @@ begin
   if Manager.fileExistsAtPath(NewFolderName) then
     raise new SugarIOException(ErrorMessage.FOLDER_EXISTS, NewName);
 
-  var lError: NSError := nil; 
+  var lError: NSError := nil;
   if not Manager.moveItemAtPath(mapped) toPath(NewFolderName) error(var lError) then
     raise new SugarNSErrorException(lError);
 

@@ -3,7 +3,7 @@
 interface
 
 {$IFDEF ECHOES}(*
-uses 
+uses
   System.IO,
   System.IO.Compression,
   System.Security.Cryptography;
@@ -23,7 +23,7 @@ type
     class method decryptStringFromBytes(cipherText: array of Byte; Key: AESKey; IV: AESBlock): String;
   end;
   AESBlock = array[0 .. AESBlockLength - 1] of Byte;
-  AESKey = array[0 .. AESKeyLength - 1] of Byte;  
+  AESKey = array[0 .. AESKeyLength - 1] of Byte;
 *){$ENDIF}
 
 implementation
@@ -32,7 +32,7 @@ implementation
 class method Aes.AesFactory(myKey: AESKey; myIV: AESBlock): AesManaged;
 begin
   result := new AesManaged(
-    Mode := AesCipherMode, 
+    Mode := AesCipherMode,
     Padding := AesPaddingMode,
     KeySize := AESKeyLength * 8,
     FeedbackSize := AESBlockLength * 8,
@@ -74,7 +74,7 @@ begin
   using encStrm := new CryptoStream(output, encryptor, CryptoStreamMode.Write) do
   // The DeflateStream compresses the input
   using gzip := new DeflateStream(encStrm, CompressionMode.Compress) do // in .NET 4.5 use CompressionLevel.Fastest
-  // The StreamWriter takes the input 
+  // The StreamWriter takes the input
   using writer := new StreamWriter(gzip) do begin
     //Write all data to the stream.
     writer.Write(plainText);

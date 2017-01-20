@@ -11,7 +11,7 @@ type
     method NextDouble: Double; mapped to nextDouble;
   end;
   {$ELSE}
-  Random = public class 
+  Random = public class
   private
     const Multiplier: UInt64 = $5DEECE66D;
     const Temp: UInt64 = 1;
@@ -44,7 +44,7 @@ begin
   constructor(System.DateTime.Now.Ticks);
   {$ELSEIF TOFFEE}
   var interval: rtl.__struct_timeval;
-  gettimeofday(@interval, nil);  
+  gettimeofday(@interval, nil);
   constructor(interval.tv_usec * interval.tv_sec);
   {$ENDIF}
 end;

@@ -21,8 +21,8 @@ type
   public
     {$IF ECHOES}
     property Name: String read DocumentType.Name.ToString; override;
-    property LocalName: String read DocumentType.Name; override;    
-    {$ENDIF}    
+    property LocalName: String read DocumentType.Name; override;
+    {$ENDIF}
     property PublicId: String read {$IF TOFFEE}XmlChar.ToString(DocumentType^.ExternalID){$ELSE}iif(DocumentType.PublicId = nil, "", DocumentType.PublicId){$ENDIF};
     property SystemId: String read {$IF TOFFEE}XmlChar.ToString(DocumentType^.SystemID){$ELSE}iif(DocumentType.SystemId = nil, "", DocumentType.SystemId){$ENDIF};
     property NodeType: XmlNodeType read XmlNodeType.DocumentType; override;
@@ -30,9 +30,9 @@ type
 
     {$IF TOFFEE}
     property FirstChild: XmlNode read nil; override;
-    property LastChild: XmlNode read nil; override;    
+    property LastChild: XmlNode read nil; override;
     property ChildCount: Integer read 0; override;
-    property ChildNodes: array of XmlNode read []; override;    
+    property ChildNodes: array of XmlNode read []; override;
     {$ENDIF}
   end;
 implementation

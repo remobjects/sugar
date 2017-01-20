@@ -20,7 +20,7 @@ type
     method SetData(aValue: String);
     method GetLength: Integer;
     {$ELSE}
-    property CharacterData: {$IF COOPER}CharacterData{$ELSEIF ECHOES}XText{$ENDIF} 
+    property CharacterData: {$IF COOPER}CharacterData{$ELSEIF ECHOES}XText{$ENDIF}
                             read Node as {$IF COOPER}CharacterData{$ELSEIF ECHOES}XText{$ENDIF};
     {$ENDIF}
     {$IF COOPER}method SetData(aValue: String);{$ENDIF}
@@ -55,10 +55,10 @@ type
   {$IF ECHOES}
   private
     property Comment: XComment read Node as XComment;
-  public    
+  public
     property Data: String read Comment.Value write Comment.Value; override;
     property Length: Integer read Comment.Value.Length; override;
-    property Value: String read Comment.Value write Comment.Value; override;    
+    property Value: String read Comment.Value write Comment.Value; override;
   {$ENDIF}
   public
     property Name: String read "#comment"; override;
@@ -108,7 +108,7 @@ begin
 
   {$IF ECHOES}
   Value := Value + aValue;
-  {$ELSEIF COOPER} 
+  {$ELSEIF COOPER}
   CharacterData.AppendData(aValue);
   {$ELSEIF TOFFEE}
   var lData: NSMutableString := NSMutableString.stringWithString(Data);
@@ -121,7 +121,7 @@ method XmlCharacterData.DeleteData(Offset: Integer; Count: Integer);
 begin
   {$IF ECHOES}
   Value := System.String(Value).Remove(Offset, Count);
-  {$ELSEIF COOPER} 
+  {$ELSEIF COOPER}
   if Offset + Count > CharacterData.Length then
     raise new SugarArgumentOutOfRangeException(String.Format(ErrorMessage.OUT_OF_RANGE_ERROR, Offset, Count, CharacterData.Length));
 
@@ -138,7 +138,7 @@ begin
   SugarArgumentNullException.RaiseIfNil(aValue, "Value");
   {$IF ECHOES}
   Value := System.String(Value).Insert(Offset, aValue);
-  {$ELSEIF COOPER} 
+  {$ELSEIF COOPER}
   CharacterData.InsertData(Offset, aValue);
   {$ELSEIF TOFFEE}
   var lData: NSMutableString := NSMutableString.stringWithString(Data);
@@ -152,7 +152,7 @@ begin
   {$IF ECHOES}
   DeleteData(Offset, Count);
   InsertData(Offset, WithValue);
-  {$ELSEIF COOPER} 
+  {$ELSEIF COOPER}
   if Offset + Count > CharacterData.Length then
     raise new SugarArgumentOutOfRangeException(String.Format(ErrorMessage.OUT_OF_RANGE_ERROR, Offset, Count, CharacterData.Length));
 
@@ -168,7 +168,7 @@ method XmlCharacterData.Substring(Offset: Integer; Count: Integer): String;
 begin
   {$IF ECHOES}
   exit Value.Substring(Offset, Count);
-  {$ELSEIF COOPER} 
+  {$ELSEIF COOPER}
   if Offset + Count > CharacterData.Length then
     raise new SugarArgumentOutOfRangeException(String.Format(ErrorMessage.OUT_OF_RANGE_ERROR, Offset, Count, CharacterData.Length));
 

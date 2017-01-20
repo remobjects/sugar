@@ -55,7 +55,7 @@ type
     method CreateElement(Name: String): XmlElement;
     method CreateElement(QualifiedName: String; NamespaceUri: String): XmlElement;
     method CreateProcessingInstruction(Target, Data: String): XmlProcessingInstruction;
-    method CreateTextNode(Data: String): XmlText;    
+    method CreateTextNode(Data: String): XmlText;
 
     method GetElementsByTagName(Name: String): array of XmlElement;
     method GetElementsByTagName(LocalName, NamespaceUri: String): array of XmlElement;
@@ -159,7 +159,7 @@ begin
   var items := Doc.GetElementsByTagName(Name);
   if items = nil then
     exit [];
-  
+
   result := new XmlElement[items.length];
   for i: Integer := 0 to items.length-1 do
     result[i] := new XmlElement(items.Item(i));
@@ -173,7 +173,7 @@ begin
   var items := Doc.GetElementsByTagNameNS(NamespaceUri, LocalName);
   if items = nil then
     exit [];
-  
+
   result := new XmlElement[items.length];
   for i: Integer := 0 to items.length-1 do
     result[i] := new XmlElement(items.Item(i));
@@ -189,9 +189,9 @@ begin
   var Factory := javax.xml.parsers.DocumentBuilderFactory.newInstance;
   //handle namespaces
   Factory.NamespaceAware := true;
-  Factory.Validating := false;  
+  Factory.Validating := false;
 
-  var Builder := Factory.newDocumentBuilder();    
+  var Builder := Factory.newDocumentBuilder();
   var Input := new org.xml.sax.InputSource(new java.io.StringReader(Content));
   if BaseUri <> nil then
     Input.SystemId := BaseUri;
@@ -203,7 +203,7 @@ begin
     else
       exit nil;
   end
-  )); 
+  ));
 
   var Document := Builder.parse(Input);
 
@@ -215,7 +215,7 @@ end;
 
 class method XmlDocument.FromFile(aFile: File): not nullable XmlDocument;
 begin
-  var Handle := aFile.Open(FileOpenMode.ReadOnly);  
+  var Handle := aFile.Open(FileOpenMode.ReadOnly);
   try
     var Bin := Handle.Read(Handle.Length);
     exit ParseXml(new String(Bin.ToArray, Encoding.UTF8), aFile.FullPath);
@@ -238,7 +238,7 @@ class method XmlDocument.CreateDocument: not nullable XmlDocument;
 begin
   var Factory := javax.xml.parsers.DocumentBuilderFactory.newInstance;
   Factory.NamespaceAware := true;
-  var Builder := Factory.newDocumentBuilder();  
+  var Builder := Factory.newDocumentBuilder();
   exit new XmlDocument(Builder.newDocument());
 end;
 
@@ -257,7 +257,7 @@ begin
   var Factory := javax.xml.transform.TransformerFactory.newInstance();
   var Transformer := Factory.newTransformer();
   var Source: javax.xml.transform.dom.DOMSource := new javax.xml.transform.dom.DOMSource(Doc);
-  
+
   Transformer.setOutputProperty(javax.xml.transform.OutputKeys.INDENT, "yes");
   Transformer.setOutputProperty(javax.xml.transform.OutputKeys.METHOD, "xml");
   Transformer.setOutputProperty(javax.xml.transform.OutputKeys.OMIT_XML_DECLARATION, "no");
@@ -297,7 +297,7 @@ method XmlDocument.ReplaceChild(Node: XmlNode; WithNode: XmlNode);
 begin
   Doc.replaceChild(WithNode.Node, Node.Node);
 end;
-{$ELSEIF ECHOES}  
+{$ELSEIF ECHOES}
 method XmlDocument.AddChild(Node: XmlNode);
 begin
   Doc.Add(Node.Node);
@@ -315,7 +315,7 @@ begin
 
   if lIndex <> -1 then
     QualifiedName := QualifiedName.Substring(lIndex+1, QualifiedName.Length - lIndex - 1);
-    
+
   var ns: XNamespace := System.String(NamespaceUri);
   var Attr := new XAttribute(ns + QualifiedName, "");
   exit new XmlAttribute(Attr);
@@ -388,7 +388,7 @@ begin
 end;
 
 method XmlDocument.GetElementsByTagName(Name: String): array of XmlElement;
-begin  
+begin
   if DocumentElement = nil then
     exit [];
 
@@ -405,10 +405,10 @@ begin
     var document := XDocument.Load(reader, LoadOptions.SetBaseUri);
     exit new XmlDocument(document);
   finally
-    Handle.Close;    
-  end;  
+    Handle.Close;
+  end;
   {$ELSE}
-  var document := XDocument.Load(System.String(aFile), LoadOptions.SetBaseUri);  
+  var document := XDocument.Load(System.String(aFile), LoadOptions.SetBaseUri);
   result := new XmlDocument(document);
   {$ENDIF}
 end;
@@ -423,7 +423,7 @@ begin
     result := new XmlDocument(document);
   finally
     ms.Position := Position;
-  end;  
+  end;
 end;
 
 class method XmlDocument.FromString(aString: String): not nullable XmlDocument;
@@ -467,7 +467,7 @@ begin
     Handle.Write(Encoding.UTF8.GetBytes(sb.ToString));
   finally
     Handle.Close;
-  end;  
+  end;
   {$ELSEIF ECHOES}
   Doc.Save(aFile);
   {$ENDIF}
@@ -499,7 +499,7 @@ begin
     raise new SugarArgumentException("Invalid attribute name {0}", Name);
 
   var NewObj := libxml.xmlNewProp(nil, XmlChar.FromString(Name), XmlChar.FromString(""));
-  
+
   if NewObj = nil then
     raise new SugarInvalidOperationException("Unable to create attribute {0}", Name);
 
@@ -683,7 +683,7 @@ end;
 
 method XmlDocument.Save(aFile: File);
 begin
-  Save(aFile, nil);  
+  Save(aFile, nil);
 end;
 
 method XmlDocument.Save(aFile: File; Version: String; Encoding: String; Standalone: Boolean);
@@ -699,7 +699,7 @@ begin
     exit;
   end;
 
-  libxml.xmlSaveFormatFile(NSString(aFile), libxml.xmlDocPtr(Node), 1);  
+  libxml.xmlSaveFormatFile(NSString(aFile), libxml.xmlDocPtr(Node), 1);
 end;
 
 method XmlDocument.GetDocumentElement: XmlElement;

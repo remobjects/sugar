@@ -12,7 +12,7 @@ uses
   {$ENDIF}
   Sugar;
 
-type  
+type
   List<T> = public class (sequence of T) mapped to {$IF COOPER}java.util.ArrayList<T>{$ELSEIF ECHOES}System.Collections.Generic.List<T>{$ELSEIF TOFFEE}Foundation.NSMutableArray where T is class;{$ENDIF}
   private
   public
@@ -38,7 +38,7 @@ type
     method TrueForAll(Match: Predicate<T>): Boolean;
     method ForEach(Action: Action<T>);
 
-    method IndexOf(anItem: T): Integer; 
+    method IndexOf(anItem: T): Integer;
     method Insert(&Index: Integer; anItem: T);
     method InsertRange(&Index: Integer; Items: List<T>);
     method InsertRange(&Index: Integer; Items: array of T);
@@ -51,7 +51,7 @@ type
     method Sort(Comparison: Comparison<T>);
 
     method ToArray: array of T; {$IF COOPER}inline;{$ENDIF}
-    
+
     property Count: Integer read {$IF COOPER}mapped.Size{$ELSEIF ECHOES}mapped.Count{$ELSEIF TOFFEE}mapped.count{$ENDIF};
     property Item[i: Integer]: T read GetItem write SetItem; default;
 
@@ -59,7 +59,7 @@ type
     operator Implicit(aArray: NSArray<T>): List<T>;
     {$ENDIF}
   end;
-  
+
   Predicate<T> = public block (Obj: T): Boolean;
   Action<T> = public block (Obj: T);
   Comparison<T> = public block (x: T; y: T): Integer;
@@ -128,7 +128,7 @@ method List<T>.SetItem(&Index: Integer; Value: T);
 begin
   {$IF TOFFEE}
   mapped[&Index] := NullHelper.ValueOf(Value);
-  {$ELSE}  
+  {$ELSE}
   mapped[&Index] := Value;
   {$ENDIF}
 end;
@@ -137,7 +137,7 @@ method List<T>.GetItem(&Index: Integer): T;
 begin
   {$IF TOFFEE}
   exit NullHelper.ValueOf(mapped.objectAtIndex(&Index));
-  {$ELSE}  
+  {$ELSE}
   exit mapped[&Index];
   {$ENDIF}
 end;
@@ -260,7 +260,7 @@ begin
 end;
 
 method List<T>.LastIndexOf(anItem: T): Integer;
-begin  
+begin
   {$IF COOPER}
   exit mapped.LastIndexOf(anItem);
   {$ELSEIF ECHOES}
@@ -282,7 +282,7 @@ begin
     RemoveAt(lIndex);
     exit true;
   end;
-  
+
   exit false;
   {$ENDIF}
 end;
@@ -311,9 +311,9 @@ end;
 
 method List<T>.Sort(Comparison: Comparison<T>);
 begin
-  {$IF COOPER}  
+  {$IF COOPER}
   java.util.Collections.sort(mapped, new class java.util.Comparator<T>(compare := (x, y) -> Comparison(x, y)));
-  {$ELSEIF ECHOES} 
+  {$ELSEIF ECHOES}
   mapped.Sort((x, y) -> Comparison(x, y));
   {$ELSEIF TOFFEE}
   mapped.sortUsingComparator((x, y) -> begin
@@ -326,7 +326,7 @@ end;
 method List<T>.ToArray: array of T;
 begin
   {$IF COOPER}
-  exit mapped.toArray(new T[mapped.size()]); 
+  exit mapped.toArray(new T[mapped.size()]);
   {$ELSEIF ECHOES}
   exit mapped.ToArray;
   {$ELSEIF TOFFEE}
@@ -372,7 +372,7 @@ begin
   if Match = nil then
     raise new SugarArgumentNullException("Match");
 
-  var Length := StartIndex + aCount; 
+  var Length := StartIndex + aCount;
 
   for i: Int32 := StartIndex to Length - 1 do
     if Match(aSelf[i]) then
@@ -414,7 +414,7 @@ begin
   for i: Integer := 0 to aSelf.Count-1 do begin
     if not Match(aSelf[i]) then
       exit false;
-  end; 
+  end;
 
   exit true;
 end;
@@ -440,7 +440,7 @@ end;
 method ListHelpers.LastIndexOf<T>(aSelf: NSArray; aItem: T): Integer;
 begin
   var o := NullHelper.ValueOf(aItem);
-  for i: Integer := aSelf.count -1 downto 0 do 
+  for i: Integer := aSelf.count -1 downto 0 do
     if aSelf[i] = o then exit i;
   exit -1;
 end;

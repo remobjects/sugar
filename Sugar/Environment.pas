@@ -21,7 +21,7 @@ type
     class method GetTargetPlatform: Sugar.TargetPlatform;
     class method GetTargetPlatformName: Sugar.String;
     class method GetCompilerSubMode: CompilerSubMode;
-    
+
     {$IF ECHOES}
     [System.Runtime.InteropServices.DllImport("libc")]
     class method uname(buf: IntPtr): Integer; external;
@@ -49,7 +49,7 @@ implementation
 class method Environment.GetEnvironmentVariable(Name: String): String;
 begin
   {$IF COOPER}
-  exit System.getenv(Name); 
+  exit System.getenv(Name);
   {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
   raise new SugarNotSupportedException("GetEnvironmentVariable not supported on this platfrom");
   {$ELSEIF ECHOES}
@@ -199,7 +199,7 @@ end;
 
 class method Environment.GetOSVersion: String;
 begin
-  {$IF COOPER}  
+  {$IF COOPER}
   System.getProperty("os.version");
   {$ELSEIF WINDOWS_PHONE}
   exit System.Environment.OSVersion.Version.ToString;
@@ -300,7 +300,7 @@ begin
   {$ELSEIF NETFX_CORE}
   exit Windows.Storage.ApplicationData.Current.LocalFolder.Path;
   {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
-  exit System.Environment.CurrentDirectory; 
+  exit System.Environment.CurrentDirectory;
   {$ELSEIF ECHOES}
   exit System.Environment.CurrentDirectory;
   {$ELSEIF TOFFEE}

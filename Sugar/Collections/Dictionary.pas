@@ -52,7 +52,7 @@ type
     method Foreach<T, U>(aSelf: Dictionary<T, U>; aAction: Action<KeyValuePair<T, U>>);
   end;
 
-  
+
 
 implementation
 
@@ -61,7 +61,7 @@ begin
   {$IF COOPER}
   result := new java.util.HashMap<T,U>(aCapacity);
   {$ELSEIF ECHOES}
-  result := new System.Collections.Generic.Dictionary<T,U>(aCapacity); 
+  result := new System.Collections.Generic.Dictionary<T,U>(aCapacity);
   {$ELSEIF TOFFEE}
   result := new Foundation.NSMutableDictionary withCapacity(aCapacity);
   {$ENDIF}
@@ -195,7 +195,7 @@ begin
 end;
 
 method DictionaryHelpers.GetItem<T, U>(aSelf: java.util.HashMap<T,U>; aKey: T): U;
-begin 
+begin
   if not aSelf.containsKey(aKey) then raise new SugarKeyNotFoundException();
   exit aSelf[aKey];
 end;
@@ -209,7 +209,7 @@ end;
 
 method DictionaryHelpers.Foreach<T, U>(aSelf: Dictionary<T, U>; aAction: Action<KeyValuePair<T, U>>);
 begin
-  for each el in aSelf.Keys do 
+  for each el in aSelf.Keys do
     aAction(new KeyValuePair<T,U>(T(el), U(aSelf.Item[el])));
 end;
 
@@ -233,7 +233,7 @@ begin
   exit DictionaryHelpers.GetSequence<T, U>(self);
 end;
 {$ENDIF}
-    
+
 {$IF TOFFEE}
 operator Dictionary<T,U>.Implicit(aDictionary: NSDictionary<T,U>): Dictionary<T,U>;
 begin

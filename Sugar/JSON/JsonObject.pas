@@ -2,7 +2,7 @@
 
 interface
 
-uses  
+uses
   Sugar,
   Sugar.Collections;
 
@@ -17,14 +17,14 @@ type
   public
     constructor;
     constructor(aItems: Dictionary<String, JsonNode>);
-  
+
     method &Add(Key: String; Value: nullable JsonNode);
     method Clear;
     method ContainsKey(Key: String): Boolean;
     method &Remove(Key: String): Boolean;
 
     method ToJson: String; override;
-    
+
     {$IF COOPER}
     method &iterator: java.util.&Iterator<KeyValuePair<String, JsonNode>>;
     {$ELSEIF ECHOES}
@@ -39,7 +39,7 @@ type
     property Count: Integer read fItems.Count; override;
     property Item[Key: String]: nullable JsonNode read GetItem write Add; default; override;
     property Keys: not nullable sequence of String read GetKeys; override;
-    property Properties: sequence of KeyValuePair<String, JsonNode> read GetProperties; 
+    property Properties: sequence of KeyValuePair<String, JsonNode> read GetProperties;
   end;
 
 implementation

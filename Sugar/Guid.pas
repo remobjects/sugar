@@ -40,7 +40,7 @@ type
     method ToString: System.String; override;
     {$ELSEIF TOFFEE}
     method description: NSString; override;
-    {$ENDIF}    
+    {$ENDIF}
   end;
 
 
@@ -54,7 +54,7 @@ begin
   exit mapped.Empty;
   {$ELSEIF TOFFEE}
   fData := new Byte[16];
-  memset(fData, 0, 16); 
+  memset(fData, 0, 16);
   {$ENDIF}
 end;
 
@@ -71,7 +71,7 @@ begin
   exit new System.Guid(Value);
   {$ELSEIF TOFFEE}
   fData := new Byte[16];
-  memcpy(fData, Value, 16); 
+  memcpy(fData, Value, 16);
   {$ENDIF}
 end;
 

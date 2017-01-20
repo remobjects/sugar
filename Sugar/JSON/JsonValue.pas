@@ -17,7 +17,7 @@ type
     property Value: not nullable T;
     operator Implicit(aValue: JsonValue<T>): not nullable T;
   end;
-  
+
   JsonStringValue = public class(JsonValue<not nullable String>)
   public
     method ToJson: String; override;
@@ -81,7 +81,7 @@ method JsonValue<T>.{$IF TOFFEE}isEqual(Obj: id){$ELSE}&Equals(Obj: Object){$END
 begin
   if (Obj = nil) or (not (Obj is JsonValue<T>)) then
     exit false;
-  
+
   exit self.Value.Equals(JsonValue<T>(Obj).Value);
 end;
 
@@ -105,7 +105,7 @@ end;}
 method JsonStringValue.ToJson: String;
 begin
   var sb := new StringBuilder;
-  
+
   for i: Int32 := 0 to Value.Length-1 do begin
     var c := Value[i];
     case c of
@@ -124,7 +124,7 @@ begin
       else sb.Append('\u'+Sugar.Convert.ToHexString(Int32(c), 4));
     end;
   end;
-  
+
   result := JsonConsts.STRING_QUOTE+sb.ToString()+JsonConsts.STRING_QUOTE;
 end;
 

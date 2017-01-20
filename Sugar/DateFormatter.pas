@@ -144,7 +144,7 @@ begin
 
       //copy format
       var UserFormat := Value.Substring(StartPosition, Current - StartPosition);
-      
+
       if String.IsNullOrEmpty(UserFormat) then
         raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);
 
@@ -163,7 +163,7 @@ begin
       if Formatter <> nil then
         sb.Append(Formatter.Convert(UserFormat))
       else //unknown format
-        raise new SugarFormatException("Unknown format specified: "+UserFormat);        
+        raise new SugarFormatException("Unknown format specified: "+UserFormat);
     end
     //escaped closing bracket
     else if (C = '}') and (Current < Value.Length) and (Value[Current] = '}') then begin
@@ -177,7 +177,7 @@ begin
   end;
 
   //text left to copy
-  if BlockStart < Value.Length then 
+  if BlockStart < Value.Length then
     AppendEscaped(Value, BlockStart, Value.Length - BlockStart, sb);
   exit sb.ToString();
   *)

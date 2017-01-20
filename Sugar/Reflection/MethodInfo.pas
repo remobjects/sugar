@@ -97,8 +97,8 @@ begin
   for i: Integer := 0 to parameterTypes.length - 1 do
   begin
     result[i] := new Sugar.Reflection.ParameterInfo(Name := 'Parameter #' + i.toString(), //Java does not support reflection of parameter names in a simple way, debug info is needed.
-                                                    ParameterType := parameterTypes[i], 
-                                                    Position := i, 
+                                                    ParameterType := parameterTypes[i],
+                                                    Position := i,
                                                     CustomAttributes := parameterAttributes[i]);
   end;
 end;

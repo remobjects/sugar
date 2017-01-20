@@ -14,7 +14,7 @@ type
   {$ELSEIF TOFFEE}
   Thread = public class mapped to Foundation.NSThread
   {$ENDIF}
-  private   
+  private
     method GetPriority: ThreadPriority;
     method SetPriority(Value: ThreadPriority);
     method GetCallStack: List<String>;
@@ -34,7 +34,7 @@ type
 
     {$IF COOPER OR ECHOES}
     property ThreadId: Int64 read {$IF COOPER}mapped.Id{$ELSEIF ECHOES}mapped.ManagedThreadId{$ENDIF};
-    {$ELSEIF TOFFEE}    
+    {$ELSEIF TOFFEE}
     property ThreadId: IntPtr read GetThreadID;
     {$ENDIF}
 
@@ -42,7 +42,7 @@ type
     property CallStack: List<String> read GetCallStack;
 
     {$IF TOFFEE}class property MainThread: Thread read mapped.mainThread;{$ENDIF}
-    class property CurrentThread: Thread read mapped.currentThread; 
+    class property CurrentThread: Thread read mapped.currentThread;
 
     class method &Async(aBlock: block);
   end;
@@ -72,7 +72,7 @@ begin
     {$ELSE}
     exit ThreadPriority(mapped.Priority);
     {$ENDIF}
-  {$ELSEIF COOPER} 
+  {$ELSEIF COOPER}
   case mapped.Priority of
     1,2: exit ThreadPriority.Lowest;
     3,4: exit ThreadPriority.BelowNormal;
@@ -91,7 +91,7 @@ begin
     {$ELSE}
     mapped.Priority := System.Threading.ThreadPriority(Value);
     {$ENDIF}
-  {$ELSEIF COOPER} 
+  {$ELSEIF COOPER}
   case Value of
     ThreadPriority.Lowest: mapped.Priority := 2;
     ThreadPriority.BelowNormal: mapped.Priority := 4;

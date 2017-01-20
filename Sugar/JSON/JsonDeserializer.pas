@@ -21,8 +21,8 @@ type
     method ReadValue: JsonNode;
   public
     constructor (JsonString: String);
-    
-    method Deserialize: JsonNode;    
+
+    method Deserialize: JsonNode;
   end;
 
 implementation
@@ -55,23 +55,23 @@ end;
 method JsonDeserializer.ReadObject: JsonObject;
 begin
   Expected(JsonTokenKind.ObjectStart);
-  
+
   result := new JsonObject;
   Tokenizer.Next;
-  
+
   if Tokenizer.Token = JsonTokenKind.ObjectEnd then
     exit;
 
   var Properties := ReadProperties;
 
   Expected(JsonTokenKind.ObjectEnd);
-  
+
   for Item in Properties do
     result.Add(Item.Key, Item.Value);
 end;
 
 method JsonDeserializer.ReadProperties: sequence of KeyValuePair<String, JsonNode>;
-begin  
+begin
   var List := new List<KeyValuePair<String, JsonNode>>;
 
   repeat
@@ -154,17 +154,17 @@ end;
 method JsonDeserializer.ReadArray: JsonArray;
 begin
   Expected(JsonTokenKind.ArrayStart);
-  
+
   result := new JsonArray;
   Tokenizer.Next;
-  
+
   if Tokenizer.Token = JsonTokenKind.ArrayEnd then
     exit;
 
   var Values := ReadValues;
 
   Expected(JsonTokenKind.ArrayEnd);
-  
+
   for Item in Values do
     result.Add(Item);
 end;

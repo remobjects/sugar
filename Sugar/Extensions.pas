@@ -11,7 +11,7 @@ extension method Foundation.NSObject.ToString: Foundation.NSString;
 extension method Foundation.NSObject.Equals(Obj: Object): Boolean;
 extension method Foundation.NSObject.GetHashCode: Integer;
 {$ENDIF}
-  
+
 implementation
 
 {$IF COOPER}

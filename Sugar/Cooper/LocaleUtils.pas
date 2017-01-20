@@ -65,7 +65,7 @@ begin
   //Country
   if Codes.length = 2 then begin
     var Country := Codes[1];
-    
+
     if not Exists(Country, Locale.getISOCountries) then
       raise new SugarFormatException(ErrorMessage.FORMAT_ERROR);
 

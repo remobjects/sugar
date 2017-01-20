@@ -2,7 +2,7 @@
 
 interface
 
-type 
+type
   SugarException = public class({$IF TOFFEE}Foundation.NSException{$ELSE}Exception{$ENDIF})
   public
     constructor;
@@ -13,7 +13,7 @@ type
     property Message: String read reason;
   {$ENDIF}
   end;
-  
+
   SugarNotImplementedException = public class(SugarException);
 
   SugarNotSupportedException = public class (SugarException);
@@ -25,7 +25,7 @@ type
     constructor(aMessage: String);
     class method RaiseIfNil(Value: Object; Name: String);
   end;
-  
+
   SugarArgumentOutOfRangeException = public class (SugarArgumentException);
 
   SugarFormatException = public class(SugarException);
@@ -41,9 +41,9 @@ type
     end;
 
   public
-    property Response: nullable HttpResponse; readonly;   
+    property Response: nullable HttpResponse; readonly;
   end;
-  
+
   SugarFileNotFoundException = public class (SugarException)
   public
     property FileName: String read write; readonly;
@@ -83,7 +83,7 @@ type
     class const KEY_NOTFOUND = "Entry with specified key does not exist";
     class const KEY_EXISTS = "An element with the same key already exists in the dictionary";
 
-    class const FILE_EXISTS = "File {0} already exists";    
+    class const FILE_EXISTS = "File {0} already exists";
     class const FILE_NOTFOUND = "File {0} not found";
     class const FILE_WRITE_ERROR = "File {0} can not be written";
     class const FILE_READ_ERROR = "File {0} can not be read";

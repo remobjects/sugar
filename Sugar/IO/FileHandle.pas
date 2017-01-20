@@ -22,7 +22,7 @@ type
     method ValidateBuffer(Buffer: array of Byte; Offset: Integer; Count: Integer);
   public
     constructor(FileName: String; Mode: FileOpenMode);
-    
+
     class method FromFile(aFile: File; Mode: FileOpenMode): FileHandle;
 
     method Close;
@@ -86,7 +86,7 @@ begin
   {$IF COOPER}
   var lMode: String := if Mode = FileOpenMode.ReadOnly then "r" else "rw";
   exit new java.io.RandomAccessFile(aFile, lMode);
-  {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}  
+  {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
   var lMode: Windows.Storage.FileAccessMode := if Mode = FileOpenMode.ReadOnly then Windows.Storage.FileAccessMode.Read else Windows.Storage.FileAccessMode.ReadWrite;
   exit Windows.Storage.StorageFile(aFile).OpenAsync(lMode).Await.AsStream;
   {$ELSEIF ECHOES}
@@ -104,7 +104,7 @@ method FileHandle.Close;
 begin
   {$IF COOPER}
   mapped.close;
-  {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}  
+  {$ELSEIF WINDOWS_PHONE OR NETFX_CORE}
   mapped.Dispose;
   {$ELSEIF ECHOES}
   mapped.Close;
@@ -140,7 +140,7 @@ begin
   if Count = 0 then
     exit;
 
-  var BufferLength := RemObjects.Oxygene.System.length(Buffer); 
+  var BufferLength := RemObjects.Oxygene.System.length(Buffer);
 
   if Offset >= BufferLength then
     raise new SugarArgumentOutOfRangeException(ErrorMessage.ARG_OUT_OF_RANGE_ERROR, "Offset");
@@ -155,7 +155,7 @@ end;
 method FileHandle.Read(Buffer: array of Byte; Offset: Integer; Count: Integer): Integer;
 begin
   ValidateBuffer(Buffer, Offset, Count);
-  
+
   if Count = 0 then
     exit 0;
 
@@ -233,7 +233,7 @@ begin
   mapped.Seek(Offset, System.IO.SeekOrigin(Origin));
   {$ELSEIF ECHOES}
   mapped.Seek(Offset, System.IO.SeekOrigin(Origin));
-  {$ELSEIF TOFFEE}  
+  {$ELSEIF TOFFEE}
   case Origin of
     SeekOrigin.Begin: mapped.seekToFileOffset(Offset);
     SeekOrigin.Current: mapped.seekToFileOffset(Position + Offset);
