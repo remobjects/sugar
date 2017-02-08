@@ -665,7 +665,7 @@ begin
   end
   else if assigned(error) then begin
     if assigned(nsHttpUrlResponse) then
-      raise new HttpException(error.description, nsHttpUrlResponse)
+      raise new HttpException(error.description, new HttpResponse(nil, nsHttpUrlResponse))
     else
       raise new SugarException withError(error)
   end
