@@ -659,9 +659,9 @@ begin
 *)
   var nsHttpUrlResponse := NSHTTPURLResponse(nsUrlResponse);
   if assigned(data) and assigned(nsHttpUrlResponse) and not assigned(error) then begin
-    if nsHttpUrlResponse.statusCode >= 300 then
-      raise new HttpException(String.Format("Unable to complete request. Error code: {0}", nsHttpUrlResponse.statusCode), nsHttpUrlResponse);
     result := new HttpResponse(data, nsHttpUrlResponse);
+    if nsHttpUrlResponse.statusCode >= 300 then
+      raise new HttpException(String.Format("Unable to complete request. Error code: {0}", nsHttpUrlResponse.statusCode), result);
   end
   else if assigned(error) then begin
     if assigned(nsHttpUrlResponse) then
@@ -671,7 +671,7 @@ begin
   end
   else begin
     if assigned(nsHttpUrlResponse) then
-      raise new HttpException(String.Format("Request failed without providing an error. Error code: {0}", nsHttpUrlResponse.statusCode), nsHttpUrlResponse)
+      raise new HttpException(String.Format("Request failed without providing an error. Error code: {0}", nsHttpUrlResponse.statusCode), new HttpResponse(nil, nsHttpUrlResponse))
     else
       raise new SugarException("Request failed without providing an error.");
   end;
