@@ -111,15 +111,13 @@ begin
     case c of
       '\': sb.Append("\\");
       '"': sb.Append('\"');
-      '/': sb.Append('\/');
       #9: sb.Append('\t');
       #8: sb.Append('\b');
       #12: sb.Append('\f');
       #13: sb.Append('\r');
       #10: sb.Append('\n');
       #32..#33,
-      #35..#46,
-      #48..#91,
+      #35..#91,
       #93..#127: sb.Append(c);
       else sb.Append('\u'+Sugar.Convert.ToHexString(Int32(c), 4));
     end;
