@@ -144,7 +144,7 @@ end;
 
 method TimeSpan.get_Days: Integer;
 begin
-  exit (Ticks / TicksPerDay) mod 24;
+  exit (Ticks / TicksPerDay);
 end;
 
 method TimeSpan.get_Milliseconds: Integer;
